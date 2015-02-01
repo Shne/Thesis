@@ -1,2 +1,2 @@
 # Thesis
-My Thesis on Wavelet Tree Construction Time in practice 
+Our Thesis on Wavelet Tree Construction Time in practice 
