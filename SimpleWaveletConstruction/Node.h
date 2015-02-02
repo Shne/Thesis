@@ -16,9 +16,9 @@ using namespace std;
 class Node {
 private:
         std::vector<bool> bitmap;
-        bool isLeaf = false;
-        Node* left = NULL;
-        Node* right = NULL;
+        bool isLeaf;
+        Node* left;
+        Node* right;
 public: 
     Node();
     Node(vector<char> s, char* alphabet, int alphabetSize);

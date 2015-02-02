@@ -17,9 +17,9 @@ using namespace std;
 int main(int argc, char** argv) {
     //Read string and alphabet 
     
-    vector<char> string {'c','a','b','b','a','a'};
-    const int alphabetSize = 3;
-    char alphabet[alphabetSize] = {'a','b','c'};
+    vector<char> string {'c','a','b','b','a','a','b','d','d','a','d','c','b','d','a','a'};
+    const int alphabetSize = 4;
+    char alphabet[alphabetSize] = {'a','b','c','d'};
     
     Tree tree = Tree(string, alphabet, alphabetSize);
     

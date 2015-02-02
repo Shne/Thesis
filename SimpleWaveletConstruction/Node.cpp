@@ -12,7 +12,7 @@
 using namespace std;
 
 
-Node::Node(vector<char> s, char* alphabet, int alphabetSize) {
+Node::Node(vector<char> s, char* alphabet, int alphabetSize): isLeaf(false), left(NULL), right(NULL) {
     
     if(alphabetSize == 1) {
         string str(s.begin(), s.end());
