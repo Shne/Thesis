@@ -11,6 +11,7 @@
 #include <string>
 #include <set>
 #include <array>
+//#include <forward_list>
 #include "Node.h"
 
 using namespace std;
@@ -21,14 +22,26 @@ private:
     Node root;
     
 public:
-    Tree(string s, vector<char> alphabet) {
-    char split = alphabet[alphabet.size()/2];
+    Tree(vector<char> s, char* alphabet, int alphabetSize) {
+    char split = alphabet[alphabetSize/2];
+    char* leftAlphabet = alphabet;
+    int leftAlphabetSize = alphabetSize/2;
+    char* rightAlphabet = alphabet + leftAlphabetSize*sizeof(char);
+    int rightAlphabetSize = alphabetSize - leftAlphabetSize;
 
+    int i = 0;
+    vector<char> left;
+    vector<char> right;
     for(auto it = s.cbegin(); it == s.cend(); it++) {
         char c = *it;
         if(c <= split) {
-            
+            root.bitmap[i] = 0;
+            left.push_back(c);
+        } else {
+            root.bitmap[i] = 1;
+            right.push_back(c);
         }
+        i++;
     }
 }
 

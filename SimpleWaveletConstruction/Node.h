@@ -12,7 +12,7 @@
 
 struct Node {
     public:
-        std::vector<bool> bs;
+        std::vector<bool> bitmap;
         Node* left;
         Node* right;
 };
