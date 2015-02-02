@@ -12,5 +12,4 @@ using namespace std;
 
 Tree::Tree(vector<char> s, char* alphabet, int alphabetSize) : root(Node::Node(s, alphabet, alphabetSize))
 {
-    
 }

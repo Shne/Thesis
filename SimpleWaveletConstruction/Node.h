@@ -17,12 +17,12 @@ class Node {
 private:
         std::vector<bool> bitmap;
         bool isLeaf = false;
-        char leafChar;
         Node* left = NULL;
         Node* right = NULL;
 public: 
     Node();
     Node(vector<char> s, char* alphabet, int alphabetSize);
+    void printAlphabet(char* alphabet, int alphabetSize);
 };
 
 #endif	/* NODE_H */
