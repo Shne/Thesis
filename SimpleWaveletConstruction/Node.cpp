@@ -1,4 +1,10 @@
- 
+/* 
+ * File:   Node.cpp
+ * Author: jhk
+ *
+ * Created on February 2, 2015, 11:14 AM
+ */ 
+
 #include "Node.h"
 
 using namespace std;
