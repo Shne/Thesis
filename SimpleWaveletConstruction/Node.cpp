@@ -22,19 +22,17 @@ Node::Node(vector<char> s, char* alphabet, int alphabetSize) {
     char* rightAlphabet = alphabet + leftAlphabetSize*sizeof(char);
     int rightAlphabetSize = alphabetSize - leftAlphabetSize;
 
-    int i = 0;
     vector<char> leftString;
     vector<char> rightString;
-    for(auto it = s.cbegin(); it == s.cend(); it++) {
+    for(auto it = s.begin(); it != s.end(); it++) {
         char currentChar = *it;
         if(currentChar <= split) {
-            bitmap[i] = 0;
+            bitmap.push_back(false);
             leftString.push_back(currentChar);
         } else {
-            bitmap[i] = 1;
+            bitmap.push_back(true);
             rightString.push_back(currentChar);
         }
-        i++;
     }
     left = new Node(leftString, leftAlphabet, leftAlphabetSize);
     right = new Node(rightString, rightAlphabet, rightAlphabetSize);

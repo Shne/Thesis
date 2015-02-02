@@ -17,6 +17,12 @@ using namespace std;
 int main(int argc, char** argv) {
     //Read string and alphabet 
     
+    vector<char> string {'c','a','b','b','a','a'};
+    const int alphabetSize = 3;
+    char alphabet[alphabetSize] = {'a','b','c'};
+    
+    Tree tree = Tree(string, alphabet, alphabetSize);
+    
     cout << "Test" << endl;
     return 0;
 }
