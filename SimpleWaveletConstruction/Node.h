@@ -21,8 +21,8 @@ private:
         Node* right;
 public: 
     Node();
-    Node(vector<char> s, char* alphabet, int alphabetSize);
-    void printAlphabet(char* alphabet, int alphabetSize);
+    Node(vector<char> s, const char* alphabet, int alphabetSize);
+    void printAlphabet(const char* alphabet, int alphabetSize);
 };
 
 #endif	/* NODE_H */

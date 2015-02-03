@@ -15,15 +15,18 @@ using namespace std;
  * 
  */
 int main(int argc, char** argv) {
-    //Read string and alphabet 
-    
-    vector<char> string {'c','a','b','b','a','a','b','d','d','a','d','c','b','d','a','a'};
-    const int alphabetSize = 4;
-    char alphabet[alphabetSize] = {'a','b','c','d'};
-    
-    Tree tree = Tree(string, alphabet, alphabetSize);
-    
-    cout << "Test" << endl;
+    string sAlphabet, sInput, sAlphabetSize;
+
+    getline(cin, sAlphabet);
+    getline(cin, sAlphabetSize);
+    getline(cin, sInput);
+
+    int alphabetSize = atoi(sAlphabetSize.c_str());
+    vector<char> input(sInput.begin(), sInput.end());
+    const char* alphabet = sAlphabet.c_str();
+
+    Tree tree = Tree(input, alphabet, alphabetSize);
+
     return 0;
 }
 

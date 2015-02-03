@@ -28,3 +28,6 @@
 *.app
 /SimpleWaveletConstruction/dist/
 /SimpleWaveletConstruction/build/
+
+# Own choices
+

@@ -21,7 +21,7 @@ private:
     Node root;
     
 public:
-    Tree(vector<char> s, char* alphabet, int alphabetSize);
+    Tree(vector<char> s, const char* alphabet, int alphabetSize);
 };
 
 

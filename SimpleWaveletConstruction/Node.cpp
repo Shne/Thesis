@@ -12,20 +12,22 @@
 using namespace std;
 
 
-Node::Node(vector<char> s, char* alphabet, int alphabetSize): isLeaf(false), left(NULL), right(NULL) {
+Node::Node(vector<char> s, const char* alphabet, int alphabetSize): isLeaf(false), left(NULL), right(NULL) {
     
     if(alphabetSize == 1) {
+#ifdef DEBUG
         string str(s.begin(), s.end());
         cout << "LEAF:\t\t" << str << endl;
         cout << "---------------" << endl;
+#endif
         isLeaf = true;
         return;
     }
     char split = alphabet[((alphabetSize+1)/2)-1]; //looks weird but handles the computation correctly for both even and odd cases
     int rightAlphabetSize = alphabetSize/2;
     int leftAlphabetSize = alphabetSize - rightAlphabetSize;
-    char* leftAlphabet = alphabet;
-    char* rightAlphabet = alphabet + leftAlphabetSize*sizeof(char);
+    const char* leftAlphabet = alphabet;
+    const char* rightAlphabet = alphabet + leftAlphabetSize*sizeof(char);
     
     vector<char> leftString;
     vector<char> rightString;
@@ -40,6 +42,7 @@ Node::Node(vector<char> s, char* alphabet, int alphabetSize): isLeaf(false), lef
         }
     }
     
+#ifdef DEBUG
     string str(s.begin(), s.end());
     string leftstr(leftString.begin(), leftString.end());
     string rightstr(rightString.begin(), rightString.end());
@@ -50,12 +53,13 @@ Node::Node(vector<char> s, char* alphabet, int alphabetSize): isLeaf(false), lef
     cout << "left string:\t" << leftstr << endl;
     cout << "right string:\t" << rightstr << endl;
     cout << "---------------" << endl;
+#endif
     
     left = new Node(leftString, leftAlphabet, leftAlphabetSize);
     right = new Node(rightString, rightAlphabet, rightAlphabetSize);
 }
 
-void Node::printAlphabet(char* alphabet, int alphabetSize) {
+void Node::printAlphabet(const char* alphabet, int alphabetSize) {
     for(int i = 0; i < alphabetSize; i++) {
         cout << alphabet[i];
     }

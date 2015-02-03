@@ -10,6 +10,6 @@
 
 using namespace std;
 
-Tree::Tree(vector<char> s, char* alphabet, int alphabetSize) : root(Node::Node(s, alphabet, alphabetSize))
+Tree::Tree(vector<char> s, const char* alphabet, int alphabetSize) : root(Node::Node(s, alphabet, alphabetSize))
 {
 }
