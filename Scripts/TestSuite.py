@@ -26,7 +26,7 @@ def readOrGenerateData(filename, powerAmount, alphabetSize):
 
 
 def testSimpleWaveletConstruction(powerAmount, alphabetSize):
-	fileName = "simpleConstruction_n:"+str(powerAmount)+"_as:"+str(alphabetSize)
+	fileName = "simpleConstruction_n"+str(powerAmount)+"_as"+str(alphabetSize)
 
 	dataFileName = "Data/"+fileName+".data"
 	outputFileName = "Data/"+fileName+".output"
