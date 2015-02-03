@@ -19,7 +19,7 @@ Node::Node(vector<char> s, const char* alphabet, int alphabetSize): isLeaf(false
         string str(s.begin(), s.end());
         cout << "LEAF:\t\t" << str << endl;
         cout << "---------------" << endl;
-#endif
+#endif  
         isLeaf = true;
         return;
     }
