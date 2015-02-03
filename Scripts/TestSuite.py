@@ -3,63 +3,45 @@
 import subprocess
 import os.path
 import random #also seeds it with system time
+from itertools import cycle
 
-def generateData(fd, amount, alphabet=None):
-	if alphabet is None:
-		alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+def generateData(fd, powerAmount, alphabetSize):
+	alphabet = [chr(i) for i in range(32,alphabetSize+32)]
 	
-	print("Generating data: "+str(amount)+" entries of alphabetsize: "+str(len(alphabet)))
-
-	randomArr = [random.choice(alphabet) for x in range(amount)]
+	print("Generating data: 10^"+str(powerAmount)+" entries of alphabetsize: "+str(len(alphabet)))
+	amount = pow(10, powerAmount)
+	randomArr = [random.choice(alphabet) for _ in range(amount)]
 
 	print(''.join(alphabet), file=fd)
 	print(len(alphabet), file=fd)
 	print(''.join(randomArr), file=fd)
 
 
-def readOrGenerateData(filename, amount, alphabet=None):
+def readOrGenerateData(filename, powerAmount, alphabetSize):
 	if os.path.isfile(filename):
 		return open(filename, "r")
 
-	fd = open(filename, "w")
-	generateData(fd, amount, alphabet)
-	return fd
+	generateData(open(filename, "w"), powerAmount, alphabetSize)
+	return open(filename, "r")
 
-def testSimpleWaveletConstruction_fullAlphabet_1millItems():
-	filename = "Data/fullAlphabet_1millItem.data"
-	amount = 1000000
-	alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
 
-	inputFd = readOrGenerateData(filename, amount, alphabet)
-	outputFd = open("Data/testSimpleWaveletConstruction_fullAlphabet_1millItem.output", "w")
+def testSimpleWaveletConstruction(powerAmount, alphabetSize):
+	fileName = "simpleConstruction_n:"+str(powerAmount)+"_as:"+str(alphabetSize)
 
-	print("testSimpleWaveletConstruction_fullAlphabet_1millItems")
+	dataFileName = "Data/"+fileName+".data"
+	outputFileName = "Data/"+fileName+".output"
+
+	inputFd = readOrGenerateData(dataFileName, powerAmount, alphabetSize)
+	outputFd = open(outputFileName, "w")
+
+	print("Testing 10^"+str(powerAmount)+" characters from alphabet size "+str(alphabetSize))
 	subprocess.call('./simplewaveletconstruction-release', stdin=inputFd, stdout=outputFd)
-
-def testSimpleWaveletConstruction_fullAlphabet_10millItems():
-	filename = "Data/fullAlphabet_10millItem.data"
-	amount = 10000000
-	alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
-
-	inputFd = readOrGenerateData(filename, amount, alphabet)
-	outputFd = open("Data/testSimpleWaveletConstruction_fullAlphabet_10millItem.output", "w")
-
-	print("testSimpleWaveletConstruction_fullAlphabet_10millItems")
-	subprocess.call('./simplewaveletconstruction-release', stdin=inputFd, stdout=outputFd)
-
-def testSimpleWaveletConstruction_fullAlphabet_100millItems():
-	filename = "Data/fullAlphabet_100millItem.data"
-	amount = 100000000
-	alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
-
-	inputFd = readOrGenerateData(filename, amount, alphabet)
-	outputFd = open("Data/testSimpleWaveletConstruction_fullAlphabet_100millItem.output", "w")
-
-	print("testSimpleWaveletConstruction_fullAlphabet_100millItems")
-	subprocess.call('./simplewaveletconstruction-release', stdin=inputFd, stdout=outputFd)
-
+	with open(outputFileName, "r") as f:
+		for line in f:
+			print(line, end='')
 
 
 subprocess.call('./makeall.sh', stdout=subprocess.DEVNULL)
-testSimpleWaveletConstruction_fullAlphabet_1millItems()
-testSimpleWaveletConstruction_fullAlphabet_10millItems()
+# testSimpleWaveletConstruction(7, 20)
+# testSimpleWaveletConstruction(7, 30)
+testSimpleWaveletConstruction(7, 1000)

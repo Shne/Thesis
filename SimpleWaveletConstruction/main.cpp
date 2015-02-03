@@ -31,8 +31,8 @@ int main(int argc, char** argv) {
     
     struct rusage usage;
     getrusage(RUSAGE_SELF, &usage);
-    printf("utime: %ld.%lds\n", usage.ru_utime.tv_sec, usage.ru_utime.tv_usec);
-    printf("stime: %ld.%lds\n", usage.ru_stime.tv_sec, usage.ru_stime.tv_usec);
+    printf("utime: %ld.%ld\n", usage.ru_utime.tv_sec, usage.ru_utime.tv_usec);
+    printf("stime: %ld.%ld\n", usage.ru_stime.tv_sec, usage.ru_stime.tv_usec);
     
     return 0;
 }
