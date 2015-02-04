@@ -2,15 +2,15 @@
 
 import random #also seeds it with system time
 
+def generateData(powerAmount, alphabetSize):
+	fileName = "Data/simpleConstruction_n"+str(powerAmount)+"_as"+str(alphabetSize)+".data"
+	fd = open(fileName, "w")
+	alphabet = [chr(i) for i in range(32,alphabetSize+32)]
 
-alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
-amount = 10000
+	print("Generating data: 10^"+str(powerAmount)+" entries of alphabetsize: "+str(len(alphabet)))
+	amount = pow(10, powerAmount)
+	randomArr = [random.choice(alphabet) for _ in range(amount)]
 
-randomArr = [random.choice(alphabet) for x in range(amount)]
-
-randomStr = ''.join(randomArr)
-
-print(''.join(alphabet))
-print(len(alphabet))
-print(randomStr)
-
+	print(''.join(alphabet), file=fd)
+	print(len(alphabet), file=fd)
+	print(''.join(randomArr), file=fd)

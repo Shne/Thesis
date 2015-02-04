@@ -34,3 +34,4 @@ SimpleWaveletConstruction/nbproject/private/private.xml
 
 # Own choices
 Data/
+*__pycache__*
