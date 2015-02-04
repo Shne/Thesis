@@ -1,0 +1,16 @@
+\contentsline {section}{\numberline {1}Introduction}{3}{section.1}
+\contentsline {section}{\numberline {2}Related Work}{3}{section.2}
+\contentsline {section}{\numberline {3}Wavelet Trees}{3}{section.3}
+\contentsline {subsection}{\numberline {3.1}Na\IeC {\"\i }ve}{3}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}"Square-root"}{3}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}(Parallelized)}{3}{subsection.3.3}
+\contentsline {section}{\numberline {4}Implementation Details}{3}{section.4}
+\contentsline {subsection}{\numberline {4.1}Na\IeC {\"\i }ve}{3}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}"Square-root"}{3}{subsection.4.2}
+\contentsline {subsection}{\numberline {4.3}(Parallelized)}{3}{subsection.4.3}
+\contentsline {section}{\numberline {5}Optimizations}{3}{section.5}
+\contentsline {subsection}{\numberline {5.1}Cache Misses}{3}{subsection.5.1}
+\contentsline {subsection}{\numberline {5.2}Branch Mispredictions}{3}{subsection.5.2}
+\contentsline {subsection}{\numberline {5.3}Translation Lookaside Buffer}{3}{subsection.5.3}
+\contentsline {subsection}{\numberline {5.4}Memory Layout Blocking}{3}{subsection.5.4}
+\contentsline {section}{\numberline {6}Tests}{3}{section.6}
