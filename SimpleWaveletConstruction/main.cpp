@@ -29,10 +29,10 @@ int main(int argc, char** argv) {
 
     Tree tree = Tree(input, alphabet, alphabetSize);
     
-    struct rusage usage;
-    getrusage(RUSAGE_SELF, &usage);
-    printf("utime: %ld.%ld\n", usage.ru_utime.tv_sec, usage.ru_utime.tv_usec);
-    printf("stime: %ld.%ld\n", usage.ru_stime.tv_sec, usage.ru_stime.tv_usec);
+//    struct rusage usage;
+//    getrusage(RUSAGE_SELF, &usage);
+//    printf("utime: %ld.%ld\n", usage.ru_utime.tv_sec, usage.ru_utime.tv_usec);
+//    printf("stime: %ld.%ld\n", usage.ru_stime.tv_sec, usage.ru_stime.tv_usec);
     
     return 0;
 }
