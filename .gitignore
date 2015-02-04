@@ -26,11 +26,11 @@
 *.exe
 *.out
 *.app
-SimpleWaveletConstruction/dist/
-SimpleWaveletConstruction/build/
+*/dist/
+*/build/
 
 #netbeans specific
-SimpleWaveletConstruction/nbproject/private/private.xml
+*/nbproject/private/private.xml
 
 # Own choices
 Data/
