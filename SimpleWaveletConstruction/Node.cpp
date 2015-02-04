@@ -15,11 +15,9 @@ using namespace std;
 Node::Node(vector<char> s, const char* alphabet, int alphabetSize): isLeaf(false), left(NULL), right(NULL) {
     
     if(alphabetSize == 1) {
-#ifdef DEBUG
-        string str(s.begin(), s.end());
-        cout << "LEAF:\t\t" << str << endl;
-        cout << "---------------" << endl;
-#endif  
+//        string str(s.begin(), s.end());
+//        cout << "LEAF:\t\t" << str << endl;
+//        cout << "---------------" << endl;
         isLeaf = true;
         return;
     }
@@ -42,18 +40,16 @@ Node::Node(vector<char> s, const char* alphabet, int alphabetSize): isLeaf(false
         }
     }
     
-#ifdef DEBUG
-    string str(s.begin(), s.end());
-    string leftstr(leftString.begin(), leftString.end());
-    string rightstr(rightString.begin(), rightString.end());
-    cout << "string:\t\t" << str << endl;
-    cout << "split char:\t" << split << endl;
-    cout << "left alphabet:\t"; printAlphabet(leftAlphabet, leftAlphabetSize);
-    cout << "right alphabet:\t"; printAlphabet(rightAlphabet, rightAlphabetSize);
-    cout << "left string:\t" << leftstr << endl;
-    cout << "right string:\t" << rightstr << endl;
-    cout << "---------------" << endl;
-#endif
+//    string str(s.begin(), s.end());
+//    string leftstr(leftString.begin(), leftString.end());
+//    string rightstr(rightString.begin(), rightString.end());
+//    cout << "string:\t\t" << str << endl;
+//    cout << "split char:\t" << split << endl;
+//    cout << "left alphabet:\t"; printAlphabet(leftAlphabet, leftAlphabetSize);
+//    cout << "right alphabet:\t"; printAlphabet(rightAlphabet, rightAlphabetSize);
+//    cout << "left string:\t" << leftstr << endl;
+//    cout << "right string:\t" << rightstr << endl;
+//    cout << "---------------" << endl;
     
     left = new Node(leftString, leftAlphabet, leftAlphabetSize);
     right = new Node(rightString, rightAlphabet, rightAlphabetSize);
