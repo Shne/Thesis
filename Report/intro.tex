@@ -1,6 +1,6 @@
 \section{Introduction}
 [Wavelet trees are interesting because...]
 
-In this thesis we wish to implement various algorithms for constructing a wavelet tree, test and compare their running times and attempt a number of optimizations such as trying to minimize cache misses, branch mispredictions, and [SOMETHING SOMETHING Translation Lookaside Buffer].
+In this thesis we wish to implement various algorithms for constructing a wavelet tree, test and compare their running times and attempt a number of optimizations such as trying to minimize Cache Misses, Branch Mispredictions, and Translation Lookaside Buffer Misses.
 
-We will implement the basic construction algorithm based on the description found in~\citep{ Navjda13}
+We will implement the basic construction algorithm based on the description found in~\citep{ Navjda13}. We will also implement a more advanced algorithm constructing a \textit{wavelet suffix tree}, which is different, yet analogous, to a wavelet tree, but with a better theoretical running time, as described in~\citep{DBLP:journals/corr/BabenkoGKS14}. Finally, we will implement a parallelized version as described in~\citep{DBLP:journals/corr/Shun14}
