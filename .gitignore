@@ -29,6 +29,15 @@
 */dist/
 */build/
 
+# LaTeX
+*.aux
+*.log
+*.pdf
+*.synctex.gz
+*.toc
+*.bbl
+*.blg
+
 #netbeans specific
 */nbproject/private/private.xml
 
