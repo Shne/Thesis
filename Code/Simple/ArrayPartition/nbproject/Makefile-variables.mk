@@ -9,19 +9,19 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=GNU-Linux-x86
 CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-Linux-x86
-CND_ARTIFACT_NAME_Debug=naive
-CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/naive
+CND_ARTIFACT_NAME_Debug=arraypartition
+CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/arraypartition
 CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Debug=naive.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/naive.tar
+CND_PACKAGE_NAME_Debug=arraypartition.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/arraypartition.tar
 # Release configuration
 CND_PLATFORM_Release=CLang-Linux-x86
 CND_ARTIFACT_DIR_Release=dist/Release/CLang-Linux-x86
-CND_ARTIFACT_NAME_Release=naive
-CND_ARTIFACT_PATH_Release=dist/Release/CLang-Linux-x86/naive
+CND_ARTIFACT_NAME_Release=arraypartition
+CND_ARTIFACT_PATH_Release=dist/Release/CLang-Linux-x86/arraypartition
 CND_PACKAGE_DIR_Release=dist/Release/CLang-Linux-x86/package
-CND_PACKAGE_NAME_Release=naive.tar
-CND_PACKAGE_PATH_Release=dist/Release/CLang-Linux-x86/package/naive.tar
+CND_PACKAGE_NAME_Release=arraypartition.tar
+CND_PACKAGE_PATH_Release=dist/Release/CLang-Linux-x86/package/arraypartition.tar
 #
 # include compiler specific variables
 #

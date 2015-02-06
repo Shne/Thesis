@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=NaiveSkewed
+PROJECTNAME=ArrayPartition
 
 # Active Configuration
 DEFAULTCONF=Debug

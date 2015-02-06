@@ -9,19 +9,19 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=GNU-Linux-x86
 CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-Linux-x86
-CND_ARTIFACT_NAME_Debug=simplewaveletconstructionskewed
-CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/simplewaveletconstructionskewed
+CND_ARTIFACT_NAME_Debug=naiveskewed
+CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/naiveskewed
 CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Debug=simplewaveletconstructionskewed.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/simplewaveletconstructionskewed.tar
+CND_PACKAGE_NAME_Debug=naiveskewed.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/naiveskewed.tar
 # Release configuration
 CND_PLATFORM_Release=CLang-Linux-x86
 CND_ARTIFACT_DIR_Release=dist/Release/CLang-Linux-x86
-CND_ARTIFACT_NAME_Release=simplewaveletconstructionskewed
-CND_ARTIFACT_PATH_Release=dist/Release/CLang-Linux-x86/simplewaveletconstructionskewed
+CND_ARTIFACT_NAME_Release=naiveskewed
+CND_ARTIFACT_PATH_Release=dist/Release/CLang-Linux-x86/naiveskewed
 CND_PACKAGE_DIR_Release=dist/Release/CLang-Linux-x86/package
-CND_PACKAGE_NAME_Release=simplewaveletconstructionskewed.tar
-CND_PACKAGE_PATH_Release=dist/Release/CLang-Linux-x86/package/simplewaveletconstructionskewed.tar
+CND_PACKAGE_NAME_Release=naiveskewed.tar
+CND_PACKAGE_PATH_Release=dist/Release/CLang-Linux-x86/package/naiveskewed.tar
 #
 # include compiler specific variables
 #
