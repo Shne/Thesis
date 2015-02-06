@@ -26,8 +26,8 @@
 *.exe
 *.out
 *.app
-*/dist/
-*/build/
+**/dist/
+**/build/
 
 # LaTeX
 *.aux
@@ -39,7 +39,7 @@
 *.blg
 
 #netbeans specific
-*/nbproject/private/private.xml
+**/nbproject/private/private.xml
 
 # Own choices
 Data/
