@@ -1,0 +1,32 @@
+\section{Algorithm Descriptions}
+
+\subsection{Naïve}
+The Naïve Wavelet Tree construction algorithm is recursively defined, calling itself to construct the left and right subtree from the root node and down. At each recursion the algorithm splits the given alphabet in two halves and traverses the given string putting each character into a left or right partition based on whether the character was in the left or right half of the alphabet.
+
+\noindent\rule{\textwidth}{0.5pt}
+\begin{algorithmic}
+\Function {ConstructNode} {$String, Alphabet$}
+\State $LeftAlphabet$, $RightAlphabet \gets Alphabet$
+\ForAll {$Char$ in $String$}
+\If {$Char$ in $LeftAlphabet$}
+\State $LeftString.Append(Char)$
+\State $Bitmap.Append(0)$
+\Else
+\State $RightString.Append(Char)$
+\State $Bitmap.Append(1)$
+\EndIf
+\EndFor
+\State $LeftNode \gets$ \Call {ConstructNode} {$LeftAlphabet, LeftString$}
+\State $RightNode \gets$ \Call {ConstructNode} {$RightAlphabet, RightString$}
+\EndFunction
+
+\State \Call {ConstructNode} {InputString, InputAlphabet}
+\end{algorithmic}
+\noindent\rule{\textwidth}{0.5pt}
+\linebreak
+
+\noindent This was also the naive implementation we did before any smarter ideas and optimizations.
+
+\subsection{"Square-root"}
+
+\subsection{(Parallelized)}
