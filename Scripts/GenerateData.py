@@ -30,4 +30,16 @@ def generateReadableData(powerAmount, alphabetSize):
 	print(len(alphabet), file=fd)
 	print(''.join(randomArr), file=fd)
 
-generateReadableData(2, 10)
+def generateIntegerData(powerAmount, alphabetSize):
+	fileName = "Data/n"+str(powerAmount)+"_as"+str(alphabetSize)+".data"
+	fd = open(fileName, "w")
+
+	print("Generating data: 10^"+str(powerAmount)+" entries of alphabetsize: "+str(alphabetSize))
+	amount = pow(10, powerAmount)
+
+	randomArray = [str(random.randint(0, alphabetSize)) for _ in range(amount)]
+	print(amount, file=fd)
+	print(alphabetSize, file=fd)
+	print(' '.join(randomArray), file=fd)
+
+generateIntegerData(6, 1024)
