@@ -9,6 +9,7 @@
 #include <iostream>
 #include <cmath>
 
+
 using namespace std;
 
 
@@ -19,14 +20,14 @@ Node::Node(vector<int> input, int alphabetMin, int alphabetMax): isLeaf(false), 
 //    cout << "IS: " << input.size() << endl;
 //    cout << input[0] << endl;
     if(input.size() == 0) {
-        cout << "Empty Node" << endl;
+//        cout << "Empty Node" << endl;
         return;
     }
     
     if(alphabetSize == 1) {
 //        string str(input.begin(), input.end());
-        cout << "LEAF:\t\t" << input[0] << endl;
-        cout << "---------------" << endl;
+//        cout << "LEAF:\t\t" << input[0] << endl;
+//        cout << "---------------" << endl;
         isLeaf = true;
         return;
     }
@@ -57,16 +58,16 @@ Node::Node(vector<int> input, int alphabetMin, int alphabetMax): isLeaf(false), 
     }
 //    cout << "END" << endl;
     
-    
-//    string str(input.begin(), input.end());
-//    string leftstr(leftString.begin(), leftString.end());
-//    string rightstr(rightString.begin(), rightString.end());
-//    cout << "string:\t\t" << str << endl;
+//    stringstream str, leftstr, rightstr;
+//    copy(input.begin(), input.end(), ostream_iterator<int>(str, " "));
+//    copy(leftString.begin(), leftString.end(), ostream_iterator<int>(leftstr, " "));
+//    copy(rightString.begin(), rightString.end(), ostream_iterator<int>(rightstr, " "));
+//    cout << "string:\t\t" << str.str() << endl;
 //    cout << "split char:\t" << split << endl;
 //    cout << "left alphabet:\t[" << leftAlphabetMin << ", " << leftAlphabetMax << "]" << endl;
 //    cout << "right alphabet:\t[" << rightAlphabetMin << ", " << rightAlphabetMax << "]" << endl;
-//    cout << "left string:\t" << leftstr << endl;
-//    cout << "right string:\t" << rightstr << endl;
+//    cout << "left string:\t" << leftstr.str() << endl;
+//    cout << "right string:\t" << rightstr.str() << endl;
 //    cout << "---------------" << endl;
     
     left = new Node(leftString, leftAlphabetMin, leftAlphabetMax);

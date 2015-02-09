@@ -46,8 +46,6 @@
         <gdb_interceptlist>
           <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
         </gdb_interceptlist>
-        <gdb_signals>
-        </gdb_signals>
         <gdb_options>
           <DebugOptions>
           </DebugOptions>
@@ -59,7 +57,6 @@
       </nativedebugger>
       <runprofile version="9">
         <runcommandpicklist>
-          <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" "Data/n7_as1024.data"</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" "../../../../../../Data/n7_as1024.data"</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" "Data/n6_as1024.data"</runcommandpicklistitem>
@@ -69,8 +66,9 @@
           <runcommandpicklistitem>"${OUTPUT_PATH}" 8 12</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" 7 12</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" 2 6</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" 1 4</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}" 2 6</runcommand>
+        <runcommand>"${OUTPUT_PATH}" 1 4</runcommand>
         <rundir></rundir>
         <buildfirst>true</buildfirst>
         <terminal-type>0</terminal-type>
