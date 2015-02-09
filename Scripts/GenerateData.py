@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import random #also seeds it with system time
+import array
 
 def generateData(powerAmount, alphabetSize):
 	fileName = "Data/n"+str(powerAmount)+"_as"+str(alphabetSize)+".data"
@@ -30,16 +31,16 @@ def generateReadableData(powerAmount, alphabetSize):
 	print(len(alphabet), file=fd)
 	print(''.join(randomArr), file=fd)
 
-def generateIntegerData(powerAmount, alphabetSize):
-	fileName = "Data/n"+str(powerAmount)+"_as"+str(alphabetSize)+".data"
-	fd = open(fileName, "w")
+def generateIntegerData(powerAmount, powerAlphabetSize):
+	fileName = "Data/n"+str(powerAmount)+"_as"+str(powerAlphabetSize)+".data"
+	fd = open(fileName, "wb")
 
-	print("Generating data: 10^"+str(powerAmount)+" entries of alphabetsize: "+str(alphabetSize))
+	print("Generating data: 10^"+str(powerAmount)+" entries of alphabetsize: 2^"+str(powerAlphabetSize))
 	amount = pow(10, powerAmount)
+	alphabetSize = pow(2, powerAlphabetSize)
 
-	randomArray = [str(random.randint(0, alphabetSize)) for _ in range(amount)]
-	print(amount, file=fd)
-	print(alphabetSize, file=fd)
-	print(' '.join(randomArray), file=fd)
+	randomList = [random.randint(0, alphabetSize-1) for _ in range(amount)]
+	randomArray = array.array('I', randomList)
+	randomArray.tofile(fd)
 
-generateIntegerData(6, 1024)
+generateIntegerData(2, 6)
