@@ -1,8 +1,8 @@
 #!/usr/bin/gnuplot
 # Gnuplot script file for plotting data in file "force.dat"
 	# This file is called   force.p
-	set term eps color size 6, 4
-	set output 'myplot.eps'
+	set term epslatex standalone color size 6, 4
+	set output 'myplot.tex'
 	set autoscale                          # scale axes automatically
 	unset log                              # remove any log-scaling
 	unset label                            # remove any previous labels

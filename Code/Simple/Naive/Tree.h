@@ -22,6 +22,10 @@ private:
     
 public:
     Tree(vector<char> s, const char* alphabet, int alphabetSize);
+    int rank(char& character, int& index, Node* node, const char*& alphabet, int& alphabetSize);
+    int binaryRank(bool charBit, int index, std::vector<bool> bitmap);
+    Node getRoot();
+    void printAlphabet(const char* alphabet, int alphabetSize);
 };
 
 

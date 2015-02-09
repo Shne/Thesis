@@ -21,6 +21,7 @@ Node::Node(vector<char> s, const char* alphabet, int alphabetSize): isLeaf(false
         isLeaf = true;
         return;
     }
+    
     char split = alphabet[((alphabetSize+1)/2)-1]; //looks weird but handles the computation correctly for both even and odd cases
     int rightAlphabetSize = alphabetSize/2;
     int leftAlphabetSize = alphabetSize - rightAlphabetSize;
@@ -60,4 +61,16 @@ void Node::printAlphabet(const char* alphabet, int alphabetSize) {
         cout << alphabet[i];
     }
     cout << endl;
+}
+
+std::vector<bool> Node::getBitmap(){
+    return bitmap;
+}
+
+Node* Node::getLeftNode(){
+    return left;
+}
+
+Node* Node::getRightNode(){
+    return right;
 }

@@ -29,6 +29,15 @@ int main(int argc, char** argv) {
 
     Tree tree = Tree(input, alphabet, alphabetSize);
     
+    char character = 'B';
+    int index = 8;
+    Node root = tree.getRoot();
+    
+    cout << "tree generated" << endl;
+    int rank = tree.rank(character, index, &root, alphabet, alphabetSize);
+    
+    cout << "rank of " << character << " until i=" << index << "  : " << rank << endl; 
+    
 //    struct rusage usage;
 //    getrusage(RUSAGE_SELF, &usage);
 //    printf("utime: %ld.%ld\n", usage.ru_utime.tv_sec, usage.ru_utime.tv_usec);
