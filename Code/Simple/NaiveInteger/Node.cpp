@@ -9,9 +9,7 @@
 #include <iostream>
 #include <cmath>
 
-
 using namespace std;
-
 
 Node::Node(vector<int> input, int alphabetMin, int alphabetMax): isLeaf(false), left(NULL), right(NULL) {
     //alphabetMax is really max + 1, so compare with <, not <=
@@ -62,11 +60,4 @@ Node::Node(vector<int> input, int alphabetMin, int alphabetMax): isLeaf(false), 
     
     left = new Node(leftString, leftAlphabetMin, leftAlphabetMax);
     right = new Node(rightString, rightAlphabetMin, rightAlphabetMax);
-}
-
-void Node::printAlphabet(const char* alphabet, int alphabetSize) {
-    for(int i = 0; i < alphabetSize; i++) {
-        cout << alphabet[i];
-    }
-    cout << endl;
 }
