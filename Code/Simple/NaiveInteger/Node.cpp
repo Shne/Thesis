@@ -16,16 +16,12 @@ using namespace std;
 Node::Node(vector<int> input, int alphabetMin, int alphabetMax): isLeaf(false), left(NULL), right(NULL) {
     //alphabetMax is really max + 1, so compare with <, not <=
     int alphabetSize = alphabetMax - alphabetMin;
-//    cout << "AS: " << alphabetSize << endl;
-//    cout << "IS: " << input.size() << endl;
-//    cout << input[0] << endl;
     if(input.size() == 0) {
 //        cout << "Empty Node" << endl;
         return;
     }
     
     if(alphabetSize == 1) {
-//        string str(input.begin(), input.end());
 //        cout << "LEAF:\t\t" << input[0] << endl;
 //        cout << "---------------" << endl;
         isLeaf = true;
@@ -33,7 +29,6 @@ Node::Node(vector<int> input, int alphabetMin, int alphabetMax): isLeaf(false), 
     }
    
     int split = (alphabetSize / 2) + alphabetMin;
-//    cout << "SPLIT: " << split << endl;
     int leftAlphabetMin = alphabetMin;
     int leftAlphabetMax = split;
     int rightAlphabetMin = split;
@@ -42,21 +37,16 @@ Node::Node(vector<int> input, int alphabetMin, int alphabetMax): isLeaf(false), 
     vector<int> leftString;
     vector<int> rightString;
     
-//    cout << "START" << endl;
     for(auto it = input.begin(); it != input.end(); it++) {
         int currentChar = *it;
-//        cout << "currentChar: " << currentChar << endl;
         if(currentChar < split) {
-//            cout << "  LEFT" << endl;
             bitmap.push_back(false);
             leftString.push_back(currentChar);
         } else {
-//            cout << "  RIGHT" << endl;
             bitmap.push_back(true);
             rightString.push_back(currentChar);
         }
     }
-//    cout << "END" << endl;
     
 //    stringstream str, leftstr, rightstr;
 //    copy(input.begin(), input.end(), ostream_iterator<int>(str, " "));
