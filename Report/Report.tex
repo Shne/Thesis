@@ -1,7 +1,7 @@
 \documentclass[a4paper, 12pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{algpseudocode}
-\usepackage{algorithm}
+\usepackage{algorithmicx}
 \usepackage[export]{adjustbox}
 \usepackage[font=small,labelfont=bf]{caption}
 \usepackage{subcaption}
@@ -10,7 +10,7 @@
 \usepackage{hyperref}
 \usepackage[round]{natbib}
 \usepackage{graphicx}
-
+	\setkeys{Gin}{width=\textwidth}
 \usepackage{tabularx}
 
 \title{Wavelet Tree Construction}
@@ -23,8 +23,7 @@ Roland L. Pedersen (20092817)
 }
 
 %************************************************************
-\usepackage{graphicx}
-	\setkeys{Gin}{width=\textwidth}
+
 \begin{document}
 \maketitle
 \vspace{25mm}
@@ -38,6 +37,8 @@ Roland L. Pedersen (20092817)
 \input{intro}
 
 \input{related}
+
+\input{wavelettree}
 
 \input{implementationnotes}
 
