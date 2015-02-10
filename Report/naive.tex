@@ -7,7 +7,7 @@ The Naïve Wavelet Tree construction algorithm is recursively defined, calling i
 \begin{algorithmic}
 \Function {ConstructNode} {$String, Alphabet$}
 \If{$Alphabet.Size() = 1$ or $String.Length() = 0$}
-	\State $Return$
+	\State \Return
 \EndIf
 \State Split $Alphabet$ into $LeftAlphabet$ and $RightAlphabet$
 \State $Split \gets$ middle character in $Alphabet$
@@ -30,5 +30,28 @@ The Naïve Wavelet Tree construction algorithm is recursively defined, calling i
 \linebreak
 
 \noindent In our implementation, $Alphabet$, $LeftAlphabet$, and $RightAlphabet$ are stored as two integer values each: a minimum and a maximum. It is explained in~\ref{sec:UsingIntAsChar} how this is equivalent to storing the full alphabet and passing pointers into it around. $Bitmap$ is stored as a \texttt{vector<bool>} which is tightly packed, only using 1 bit per bool\footnote{\url{http://www.cplusplus.com/reference/vector/vector-bool/}}.
+
+\subsection{Rank/Select Query}
+\noindent\rule{\textwidth}{0.5pt}
+\begin{algorithmic} 
+\Function {Rank} {$Character, Position$}
+\If{$Self.IsLeaf()$}
+\State \Return $Position$
+\EndIf
+\State $CharBit \gets$ bit representing $Character$ in bitmap of current node
+\State $Position \gets$ \Call {BinaryRank} {$CharBit, Position, BitMap$}
+\If{$CharBit = 1$}
+	\State $Rank \gets$ RightChildNode.\Call {Rank} {$CharBit, Position$}
+\Else
+	\State $Rank \gets$ LeftChildNode.\Call {Rank} {$CharBit, Position$}
+\EndIf
+\State \Return $Rank$ 
+\EndFunction
+\State RootNode.\Call {Rank} {$Character, Position$}
+\end{algorithmic}
+\noindent\rule{\textwidth}{0.5pt}
+\linebreak
+
+\noindent \textproc{Rank($Character, Position$)} is defined on each node, which is why it is called on the root node and the right and left child nodes in stead of specifying the node as a parameter to the \textproc{Rank} function.
 
 \subsection{Experiments}
