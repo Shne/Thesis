@@ -133,14 +133,6 @@ int Node::rank(char character, int index, const char* alphabet, int alphabetSize
     return theRank;
 }
 
-inline void Node::calculateSplitAndAlphabet(char& split, int& rightAlphabetSize, int& leftAlphabetSize, 
-        const char*& rightAlphabet, const char*& leftAlphabet, const char* alphabet, int alphabetSize){
-    split = alphabet[((alphabetSize+1)/2)-1]; //looks weird but handles the computation correctly for both even and odd cases
-    rightAlphabetSize = alphabetSize/2;
-    leftAlphabetSize = alphabetSize - rightAlphabetSize;
-    leftAlphabet = alphabet;
-    rightAlphabet = alphabet + leftAlphabetSize*sizeof(char);
-}
 
 int Node::select(char character, int index){
     if(parent == nullptr){ 
@@ -183,4 +175,13 @@ int Node::binarySelect(bool charBit, int index){
     }
     
     return pos;
+}
+
+inline void Node::calculateSplitAndAlphabet(char& split, int& rightAlphabetSize, int& leftAlphabetSize, 
+        const char*& rightAlphabet, const char*& leftAlphabet, const char* alphabet, int alphabetSize){
+    split = alphabet[((alphabetSize+1)/2)-1]; //looks weird but handles the computation correctly for both even and odd cases
+    rightAlphabetSize = alphabetSize/2;
+    leftAlphabetSize = alphabetSize - rightAlphabetSize;
+    leftAlphabet = alphabet;
+    rightAlphabet = alphabet + leftAlphabetSize*sizeof(char);
 }
