@@ -19,13 +19,14 @@ class Tree {
     
 private:
     Node root;
+    const char* alphabet;
+    int alphabetSize;
     
 public:
     Tree(vector<char> s, const char* alphabet, int alphabetSize);
-    int rank(char& character, int& index, Node* node, const char*& alphabet, int& alphabetSize);
-    int binaryRank(bool charBit, int index, std::vector<bool> bitmap);
-    Node getRoot();
-    void printAlphabet(const char* alphabet, int alphabetSize);
+    int rank(char character, int index);
+    int select(char character, int index);   
+    void printAlphabet();
 };
 
 

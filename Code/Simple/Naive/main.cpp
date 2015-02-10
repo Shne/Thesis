@@ -28,15 +28,17 @@ int main(int argc, char** argv) {
     const char* alphabet = sAlphabet.c_str();
 
     Tree tree = Tree(input, alphabet, alphabetSize);
-    
-    char character = 'B';
-    int index = 8;
-    Node root = tree.getRoot();
-    
     cout << "tree generated" << endl;
-    int rank = tree.rank(character, index, &root, alphabet, alphabetSize);
     
-    cout << "rank of " << character << " until i=" << index << "  : " << rank << endl; 
+    char character = 'b';
+    int index = 5;
+    
+    int pos = tree.select(character, index);
+    cout << "Position of " << index << "th " << character << " is " << pos << endl; 
+    
+    int rank = tree.rank(character, index);    
+    cout << "rank of " << character << " until i=" << index << " is " << rank << endl; 
+    
     
 //    struct rusage usage;
 //    getrusage(RUSAGE_SELF, &usage);
