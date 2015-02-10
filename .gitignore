@@ -46,3 +46,4 @@ Data/
 *__pycache__*
 /Code/Simple/Naive/build/
 /Code/Simple/Naive/dist/
+!/Articles/*

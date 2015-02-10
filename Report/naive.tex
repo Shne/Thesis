@@ -54,4 +54,24 @@ The Naïve Wavelet Tree construction algorithm is recursively defined, calling i
 
 \noindent \textproc{Rank($Character, Position$)} is defined on each node, which is why it is called on the root node and the right and left child nodes in stead of specifying the node as a parameter to the \textproc{Rank} function.
 
+
+\noindent\rule{\textwidth}{0.5pt}
+\begin{algorithmic} 
+\Function {BinaryRank} {$CharacterBit, Position, BitMap$}
+\State $Rank \gets$ 0
+\ForAll{$Bit$ in $BitMap$}
+	\If{$BitMap.IndexOf(Bit) > Position$}
+		\State $Break$
+	\EndIf
+	\If{$Bit$ is $CharacterBit$}
+		\State $Rank \gets Rank$ + 1 
+	\EndIf
+\EndFor
+\State \Return $Rank$ 
+\EndFunction
+\State RootNode.\Call {Rank} {$Character, Position$}
+\end{algorithmic}
+\noindent\rule{\textwidth}{0.5pt}
+\linebreak
+
 \subsection{Experiments}
