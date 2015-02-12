@@ -19,8 +19,8 @@ Node::Node(vector<int> input, int alphabetMin, int alphabetMax, Node* &node_pt, 
     
     int alphabetSize = alphabetMax - alphabetMin;
     if(alphabetSize == 1) {
-        cout << "LEAF:\t\t" << input[0] << endl;
-        cout << "---------------" << endl;
+//        cout << "LEAF:\t\t" << input[0] << endl;
+//        cout << "---------------" << endl;
         isLeaf = true;
         return;
     }
@@ -28,7 +28,7 @@ Node::Node(vector<int> input, int alphabetMin, int alphabetMax, Node* &node_pt, 
     bitmap_start = bitmap_it; //remember this node's bitmap position in larger bitmap
     bitmap_size = input.size(); //one bit for each character in the input string
    
-    int split = (alphabetSize / 2) + alphabetMin;
+    int split = (alphabetSize / 4) + alphabetMin;
     int leftAlphabetMin = alphabetMin;
     int leftAlphabetMax = split;
     int rightAlphabetMin = split;

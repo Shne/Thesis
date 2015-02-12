@@ -25,7 +25,6 @@ private:
 public: 
     Node();
     Node(vector<int> input, int alphabetMin, int alphabetMax);
-    void printAlphabet(const char* alphabet, int alphabetSize);
 };
 
 #endif	/* NODE_H */
