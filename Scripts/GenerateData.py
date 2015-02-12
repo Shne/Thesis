@@ -39,8 +39,9 @@ def generateIntegerData(powerAmount, powerAlphabetSize):
 	amount = pow(10, powerAmount)
 	alphabetSize = pow(2, powerAlphabetSize)
 
-	randomList = [random.randint(0, alphabetSize-1) for _ in range(amount)]
-	randomArray = array.array('I', randomList)
+	randomArray = array.array('I')
+	for _ in range(amount):
+		randomArray.append(random.randint(0, alphabetSize-1))
 	randomArray.tofile(fd)
 
-generateIntegerData(2, 6)
+generateIntegerData(8, 12)
