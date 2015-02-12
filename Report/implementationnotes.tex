@@ -17,3 +17,6 @@ We will still use the terms "character" and "string" in our descriptions of the 
 
 \subsection{Reading Input}
 At first we simply read from stdin using the \texttt{getline(cin, \&string)} function. Once we applied a profiler we found this to be horrendously slow, our Naïve algorithm spending about 20\% of its running time on resizing IO buffers. We then switched to using the \texttt{ifstream} class and IO time was reduced significantly to below 1\% of total running time.
+
+\subsection{Bitmask implementation choice}
+Something something~\cite{Pieterse:2010:PCB:1899503.1899530}
