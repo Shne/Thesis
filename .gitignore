@@ -47,3 +47,4 @@ Data/
 /Code/Simple/Naive/build/
 /Code/Simple/Naive/dist/
 !/Articles/*
+*callgrind.out.*
