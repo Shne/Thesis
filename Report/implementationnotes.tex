@@ -4,9 +4,11 @@
 \label{sec:UsingIntAsChar}
 The Wavelet Tree is a data structure for strings. Using the C++ \texttt{char array} or C++11 \texttt{string} types would seem natural in this case, but they each have problems.
 The C and C++ \texttt{char} type is only of size 1 byte allowing us only to use an alphabet size of up to 256, making testing the running times dependency on alphabet size near-impossible as inaccuracies in the running time would likely exceed the difference in running time between the available sizes of the alphabet.
+
 The C++11 \texttt{string} and arrays of type \texttt{char32\_t} doesn't have this problem and supports character types up to 32-bit unsigned. The problem lies in output and readability as characters corresponding to byte values below 32 are special non-printable control characters such as carriage-return and backspace. At higher byte values other non-printable control characters and otherwise unreadable characters appear again, meaning we would have to be very selective with the allowed byte values in our alphabets if we want it to be readable for output and debugging, and likely end up with an alphabet that is non-continuous on the set of byte values as a result.
 Because of this, we have for convenience chosen to simply use arrays of integers as our strings in our implementations.
 This will have no impact on performance as both characters and integers are simply different representations of byte values, so.
+
 We assume in our implementation that the alphabet is always continuous on the set of byte values and store the alphabet as a minimum and maximum value, instead of storing each value in some data structure to pass around or point into.
 This is for convenience as any other non-continuous alphabet could simply be mapped to a continuous run of byte values and used in the same way. 
 This mapping could e.g. be done by storing an array of the alphabet in sorted order and using pointers into this array to signify the characters. 

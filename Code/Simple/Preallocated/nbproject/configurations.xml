@@ -42,7 +42,7 @@
       <compileType>
         <ccTool>
           <standard>8</standard>
-          <commandLine>-std=c++11</commandLine>
+          <commandLine>-std=c++11 -O3 -g</commandLine>
         </ccTool>
       </compileType>
       <item path="IO.h" ex="false" tool="3" flavor2="0">
