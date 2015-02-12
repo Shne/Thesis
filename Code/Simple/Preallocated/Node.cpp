@@ -11,48 +11,65 @@
 
 using namespace std;
 
-Node::Node(vector<int> input, int alphabetMin, int alphabetMax, Node* &node_pt, _Bit_iterator &bitmap_it): isLeaf(false) {
-    if(input.size() == 0) {
+Node::Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* node_pt, boost::dynamic_bitset<>* in_bitmap, int &in_bitmapOffset): isLeaf(false), left(nullptr), right(nullptr) {
+    node_pt++;
+//    if(input.size() == 0) {
 //        cout << "Empty Node" << endl;
-        return;
-    }
+//        return;
+//    }
     
     int alphabetSize = alphabetMax - alphabetMin;
     if(alphabetSize == 1) {
-//        cout << "LEAF:\t\t" << input[0] << endl;
+//        cout << "LEAF:\t\t" << (*input)[0] << endl;
 //        cout << "---------------" << endl;
         isLeaf = true;
         return;
     }
     
-    bitmap_start = bitmap_it; //remember this node's bitmap position in larger bitmap
-    bitmap_size = input.size(); //one bit for each character in the input string
+    bitmap = in_bitmap;
+    bitmapSize = input->size(); //one bit for each character in the input string
+    bitmapOffset = in_bitmapOffset;
    
-    int split = (alphabetSize / 4) + alphabetMin;
+    int skew = 4;
+    int split;
+    if(alphabetSize > skew) {
+        split = (alphabetSize/skew) + alphabetMin;
+    } else {
+        split = (alphabetSize/2) + alphabetMin;
+    }
+
     int leftAlphabetMin = alphabetMin;
     int leftAlphabetMax = split;
     int rightAlphabetMin = split;
     int rightAlphabetMax = alphabetMax;
-    
-    vector<int> leftString;
-    vector<int> rightString;
-    
-    for(auto it = input.begin(); it != input.end(); it++) {
+//    cout << in_bitmapOffset << endl;
+    vector<int>* leftString = new vector<int>();
+    vector<int>* rightString = new vector<int>();
+//    cout << input->size() << endl;
+    for(auto it = input->begin(); it != input->end(); it++) {
         int currentChar = *it;
         if(currentChar < split) {
-            (*bitmap_it) = false;
-            leftString.push_back(currentChar);
+            (*in_bitmap)[in_bitmapOffset] = false;
+            leftString->push_back(currentChar);
         } else {
-            (*bitmap_it) = true;
-            rightString.push_back(currentChar);
+            (*in_bitmap)[in_bitmapOffset] = true;
+            rightString->push_back(currentChar);
         }
-        bitmap_it++;
+        in_bitmapOffset++;
     }
+//    cout << leftString->size() << endl;
+//    cout << rightString->size() << endl;
+    
+
+    
+//    cout << in_bitmapOffset << endl;
+    
+    
     
 //    stringstream str, leftstr, rightstr;
-//    copy(input.begin(), input.end(), ostream_iterator<int>(str, " "));
-//    copy(leftString.begin(), leftString.end(), ostream_iterator<int>(leftstr, " "));
-//    copy(rightString.begin(), rightString.end(), ostream_iterator<int>(rightstr, " "));
+//    copy(input->begin(), input->end(), ostream_iterator<int>(str, " "));
+//    copy(leftString->begin(), leftString->end(), ostream_iterator<int>(leftstr, " "));
+//    copy(rightString->begin(), rightString->end(), ostream_iterator<int>(rightstr, " "));
 //    cout << "string:\t\t" << str.str() << endl;
 //    cout << "split char:\t" << split << endl;
 //    cout << "left alphabet:\t[" << leftAlphabetMin << ", " << leftAlphabetMax << "]" << endl;
@@ -61,10 +78,29 @@ Node::Node(vector<int> input, int alphabetMin, int alphabetMax, Node* &node_pt, 
 //    cout << "right string:\t" << rightstr.str() << endl;
 //    cout << "---------------" << endl;
     
-    right = node_pt; //store pointer to right node
+    input->clear();
+    delete input;
+    
+    
+    if(rightString->size() == 0 || leftString->size() == 0) {
+        //then kinda ignore us; reset bitmap offset
+        in_bitmapOffset = bitmapOffset;
+        bitmap = nullptr;
+    }
+    
     //construct node, save it at right pointer location. give it incremented node_pt and bitmap_it so they point to free space.
-    *right = Node(rightString, rightAlphabetMin, rightAlphabetMax, ++node_pt, ++bitmap_it);
+    if(rightString->size() != 0) {
+        right = node_pt; //store pointer to right node
+        new (node_pt) Node(rightString, rightAlphabetMin, rightAlphabetMax, node_pt, in_bitmap, in_bitmapOffset);
+    } else {
+        delete rightString;
+    }
     //same for left. node_pt and bitmap_it should have been incrememented by our right subnode to point to free space now.
-    left = node_pt;
-    *left = Node(leftString, leftAlphabetMin, leftAlphabetMax, ++node_pt, ++bitmap_it);
+    if(leftString->size() != 0) {
+        left = node_pt;
+        new (node_pt) Node(leftString, leftAlphabetMin, leftAlphabetMax, node_pt, in_bitmap, in_bitmapOffset);
+    } else {
+        delete leftString;
+        
+    }
 }

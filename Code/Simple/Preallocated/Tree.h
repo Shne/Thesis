@@ -13,6 +13,8 @@
 #include <array>
 #include <cmath>
 #include "Node.h"
+#include <iostream>
+
 
 using namespace std;
 
@@ -20,9 +22,10 @@ class Tree {
     
 private:
     Node* root;
+    boost::dynamic_bitset<>* bitmap;
     
 public:
-    Tree(vector<int> input, int amount, int alphabetSize);
+    Tree(vector<int>* input, int amount, int alphabetSize);
 };
 
 

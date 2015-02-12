@@ -25,7 +25,8 @@ int main(int argc, char** argv) {
     int size_out = 0;
     int* inputArr = read_file(size_out, filename.c_str());
     
-    vector<int> input(inputArr, inputArr + size_out);
+    vector<int>* input = new vector<int>(inputArr, inputArr + size_out);
+    delete[] inputArr;
     
     int amount = pow(10, atoi(argv[1]));
     int alphabetSize = pow(2, atoi(argv[2]));

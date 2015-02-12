@@ -13,19 +13,21 @@
 #include <sstream>
 #include <algorithm>
 #include <iterator>
+#include <boost/dynamic_bitset.hpp>
 
 using namespace std;
 
 class Node {
 private:
-    _Bit_iterator bitmap_start;
-    int bitmap_size;
+    boost::dynamic_bitset<>* bitmap;
+    int bitmapOffset;
+    int bitmapSize;
     bool isLeaf;
     Node* left;
     Node* right;
-public: 
+public:
     Node();
-    Node(vector<int> input, int alphabetMin, int alphabetMax, Node* &node_pt, _Bit_iterator &bitmap_it);
+    Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* node_pt, boost::dynamic_bitset<>* in_bitmap, int &in_bitmapOffset);
 };
 
 #endif	/* NODE_H */

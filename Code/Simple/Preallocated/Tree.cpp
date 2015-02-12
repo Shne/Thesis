@@ -10,14 +10,16 @@
 
 using namespace std;
 
-Tree::Tree(vector<int> input, int amount, int alphabetSize) {
-    auto nodeArraySize = sizeof(Node[2*alphabetSize-1]);
-    Node* nodeArray = static_cast<Node*> (::operator new (nodeArraySize));
+Tree::Tree(vector<int>* input, int amount, int alphabetSize) {
+//    auto nodeArraySize = ;
+    root = static_cast<Node*> (::operator new (sizeof(Node)*2*alphabetSize));
     
     int bitmapSize = (int) ceil(amount * log2(alphabetSize));
-    vector<bool> bitmap = vector<bool>();
-    bitmap.reserve(bitmapSize);
-    auto bitmap_it = bitmap.begin();
+    bitmap = new boost::dynamic_bitset<>(bitmapSize,0);
+//    cout << bitmapSize << endl;
+    int bitmapOffset = 0;
     
-    nodeArray[0] = Node(input, 0, alphabetSize, (++nodeArray), bitmap_it);
+    new (root) Node(input, 0, alphabetSize, root, bitmap, bitmapOffset);
+    
+    
 }

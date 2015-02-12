@@ -42,7 +42,10 @@
       <compileType>
         <ccTool>
           <standard>8</standard>
-          <commandLine>-std=c++11 -O3 -g</commandLine>
+          <incDir>
+            <pElem>../../../../../Downloads/boost_1_57_0</pElem>
+          </incDir>
+          <commandLine>-std=c++11</commandLine>
         </ccTool>
       </compileType>
       <item path="IO.h" ex="false" tool="3" flavor2="0">
@@ -72,7 +75,10 @@
           <developmentMode>5</developmentMode>
           <architecture>2</architecture>
           <standard>8</standard>
-          <commandLine>-std=c++11 -O3 -g</commandLine>
+          <incDir>
+            <pElem>../../../../../Downloads/boost_1_57_0</pElem>
+          </incDir>
+          <commandLine>-std=c++11 -g -O3</commandLine>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
