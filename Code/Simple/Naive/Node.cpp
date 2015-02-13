@@ -119,7 +119,6 @@ int Node::rank(char character, int index, const char* alphabet, int alphabetSize
     calculateSplitAndAlphabet(split, rightAlphabetSize, leftAlphabetSize, rightAlphabet, leftAlphabet, alphabet, alphabetSize);
         
     bool charBit = character > split;
-//    int pos = binaryRank(charBit, index);
     int pos = charBit ? binaryRankPopcountInstruction(index) : index - binaryRankPopcountInstruction(index);
     cout << "binary rank; " << pos << endl;
     
