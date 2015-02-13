@@ -3,20 +3,20 @@
 [What is a wavelet tree; theory; usage; rank/select; etc...]
 
 \subsection{What is a Wavelet Tree}
-The Wavelet Tree is a binary balanced tree structure, that was invented by Grossi, Grupta and Vitter \citep{Grossi:2003:HET:644108.644250} in 2003. It has applications in many areas; from string processing to geometry, and can for instance be used to represent; a sequence of elements, a reordering of elements and a grid of points. 
-
-The Wavelet Tree is actually a generalization of parts of an old data structure by Chazelle (TODO: reference), that is used a lot in Computational Geometry. When Grossi et al. invented the Wavelet Tree, it was a milestone in compressed full-text indexing even though it is mentioned very little in the paper.
+The Wavelet Tree is a binary balanced tree structure, that was invented by Grossi, Grupta and Vitter \citep{Grossi:2003:HET:644108.644250} in 2003. It has applications in many areas; from string processing to geometry, and can for instance be used to represent; a sequence of elements, a reordering of elements and a grid of points. When \citep{Grossi:2003:HET:644108.644250} invented the Wavelet Tree, it was a milestone in compressed full-text indexing even though it is mentioned very little in the paper.
 
 \subsection{Theory: Data Structure}
 A Wavelet Tree stores a string by creating a bitmap that describes the string using the alphabet of the string. The alphabet is split in the middle and the symbols to the left gets bit value 0 and the symbols to the right gets bit value 1 so that there is a bit for each symbol in the string in the bitmap. The symbols of the string that has bit value 0 is concatenated in the order they have in the string and is added to the left sub-tree and the ones with bit value 1 is added to the right sub-tree. 
 
-This process continues in each sub tree until we end up in the leaves where the string only consists of one unique symbol from the alphabet. An example of a Wavelet Tree can be seen in Figure \ref{fig:WaveletTreeExample}.
+This process continues in each sub tree until we end up in the leaves where the string only consists of one unique symbol from the alphabet. An example of a Wavelet Tree can be seen in Figure \ref{fig:WaveletTreeExample}. We now go into more detail about how it all works.
 
+\vspace{0.5 cm}
 \begin{mdframed}[nobreak]
 \textbf{Definition:} String representation in a Wavelet Tree
 
 Let $S[1,n] = S_1 S_2 ... S_n$ be a sequence of symbols where $s_i \in \Sigma$ and $\Sigma = [1 .. \sigma]$ is the alphabet. $S$ can then be represented in plain form using $n \lceil \log \sigma \rceil = n \log \sigma = O(n)$ bits.
 \end{mdframed}
+\vspace{0.5 cm}
 
 
 \begin{figure}[ht!]
@@ -38,8 +38,8 @@ Let $S[1,n] = S_1 S_2 ... S_n$ be a sequence of symbols where $s_i \in \Sigma$ a
 
 		
 A Wavelet Tree can be described recursively over a sub-alphabet range $[a .. b] \subseteq [1 .. 0]$, for a sequence $S[1,n]$ over alphabet $[1 .. \sigma]$. A Wavelet Tree over alphabet $[a .. b]$ is a binary balanced tree with $b - a + 1$ leaves. If $a = b$ then the Wavelet Tree is simply a leaf labelled a. Otherwise it has an internal root node $v_{root}$ that represents the string $S[1,n]$. $v_{root}$ stores bitmap $B_{v_{root}}$ in the following way:
-\vspace{0.5 cm}
 
+\vspace{0.5 cm}
 \noindent\rule{\textwidth}{0.5pt}
 \begin{algorithmic}
 \Function{BitmapConstruction}{$S$}
@@ -55,8 +55,9 @@ A Wavelet Tree can be described recursively over a sub-alphabet range $[a .. b] 
 
 We now know how to construct the bitmap in the root of the Wavelet Tree. Now we define how symbols of the string is split into the right- and left sub-tree.\\
 
+\vspace{0.5 cm}
 \begin{mdframed}[nobreak]
-\textbf{Definition:} Splitting string into right and left sub-tree and sub-trees ar also Wavelet Trees. \linebreak
+\textbf{Definition:} Splitting string into right and left sub-tree and sub-trees ar also Wavelet Trees. \\
 
 \noindent
 Let $S_0[1,n_0] =$ subsequence of $S[1,n]$ formed by symbols $c \leq (a + b)$/2.
@@ -65,9 +66,16 @@ Let $S_0[1,n_0] =$ subsequence of $S[1,n]$ formed by symbols $c \leq (a + b)$/2.
 Let $S_1[1,n_1] =$ subsequence of $S[1,n]$ formed by symbols $c > (a + b)$/2.
 \\ \linebreak
 \noindent
-Then the left child of $v_{root}$ is a Wavelet Tree for $S_0[1,n_0]$ over alphabet $[a .. \lfloor (a + b)/2 \rfloor]$ and right child of $v_{root}$ is a Wavelet Tree for $S_1[1,n_1]$ over alphabet $[1 + \lfloor (a + b)/2 \rfloor .. b]$.
+Then the left child of $v_{root}$ is a Wavelet Tree for $S_0[1,n_0]$ over alphabet $[a .. \lfloor (a + b)/2 \rfloor]$ and right child of $v_{root}$ is a Wavelet Tree for $S_1[1,n_1]$ over alphabet $[1 + \lfloor (a + b)/2 \rfloor .. b]$. 
 \end{mdframed}
+\vspace{0.5 cm}
 
+\subsubsection{Complexity}
+The height of the Wavelet Tree is  $\lceil \log \sigma \rceil$ and it has $\sigma$ leaves and $\sigma - 1$ internal nodes. At each level in the tree n bits are stored and in the last level at most n bits are stored. $n \lceil \log \sigma \rceil$ is an upper bound to the total number of bits that the Wavelet Tree stores. The Wavelet Tree can be constructed in $O(n \log \sigma)$ time.
+
+\subsection{Queries}
+
+\subsection{Applications}
 
 
 
