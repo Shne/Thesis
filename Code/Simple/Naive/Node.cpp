@@ -119,9 +119,9 @@ int Node::rank(char character, int index, const char* alphabet, int alphabetSize
     calculateSplitAndAlphabet(split, rightAlphabetSize, leftAlphabetSize, rightAlphabet, leftAlphabet, alphabet, alphabetSize);
         
     bool charBit = character > split;
-    int pos = binaryRank(charBit, index);
-    
-    
+//    int pos = binaryRank(charBit, index);
+    int pos = charBit ? binaryRankPopcountInstruction(index) : index - binaryRankPopcountInstruction(index);
+    cout << "binary rank; " << pos << endl;
     
     int theRank = 0;
     if(charBit && right != nullptr){
@@ -159,6 +159,47 @@ int Node::binaryRank(bool charBit, int index){
     }
     
     return rank;
+}
+
+unsigned int Node::binaryRankPopcountInstruction(unsigned int pos){
+    if(pos > bitmap.size()) return -1;
+    unsigned int bitmapwordRank = 0;
+    
+    unsigned long i;
+    unsigned int wordsize = 64;
+    
+    for(i = 0; i+wordsize < pos; i+=wordsize){
+//        vector<bool> wordVector(bitmap.begin()+i, bitmap.begin() + i + 64);
+//        auto word = wordVector.begin()._M_p;
+        long unsigned int* word((bitmap.begin()+i)._M_p);
+        bitmapwordRank += __builtin_popcount((unsigned int)*word); //this cast might not work
+    }
+    
+    unsigned int word((unsigned int) *(bitmap.begin()+i)._M_p);
+    unsigned int mask = (1 << pos) -1;
+    word &= mask;
+    bitmapwordRank += __builtin_popcount(word);
+    return bitmapwordRank;
+}
+
+//From https://graphics.stanford.edu/~seander/bithacks.html#CountBitsFromMSBToPos
+uint64_t Node::binaryRankPopcount(uint64_t bitset, unsigned int position){
+    uint64_t v = bitset;       // Compute the rank (bits set) in v from the MSB to pos.
+    unsigned int pos = position; // Bit position to count bits upto.
+    uint64_t r;       // Resulting rank of bit at pos goes here.
+
+    // Shift out bits after given position. CHAR_BIT is number of bits in a byte (usually 8)
+    r = v >> (sizeof(v) * CHAR_BIT - pos);
+    // Count set bits in parallel.
+    // r = (r & 0x5555...) + ((r >> 1) & 0x5555...);
+    r = r - ((r >> 1) & ~0UL/3);
+    // r = (r & 0x3333...) + ((r >> 2) & 0x3333...);
+    r = (r & ~0UL/5) + ((r >> 2) & ~0UL/5);
+    // r = (r & 0x0f0f...) + ((r >> 4) & 0x0f0f...);
+    r = (r + (r >> 4)) & ~0UL/17;
+    // r = r % 255;
+    r = (r * (~0UL/255)) >> ((sizeof(v) - 1) * CHAR_BIT);
+    return r;
 }
 
 int Node::binarySelect(bool charBit, int index){

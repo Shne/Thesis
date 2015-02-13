@@ -10,6 +10,9 @@
 
 #include <string>
 #include <vector>
+#include <limits.h>
+#include "nmmintrin.h"
+
 
 
 using namespace std;
@@ -33,6 +36,8 @@ public:
     int rank(char character, int index, const char* alphabet, int alphabetSize);
     int select(char character, int index);
     int binaryRank(bool charBit, int index);
+    uint64_t binaryRankPopcount(uint64_t bitset, unsigned int position);
+    unsigned int binaryRankPopcountInstruction(unsigned int pos);
     int binarySelect(bool charBit, int index);
     void printAlphabet(const char* alphabet, int alphabetSize);
     void calculateSplitAndAlphabet(char& split, int& rightAlphabetSize, int& leftAlphabetSize, 

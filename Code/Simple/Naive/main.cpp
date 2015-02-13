@@ -31,10 +31,10 @@ int main(int argc, char** argv) {
     cout << "tree generated" << endl;
     
     char character = 'b';
-    int index = 5;
+    int index = 20;
     
-    int pos = tree.select(character, index);
-    cout << "Position of " << index << "th " << character << " is " << pos << endl; 
+//    int pos = tree.select(character, index);
+//    cout << "Position of " << index << "th " << character << " is " << pos << endl; 
     
     int rank = tree.rank(character, index);    
     cout << "rank of " << character << " until i=" << index << " is " << rank << endl; 
