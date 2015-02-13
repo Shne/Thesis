@@ -21,7 +21,7 @@ Tree::Tree(vector<int>* input, int amount, int alphabetSize) {
     
     bitmap = new boost::dynamic_bitset<>(bitmapSize,0);
 //    cout << bitmapSize << endl;
-    int bitmapOffset = 0;
+    long bitmapOffset = 0;
     
     new (root) Node(input, 0, alphabetSize-1, root, bitmap, bitmapOffset);
     
