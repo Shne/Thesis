@@ -78,7 +78,7 @@
           <incDir>
             <pElem>../../../../../Downloads/boost_1_57_0</pElem>
           </incDir>
-          <commandLine>-std=c++11 -g -O3</commandLine>
+          <commandLine>-std=c++11 -g -O3 -march=native</commandLine>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
