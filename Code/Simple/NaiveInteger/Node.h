@@ -8,6 +8,8 @@
 #ifndef NODE_H
 #define	NODE_H
 
+#define SKEW 4
+
 #include <string>
 #include <vector>
 #include <sstream>

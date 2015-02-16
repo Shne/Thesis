@@ -13,7 +13,7 @@ using namespace std;
 
 Node::Node(vector<int> input, int alphabetMin, int alphabetMax): isLeaf(false), left(NULL), right(NULL) {
     //alphabetMax is really max + 1, so compare with <, not <=
-    int alphabetSize = alphabetMax - alphabetMin;
+    int alphabetSize = alphabetMax - alphabetMin +1;
     if(input.size() == 0) {
 //        cout << "Empty Node" << endl;
         return;
@@ -26,10 +26,11 @@ Node::Node(vector<int> input, int alphabetMin, int alphabetMax): isLeaf(false), 
         return;
     }
    
-    int split = (alphabetSize / 2) + alphabetMin;
+    int split = (alphabetSize-1)/SKEW + alphabetMin;
+
     int leftAlphabetMin = alphabetMin;
     int leftAlphabetMax = split;
-    int rightAlphabetMin = split;
+    int rightAlphabetMin = split+1;
     int rightAlphabetMax = alphabetMax;
     
     vector<int> leftString;
