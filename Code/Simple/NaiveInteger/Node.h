@@ -17,11 +17,13 @@
 #include <iterator>
 //#include <boost/dynamic_bitset.hpp>
 
+typedef std::vector<bool> bitmap_t;
+
 using namespace std;
 
 class Node {
 private:
-    vector<bool> bitmap;
+    bitmap_t bitmap;
     bool isLeaf;
     Node* parent;
     Node* left;
@@ -29,10 +31,10 @@ private:
 public: 
     Node();
     Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNode);
-    int rank(int character, int index, int alphabetMin, int alphabetMax);
-    unsigned int binaryRankPopcountInstruction(unsigned int pos);
-    int select(int character, int index);
-    int binarySelect(bool charBit, int index);
+    int rank(int character, unsigned long int index, int alphabetMin, int alphabetMax);
+    unsigned long int binaryRankPopcountInstruction(unsigned long int pos);
+    int select(int character, unsigned long int index);
+    int binarySelect(bool charBit, unsigned long int index);
     Node* getLeaf(int character, int alphabetMin, int alphabetMax);
 };
 

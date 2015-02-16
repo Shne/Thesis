@@ -19,7 +19,8 @@ Tree::Tree(vector<int>* input, int amount, int alphabetSize) {
     double skew = (double) SKEW;
     long bitmapSize = (int) amount * log2(alphabetSize) / log2(skew/(skew-1));
     
-    bitmap = new boost::dynamic_bitset<>(bitmapSize,0);
+//    bitmap = new boost::dynamic_bitset<>(bitmapSize,0);
+    bitmap = new bitmap_t(bitmapSize);
 //    cout << bitmapSize << endl;
     long bitmapOffset = 0;
     

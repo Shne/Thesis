@@ -41,6 +41,7 @@ int main(int argc, char** argv) {
     
     Tree tree = Tree(input, amount, alphabetSize);
     
+    cout << tree.rank(123, 1000000) << endl;
 //    struct rusage usage;
 //    getrusage(RUSAGE_SELF, &usage);
 //    printf("utime: %ld.%ld\n", usage.ru_utime.tv_sec, usage.ru_utime.tv_usec);

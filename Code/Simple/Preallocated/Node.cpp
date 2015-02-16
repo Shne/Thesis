@@ -11,7 +11,7 @@
 
 using namespace std;
 
-Node::Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* node_pt, boost::dynamic_bitset<>* in_bitmap, long &in_bitmapOffset): isLeaf(false), left(nullptr), right(nullptr) {
+Node::Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* node_pt, bitmap_t* in_bitmap, long &in_bitmapOffset): isLeaf(false), left(nullptr), right(nullptr) {
     node_pt++;
 //    if(input.size() == 0) {
 //        cout << "Empty Node" << endl;

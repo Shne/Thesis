@@ -22,7 +22,7 @@ class Tree {
     
 private:
     Node* root;
-    boost::dynamic_bitset<>* bitmap;
+    bitmap_t* bitmap;
     
 public:
     Tree(vector<int>* input, int amount, int alphabetSize);

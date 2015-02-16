@@ -38,7 +38,7 @@ Node::Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNod
     
     for(auto it = input->begin(); it != input->end(); it++) {
         int currentChar = *it;
-        if(currentChar < split) {
+        if(currentChar <= split) {
             bitmap.push_back(false);
             leftString->push_back(currentChar);
         } else {
@@ -68,7 +68,7 @@ Node::Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNod
 
 
 
-int Node::rank(int character, int index, int alphabetMin, int alphabetMax){
+int Node::rank(int character, unsigned long index, int alphabetMin, int alphabetMax){
     if(isLeaf){ 
         return index;
     }
@@ -80,8 +80,9 @@ int Node::rank(int character, int index, int alphabetMin, int alphabetMax){
     int rightAlphabetMin = split+1;
     int rightAlphabetMax = alphabetMax;
     
-    bool charBit = character >= split;
-    int pos = charBit ? binaryRankPopcountInstruction(index) : index - binaryRankPopcountInstruction(index);
+    bool charBit = character > split;
+    cout << "charBit " << charBit << endl;
+    unsigned long pos = charBit ? binaryRankPopcountInstruction(index) : index - binaryRankPopcountInstruction(index);
     cout << "binary rank; " << pos << endl;
     
     int rank = 0;
@@ -94,28 +95,27 @@ int Node::rank(int character, int index, int alphabetMin, int alphabetMax){
     return rank;
 }
 
-unsigned int Node::binaryRankPopcountInstruction(unsigned int pos) {
-    if(pos > bitmap.size()) return -1;
-    unsigned int bitmapwordRank = 0;
+unsigned long Node::binaryRankPopcountInstruction(unsigned long pos) {
+    if(pos > bitmap.size()) cout << "position " << pos << " larger than bitmapsize " << bitmap.size() << endl;
+    unsigned long bitmapwordRank = 0;
     
     unsigned long i;
-    cout << sizeof(long unsigned int) << " should be 64" << endl;
-    unsigned int wordsize = sizeof(long unsigned int);
+    unsigned int wordsize = sizeof(unsigned long) * 8;
     
     for(i = 0; i+wordsize < pos; i+=wordsize) {
-        long unsigned int* word((bitmap.begin()+i)._M_p);
-        bitmapwordRank += __builtin_popcountl(*word); //this cast might not work
+        unsigned long* word((bitmap.begin()+i)._M_p);
+        bitmapwordRank += __builtin_popcountl(*word);
     }
     
-    unsigned int word((unsigned int) *(bitmap.begin()+i)._M_p);
-    unsigned int mask = (1 << pos) -1;
+    unsigned long word(*(bitmap.begin()+i)._M_p);
+    unsigned long mask = (1 << pos) -1;
     word &= mask;
     bitmapwordRank += __builtin_popcount(word);
     return bitmapwordRank;
 }
 
 
-int Node::select(int character, int index) {
+int Node::select(int character, unsigned long index) {
     if(parent == nullptr) {
         return index;
     }
@@ -126,9 +126,9 @@ int Node::select(int character, int index) {
     return parent->select(character, pos);
 }
 
-int Node::binarySelect(bool charBit, int index) {
+int Node::binarySelect(bool charBit, unsigned long index) {
     int pos = 0;
-    for(int i = 0; i < bitmap.size(); i++) {
+    for(unsigned long i = 0; i < bitmap.size(); i++) {
         if(i+1 > index) break;
 
         if(bitmap[i] == charBit) { 

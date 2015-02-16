@@ -2,13 +2,10 @@
 Same algorithm as the Simple, Naïve approach, but with a controlled memory layout.
 
 \subsection{Controlled Memory Layout}
-In order to reduce cache misses from skewing the tree 
+In order to reduce cache misses by skewing the tree, we needed a memory layout that would put the node that is most often accessed next, next in the memory, preferably in the same cache line. 
 [What layout we wanted, why and how we did it]
 
-\subsection{Preallocated}
-[we tried preallocating, but found 
-
-\subsection{Dynamic}
+\subsection{Preallocating the Memory}
 
 \subsection{Experiments}
 [Testing Running time, cache-misses and branch mispredictions]
