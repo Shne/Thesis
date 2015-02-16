@@ -37,6 +37,7 @@ int main(int argc, char** argv) {
 //    const char* alphabet = sAlphabet.c_str();
 //    cout << amount << endl;
 //    cout << alphabetSize << endl;
+//    cout << size_out << endl;
 //    cout << input[0] << endl;
     
     Tree tree = Tree(input, amount, alphabetSize);

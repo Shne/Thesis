@@ -18,7 +18,7 @@ Tree::Tree(vector<int>* input, int amount, int alphabetSize)
 }
 
 int Tree::rank(int character, unsigned long index) {
-    if(index >= inputSize) index = inputSize -1;
+    if(index > inputSize) index = inputSize;
     return root.rank(character, index, alphabetMin, alphabetMax);
 }
 

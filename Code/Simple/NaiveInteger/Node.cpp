@@ -62,14 +62,15 @@ Node::Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNod
     input->clear();
     delete input;
     
-    left = new Node(leftString, leftAlphabetMin, leftAlphabetMax, this);
     right = new Node(rightString, rightAlphabetMin, rightAlphabetMax, this);
+    left = new Node(leftString, leftAlphabetMin, leftAlphabetMax, this);
 }
 
 
 
 int Node::rank(int character, unsigned long index, int alphabetMin, int alphabetMax){
-    if(isLeaf){ 
+    if(isLeaf){
+//        cout << "Rank Leaf" << endl;
         return index;
     }
     
@@ -81,9 +82,10 @@ int Node::rank(int character, unsigned long index, int alphabetMin, int alphabet
     int rightAlphabetMax = alphabetMax;
     
     bool charBit = character > split;
-    cout << "charBit " << charBit << endl;
+//    cout << "charBit " << charBit << endl;
+//    cout << "index " << index << endl;
     unsigned long pos = charBit ? binaryRankPopcountInstruction(index) : index - binaryRankPopcountInstruction(index);
-    cout << "binary rank; " << pos << endl;
+    cout << "binary rank: " << pos << endl;
     
     int rank = 0;
     if(charBit && right != nullptr) {
@@ -100,17 +102,18 @@ unsigned long Node::binaryRankPopcountInstruction(unsigned long pos) {
     unsigned long bitmapwordRank = 0;
     
     unsigned long i;
-    unsigned int wordsize = sizeof(unsigned long) * 8;
+    unsigned long wordsize = sizeof(unsigned long) * 8;
     
-    for(i = 0; i+wordsize < pos; i+=wordsize) {
-        unsigned long* word((bitmap.begin()+i)._M_p);
-        bitmapwordRank += __builtin_popcountl(*word);
+    for(i = 0; i+wordsize <= pos; i+=wordsize) {
+        unsigned long word = *((bitmap.begin()+i)._M_p);
+        bitmapwordRank += __builtin_popcountl(word);
     }
     
-    unsigned long word(*(bitmap.begin()+i)._M_p);
-    unsigned long mask = (1 << pos) -1;
-    word &= mask;
-    bitmapwordRank += __builtin_popcount(word);
+    unsigned long word = *((bitmap.begin()+i)._M_p);
+    unsigned long shift = pos - i;
+    unsigned long mask = (1 << shift) -1;
+    unsigned long maskedWord = word & mask;
+    bitmapwordRank += __builtin_popcountl(maskedWord);
     return bitmapwordRank;
 }
 
