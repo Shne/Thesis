@@ -15,15 +15,16 @@
 #include <sstream>
 #include <algorithm>
 #include <iterator>
+#include <boost/dynamic_bitset.hpp>
 
 using namespace std;
 
 class Node {
 private:
-        std::vector<bool> bitmap;
-        bool isLeaf;
-        Node* left;
-        Node* right;
+    boost::dynamic_bitset<> bitmap;
+    bool isLeaf;
+    Node* left;
+    Node* right;
 public: 
     Node();
     Node(vector<int> input, int alphabetMin, int alphabetMax);

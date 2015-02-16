@@ -54,7 +54,7 @@
         <ccTool>
           <standard>8</standard>
           <incDir>
-            <pElem>../../../../../Downloads/boost_1_57_0</pElem>
+            <pElem>../../boost</pElem>
           </incDir>
           <commandLine>-std=c++11</commandLine>
         </ccTool>
@@ -87,7 +87,7 @@
           <architecture>2</architecture>
           <standard>8</standard>
           <incDir>
-            <pElem>../../../../../Downloads/boost_1_57_0</pElem>
+            <pElem>../../boost</pElem>
           </incDir>
           <commandLine>-std=c++11 -g -O3 -march=native</commandLine>
         </ccTool>

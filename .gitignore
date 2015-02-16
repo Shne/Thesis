@@ -50,3 +50,6 @@ Data/
 *callgrind.out.*
 /Code/Simple/Preallocated/build/
 /Code/Simple/Preallocated/dist/
+
+#link to boost library
+/Code/boost
