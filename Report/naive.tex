@@ -1,5 +1,5 @@
-\section{Naïve Algorithm}
-This is the naive implementation we did before any smart ideas and optimizations.
+\section{Simple, Naïve Algorithm}
+This is the simple, straightforward, naïve implementation we did before any smart ideas and optimizations.
 \subsection{Algorithm Description}
 The Naïve Wavelet Tree construction algorithm is recursively defined, calling itself to construct the left and right subtree from the root node and down. At each recursion the algorithm splits the given alphabet in two halves and traverses the given string putting each character into a left or right partition based on whether the character was in the left or right half of the alphabet.
 
@@ -74,3 +74,8 @@ The Naïve Wavelet Tree construction algorithm is recursively defined, calling i
 \linebreak
 
 \subsection{Experiments}
+[Running time, Cache-Misses, branch mispredictions, etc]
+
+
+
+[We then had the idea of skewing the tree to reduce branch mispredictions and cache-misses. but to reduce cache misses, we also need to control the memory layout... see following section]
