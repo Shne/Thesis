@@ -218,7 +218,7 @@ int Node::binarySelect(bool charBit, int index){
 }
 
 inline void Node::calculateSplitAndAlphabet(char& split, int& rightAlphabetSize, int& leftAlphabetSize, 
-        const char*& rightAlphabet, const char*& leftAlphabet, const char* alphabet, int alphabetSize){
+    const char*& rightAlphabet, const char*& leftAlphabet, const char* alphabet, int alphabetSize){
     split = alphabet[((alphabetSize+1)/2)-1]; //looks weird but handles the computation correctly for both even and odd cases
     rightAlphabetSize = alphabetSize/2;
     leftAlphabetSize = alphabetSize - rightAlphabetSize;

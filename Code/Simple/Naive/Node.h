@@ -19,10 +19,10 @@ using namespace std;
 
 class Node {
 private:
-        std::vector<bool> bitmap;        
-        Node* left;
-        Node* right;
-        Node* parent;
+    std::vector<bool> bitmap;        
+    Node* left;
+    Node* right;
+    Node* parent;
         
 public: 
     Node();
@@ -41,7 +41,7 @@ public:
     int binarySelect(bool charBit, int index);
     void printAlphabet(const char* alphabet, int alphabetSize);
     void calculateSplitAndAlphabet(char& split, int& rightAlphabetSize, int& leftAlphabetSize, 
-        const char*& rightAlphabet, const char*& leftAlphabet, const char* alphabet, int alphabetSize);
+    const char*& rightAlphabet, const char*& leftAlphabet, const char* alphabet, int alphabetSize);
 };
 
 #endif	/* NODE_H */
