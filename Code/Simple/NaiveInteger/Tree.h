@@ -19,9 +19,12 @@ class Tree {
     
 private:
     Node root;
+    unsigned long int alphabetMin, alphabetMax;
     
 public:
-    Tree(vector<int> input, int amount, int alphabetSize);
+    Tree(vector<int>* input, int amount, int alphabetSize);
+    int rank(int character, int index);
+    int select(int character, int index);
 };
 
 

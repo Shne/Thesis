@@ -8,26 +8,32 @@
 #ifndef NODE_H
 #define	NODE_H
 
-#define SKEW 4
+#define SKEW 2
 
 #include <string>
 #include <vector>
 #include <sstream>
 #include <algorithm>
 #include <iterator>
-#include <boost/dynamic_bitset.hpp>
+//#include <boost/dynamic_bitset.hpp>
 
 using namespace std;
 
 class Node {
 private:
-    boost::dynamic_bitset<> bitmap;
+    vector<bool> bitmap;
     bool isLeaf;
+    Node* parent;
     Node* left;
     Node* right;
 public: 
     Node();
-    Node(vector<int> input, int alphabetMin, int alphabetMax);
+    Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNode);
+    int rank(int character, int index, int alphabetMin, int alphabetMax);
+    unsigned int binaryRankPopcountInstruction(unsigned int pos);
+    int select(int character, int index);
+    int binarySelect(bool charBit, int index);
+    Node* getLeaf(int character, int alphabetMin, int alphabetMax);
 };
 
 #endif	/* NODE_H */

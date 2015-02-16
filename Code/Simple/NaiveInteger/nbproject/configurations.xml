@@ -4,6 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>Bitmap.h</itemPath>
       <itemPath>IO.h</itemPath>
       <itemPath>Node.h</itemPath>
       <itemPath>Tree.h</itemPath>
@@ -15,6 +16,7 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>Bitmap.cpp</itemPath>
       <itemPath>Node.cpp</itemPath>
       <itemPath>Tree.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
@@ -48,6 +50,10 @@
           <commandLine>-std=c++11</commandLine>
         </ccTool>
       </compileType>
+      <item path="Bitmap.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Bitmap.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="IO.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Node.cpp" ex="false" tool="1" flavor2="0">
@@ -87,6 +93,10 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="Bitmap.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Bitmap.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="IO.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Node.cpp" ex="false" tool="1" flavor2="0">
