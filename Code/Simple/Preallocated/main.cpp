@@ -40,6 +40,11 @@ int main(int argc, char** argv) {
     
     Tree tree = Tree(input, amount, alphabetSize);
     
+    unsigned long rank = tree.rank(2, amount);
+    cout << "rank: " << rank << endl;
+    unsigned long pos = tree.select(2, rank);
+    cout << "select: " << pos << endl;
+    
 //    struct rusage usage;
 //    getrusage(RUSAGE_SELF, &usage);
 //    printf("utime: %ld.%ld\n", usage.ru_utime.tv_sec, usage.ru_utime.tv_usec);
