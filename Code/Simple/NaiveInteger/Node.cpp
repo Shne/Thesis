@@ -8,16 +8,13 @@
 #include "Node.h"
 #include <iostream>
 #include <cmath>
+#include <climits>
+#include <unistd.h>
 
 using namespace std;
 
 Node::Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNode)
-    : isLeaf(false), left(NULL), right(NULL), parent(parentNode) {
-    if(input->size() == 0) {
-//        cout << "Empty Node" << endl;
-//        cout << "---------------" << endl;
-        return;
-    }
+    : isLeaf(false), left(nullptr), right(nullptr), parent(parentNode) {
     
     int alphabetSize = alphabetMax - alphabetMin +1;
     if(alphabetSize == 1) {
@@ -47,6 +44,8 @@ Node::Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNod
         }
     }
     
+    bitmap.shrink_to_fit();
+    
 //    stringstream str, leftstr, rightstr;
 //    copy(input->begin(), input->end(), ostream_iterator<int>(str, " "));
 //    copy(leftString->begin(), leftString->end(), ostream_iterator<int>(leftstr, " "));
@@ -61,11 +60,19 @@ Node::Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNod
     
     input->clear();
     delete input;
-    
-    right = new Node(rightString, rightAlphabetMin, rightAlphabetMax, this);
-    left = new Node(leftString, leftAlphabetMin, leftAlphabetMax, this);
+    if(rightString->size() > 0) {
+        right = new Node(rightString, rightAlphabetMin, rightAlphabetMax, this);
+    } else {
+        rightString->clear();
+        delete rightString;
+    }
+    if(leftString->size() > 0) {
+        left = new Node(leftString, leftAlphabetMin, leftAlphabetMax, this);
+    } else {
+        leftString->clear();
+        delete leftString;
+    }
 }
-
 
 
 int Node::rank(int character, unsigned long index, int alphabetMin, int alphabetMax){
@@ -82,12 +89,8 @@ int Node::rank(int character, unsigned long index, int alphabetMin, int alphabet
     int rightAlphabetMax = alphabetMax;
     
     bool charBit = character > split;
-//    cout << "charBit " << charBit << endl;
-//    cout << "index " << index << endl;
     unsigned long pos = charBit ? binaryRankPopcountInstruction(index) : index - binaryRankPopcountInstruction(index);
-    cout << "binary rank: " << pos << endl;
-    
-    int rank = 0;
+    unsigned long rank = 0;
     if(charBit && right != nullptr) {
         rank = right->rank(character, pos, rightAlphabetMin, rightAlphabetMax); //right sub tree
     }else if(left != nullptr){
@@ -102,16 +105,17 @@ unsigned long Node::binaryRankPopcountInstruction(unsigned long pos) {
     unsigned long bitmapwordRank = 0;
     
     unsigned long i;
-    unsigned long wordsize = sizeof(unsigned long) * 8;
+    unsigned long wordsize = sizeof(*bitmap.begin()._M_p) * CHAR_BIT; //vector<bool> src uses CHAR_BIT too
+    unsigned long fullWords = pos / wordsize;
     
-    for(i = 0; i+wordsize <= pos; i+=wordsize) {
-        unsigned long word = *((bitmap.begin()+i)._M_p);
+    for(i = 0; i < fullWords; i++) {
+        unsigned long word = *(bitmap.begin()._M_p + i);
         bitmapwordRank += __builtin_popcountl(word);
     }
+    unsigned long word = *(bitmap.begin()._M_p + i);
+    unsigned long shift = (pos % wordsize);
+    unsigned long mask = (1UL << shift)-1;
     
-    unsigned long word = *((bitmap.begin()+i)._M_p);
-    unsigned long shift = pos - i;
-    unsigned long mask = (1 << shift) -1;
     unsigned long maskedWord = word & mask;
     bitmapwordRank += __builtin_popcountl(maskedWord);
     return bitmapwordRank;

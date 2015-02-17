@@ -5,7 +5,7 @@ import array
 def rank(character, position):	
 	rank = 0;
 	index = 1;
-	for c in stringArray:
+	for c in intArray:
 		if character == c:
 			rank = rank + 1
 		if index == position: 
@@ -16,7 +16,7 @@ def rank(character, position):
 def select(character, occourance):	
 	occ = 0;
 	pos = 1;
-	for c in stringArray:
+	for c in intArray:
 		if character == c:
 			occ = occ + 1
 		if occourance == occ: 
@@ -24,21 +24,23 @@ def select(character, occourance):
 		pos = pos + 1
 	return pos
 
+powerAmount = 7
+alphabetSize = 12
 
-
-powerAmount = 2
-alphabetSize = 2
+amount = pow(10, powerAmount)
 
 fileName = "Data/n"+str(powerAmount)+"_as"+str(alphabetSize)+".data"
 fileHandle = open(fileName, "rb")
-stringArray = array.array('I')
-stringArray.fromfile(fileHandle, pow(10,powerAmount))
+intArray = array.array('I')
+intArray.fromfile(fileHandle, amount)
 
 symbol = 2;
-#print(stringArray)
-position = rank(symbol, pow(10,powerAmount))
-print("rank: " + str(position))
-print("select: " + str(select(symbol, position)))
+#print(intArray)
+rank = rank(symbol, amount)
+print("rank: " + str(rank))
+position = select(symbol, rank)
+print("select: " + str(position))
+print(intArray[position-1])
 
 
 
