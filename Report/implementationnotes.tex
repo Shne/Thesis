@@ -45,7 +45,17 @@ We then bitwise \texttt{AND} this bitmask and the machine word containing the bi
 As also noted in~\citep{Navjda13}, we don't need to count the number of 0s, although required by the algorithm, as we can simply take the number of bits in the string and subtract the number of 1s to calculate the number of 0s.
 
 
-\subsection{Bitmask implementation choice}
-Something something~\cite{Pieterse:2010:PCB:1899503.1899530}
+\subsection{Bitmap implementation choice}
+There are several bitmap implementations available to us. In the STL there is \texttt{std::bitset<size\_t N>} and \texttt{std::vector<bool>}. From the Boost library there is \texttt{boost::dynamic\_bitset<>}.
+\begin{description}
+\item[\texttt{std::bitset}] While it would technically be possible to use the \texttt{std::bitset}, it requires that the size of the bitset is known at compile time and passed as a template parameter. This means we would need to recompile the program for each $n$, or size of the input string. We would also need to allocate a bitmap with room for $n$ bits for each subnode as that is the theoretically possible size required, making the size required for the bitmaps of the tree $O(n \times |nodes|) = O(n2^{log(\sigma)})$ instead of $O(n \times height) = O(n~log(\sigma))$.
+[TODO: later we do preallocation and fill it up along the way. try bitset there]
+We also feel that an actual practically usable implementation should be able to handle different size input at runtime instead of compiletime. 
+
+\item[\texttt{vector<bool>}] is a specialised implementation for \texttt{bool} that packs the data so that each \texttt{bool} only takes up one bit and is not an actual C++ container, though it tries to mimic some of the behaviour. It is basically the STL implementation of a dynamically allocated bitset.
+
+\item[\texttt{boost::dynamic\_bitset}] is the Boost library's take on a dynamic bitset. It doesn't try to mimic a container and lacks some features such as an iterator because of that. It also does not guarantee that the bits will be allocated consecutively in memory and has no raw pointer access to the data in memory. This is a problem when we want to call popcount on all machine words from beginning up to some index.
+\end{description}
+
 [We end up using \texttt{vector<bool>} because we want direct memory access for \verb#__builtin_popcountl()#]
 
