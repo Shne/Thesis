@@ -15,7 +15,7 @@ def rank(character, position):
 
 def select(character, occourance):	
 	occ = 0;
-	pos = 1;
+	pos = 0;
 	for c in intArray:
 		if character == c:
 			occ = occ + 1

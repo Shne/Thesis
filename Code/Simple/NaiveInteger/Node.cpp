@@ -122,50 +122,54 @@ unsigned long Node::binaryRankPopcountInstruction(unsigned long pos) {
 }
 
 
-int Node::select(int character, unsigned long index) {
-    if(parent == nullptr) {
-        return index;
-    }
-    
-    bool charBit = this == parent->left;
-    int pos = isLeaf ? index : binarySelect(charBit, index);
-    
-    return parent->select(character, pos);
+int Node::leafSelect(int character, unsigned long occurance) {
+    bool charBit = this == parent->right;
+    return parent->select(character, charBit, occurance);
 }
 
-int Node::binarySelect(bool charBit, unsigned long index) {
-    int pos = 0;
-    for(unsigned long i = 0; i < bitmap.size(); i++) {
-        if(i+1 > index) break;
+int Node::select(int character, bool charBit, unsigned long occurance) {
+    if(parent == nullptr) {
+        //we are root
+        return binarySelect(charBit, occurance);
+    }
+    int position = binarySelect(charBit, occurance);
+    
+    bool parentCharBit = this == parent->right;
+    return parent->select(character, parentCharBit, position+1);
+}
 
+int Node::binarySelect(bool charBit, unsigned long occurance) {
+    unsigned long occ = 0;
+    for(unsigned long i = 0; i < bitmap.size(); i++) {
         if(bitmap[i] == charBit) { 
-            pos += i+1;
+            if(++occ == occurance) {
+                return i;
+            }
         }
     }
-    
-    return pos;
+    cout << "Occurance too high!" << endl;
 }
 
 Node* Node::getLeaf(int character, int alphabetMin, int alphabetMax) {
     if(isLeaf){
         return this;
     }
-    
+
     int alphabetSize = alphabetMax - alphabetMin +1;
     int split = (alphabetSize-1)/SKEW + alphabetMin;
     int leftAlphabetMin = alphabetMin;
     int leftAlphabetMax = split;
     int rightAlphabetMin = split+1;
     int rightAlphabetMax = alphabetMax;
-    
-    bool charBit = character >= split;
-    
+
+    bool charBit = character > split;
+
     Node* leaf = nullptr;
     if(charBit && right != nullptr){
         leaf = right->getLeaf(character, rightAlphabetMin, rightAlphabetMax); //right sub tree
     }else if(left != nullptr){
         leaf = left->getLeaf(character, leftAlphabetMin, leftAlphabetMax); //right sub tree
     }
-    
+
     return leaf;
 }

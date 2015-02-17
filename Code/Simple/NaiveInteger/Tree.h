@@ -24,7 +24,7 @@ private:
 public:
     Tree(vector<int>* input, int amount, int alphabetSize);
     int rank(int character, unsigned long index);
-    int select(int character, unsigned long index);
+    int select(int character, unsigned long occurance);
 };
 
 

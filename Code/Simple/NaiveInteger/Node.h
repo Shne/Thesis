@@ -31,11 +31,12 @@ private:
 public: 
     Node();
     Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNode);
-    int rank(int character, unsigned long int index, int alphabetMin, int alphabetMax);
-    unsigned long int binaryRankPopcountInstruction(unsigned long int pos);
-    int select(int character, unsigned long int index);
-    int binarySelect(bool charBit, unsigned long int index);
+    int rank(int character, unsigned long index, int alphabetMin, int alphabetMax);
+    unsigned long int binaryRankPopcountInstruction(unsigned long pos);
+    int select(int character, bool charBit, unsigned long occurance);
+    int binarySelect(bool charBit, unsigned long occurance);
     Node* getLeaf(int character, int alphabetMin, int alphabetMax);
+    int leafSelect(int character, unsigned long occurance);
 };
 
 #endif	/* NODE_H */

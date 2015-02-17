@@ -22,7 +22,7 @@ int Tree::rank(int character, unsigned long index) {
     return root.rank(character, index, alphabetMin, alphabetMax);
 }
 
-int Tree::select(int character, unsigned long index) {
+int Tree::select(int character, unsigned long occurance) {
     Node* leaf = root.getLeaf(character, alphabetMin, alphabetMax);
-    return leaf->select(character, index);
+    return leaf->leafSelect(character, occurance);
 }
