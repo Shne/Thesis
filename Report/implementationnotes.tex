@@ -1,5 +1,11 @@
 \section{Notes on Implementation}
 
+\subsection{Machines used}
+[Specs of all machines used for testing]
+
+Machine 1: Jan's ASUS
+Machine 2: Roland's ASUS
+
 \subsection{Using Integers as Characters}
 \label{sec:UsingIntAsChar}
 The Wavelet Tree is a data structure for strings. Using the C++ \texttt{char array} or C++11 \texttt{string} types would seem natural in this case, but they each have problems.
@@ -20,5 +26,26 @@ We will still use the terms "character" and "string" in our descriptions of the 
 \subsection{Reading Input}
 At first we simply read from stdin using the \texttt{getline(cin, \&string)} function. Once we applied a profiler we found this to be horrendously slow, our Naïve algorithm spending about 20\% of its running time on resizing IO buffers. We then switched to using the \texttt{ifstream} class and IO time was reduced significantly to below 1\% of total running time.
 
+\subsection{Reducing Construction Time Memory Usage}
+Since the Wavelet tree is a recursively defined data structure, we also implement it recursively. Since it is also binary (or $d$-ary) we recursive into several sub-node constructors in the construction of a node, which means our compiler can't do tail-recursion optimisation (TODO: check that this is true!). This further causes any stack-allocated variables to be held in memory until we leave the scope of the constructor function.
+We traverse and split the input string into its left and right parts in each node constructor and thus end up holding the input string twice in memory: once in the variable holding the input string, once in the two variables holding the left and right split strings.
+This is wasted memory because we don't actually need the input string any longer once we have split it into its left and right parts.
+Because we simply call one subnode constructor, then the other, once the first has completed, and finally return once both subnodes has completed constructing themselves, we end up completing the construction of the nodes in post-order.
+This means we will keep the scopes of the root node, and those near the root, alive for most of the running time of the construction algorithm, and much memory is wasted.
+The solution is to allocate these strings on the heap instead, passing pointers to the subnode constructors and having them delete them (as their input strings) once they have split them.
+Doing this reduced the memory usage so much that we could run it for input strings with a length above $10^8$ without exhausting the about 6GB available memory on machine 1.
+
+\subsection{Binary Rank}
+A cornerstone of the rank algorithm for a Wavelet Tree is calculating the binary rank of a character on a bitmap at a node. The running time of the rank algorithm depends on the running time of the binary rank since binary rank is called once per layer of the tree in order to answer a single rank query on the tree.
+To make binary rank fast, we looked at using intrinsic CPU instructions, and we found the \texttt{popcountl} instruction that counts the number of 1s in a given \texttt{unsigned long}.
+We simply sum up the result of calling \texttt{popcount} on each machine word up to $index$.
+When the index of the rank query is not a multiple of the machine word size, we need to constrain what part of the machine word is counted using \texttt{popcount}.
+We do this by constructing a bitmask by bitshifting the number 1 $index$ times and then subtracting one, as that will create a machine word where the $index$ least significant bits are set to 1 and the rest to 0.
+We then bitwise \texttt{AND} this bitmask and the machine word containing the bit corresponding to $index$, and call \texttt{popcount} on the result.
+As also noted in~\citep{Navjda13}, we don't need to count the number of 0s, although required by the algorithm, as we can simply take the number of bits in the string and subtract the number of 1s to calculate the number of 0s.
+
+
 \subsection{Bitmask implementation choice}
 Something something~\cite{Pieterse:2010:PCB:1899503.1899530}
+[We end up using \texttt{vector<bool>} because we want direct memory access for \verb#__builtin_popcountl()#]
+
