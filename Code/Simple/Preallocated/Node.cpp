@@ -53,7 +53,7 @@ Node::Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNod
         } else {
             (*in_bitmap)[in_bitmapOffset] = true;
             rightString->push_back(currentChar);
-        }   
+        }
     }
     
 //    stringstream str, leftstr, rightstr;

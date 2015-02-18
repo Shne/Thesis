@@ -26,6 +26,7 @@ Tree::Tree(vector<int>* input, int amount, int alphabetSize)
     long bitmapOffset = 0;
     
     new (root) Node(input, 0, alphabetSize-1, nullptr, root, bitmap, bitmapOffset);
+    bitmap->shrink_to_fit();
 }
 
 int Tree::rank(int character, unsigned long index) {
