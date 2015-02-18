@@ -131,27 +131,28 @@ unsigned long Node::binaryRankPopcountInstruction(unsigned long pos) {
     unsigned long* firstFullWord = ref._M_p;
     
     //PART OF FIRST WORD if unaligned
-    if(ref._M_mask > 1) {
+    if(ref._M_mask > 1) { //mask = 1 means first part of first word is part of our bitmap, and we can just use the fullword iteration code below
         //create 111110000 type mask from 000010000 type mask
-        unsigned long firstMask = ~(ref._M_mask - 1UL);
+        unsigned long firstMask = ~(ref._M_mask - 1UL); //the bit of _M_mask and up
         unsigned long maskedFirstWord = (*ref._M_p) & firstMask;
         bitmapwordRank += __builtin_popcountl(maskedFirstWord);
-        initialOffset = __builtin_popcountl(firstMask);
-        firstFullWord++;
+        initialOffset = __builtin_popcountl(firstMask); //the amount we should skip for our calculation of fullWords
+        firstFullWord++; ///pointer was to a word we only partially had bits in
     }
-
+    
     //FULL WORDS
-    unsigned long fullWords = (pos - initialOffset) / wordsize;
+    unsigned int alignedPos = pos - initialOffset; //initialOffset is the amount of bits in the first unaligned word of our bitmap
+    unsigned long fullWords = alignedPos / wordsize; //the amount of full words we should iterate through. 
     for(i = 0; i < fullWords; i++) {
         unsigned long word = *(firstFullWord + i);
         bitmapwordRank += __builtin_popcountl(word);
-    }
+    } //we believe i is incremented even after the condition has failed
     
-    //PART OF LAST WORD if unaligned
+    //PART OF LAST WORD (if unaligned)
     unsigned long word = *(firstFullWord + i);
-    unsigned long shift = (pos - initialOffset) % wordsize;
-    unsigned long mask = (1UL << shift)-1UL;
-    unsigned long maskedWord = word & mask;
+    unsigned long shift = alignedPos % wordsize; //if word-aligned, shift will be 0, making mask (below) all 0.
+    unsigned long mask = (1UL << shift)-1UL; //if word-aligned mask will be 0
+    unsigned long maskedWord = word & mask; //if word-aligned maskedWord will be 0
     bitmapwordRank += __builtin_popcountl(maskedWord);
     
     return bitmapwordRank;
