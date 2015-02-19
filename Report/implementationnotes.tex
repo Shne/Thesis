@@ -41,7 +41,7 @@ To make binary rank fast, we looked at using intrinsic CPU instructions, and we 
 We simply sum up the result of calling \texttt{popcount} on each machine word up to $index$.
 When the index of the rank query is not a multiple of the machine word size, we need to constrain what part of the machine word is counted using \texttt{popcount}.
 We do this by constructing a bitmask by bitshifting the number 1 $index$ times and then subtracting one, as that will create a machine word where the $index$ least significant bits are set to 1 and the rest to 0.
-We then bitwise \texttt{AND} this bitmask and the machine word containing the bit corresponding to $index$, and call \texttt{popcount} on the result.
+We then bitwise \texttt{AND} this bitmask and the machine word containing the bit corresponding to $index$, and call \texttt{popcountl} on the result.
 As also noted in~\citep{Navjda13}, we don't need to count the number of 0s, although required by the algorithm, as we can simply take the number of bits in the string and subtract the number of 1s to calculate the number of 0s.
 
 
@@ -57,5 +57,5 @@ We also feel that an actual practically usable implementation should be able to 
 \item[\texttt{boost::dynamic\_bitset}] is the Boost library's take on a dynamic bitset. It doesn't try to mimic a container and lacks some features such as an iterator because of that. It also does not guarantee that the bits will be allocated consecutively in memory and has no raw pointer access to the data in memory. This is a problem when we want to call popcount on all machine words from beginning up to some index.
 \end{description}
 
-[We end up using \texttt{vector<bool>} because we want direct memory access for \verb#__builtin_popcountl()#]
-
+\subsection{Skewing the tree}
+[how our skew calculations work]
