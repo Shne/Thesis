@@ -1,0 +1,15 @@
+    for (int j = 63; j >= 0; j--){
+        cout << ((word >> j) & 1);
+    }
+
+    cout << ", " << word << endl;
+    
+    for (int j = 63; j >= 0; j--){
+        cout << ((mask >> j) & 1);
+    }
+    cout << ", " << mask << endl;
+    
+    for (int j = 63; j >= 0; j--){
+        cout << ((maskedWord >> j) & 1);
+    }
+    cout << ", " << maskedWord << endl;

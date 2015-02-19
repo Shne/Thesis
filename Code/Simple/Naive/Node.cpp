@@ -160,24 +160,22 @@ int Node::binaryRank(bool charBit, int index){
     return rank;
 }
 
-unsigned int Node::binaryRankPopcountInstruction(unsigned int pos){
-    if(pos > bitmap.size()) return -1;
-    unsigned int bitmapwordRank = 0;
+unsigned int Node::binaryRankPopcountInstruction(unsigned int pos){    
+    if(pos > bitmap.size()) cout << "position " << pos << " larger than bitmapsize " << bitmap.size() << endl;
+    unsigned long bitmapwordRank = 0;
     
     unsigned long i;
-    unsigned int wordsize = 64;
+    unsigned long wordsize = sizeof(unsigned long) * sizeof(void*); //sizeof(void*) is 8
     
-    for(i = 0; i+wordsize < pos; i+=wordsize){
-//        vector<bool> wordVector(bitmap.begin()+i, bitmap.begin() + i + 64);
-//        auto word = wordVector.begin()._M_p;
-        long unsigned int* word((bitmap.begin()+i)._M_p);
-        bitmapwordRank += __builtin_popcount((unsigned int)*word); //this cast might not work
+    for(i = 0; i+wordsize < pos; i+=wordsize) {
+        unsigned long word = *((bitmap.begin()+i)._M_p);
+        bitmapwordRank += __builtin_popcountl(word);
     }
-    
-    unsigned int word((unsigned int) *(bitmap.begin()+i)._M_p);
-    unsigned int mask = (1 << pos) -1;
-    word &= mask;
-    bitmapwordRank += __builtin_popcount(word);
+    unsigned long word = *((bitmap.begin()+i)._M_p);
+    unsigned long shift = pos - i;
+    unsigned long mask = (1 << shift) -1;
+    unsigned long maskedWord = word & mask;
+    bitmapwordRank += __builtin_popcountl(maskedWord);
     return bitmapwordRank;
 }
 

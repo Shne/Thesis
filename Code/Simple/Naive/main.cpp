@@ -30,8 +30,8 @@ int main(int argc, char** argv) {
     Tree tree = Tree(input, alphabet, alphabetSize);
     cout << "tree generated" << endl;
     
-    char character = 'b';
-    int index = 20;
+    char character = 'A';
+    int index = 100000;
     
 //    int pos = tree.select(character, index);
 //    cout << "Position of " << index << "th " << character << " is " << pos << endl; 

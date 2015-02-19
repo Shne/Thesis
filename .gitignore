@@ -53,3 +53,5 @@ Data/
 
 #link to boost library
 /Code/boost
+/Code/Simple/NaiveInteger/build/
+/Code/Simple/NaiveInteger/dist/
