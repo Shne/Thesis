@@ -1,9 +1,9 @@
 \section{Simple, Naïve Algorithm}
 This is the simple, straightforward, naïve implementation we did before any smart ideas and optimizations.
 \subsection{Algorithm Description}
-The Naïve Wavelet Tree construction algorithm is recursively defined, calling itself to construct the left and right subtree from the root node and down. At each recursion the algorithm splits the given alphabet in two halves and traverses the given string putting each character into a left or right partition based on whether the character was in the left or right half of the alphabet.
+The Naïve Wavelet Tree construction algorithm is recursively defined, calling itself to construct the left and right sub-tree from the root node and down. At each recursion the algorithm splits the given alphabet in two halves and traverses the given string putting each character into a left or right partition based on whether the character was in the left or right half of the alphabet.
 
-\noindent\rule{\textwidth}{0.5pt}
+\begin{mdframed}[nobreak]
 \begin{algorithmic}
 \Function {ConstructNode} {$String, Alphabet$}
 \If{$Alphabet.Size() = 1$ or $String.Length() = 0$}
@@ -26,55 +26,14 @@ The Naïve Wavelet Tree construction algorithm is recursively defined, calling i
 
 \State \Call {ConstructNode} {InputString, InputAlphabet}
 \end{algorithmic}
-\noindent\rule{\textwidth}{0.5pt}
-\linebreak
+\end{mdframed}
 
 \noindent In our implementation, $Alphabet$, $LeftAlphabet$, and $RightAlphabet$ are stored as two integer values each: a minimum and a maximum. It is explained in~\ref{sec:UsingIntAsChar} how this is equivalent to storing the full alphabet and passing pointers into it around. $Bitmap$ is stored as a \texttt{vector<bool>} which is tightly packed, only using 1 bit per bool\footnote{\url{http://www.cplusplus.com/reference/vector/vector-bool/}}.
 
-\subsection{Rank/Select Query}
-\noindent\rule{\textwidth}{0.5pt}
-\begin{algorithmic} 
-\Function {Rank} {$Character, Position$}
-\If{$Self.IsLeaf()$}
-\State \Return $Position$
-\EndIf
-\State $CharBit \gets$ bit representing $Character$ in bitmap of current node
-\State $Position \gets$ \Call {BinaryRank} {$CharBit, Position, BitMap$}
-\If{$CharBit = 1$}
-	\State $Rank \gets$ RightChildNode.\Call {Rank} {$CharBit, Position$}
-\Else
-	\State $Rank \gets$ LeftChildNode.\Call {Rank} {$CharBit, Position$}
-\EndIf
-\State \Return $Rank$ 
-\EndFunction
-\State RootNode.\Call {Rank} {$Character, Position$}
-\end{algorithmic}
-\noindent\rule{\textwidth}{0.5pt}
-\linebreak
 
-\noindent \textproc{Rank($Character, Position$)} is defined on each node, which is why it is called on the root node and the right and left child nodes in stead of specifying the node as a parameter to the \textproc{Rank} function.
-
-
-\noindent\rule{\textwidth}{0.5pt}
-\begin{algorithmic} 
-\Function {BinaryRank} {$CharacterBit, Position, BitMap$}
-\State $Rank \gets$ 0
-\ForAll{$Bit$ in $BitMap$}
-	\If{$BitMap.IndexOf(Bit) > Position$}
-		\State $Break$
-	\EndIf
-	\If{$Bit$ is $CharacterBit$}
-		\State $Rank \gets Rank$ + 1 
-	\EndIf
-\EndFor
-\State \Return $Rank$ 
-\EndFunction
-\end{algorithmic}
-\noindent\rule{\textwidth}{0.5pt}
-\linebreak
 
 \subsection{Experiments}
-[Running time, Cache-Misses, branch mispredictions, etc]
+[Running time, Cache-Misses, branch miss-predictions, etc]
 
 
 

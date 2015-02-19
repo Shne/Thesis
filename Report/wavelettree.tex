@@ -5,7 +5,7 @@
 \subsection{What is a Wavelet Tree}
 The Wavelet Tree is a binary balanced tree structure, that was invented by Grossi, Grupta and Vitter \citep{Grossi:2003:HET:644108.644250} in 2003. It has applications in many areas; from string processing to geometry, and can for instance be used to represent; a sequence of elements, a reordering of elements and a grid of points. When \citep{Grossi:2003:HET:644108.644250} invented the Wavelet Tree, it was a milestone in compressed full-text indexing even though it is mentioned very little in the paper.
 
-\subsection{Theory: Data Structure}
+\subsection{Constructing the Wavelet Tree}
 A Wavelet Tree stores a string by creating a bitmap that describes the string using the alphabet of the string. The alphabet is split in the middle and the symbols to the left gets bit value 0 and the symbols to the right gets bit value 1 so that there is a bit for each symbol in the string in the bitmap. The symbols of the string that has bit value 0 is concatenated in the order they have in the string and is added to the left sub-tree and the ones with bit value 1 is added to the right sub-tree. 
 
 This process continues in each sub tree until we end up in the leaves where the string only consists of one unique symbol from the alphabet. An example of a Wavelet Tree can be seen in Figure \ref{fig:WaveletTreeExample}. We now go into more detail about how it all works.
@@ -40,7 +40,7 @@ Let $S[1,n] = S_1 S_2 ... S_n$ be a sequence of symbols where $s_i \in \Sigma$ a
 A Wavelet Tree can be described recursively over a sub-alphabet range $[a .. b] \subseteq [1 .. 0]$, for a sequence $S[1,n]$ over alphabet $[1 .. \sigma]$. A Wavelet Tree over alphabet $[a .. b]$ is a binary balanced tree with $b - a + 1$ leaves. If $a = b$ then the Wavelet Tree is simply a leaf labelled a. Otherwise it has an internal root node $v_{root}$ that represents the string $S[1,n]$. $v_{root}$ stores bitmap $B_{v_{root}}$ in the following way:
 
 \vspace{0.5 cm}
-\noindent\rule{\textwidth}{0.5pt}
+\begin{mdframed}[nobreak]
 \begin{algorithmic}
 \Function{BitmapConstruction}{$S$}
 \If{ $S[i] \leq (a + b)/2$ }
@@ -50,10 +50,11 @@ A Wavelet Tree can be described recursively over a sub-alphabet range $[a .. b] 
 \EndIf
 \EndFunction
 \end{algorithmic}
-\noindent\rule{\textwidth}{0.5pt}
-\linebreak
+\end{mdframed}
 
-We now know how to construct the bitmap in the root of the Wavelet Tree. Now we define how symbols of the string is split into the right- and left sub-tree.\\
+
+We now know how to construct the bitmap in the root of the Wavelet Tree. Now we define how symbols of the string is split into the right- and left sub-tree.
+
 
 \vspace{0.5 cm}
 \begin{mdframed}[nobreak]
@@ -73,7 +74,85 @@ Then the left child of $v_{root}$ is a Wavelet Tree for $S_0[1,n_0]$ over alphab
 \subsubsection{Complexity}
 The height of the Wavelet Tree is  $\lceil \log \sigma \rceil$ and it has $\sigma$ leaves and $\sigma - 1$ internal nodes. At each level in the tree n bits are stored and in the last level at most n bits are stored. $n \lceil \log \sigma \rceil$ is an upper bound to the total number of bits that the Wavelet Tree stores. The Wavelet Tree can be constructed in $O(n \log \sigma)$ time.
 
-\subsection{Queries}
+\subsection{Rank Query}
+Rank counts the number of occurrences of the specified character up to and including the specified position.
+
+\begin{mdframed}[nobreak]
+\begin{algorithmic} 
+\Function {Rank} {$Character, Position$}
+\If{$Self.IsLeaf()$}
+\State \Return $Position$
+\EndIf
+\State $CharBit \gets$ bit representing $Character$ in bitmap of current node
+\State $Position \gets$ \Call {BinaryRank} {$CharBit, Position, BitMap$}
+\If{$CharBit = 1$}
+	\State $Rank \gets$ RightChildNode.\Call {Rank} {$CharBit, Position$}
+\Else
+	\State $Rank \gets$ LeftChildNode.\Call {Rank} {$CharBit, Position$}
+\EndIf
+\State \Return $Rank$ 
+\EndFunction
+\State RootNode.\Call {Rank} {$Character, Position$}
+\end{algorithmic}
+\end{mdframed}
+
+
+\noindent \textproc{Rank($Character, Position$)} in our implementation is defined on each node, which is why it is called on the root node and the right and left child nodes in stead of specifying the node as a parameter to the \textproc{Rank} function, here in the pseudo-code.
+
+\subsubsection{Binary Rank} 
+\label{sec:TheoryBinaryRank}
+A cornerstone of the rank algorithm for a Wavelet Tree is calculating the binary rank of a character on a bitmap at a node.
+The naive implementation of \textproc{BinaryRank} where you loop through the binary number and count the number of 1s or 0s takes O(N) time, which is too much because the running time of the rank algorithm depends on the running time of \textproc{BinaryRank} since \textproc{BinaryRank} is called once per layer of the tree in order to answer a single rank query on the tree.
+
+To make binary rank fast, we use the \texttt{popcount} instruction that counts the number of 1s in a given binary number.
+The binary rank can then be found by summing the result of calling \texttt{popcount} on each machine word up to a given $Position$.
+When the index of the rank query is not a multiple of the machine word size, we need to constrain what part of the machine word is counted using \texttt{popcount}. This can be done by constructing a bitmask by bitshifting the number 1 $Position$ times towards the most significant bit and then subtracting one, as that will create a machine word where the $Position$ least significant bits are set to 1 and the rest to 0.
+Then we do a bitwise \texttt{AND} operation on this bitmask and the machine word containing the bit corresponding to $Position$, and call \texttt{popcountl} on the result. Using \texttt{popcount} \textproc{BinaryRank} becomes a $O(N/wordsize) = O(N)$ operation. So in theory still O(N) since $wordsize$ is a constant factor, but it has a large practical effect on performance.
+As also noted in~\citep{Navjda13}, we don't need to count the number of 0s, although required by the algorithm, as we can simply take the number of bits in the string and subtract the number of 1s to calculate the number of 0s.
+
+\subsection{Select query}
+\textproc{Select} queries the Wavelet Tree for the position of the i'th occurrence of the specified character.
+It starts from the leaf of the character and queries up through the tree, which means you need to know the leaf of the character in advance.
+
+
+\begin{mdframed}[nobreak]
+\begin{algorithmic} 
+\Function {Select} {$Character, Occurrence$}
+\If{$CurrentNode$ is $RightChild$}
+	\State $CharBit \gets 1$
+\Else
+	\State $CharBit \gets 0$
+\EndIf
+\State \Return $Parent.SelectRec(CharBit, Occurrence)$
+\EndFunction
+\end{algorithmic}
+\end{mdframed}
+
+
+\begin{mdframed}[nobreak]
+\begin{algorithmic} 
+\Function {SelectRec} {$CharBit, Occurrence$}
+\If{$CurrentNode$ is $root$}
+	\State \Return $BinarySelect(CharBit, Occurrence)$
+\EndIf
+\State $Position \gets BinarySelect(CharBit, Occurrence)$
+\If{$CurrentNode$ is $RightChild$}
+	\State $CharBit \gets 1$
+\Else
+	\State $CharBit \gets 0$
+\EndIf
+\State \Return $Parent.SelectRec(CharBit, Position)$
+\EndFunction
+\end{algorithmic}
+\end{mdframed}
+
+
+We split Select into two functions; \textproc{Select} which is called on the leaf and \textproc{SelectRec} which is called on the parent of the leaf and continues recursively until the root is reached. This makes sense because it saves us a check for whether we are a leaf or not at each recursive call and since we start out in a leaf and will never meet one again that check would only be true once. 
+
+Figuring out the \textproc{CharBit} is a lot easier for \textproc{Select} than for \textproc{Rank} since we query bottom-up and can just check whether the current node is a left child or a right child. In \textproc{Rank} one needs to calculate the split character and then check whether the input character is before or after it in the alphabet.
+
+\subsubsection{Binary Select}
+\textproc{BinarySelect} returns the position of the i'th occurrence of 1 or 0 (\textproc{CharBit}) in a bitset. The simple implementation is to loop through the bitset and when $i$ occurrences of either 1 or 0 has been seen then return the position of the last one. This takes O(N) time making \textproc{BinarySelect} a huge bottleneck for \textproc{Select} since is it called for each level in the Wavelet Tree. In \ref{sec:ImplBinarySelect} we describe how to improve the practical running time of \textproc{BinarySelect} using the \textit{popcount} instruction.
 
 \subsection{Applications}
 
