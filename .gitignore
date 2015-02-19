@@ -48,10 +48,7 @@ Data/
 /Code/Simple/Naive/dist/
 !/Articles/*
 *callgrind.out.*
-/Code/Simple/Preallocated/build/
-/Code/Simple/Preallocated/dist/
 
 #link to boost library
 /Code/boost
-/Code/Simple/NaiveInteger/build/
-/Code/Simple/NaiveInteger/dist/
+/Code/papi
