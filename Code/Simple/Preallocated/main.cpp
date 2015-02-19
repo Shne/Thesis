@@ -48,8 +48,8 @@ int main(int argc, char** argv) {
     uint maxChar = 32;
     for(uint character = 0; character < maxChar; character++) {
         ulong rank = tree.rank(character, amount);
-        cout << "rank: " << rank << endl;
-//        unsigned long pos = tree.select(character, rank);
+//        cout << "rank: " << rank << endl;
+        unsigned long pos = tree.select(character, rank);
 //        cout << "select: " << pos << endl;
     }
 
