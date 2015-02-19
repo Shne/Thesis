@@ -18,12 +18,12 @@ Tree::Tree(vector<int>* input, int amount, int alphabetSize)
 //    int bitmapSize = (int) amount * log2(alphabetSize) * 1.2;
     
     double skew = (double) SKEW;
-    long bitmapSize = (int) amount * log2(alphabetSize) / log2(skew/(skew-1));
+    unsigned long bitmapSize = (unsigned long) amount * log2(alphabetSize) / log2(skew/(skew-1));
     
 //    bitmap = new boost::dynamic_bitset<>(bitmapSize,0);
     bitmap = new bitmap_t(bitmapSize);
 //    cout << bitmapSize << endl;
-    long bitmapOffset = 0;
+    unsigned long bitmapOffset = 0;
     
     new (root) Node(input, 0, alphabetSize-1, nullptr, root, bitmap, bitmapOffset);
     bitmap->shrink_to_fit();

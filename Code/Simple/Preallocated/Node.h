@@ -24,8 +24,8 @@ using namespace std;
 class Node {
 private:
     bitmap_t* bitmap;
-    int bitmapOffset;
-    int bitmapSize;
+    unsigned long bitmapOffset;
+    unsigned long bitmapSize;
     bool isLeaf;
     Node* parent;
     Node* left;
@@ -33,7 +33,7 @@ private:
 public:
     Node();
     Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNode,
-        Node* node_pt, bitmap_t* in_bitmap, long &in_bitmapOffset);
+        Node* node_pt, bitmap_t* in_bitmap, unsigned long &in_bitmapOffset);
     int rank(int character, unsigned long index, int alphabetMin, int alphabetMax);
     unsigned long int binaryRankPopcountInstruction(unsigned long pos);
     int select(int character, bool charBit, unsigned long occurance);
