@@ -20,7 +20,7 @@ def select(character, occourance):
 		if character == c:
 			occ = occ + 1
 		if occourance == occ: 
-			break		
+			break
 		pos = pos + 1
 	return pos
 
@@ -40,7 +40,7 @@ rank = rank(symbol, amount)
 print("rank: " + str(rank))
 position = select(symbol, rank)
 print("select: " + str(position))
-print(intArray[position-1])
+print(intArray[position])
 
 
 
