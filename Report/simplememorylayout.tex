@@ -2,8 +2,23 @@
 Same algorithm as the Simple, Naïve approach, but with a controlled memory layout.
 
 \subsection{Controlled Memory Layout}
-In order to reduce cache misses by skewing the tree, we needed a memory layout that would put the node that is most often accessed next, next in the memory, preferably in the same cache line. 
-[What layout we wanted, why and how we did it]
+In order to reduce cache misses by skewing the tree, we needed a memory layout that would put the node that is most often accessed next in the same cache line, or if failing that, next in memory so that prefetching will have it ready.
+We still want to support dynamic input and alphabet sizes without recompilation, so the nodes must be dynamically allocated on the heap.
+It is impossible to know the size of the bitmap of each node before its input string is found by its parent, because the bitmap length in each node is the size of its input string.
+Because of this, we cannot store the bitmaps as part of the nodes and neither can we simply use an array of bitmaps to ensure they are in consecutive order in memory.
+
+The size of a node (not including its bitmap) is known at compile time as it contains simply pointers to parent node and left and right child nodes, as well as a boolean to flag it as a leaf node.
+As such, we can and do allocate the memory for the nodes by allocating an array, then instantiating nodes into that array.
+We pass a reference to a pointer into the array from parent to child nodes during construction, so they know where to allocate their child nodes.
+The pointer points to the position of the last node in the array, and so before each instantiation of a new node, we increment the pointer so it points to free space, then place the new node there.
+
+Because the size of each bitmap is unknown at compile time, we cannot use an array, and so we must do it in another way. We still want the bitmaps stored consecutively in memory and because the bitmaps take up the most space, we would like to ensure that the bits are tightly packed.
+We allocate the bitmaps as one giant bitmap of size $n \times log_{skew}(\sigma)$ as that is the maximum possible size required to store all the bitmaps for all the nodes. We then store an offset and a size for the bitmap in each node, so we can index into the giant bitmap and access the bits corresponding to the node.
+After having constructed the entire tree, we then shrink the giant bitmap to fit its actual size, to not waste the memory when the tree is in use for querying.
+If we had allocated a bitmap for each node individually, they would have been word-aligned, and the bits between the end of one bitmap and the start of another would have gone unused and so, wasted.
+
+The nodes now contain, in addition to the previously mentioned pointers, a pointer to the large bitmap, an offset and a size.
+The size of each of these variables is known at compile time and doesn't preclude us from allocating the nodes in an array.
 
 \subsection{Preallocating the Memory}
 
