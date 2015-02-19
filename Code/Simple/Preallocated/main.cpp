@@ -40,9 +40,10 @@ int main(int argc, char** argv) {
     
     Tree tree = Tree(input, amount, alphabetSize);
     
-    unsigned long rank = tree.rank(2, amount);
+    int character = 5;
+    unsigned long rank = tree.rank(character, amount);
     cout << "rank: " << rank << endl;
-    unsigned long pos = tree.select(2, rank);
+    unsigned long pos = tree.select(character, rank);
     cout << "select: " << pos << endl;
     
 //    struct rusage usage;

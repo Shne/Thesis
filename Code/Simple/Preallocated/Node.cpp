@@ -13,7 +13,7 @@
 using namespace std;
 
 Node::Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNode,
-        Node* node_pt, bitmap_t* in_bitmap, unsigned long &in_bitmapOffset)
+        Node* &node_pt, bitmap_t* in_bitmap, unsigned long &in_bitmapOffset)
     : isLeaf(false), left(nullptr), right(nullptr), parent(parentNode) {
 //    if(input.size() == 0) {
 //        cout << "Empty Node" << endl;
@@ -76,6 +76,7 @@ Node::Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNod
         bitmap = nullptr;
         bitmapSize = 0;
     }
+    
     //construct node, save it at right pointer location. give it incremented node_pt and bitmap_it so they point to free space.
     if(rightString->size() != 0) {
         node_pt++; //increment to free space
@@ -173,13 +174,13 @@ int Node::select(int character, bool charBit, unsigned long occurance) {
     int position = binarySelect(charBit, occurance);
     
     bool parentCharBit = this == parent->right;
-    return parent->select(character, parentCharBit, position+1);
+    return parent->select(character, parentCharBit, position+1); //position+1 to go form 0-indexed position to "1-indexed" occurance
 }
 
 int Node::binarySelect(bool charBit, unsigned long occurance) {
     unsigned long occ = 0;
-    for(unsigned long i = 0; i < bitmap->size(); i++) {
-        if((*bitmap)[i] == charBit) { 
+    for(unsigned long i = 0; i < bitmapSize; i++) {
+        if((*bitmap)[bitmapOffset+i] == charBit) {
             if(++occ == occurance) {
                 return i;
             }
@@ -204,9 +205,11 @@ Node* Node::getLeaf(int character, int alphabetMin, int alphabetMax) {
 
     Node* leaf = nullptr;
     if(charBit && right != nullptr){
-        leaf = right->getLeaf(character, rightAlphabetMin, rightAlphabetMax); //right sub tree
-    }else if(left != nullptr){
-        leaf = left->getLeaf(character, leftAlphabetMin, leftAlphabetMax); //right sub tree
+        leaf = right->getLeaf(character, rightAlphabetMin, rightAlphabetMax);
+    } else if(left != nullptr){
+        leaf = left->getLeaf(character, leftAlphabetMin, leftAlphabetMax);
+    } else {
+        cout << "Error: both child node pointers are null!" << endl;
     }
 
     return leaf;

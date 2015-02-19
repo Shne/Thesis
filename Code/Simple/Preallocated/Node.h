@@ -33,7 +33,7 @@ private:
 public:
     Node();
     Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNode,
-        Node* node_pt, bitmap_t* in_bitmap, unsigned long &in_bitmapOffset);
+        Node* &node_pt, bitmap_t* in_bitmap, unsigned long &in_bitmapOffset);
     int rank(int character, unsigned long index, int alphabetMin, int alphabetMax);
     unsigned long int binaryRankPopcountInstruction(unsigned long pos);
     int select(int character, bool charBit, unsigned long occurance);
