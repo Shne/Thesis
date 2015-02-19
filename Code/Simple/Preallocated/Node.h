@@ -15,7 +15,6 @@
 #include <sstream>
 #include <algorithm>
 #include <iterator>
-//#include <boost/dynamic_bitset.hpp>
 
 typedef std::vector<bool> bitmap_t;
 

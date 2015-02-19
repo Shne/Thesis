@@ -28,10 +28,12 @@ inline void handle_error (int retval) {
 int main(int argc, char** argv) {
     if(argc < 3) { cout << "NOT ENOUGH ARGUMENTS" << endl; return 0; }
     
-    string filename = "../../../Data/n" + string(argv[1]) + "_as" + string(argv[2]) + ".data";
-    cout << filename << endl;
+    string inputFilename = "../../../Data/n" + string(argv[1]) + "_as" + string(argv[2]) + ".data";
+    string outputFilename = "../../../Output/preallocated_n" + string(argv[1]) + "_as" + string(argv[2]) + ".output";
+    ofstream output(outputFilename, ios::app);
+    cout << inputFilename << endl;
     uint size_out = 0;
-    uint* inputArr = read_file(size_out, filename.c_str());
+    uint* inputArr = read_file(size_out, inputFilename.c_str());
     
     vector<uint>* input = new vector<uint>(inputArr, inputArr + size_out);
     delete[] inputArr;
@@ -83,9 +85,8 @@ int main(int argc, char** argv) {
     /* Stop counting events */
     if (PAPI_stop_counters(values, NUM_EVENTS) != PAPI_OK) handle_error(1);
 
-    cout << "Total lvl 1 Cache Misses: " << values[0] << endl;
-    cout << "Branch Mispredictions: " << values[1] << endl;
-    cout << "Total TLB Misses: " << values[2] << endl;
+//    output << "# [SKEW] [lvl1 cache misses] [branch mispredictions]" << endl;
+    output << "  " << SKEW << "\t" << values[0] << "\t" << values[1] << endl;
 
     printf("Wall clock cycles: %lld\n", end_cycles - start_cycles);
     printf("Wall clock time in microseconds: %lld\n", end_usec - start_usec);
