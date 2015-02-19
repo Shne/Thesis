@@ -10,7 +10,7 @@
 
 using namespace std;
 
-Tree::Tree(vector<int>* input, int amount, int alphabetSize) 
+Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize) 
     : alphabetMin(0), alphabetMax(alphabetSize-1), inputSize(amount){
     Node* node_pt = static_cast<Node*> (::operator new (sizeof(Node)*2*alphabetSize));
     root = node_pt;

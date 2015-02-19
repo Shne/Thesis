@@ -25,7 +25,7 @@ private:
     bitmap_t* bitmap;
     unsigned long alphabetMin, alphabetMax, inputSize;
 public:
-    Tree(vector<int>* input, int amount, int alphabetSize);
+    Tree(vector<uint>* input, uint amount, uint alphabetSize);
     int rank(int character, unsigned long index);
     int select(int character, unsigned long occurance);
 };

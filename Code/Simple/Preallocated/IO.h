@@ -24,9 +24,9 @@ using namespace std;
  * @returns a pointer to a newly created array containing the data, remember to delete[] this
  * 
  */
-inline int* read_file(int& size_out, const char* filename) {
+inline uint* read_file(uint& size_out, const char* filename) {
     streampos size;
-    int * arr = nullptr;
+    uint * arr = nullptr;
 //    vector<int>* arr = new vector<int>(size/sizeof(int));
     ifstream file(filename, ios::in|ios::binary|ios::ate);
     if(file.is_open())
@@ -35,8 +35,8 @@ inline int* read_file(int& size_out, const char* filename) {
 //        cout << "Size: " << size << endl;
 //        cout << "sizeof(int): " << sizeof(int) << endl;
 //        cout << "Elements: " << size/sizeof(int) << endl;
-        size_out = size/sizeof(int);
-        arr = new int[size/sizeof(int)];
+        size_out = size/sizeof(uint);
+        arr = new uint[size/sizeof(uint)];
         file.seekg(0, ios::beg);
         file.read((char*) arr, size);
     }

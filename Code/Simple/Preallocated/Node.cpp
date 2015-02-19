@@ -12,7 +12,7 @@
 
 using namespace std;
 
-Node::Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNode,
+Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode,
         Node* &node_pt, bitmap_t* in_bitmap, unsigned long &in_bitmapOffset)
     : isLeaf(false), left(nullptr), right(nullptr), parent(parentNode) {
 //    if(input.size() == 0) {
@@ -20,7 +20,7 @@ Node::Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNod
 //        return;
 //    }
     
-    int alphabetSize = alphabetMax - alphabetMin +1;
+    uint alphabetSize = alphabetMax - alphabetMin +1;
     if(alphabetSize == 1) {
 //        cout << "LEAF:\t\t" << (*input)[0] << endl;
 //        cout << "---------------" << endl;
@@ -32,20 +32,20 @@ Node::Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNod
     bitmapSize = input->size(); //one bit for each character in the input string
     bitmapOffset = in_bitmapOffset;
    
-    int split = (alphabetSize-1)/SKEW + alphabetMin;
+    uint split = (alphabetSize-1)/SKEW + alphabetMin;
 
-    int leftAlphabetMin = alphabetMin;
-    int leftAlphabetMax = split;
-    int rightAlphabetMin = split+1;
-    int rightAlphabetMax = alphabetMax;
+    uint leftAlphabetMin = alphabetMin;
+    uint leftAlphabetMax = split;
+    uint rightAlphabetMin = split+1;
+    uint rightAlphabetMax = alphabetMax;
     
 //    cout << in_bitmapOffset << endl;
-    vector<int>* leftString = new vector<int>();
-    vector<int>* rightString = new vector<int>();
+    vector<uint>* leftString = new vector<uint>();
+    vector<uint>* rightString = new vector<uint>();
 //    cout << input->size() << endl;
     
     for(auto it = input->begin(); it != input->end(); it++, in_bitmapOffset++) {
-        int currentChar = *it;
+        uint currentChar = *it;
         if(currentChar <= split) {
             (*in_bitmap)[in_bitmapOffset] = false;
             leftString->push_back(currentChar);
@@ -187,6 +187,44 @@ int Node::binarySelect(bool charBit, unsigned long occurance) {
         }
     }
     cout << "Occurance too high!" << endl;
+}
+
+int Node::popcountBinarySelect(bool charBit, unsigned long occurance) {
+    unsigned long pos = 0;
+    
+    unsigned long i;
+    unsigned long wordsize = sizeof(*bitmap->begin()._M_p) * CHAR_BIT; //vector<bool> src uses CHAR_BIT too
+    
+    vector<bool>::reference ref = (*bitmap)[bitmapOffset];
+    unsigned long initialOffset = 0;
+    unsigned long* firstFullWord = ref._M_p;
+    
+    //PART OF FIRST WORD if unaligned
+    if(ref._M_mask > 1) { //mask = 1 means first part of first word is part of our bitmap, and we can just use the fullword iteration code below
+        //create 111110000 type mask from 000010000 type mask
+        unsigned long firstMask = ~(ref._M_mask - 1UL); //the bit of _M_mask and up
+        unsigned long maskedFirstWord = (*ref._M_p) & firstMask;
+        pos += __builtin_popcountl(maskedFirstWord);
+        initialOffset = __builtin_popcountl(firstMask); //the amount we should skip for our calculation of fullWords
+        firstFullWord++; ///pointer was to a word we only partially had bits in
+    }
+    
+    //FULL WORDS
+    unsigned int alignedPos = pos - initialOffset; //initialOffset is the amount of bits in the first unaligned word of our bitmap
+    unsigned long fullWords = alignedPos / wordsize; //the amount of full words we should iterate through. 
+    for(i = 0; i < fullWords; i++) {
+        unsigned long word = *(firstFullWord + i);
+        pos += __builtin_popcountl(word);
+    } //we believe i is incremented even after the condition has failed
+    
+    //PART OF LAST WORD (if unaligned)
+    unsigned long word = *(firstFullWord + i);
+    unsigned long shift = alignedPos % wordsize; //if word-aligned, shift will be 0, making mask (below) all 0.
+    unsigned long mask = (1UL << shift)-1UL; //if word-aligned mask will be 0
+    unsigned long maskedWord = word & mask; //if word-aligned maskedWord will be 0
+    pos += __builtin_popcountl(maskedWord);
+    
+    return pos;
 }
 
 Node* Node::getLeaf(int character, int alphabetMin, int alphabetMax) {
