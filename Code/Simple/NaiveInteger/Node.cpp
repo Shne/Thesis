@@ -121,12 +121,12 @@ unsigned long Node::binaryRankPopcountInstruction(unsigned long pos) {
 }
 
 
-int Node::leafSelect(int character, unsigned long occurance) {
+int Node::select(int character, unsigned long occurance) {
     bool charBit = this == parent->right;
-    return parent->select(character, charBit, occurance);
+    return parent->parentSelect(charBit, occurance);
 }
 
-int Node::select(int character, bool charBit, unsigned long occurance) {
+int Node::parentSelect(bool charBit, unsigned long occurance) {
     if(parent == nullptr) {
         //we are root
         return binarySelect(charBit, occurance);
@@ -134,7 +134,7 @@ int Node::select(int character, bool charBit, unsigned long occurance) {
     int position = binarySelect(charBit, occurance);
     
     bool parentCharBit = this == parent->right;
-    return parent->select(character, parentCharBit, position+1);
+    return parent->parentSelect(parentCharBit, position+1);
 }
 
 int Node::binarySelect(bool charBit, unsigned long occurance) {

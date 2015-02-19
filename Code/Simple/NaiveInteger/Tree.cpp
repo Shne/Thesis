@@ -24,5 +24,5 @@ int Tree::rank(int character, unsigned long index) {
 
 int Tree::select(int character, unsigned long occurance) {
     Node* leaf = root.getLeaf(character, alphabetMin, alphabetMax);
-    return leaf->leafSelect(character, occurance);
+    return leaf->select(character, occurance);
 }
