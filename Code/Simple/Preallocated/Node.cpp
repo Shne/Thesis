@@ -13,7 +13,7 @@
 using namespace std;
 
 Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode,
-        Node* &node_pt, bitmap_t* in_bitmap, unsigned long &in_bitmapOffset)
+        Node* &node_pt, bitmap_t* in_bitmap, unsigned long &in_bitmapOffset, uint skew)
     : isLeaf(false), left(nullptr), right(nullptr), parent(parentNode) {
 //    if(input.size() == 0) {
 //        cout << "Empty Node" << endl;
@@ -32,7 +32,7 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
     bitmapSize = input->size(); //one bit for each character in the input string
     bitmapOffset = in_bitmapOffset;
    
-    uint split = (alphabetSize-1)/SKEW + alphabetMin;
+    uint split = (alphabetSize-1)/skew + alphabetMin;
 
     uint leftAlphabetMin = alphabetMin;
     uint leftAlphabetMax = split;
@@ -81,7 +81,8 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
     if(rightString->size() != 0) {
         node_pt++; //increment to free space
         right = node_pt; //store pointer to right node
-        new (node_pt) Node(rightString, rightAlphabetMin, rightAlphabetMax, this, node_pt, in_bitmap, in_bitmapOffset);
+        new (node_pt) Node(rightString, rightAlphabetMin, rightAlphabetMax, this, 
+                node_pt, in_bitmap, in_bitmapOffset, skew);
     } else {
         delete rightString;
     }
@@ -89,21 +90,22 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
     if(leftString->size() != 0) {
         node_pt++;
         left = node_pt;
-        new (node_pt) Node(leftString, leftAlphabetMin, leftAlphabetMax, this, node_pt, in_bitmap, in_bitmapOffset);
+        new (node_pt) Node(leftString, leftAlphabetMin, leftAlphabetMax, this, 
+                node_pt, in_bitmap, in_bitmapOffset, skew);
     } else {
         delete leftString;
     }
 }
 
 
-int Node::rank(int character, unsigned long index, int alphabetMin, int alphabetMax){
+int Node::rank(int character, unsigned long index, int alphabetMin, int alphabetMax, uint skew){
     if(isLeaf){
 //        cout << "Rank Leaf" << endl;
         return index;
     }
     
     int alphabetSize = alphabetMax - alphabetMin +1;
-    int split = (alphabetSize-1)/SKEW + alphabetMin;
+    int split = (alphabetSize-1)/skew + alphabetMin;
     int leftAlphabetMin = alphabetMin;
     int leftAlphabetMax = split;
     int rightAlphabetMin = split+1;
@@ -113,9 +115,9 @@ int Node::rank(int character, unsigned long index, int alphabetMin, int alphabet
     unsigned long pos = charBit ? binaryRankPopcountInstruction(index) : index - binaryRankPopcountInstruction(index);
     unsigned long rank = 0;
     if(charBit && right != nullptr) {
-        rank = right->rank(character, pos, rightAlphabetMin, rightAlphabetMax); //right sub tree
+        rank = right->rank(character, pos, rightAlphabetMin, rightAlphabetMax, skew);
     }else if(left != nullptr){
-        rank = left->rank(character, pos, leftAlphabetMin, leftAlphabetMax); //right sub tree
+        rank = left->rank(character, pos, leftAlphabetMin, leftAlphabetMax, skew);
     }
     
     return rank;
@@ -259,13 +261,13 @@ int Node::popcountBinarySelect(bool charBit, ulong occurance) {
 
 
 
-Node* Node::getLeaf(int character, int alphabetMin, int alphabetMax) {
+Node* Node::getLeaf(int character, int alphabetMin, int alphabetMax, uint skew) {
     if(isLeaf){
         return this;
     }
 
     int alphabetSize = alphabetMax - alphabetMin +1;
-    int split = (alphabetSize-1)/SKEW + alphabetMin;
+    int split = (alphabetSize-1)/skew + alphabetMin;
     int leftAlphabetMin = alphabetMin;
     int leftAlphabetMax = split;
     int rightAlphabetMin = split+1;
@@ -275,9 +277,9 @@ Node* Node::getLeaf(int character, int alphabetMin, int alphabetMax) {
 
     Node* leaf = nullptr;
     if(charBit && right != nullptr){
-        leaf = right->getLeaf(character, rightAlphabetMin, rightAlphabetMax);
+        leaf = right->getLeaf(character, rightAlphabetMin, rightAlphabetMax, skew);
     } else if(left != nullptr){
-        leaf = left->getLeaf(character, leftAlphabetMin, leftAlphabetMax);
+        leaf = left->getLeaf(character, leftAlphabetMin, leftAlphabetMax, skew);
     } else {
         cout << "Error: both child node pointers are null!" << endl;
     }

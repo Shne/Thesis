@@ -8,7 +8,7 @@
 #ifndef NODE_H
 #define	NODE_H
 
-#define SKEW 2
+//#define SKEW 2
 
 #include <string>
 #include <vector>
@@ -32,13 +32,13 @@ private:
 public:
     Node();
     Node(vector<unsigned int>* input, unsigned int alphabetMin, unsigned int alphabetMax, Node* parentNode,
-        Node* &node_pt, bitmap_t* in_bitmap, unsigned long &in_bitmapOffset);
-    int rank(int character, unsigned long index, int alphabetMin, int alphabetMax);
+        Node* &node_pt, bitmap_t* in_bitmap, unsigned long &in_bitmapOffset, uint skew);
+    int rank(int character, unsigned long index, int alphabetMin, int alphabetMax, uint skew);
     unsigned long int binaryRankPopcountInstruction(unsigned long pos);
     int select(int character, bool charBit, unsigned long occurance);
 //    int binarySelect(bool charBit, unsigned long occurance);
     int popcountBinarySelect(bool charBit, unsigned long occurance);
-    Node* getLeaf(int character, int alphabetMin, int alphabetMax);
+    Node* getLeaf(int character, int alphabetMin, int alphabetMax, uint skew);
     int leafSelect(int character, unsigned long occurance);
     
     inline void showBits(unsigned long n);

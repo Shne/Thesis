@@ -41,7 +41,7 @@ OBJECTFILES= \
 
 
 # C Compiler Flags
-CFLAGS=
+CFLAGS=-m64
 
 # CC Compiler Flags
 CCFLAGS=-m64 -std=c++11 -g -O3 -march=native
@@ -51,7 +51,7 @@ CXXFLAGS=-m64 -std=c++11 -g -O3 -march=native
 FFLAGS=
 
 # Assembler Flags
-ASFLAGS=
+ASFLAGS=--64
 
 # Link Libraries and Options
 LDLIBSOPTIONS=-lpapi
