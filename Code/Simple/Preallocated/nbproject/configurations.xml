@@ -86,9 +86,6 @@
           <developmentMode>5</developmentMode>
           <architecture>2</architecture>
           <standard>8</standard>
-          <incDir>
-            <pElem>../../boost</pElem>
-          </incDir>
           <commandLine>-std=c++11 -g -O3 -march=native</commandLine>
         </ccTool>
         <fortranCompilerTool>
@@ -97,6 +94,11 @@
         <asmTool>
           <developmentMode>5</developmentMode>
         </asmTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibLibItem>papi</linkerLibLibItem>
+          </linkerLibItems>
+        </linkerTool>
       </compileType>
       <item path="IO.h" ex="false" tool="3" flavor2="0">
       </item>

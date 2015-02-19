@@ -10,6 +10,7 @@
 #include "Tree.h"
 #include <sys/time.h>
 #include <sys/resource.h>
+#include <papi.h>
 #include "IO.h"
 
 using namespace std;
@@ -40,16 +41,22 @@ int main(int argc, char** argv) {
     
     Tree tree = Tree(input, amount, alphabetSize);
     
-    int character = 5;
-    unsigned long rank = tree.rank(character, amount);
-    cout << "rank: " << rank << endl;
-    unsigned long pos = tree.select(character, rank);
-    cout << "select: " << pos << endl;
+    long_long start_cycles, end_cycles, start_usec, end_usec;
+    start_cycles = PAPI_get_real_cyc();
+    start_usec = PAPI_get_real_usec();
     
-//    struct rusage usage;
-//    getrusage(RUSAGE_SELF, &usage);
-//    printf("utime: %ld.%ld\n", usage.ru_utime.tv_sec, usage.ru_utime.tv_usec);
-//    printf("stime: %ld.%ld\n", usage.ru_stime.tv_sec, usage.ru_stime.tv_usec);
+    int maxChar = 32;
+    for(int character = 0; character < maxChar; character++) {
+        unsigned long rank = tree.rank(character, amount);
+//        cout << "rank: " << rank << endl;
+//        unsigned long pos = tree.select(character, rank);
+//        cout << "select: " << pos << endl;
+    }
+
+    end_cycles = PAPI_get_real_cyc();
+    end_usec = PAPI_get_real_usec();
+    printf("Wall clock cycles: %lld\n", end_cycles - start_cycles);
+    printf("Wall clock time in microseconds: %lld\n", end_usec - start_usec);
     
     return 0;
 }
