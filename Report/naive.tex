@@ -35,6 +35,18 @@ The Naïve Wavelet Tree construction algorithm is recursively defined, calling i
 \subsection{Experiments}
 [Running time, Cache-Misses, branch miss-predictions, etc]
 
+\begin{figure}
+\caption{Simple Binary Rank vs. Binary Rank using the Popcount instruction.}
+\label{fig:rankPopcountDiff}
+\input{rankPopcountDifference}
+\end{figure}
+
+\begin{figure}
+\caption{Simple Binary Select vs. Binary Select using the Popcount instruction.}
+\label{fig:selectPopcountDiff}
+\input{rankPopcountDifference}
+\end{figure}
+
 
 
 [We then had the idea of skewing the tree to reduce branch mispredictions and cache-misses. but to reduce cache misses, we also need to control the memory layout... see following section]
