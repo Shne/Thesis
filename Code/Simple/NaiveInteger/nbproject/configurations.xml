@@ -43,12 +43,21 @@
       </toolsSet>
       <compileType>
         <ccTool>
+          <architecture>2</architecture>
           <standard>8</standard>
           <incDir>
             <pElem>../../boost</pElem>
           </incDir>
-          <commandLine>-std=c++11</commandLine>
+          <commandLine>-std=c++11 -O3 -g -march=native</commandLine>
         </ccTool>
+        <asmTool>
+          <architecture>2</architecture>
+        </asmTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibLibItem>papi</linkerLibLibItem>
+          </linkerLibItems>
+        </linkerTool>
       </compileType>
       <item path="Bitmap.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -91,6 +100,7 @@
         </fortranCompilerTool>
         <asmTool>
           <developmentMode>5</developmentMode>
+          <architecture>2</architecture>
         </asmTool>
         <linkerTool>
           <linkerLibItems>

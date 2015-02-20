@@ -52,7 +52,7 @@ CXXFLAGS=-m64 -std=c++11 -O3 -g -march=native
 FFLAGS=
 
 # Assembler Flags
-ASFLAGS=
+ASFLAGS=--64
 
 # Link Libraries and Options
 LDLIBSOPTIONS=-lpapi

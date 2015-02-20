@@ -43,9 +43,9 @@ The solution is to allocate these strings on the heap instead, passing pointers 
 Doing this reduced the memory usage so much that we could run it for input strings with a length above $10^8$ without exhausting the about 6GB available memory on machine 1.
 
 \subsection{Binary Rank}
-Binary Rank is implemented as described in \ref{sec:TheoryBinaryRank}. 
+Binary Rank is implemented using the algorithm described in \ref{sec:TheoryBinaryRank}. 
 To do \textit{popcount} we use \textit{\_\_builtin\_popcountl} which is a built-in popcount instruction implemented by the GCC compiler \citep{Popcount-GCC-Builtin}. 
-It takes an \textit{unsigned long} as a parameter and returns the number of 1s in it. \textit{\_\_builtin\_popcountl} will automatically figure out how to do \textit{popcount} based on what CPU you are using. \textit{popcount} is supported on both AMD \citep{AMD-Popcount} and Intel arhitectures \citep{Intel-Popcount}.
+It takes an \textit{unsigned long} as a parameter and returns the number of 1s in it. \textit{\_\_builtin\_popcountl} will automatically figure out how to do \textit{popcount} based on what CPU you are using. \textit{Popcount} is supported on both AMD \citep{AMD-Popcount} and Intel arhitectures \citep{Intel-Popcount}. We have verified that $popcount$ is calculated using an instruction $popcnt$ on our computers which we assume to be the fastest way to calculate $popcount$ since it is only a single instruction.
 
 \subsection{Binary Select}
 \label{sec:ImplBinarySelect}
