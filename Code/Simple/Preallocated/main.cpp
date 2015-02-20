@@ -39,14 +39,6 @@ int main(int argc, char** argv) {
     uint amount = pow(10, atoi(argv[1]));
     uint alphabetSize = pow(2, atoi(argv[2]));
     uint skew = atoi(argv[3]);
-
-//    int alphabetSize = atoi(sAlphabetSize.c_str());
-//    vector<char> input(sInput.begin(), sInput.end());
-//    const char* alphabet = sAlphabet.c_str();
-//    cout << amount << endl;
-//    cout << alphabetSize << endl;
-//    cout << input[0] << endl;
-    
     
     int Events[NUM_EVENTS] = { PAPI_TOT_CYC, PAPI_L1_TCM, PAPI_BR_MSP };
     long_long values[NUM_EVENTS];
@@ -76,7 +68,6 @@ int main(int argc, char** argv) {
             << values[0] << "\t" // cycles
             << values[1] << "\t" // cache misses
             << values[2] << endl; // branch mispredictions
-    
     
     
     
@@ -112,9 +103,6 @@ int main(int argc, char** argv) {
             << values[0] << "\t" // cycles
             << values[1] << "\t" // cache misses
             << values[2] << endl; // branch mispredictions
-
-//    printf("Wall clock cycles: %lld\n", end_cycles - start_cycles);
-//    printf("Wall clock time in microseconds: %lld\n", end_usec - start_usec);
 
     return 0;
 }

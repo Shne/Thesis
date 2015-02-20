@@ -34,7 +34,7 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
    
     uint split = (alphabetSize-1)/skew + alphabetMin;
 
-    uint leftAlphabetMin = alphabetMin;
+    uint leftAlphabetMin = alphabetMin; 
     uint leftAlphabetMax = split;
     uint rightAlphabetMin = split+1;
     uint rightAlphabetMax = alphabetMax;
