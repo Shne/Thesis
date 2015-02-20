@@ -8,10 +8,13 @@ Machine 2: Roland's ASUS
 
 \subsection{Using Integers as Characters}
 \label{sec:UsingIntAsChar}
-The Wavelet Tree is a data structure for strings. Using the C++ \texttt{char array} or C++11 \texttt{string} types would seem natural in this case, but they each have problems.
+The Wavelet Tree is a data structure for strings. 
+Using the C++ \texttt{char array} or C++11 \texttt{string} types would seem natural in this case, but they each have problems.
 The C and C++ \texttt{char} type is only of size 1 byte allowing us only to use an alphabet size of up to 256, making testing the running times dependency on alphabet size near-impossible as inaccuracies in the running time would likely exceed the difference in running time between the available sizes of the alphabet.
 
-The C++11 \texttt{string} and arrays of type \texttt{char32\_t} doesn't have this problem and supports character types up to 32-bit unsigned. The problem lies in output and readability as characters corresponding to byte values below 32 are special non-printable control characters such as carriage-return and backspace. At higher byte values other non-printable control characters and otherwise unreadable characters appear again, meaning we would have to be very selective with the allowed byte values in our alphabets if we want it to be readable for output and debugging, and likely end up with an alphabet that is non-continuous on the set of byte values as a result.
+The C++11 \texttt{string} and arrays of type \texttt{char32\_t} doesn't have this problem and supports character types up to 32-bit unsigned. 
+The problem lies in output and readability as characters corresponding to byte values below 32 are special non-printable control characters such as carriage-return and backspace. 
+At higher byte values other non-printable control characters and otherwise unreadable characters appear again, meaning we would have to be very selective with the allowed byte values in our alphabets if we want it to be readable for output and debugging, and likely end up with an alphabet that is non-continuous on the set of byte values as a result.
 Because of this, we have for convenience chosen to simply use arrays of integers as our strings in our implementations.
 This will have no impact on performance as both characters and integers are simply different representations of byte values, so.
 
@@ -24,10 +27,14 @@ We will still use the terms "character" and "string" in our descriptions of the 
 
 
 \subsection{Reading Input}
-At first we simply read from stdin using the \texttt{getline(cin, \&string)} function. Once we applied a profiler we found this to be horrendously slow, our Naïve algorithm spending about 20\% of its running time on resizing IO buffers. We then switched to using the \texttt{ifstream} class and IO time was reduced significantly to below 1\% of total running time.
+At first we simply read from stdin using the \texttt{getline(cin, \&string)} function. 
+Once we applied a profiler we found this to be horrendously slow, our Naïve algorithm spending about 20\% of its running time on resizing IO buffers. 
+We then switched to using the \texttt{ifstream} class and IO time was reduced significantly to below 1\% of total running time.
 
 \subsection{Reducing Construction Time Memory Usage}
-Since the Wavelet tree is a recursively defined data structure, we also implement it recursively. Since it is also binary (or $d$-ary) we recursive into several sub-node constructors in the construction of a node, which means our compiler can't do tail-recursion optimisation (TODO: check that this is true!). This further causes any stack-allocated variables to be held in memory until we leave the scope of the constructor function.
+Since the Wavelet tree is a recursively defined data structure, we also implement it recursively. 
+Since it is also binary (or $d$-ary) we recursive into several sub-node constructors in the construction of a node, which means our compiler can't do tail-recursion optimisation (TODO: check that this is true!). 
+This further causes any stack-allocated variables to be held in memory until we leave the scope of the constructor function.
 We traverse and split the input string into its left and right parts in each node constructor and thus end up holding the input string twice in memory: once in the variable holding the input string, once in the two variables holding the left and right split strings.
 This is wasted memory because we don't actually need the input string any longer once we have split it into its left and right parts.
 Because we simply call one sub-node constructor, then the other, once the first has completed, and finally return once both subnodes has completed constructing themselves, we end up completing the construction of the nodes in post-order.
@@ -36,23 +43,32 @@ The solution is to allocate these strings on the heap instead, passing pointers 
 Doing this reduced the memory usage so much that we could run it for input strings with a length above $10^8$ without exhausting the about 6GB available memory on machine 1.
 
 \subsection{Binary Rank}
-Binary Rank is implemented as described in \ref{sec:TheoryBinaryRank}. To do \textit{popcount} we use \textit{\_\_builtin\_popcountl} which is a built-in popcount instruction implemented by the GCC compiler \citep{Popcount-GCC-Builtin}. It takes an \textit{unsigned long} as a parameter and returns the number of 1s in it. \textit{\_\_builtin\_popcountl} will automatically figure out how to do \textit{popcount} based on what CPU you are using. \textit{popcount} is supported on both AMD \citep{AMD-Popcount} and Intel arhitectures \citep{Intel-Popcount}.
+Binary Rank is implemented as described in \ref{sec:TheoryBinaryRank}. 
+To do \textit{popcount} we use \textit{\_\_builtin\_popcountl} which is a built-in popcount instruction implemented by the GCC compiler \citep{Popcount-GCC-Builtin}. 
+It takes an \textit{unsigned long} as a parameter and returns the number of 1s in it. \textit{\_\_builtin\_popcountl} will automatically figure out how to do \textit{popcount} based on what CPU you are using. \textit{popcount} is supported on both AMD \citep{AMD-Popcount} and Intel arhitectures \citep{Intel-Popcount}.
 
 \subsection{Binary Select}
 \label{sec:ImplBinarySelect}
-We improved \textproc{Binary Select} by again using the \textit{popcount} instruction. We call \textit{popcount} for each word and sum up the result of \textit{popcount} along the way. When the sum of $popcount$  is greater than the specified number of occurrences we do naive binary select within that word only and add that result to \textit{(number of words seen)} $* wordsize$ giving us the binary select value.
+We improved \textproc{Binary Select} by again using the \textit{popcount} instruction. 
+We call \textit{popcount} for each word and sum up the result of \textit{popcount} along the way. 
+When the sum of $popcount$  is greater than the specified number of occurrences we do naive binary select within that word only and add that result to \textit{(number of words seen)} $* wordsize$ giving us the binary select value.
 
 
 \subsection{Bitmap implementation choice}
 There are several bitmap implementations available to us. In the STL there is \texttt{std::bitset<size\_t N>} and \texttt{std::vector<bool>}. From the Boost library there is \texttt{boost::dynamic\_bitset<>}.
 \begin{description}
-\item[\texttt{std::bitset}] While it would technically be possible to use the \texttt{std::bitset}, it requires that the size of the bitset is known at compile time and passed as a template parameter. This means we would need to recompile the program for each $n$, or size of the input string. We would also need to allocate a bitmap with room for $n$ bits for each subnode as that is the theoretically possible size required, making the size required for the bitmaps of the tree $O(n \times |nodes|) = O(n2^{log(\sigma)})$ instead of $O(n \times height) = O(n~log(\sigma))$.
+\item[\texttt{std::bitset}] While it would technically be possible to use the \texttt{std::bitset}, it requires that the size of the bitset is known at compile time and passed as a template parameter. This means we would need to recompile the program for each $n$, or size of the input string. 
+We would also need to allocate a bitmap with room for $n$ bits for each subnode as that is the theoretically possible size required, making the size required for the bitmaps of the tree $O(n \times |nodes|) = O(n2^{log(\sigma)})$ instead of $O(n \times height) = O(n~log(\sigma))$.
 [TODO: later we do preallocation and fill it up along the way. try bitset there]
 We also feel that an actual practically usable implementation should be able to handle different size input at runtime instead of compiletime. 
 
-\item[\texttt{vector<bool>}] is a specialised implementation for \texttt{bool} that packs the data so that each \texttt{bool} only takes up one bit and is not an actual C++ container, though it tries to mimic some of the behaviour. It is basically the STL implementation of a dynamically allocated bitset.
+\item[\texttt{vector<bool>}] is a specialised implementation for \texttt{bool} that packs the data so that each \texttt{bool} only takes up one bit and is not an actual C++ container, though it tries to mimic some of the behaviour. 
+It is basically the STL implementation of a dynamically allocated bitset.
 
-\item[\texttt{boost::dynamic\_bitset}] is the Boost library's take on a dynamic bitset. It doesn't try to mimic a container and lacks some features such as an iterator because of that. It also does not guarantee that the bits will be allocated consecutively in memory and has no raw pointer access to the data in memory. This is a problem when we want to call popcount on all machine words from beginning up to some index.
+\item[\texttt{boost::dynamic\_bitset}] is the Boost library's take on a dynamic bitset. 
+It doesn't try to mimic a container and lacks some features such as an iterator because of that. 
+It also does not guarantee that the bits will be allocated consecutively in memory and has no raw pointer access to the data in memory. 
+This is a problem when we want to call popcount on all machine words from beginning up to some index.
 \end{description}
 
 \subsection{Skewing the tree}

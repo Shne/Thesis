@@ -3,12 +3,17 @@
 [What is a wavelet tree; theory; usage; rank/select; etc...]
 
 \subsection{What is a Wavelet Tree}
-The Wavelet Tree is a binary balanced tree structure, that was invented by Grossi, Grupta and Vitter \citep{Grossi:2003:HET:644108.644250} in 2003. It has applications in many areas; from string processing to geometry, and can for instance be used to represent; a sequence of elements, a reordering of elements and a grid of points. When \citep{Grossi:2003:HET:644108.644250} invented the Wavelet Tree, it was a milestone in compressed full-text indexing even though it is mentioned very little in the paper.
+The Wavelet Tree is a binary balanced tree structure, that was invented by Grossi, Grupta and Vitter \citep{Grossi:2003:HET:644108.644250} in 2003. 
+It has applications in many areas; from string processing to geometry, and can for instance be used to represent; a sequence of elements, a reordering of elements and a grid of points. 
+When \citep{Grossi:2003:HET:644108.644250} invented the Wavelet Tree, it was a milestone in compressed full-text indexing even though it is mentioned very little in the paper.
 
 \subsection{Constructing the Wavelet Tree}
-A Wavelet Tree stores a string by creating a bitmap that describes the string using the alphabet of the string. The alphabet is split in the middle and the symbols to the left gets bit value 0 and the symbols to the right gets bit value 1 so that there is a bit for each symbol in the string in the bitmap. The symbols of the string that has bit value 0 is concatenated in the order they have in the string and is added to the left sub-tree and the ones with bit value 1 is added to the right sub-tree. 
+A Wavelet Tree stores a string by creating a bitmap that describes the string using the alphabet of the string. The alphabet is split in the middle and the symbols to the left gets bit value 0 and the symbols to the right gets bit value 1 so that there is a bit for each symbol in the string in the bitmap. 
+The symbols of the string that has bit value 0 is concatenated in the order they have in the string and is added to the left sub-tree and the ones with bit value 1 is added to the right sub-tree. 
 
-This process continues in each sub tree until we end up in the leaves where the string only consists of one unique symbol from the alphabet. An example of a Wavelet Tree can be seen in Figure \ref{fig:WaveletTreeExample}. We now go into more detail about how it all works.
+This process continues in each sub tree until we end up in the leaves where the string only consists of one unique symbol from the alphabet. 
+An example of a Wavelet Tree can be seen in Figure \ref{fig:WaveletTreeExample}. 
+We now go into more detail about how it all works as described by \citep{Navjda13}.
 
 \vspace{0.5 cm}
 \begin{mdframed}[nobreak]
@@ -37,7 +42,9 @@ Let $S[1,n] = S_1 S_2 ... S_n$ be a sequence of symbols where $s_i \in \Sigma$ a
 \end{figure}
 
 		
-A Wavelet Tree can be described recursively over a sub-alphabet range $[a .. b] \subseteq [1 .. 0]$, for a sequence $S[1,n]$ over alphabet $[1 .. \sigma]$. A Wavelet Tree over alphabet $[a .. b]$ is a binary balanced tree with $b - a + 1$ leaves. If $a = b$ then the Wavelet Tree is simply a leaf labelled a. Otherwise it has an internal root node $v_{root}$ that represents the string $S[1,n]$. $v_{root}$ stores bitmap $B_{v_{root}}$ in the following way:
+A Wavelet Tree can be described recursively over a sub-alphabet range $[a .. b] \subseteq [1 .. 0]$, for a sequence $S[1,n]$ over alphabet $[1 .. \sigma]$. 
+A Wavelet Tree over alphabet $[a .. b]$ is a binary balanced tree with $b - a + 1$ leaves. If $a = b$ then the Wavelet Tree is simply a leaf labelled a. 
+Otherwise it has an internal root node $v_{root}$ that represents the string $S[1,n]$. $v_{root}$ stores bitmap $B_{v_{root}}$ in the following way:
 
 \vspace{0.5 cm}
 \begin{mdframed}[nobreak]
@@ -53,12 +60,12 @@ A Wavelet Tree can be described recursively over a sub-alphabet range $[a .. b] 
 \end{mdframed}
 
 
-We now know how to construct the bitmap in the root of the Wavelet Tree. Now we define how symbols of the string is split into the right- and left sub-tree.
+We now know how to construct the bitmap in the root of the Wavelet Tree and define how symbols of the string is split into the right- and left sub-tree.
 
 
 \vspace{0.5 cm}
 \begin{mdframed}[nobreak]
-\textbf{Definition:} Splitting string into right and left sub-tree and sub-trees ar also Wavelet Trees. \\
+\textbf{Definition:} Splitting string into right and left sub-tree also makes sub-trees into Wavelet Trees. \\
 
 \noindent
 Let $S_0[1,n_0] =$ subsequence of $S[1,n]$ formed by symbols $c \leq (a + b)$/2.
@@ -71,11 +78,16 @@ Then the left child of $v_{root}$ is a Wavelet Tree for $S_0[1,n_0]$ over alphab
 \end{mdframed}
 \vspace{0.5 cm}
 
+Having generated the left and right sub-trees the construction process (splitting of string and bitmap construction) continues recursively on the root of each of the sub-trees until it end up in a leaf.
+
 \subsubsection{Complexity}
-The height of the Wavelet Tree is  $\lceil \log \sigma \rceil$ and it has $\sigma$ leaves and $\sigma - 1$ internal nodes. At each level in the tree n bits are stored and in the last level at most n bits are stored. $n \lceil \log \sigma \rceil$ is an upper bound to the total number of bits that the Wavelet Tree stores. The Wavelet Tree can be constructed in $O(n \log \sigma)$ time.
+The height of the Wavelet Tree is  $\lceil \log \sigma \rceil$ and it has $\sigma$ leaves and $\sigma - 1$ internal nodes. 
+At each level in the tree n bits are stored and in the last level at most n bits are stored. $n \lceil \log \sigma \rceil$ is an upper bound to the total number of bits that the Wavelet Tree stores. 
+The Wavelet Tree can be constructed in $O(n \log \sigma)$ time.
 
 \subsection{Rank Query}
-Rank counts the number of occurrences of the specified character up to and including the specified position.
+Rank counts the number of occurrences of the specified character up to and including the specified position. 
+It starts from the root of the Wavelet Tree and moves down through the tree until it hits the leaf of the input character, \citep{Claude08practicalrankselect}.
 
 \begin{mdframed}[nobreak]
 \begin{algorithmic} 
@@ -107,12 +119,13 @@ The naive implementation of \textproc{BinaryRank} where you loop through the bin
 To make binary rank fast, we use the \texttt{popcount} instruction that counts the number of 1s in a given binary number.
 The binary rank can then be found by summing the result of calling \texttt{popcount} on each machine word up to a given $Position$.
 When the index of the rank query is not a multiple of the machine word size, we need to constrain what part of the machine word is counted using \texttt{popcount}. This can be done by constructing a bitmask by bitshifting the number 1 $Position$ times towards the most significant bit and then subtracting one, as that will create a machine word where the $Position$ least significant bits are set to 1 and the rest to 0.
-Then we do a bitwise \texttt{AND} operation on this bitmask and the machine word containing the bit corresponding to $Position$, and call \texttt{popcountl} on the result. Using \texttt{popcount} \textproc{BinaryRank} becomes a $O(N/wordsize) = O(N)$ operation. So in theory still O(N) since $wordsize$ is a constant factor, but it has a large practical effect on performance.
+Then we do a bitwise \texttt{AND} operation on this bitmask and the machine word containing the bit corresponding to $Position$, and call \texttt{popcountl} on the result. 
+Using \texttt{popcount} \textproc{BinaryRank} becomes a $O(N/wordsize) = O(N)$ operation. So in theory still O(N) since $wordsize$ is a constant factor, but it has a large practical effect on performance.
 As also noted in~\citep{Navjda13}, we don't need to count the number of 0s, although required by the algorithm, as we can simply take the number of bits in the string and subtract the number of 1s to calculate the number of 0s.
 
 \subsection{Select query}
 \textproc{Select} queries the Wavelet Tree for the position of the i'th occurrence of the specified character.
-It starts from the leaf of the character and queries up through the tree, which means you need to know the leaf of the character in advance.
+It starts from the leaf of the character and queries up through the tree, which means you need to know the leaf of the character in advance \citep{Claude08practicalrankselect}. 
 
 
 \begin{mdframed}[nobreak]
@@ -147,12 +160,17 @@ It starts from the leaf of the character and queries up through the tree, which 
 \end{mdframed}
 
 
-We split Select into two functions; \textproc{Select} which is called on the leaf and \textproc{SelectRec} which is called on the parent of the leaf and continues recursively until the root is reached. This makes sense because it saves us a check for whether we are a leaf or not at each recursive call and since we start out in a leaf and will never meet one again that check would only be true once. 
+We split Select into two functions; \textproc{Select} which is called on the leaf and \textproc{SelectRec} which is called on the parent of the leaf and continues recursively until the root is reached. 
+This makes sense because it saves us a check for whether we are a leaf or not at each recursive call and since we start out in a leaf and will never meet one again that check would only be true once. 
 
-Figuring out the \textproc{CharBit} is a lot easier for \textproc{Select} than for \textproc{Rank} since we query bottom-up and can just check whether the current node is a left child or a right child. In \textproc{Rank} one needs to calculate the split character and then check whether the input character is before or after it in the alphabet.
+Figuring out the \textproc{CharBit} is a lot easier for \textproc{Select} than for \textproc{Rank} since we query bottom-up and can just check whether the current node is a left child or a right child. 
+In \textproc{Rank} one needs to calculate the split character and then check whether the input character is before or after it in the alphabet.
 
 \subsubsection{Binary Select}
-\textproc{BinarySelect} returns the position of the i'th occurrence of 1 or 0 (\textproc{CharBit}) in a bitset. The simple implementation is to loop through the bitset and when $i$ occurrences of either 1 or 0 has been seen then return the position of the last one. This takes O(N) time making \textproc{BinarySelect} a huge bottleneck for \textproc{Select} since is it called for each level in the Wavelet Tree. In \ref{sec:ImplBinarySelect} we describe how to improve the practical running time of \textproc{BinarySelect} using the \textit{popcount} instruction.
+\textproc{BinarySelect} returns the position of the i'th occurrence of 1 or 0 (\textproc{CharBit}) in a bitset. 
+The simple implementation is to loop through the bitset and when $i$ occurrences of either 1 or 0 has been seen then return the position of the last one. 
+This takes O(N) time making \textproc{BinarySelect} a huge bottleneck for \textproc{Select} since is it called for each level in the Wavelet Tree. 
+In \ref{sec:ImplBinarySelect} we describe how to improve the practical running time of \textproc{BinarySelect} using the \textit{popcount} instruction.
 
 \subsection{Applications}
 

@@ -1,1 +1,9 @@
 \section{Related Work}
+In our implementation of rank and select we have improved binary rank and binary select using $popcount$.
+\cite{Gonzalez05practicalimplementation} has also looked at improving binary rank and binary select using $popcount$. 
+In section 1.1 they describe a constant time binary rank algorithm that requires a pre-computed look-up table to compute the rank. 
+This table uses quite a lot of memory space. 
+They improve the algorithm by decreasing the space of the lookup table by calculating it using $popcount$ which they describe in section 1.2. 
+
+They do binary select using the same structure as rank uses: First binary search for the proper superblock using $R_s$ , then binary search that superblock for the proper block using $R_b$, and finally binary search for the position inside the block. 
+This takes $O(\log n)$ time and requires little space.
