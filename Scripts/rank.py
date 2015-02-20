@@ -34,11 +34,11 @@ fileHandle = open(fileName, "rb")
 intArray = array.array('I')
 intArray.fromfile(fileHandle, amount)
 
-symbol = 2;
+symbol = 3;
 #print(intArray)
 rank = rank(symbol, amount)
 print("rank: " + str(rank))
-position = select(symbol, rank)
+position = select(symbol, 2000)
 print("select: " + str(position))
 print(intArray[position])
 
