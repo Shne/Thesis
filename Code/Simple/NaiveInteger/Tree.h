@@ -22,9 +22,9 @@ private:
     unsigned long alphabetMin, alphabetMax, inputSize;
     
 public:
-    Tree(vector<int>* input, int amount, int alphabetSize);
-    int rank(int character, unsigned long index);
-    int select(int character, unsigned long occurance);
+    Tree(vector<int>* input, int amount, int alphabetSize, uint skew);
+    int rank(int character, unsigned long index, uint skew);
+    int select(int character, unsigned long occurance, uint skew);
 };
 
 

@@ -30,12 +30,12 @@ private:
     Node* right;
 public: 
     Node();
-    Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNode);
-    int rank(int character, unsigned long index, int alphabetMin, int alphabetMax);
+    Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNode, uint skew);
+    int rank(int character, unsigned long index, int alphabetMin, int alphabetMax, uint skew);
     unsigned long int binaryRankPopcountInstruction(unsigned long pos);
     int parentSelect(bool charBit, unsigned long occurance);
     int binarySelect(bool charBit, unsigned long occurance);
-    Node* getLeaf(int character, int alphabetMin, int alphabetMax);
+    Node* getLeaf(int character, int alphabetMin, int alphabetMax, uint skew);
     int select(int character, unsigned long occurance);
 };
 

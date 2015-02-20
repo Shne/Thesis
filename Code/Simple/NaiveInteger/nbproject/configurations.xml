@@ -92,6 +92,11 @@
         <asmTool>
           <developmentMode>5</developmentMode>
         </asmTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibLibItem>papi</linkerLibLibItem>
+          </linkerLibItems>
+        </linkerTool>
       </compileType>
       <item path="Bitmap.cpp" ex="false" tool="1" flavor2="0">
       </item>

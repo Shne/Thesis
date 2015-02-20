@@ -12,7 +12,7 @@
 
 using namespace std;
 
-Node::Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNode)
+Node::Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNode, uint skew)
     : isLeaf(false), left(nullptr), right(nullptr), parent(parentNode) {
     
     int alphabetSize = alphabetMax - alphabetMin +1;
@@ -23,7 +23,7 @@ Node::Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNod
         return;
     }
    
-    int split = (alphabetSize-1)/SKEW + alphabetMin;
+    int split = (alphabetSize-1)/skew + alphabetMin;
     int leftAlphabetMin = alphabetMin;
     int leftAlphabetMax = split;
     int rightAlphabetMin = split+1;
@@ -60,13 +60,13 @@ Node::Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNod
     input->clear();
     delete input;
     if(rightString->size() > 0) {
-        right = new Node(rightString, rightAlphabetMin, rightAlphabetMax, this);
+        right = new Node(rightString, rightAlphabetMin, rightAlphabetMax, this, skew);
     } else {
         rightString->clear();
         delete rightString;
     }
     if(leftString->size() > 0) {
-        left = new Node(leftString, leftAlphabetMin, leftAlphabetMax, this);
+        left = new Node(leftString, leftAlphabetMin, leftAlphabetMax, this, skew);
     } else {
         leftString->clear();
         delete leftString;
@@ -74,14 +74,14 @@ Node::Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNod
 }
 
 
-int Node::rank(int character, unsigned long index, int alphabetMin, int alphabetMax){
+int Node::rank(int character, unsigned long index, int alphabetMin, int alphabetMax, uint skew){
     if(isLeaf){
 //        cout << "Rank Leaf" << endl;
         return index;
     }
     
     int alphabetSize = alphabetMax - alphabetMin +1;
-    int split = (alphabetSize-1)/SKEW + alphabetMin;
+    int split = (alphabetSize-1)/skew + alphabetMin;
     int leftAlphabetMin = alphabetMin;
     int leftAlphabetMax = split;
     int rightAlphabetMin = split+1;
@@ -91,9 +91,9 @@ int Node::rank(int character, unsigned long index, int alphabetMin, int alphabet
     unsigned long pos = charBit ? binaryRankPopcountInstruction(index) : index - binaryRankPopcountInstruction(index);
     unsigned long rank = 0;
     if(charBit && right != nullptr) {
-        rank = right->rank(character, pos, rightAlphabetMin, rightAlphabetMax); //right sub tree
+        rank = right->rank(character, pos, rightAlphabetMin, rightAlphabetMax, skew); //right sub tree
     }else if(left != nullptr){
-        rank = left->rank(character, pos, leftAlphabetMin, leftAlphabetMax); //right sub tree
+        rank = left->rank(character, pos, leftAlphabetMin, leftAlphabetMax, skew); //right sub tree
     }
     
     return rank;
@@ -149,13 +149,13 @@ int Node::binarySelect(bool charBit, unsigned long occurance) {
     cout << "Occurance too high!" << endl;
 }
 
-Node* Node::getLeaf(int character, int alphabetMin, int alphabetMax) {
+Node* Node::getLeaf(int character, int alphabetMin, int alphabetMax, uint skew) {
     if(isLeaf){
         return this;
     }
 
     int alphabetSize = alphabetMax - alphabetMin +1;
-    int split = (alphabetSize-1)/SKEW + alphabetMin;
+    int split = (alphabetSize-1)/skew + alphabetMin;
     int leftAlphabetMin = alphabetMin;
     int leftAlphabetMax = split;
     int rightAlphabetMin = split+1;
@@ -165,9 +165,9 @@ Node* Node::getLeaf(int character, int alphabetMin, int alphabetMax) {
 
     Node* leaf = nullptr;
     if(charBit && right != nullptr){
-        leaf = right->getLeaf(character, rightAlphabetMin, rightAlphabetMax); //right sub tree
+        leaf = right->getLeaf(character, rightAlphabetMin, rightAlphabetMax, skew); //right sub tree
     }else if(left != nullptr){
-        leaf = left->getLeaf(character, leftAlphabetMin, leftAlphabetMax); //right sub tree
+        leaf = left->getLeaf(character, leftAlphabetMin, leftAlphabetMax, skew); //right sub tree
     }
 
     return leaf;
