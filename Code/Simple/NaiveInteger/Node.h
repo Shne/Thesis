@@ -33,11 +33,12 @@ public:
     Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNode, uint skew);
     int rank(int character, unsigned long index, int alphabetMin, int alphabetMax, uint skew);
     unsigned long int binaryRankPopcountInstruction(unsigned long pos);
-    int parentSelect(bool charBit, unsigned long occurance);
-//    int binarySelect(bool charBit, unsigned long occurance);
+    ulong binaryRank(ulong index);
+    uint select(bool charBit, unsigned long occurance);
+    uint binarySelect(bool charBit, unsigned long occurance);
     ulong popcountBinarySelect(bool charBit, unsigned long occurance);
-    Node* getLeaf(int character, int alphabetMin, int alphabetMax, uint skew);
-    int select(int character, unsigned long occurance);
+    Node* getLeaf(uint character, uint alphabetMin, uint alphabetMax, uint skew);
+    uint leafSelect(uint character, unsigned long occurance);
 };
 
 #endif	/* NODE_H */

@@ -24,5 +24,5 @@ int Tree::rank(int character, unsigned long index, uint skew) {
 
 int Tree::select(int character, unsigned long occurance, uint skew) {
     Node* leaf = root.getLeaf(character, alphabetMin, alphabetMax, skew);
-    return leaf->select(character, occurance);
+    return leaf->leafSelect(character, occurance);
 }

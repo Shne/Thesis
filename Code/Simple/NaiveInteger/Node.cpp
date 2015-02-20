@@ -120,46 +120,59 @@ unsigned long Node::binaryRankPopcountInstruction(unsigned long pos) {
     return bitmapwordRank;
 }
 
-
-int Node::select(int character, unsigned long occurance) {
-    bool charBit = this == parent->right;
-    return parent->parentSelect(charBit, occurance);
+ulong Node::binaryRank(ulong pos) {
+    int i = 1;
+    int rank = 0;
+    for(auto it = bitmap.begin(); it != bitmap.end(); it++) {
+        if(i > pos) break;
+        bool currentBit = *it;
+        if(currentBit) rank++;
+        i++;
+    }
+    return rank;
 }
 
-int Node::parentSelect(bool charBit, unsigned long occurance) {
+
+uint Node::leafSelect(uint character, unsigned long occurance) {
+    //a leaf has no bitmap
+    bool charBit = this == parent->right;
+    return parent->select(charBit, occurance);
+}
+
+uint Node::select(bool charBit, unsigned long occurance) {
     if(parent == nullptr) {
         //we are root
         return popcountBinarySelect(charBit, occurance);
     }
     int position = popcountBinarySelect(charBit, occurance);
-    
+
     bool parentCharBit = this == parent->right;
-    return parent->parentSelect(parentCharBit, position+1);
+    return parent->select(parentCharBit, position+1);
 }
 
-//int Node::binarySelect(bool charBit, unsigned long occurance) {
-//    unsigned long occ = 0;
-//    for(unsigned long i = 0; i < bitmap.size(); i++) {
-//        if(bitmap[i] == charBit) { 
-//            if(++occ == occurance) {
-//                return i;
-//            }
-//        }
-//    }
-//    cout << "Occurance too high!" << endl;
-//}
+uint Node::binarySelect(bool charBit, unsigned long occurance) {
+    unsigned long occ = 0;
+    for(unsigned long i = 0; i < bitmap.size(); i++) {
+        if(bitmap[i] == charBit) { 
+            if(++occ == occurance) {
+                return i;
+            }
+        }
+    }
+    cout << "Occurance too high!" << endl;
+}
 
-Node* Node::getLeaf(int character, int alphabetMin, int alphabetMax, uint skew) {
+Node* Node::getLeaf(uint character, uint alphabetMin, uint alphabetMax, uint skew) {
     if(isLeaf){
         return this;
     }
 
-    int alphabetSize = alphabetMax - alphabetMin +1;
-    int split = (alphabetSize-1)/skew + alphabetMin;
-    int leftAlphabetMin = alphabetMin;
-    int leftAlphabetMax = split;
-    int rightAlphabetMin = split+1;
-    int rightAlphabetMax = alphabetMax;
+    uint alphabetSize = alphabetMax - alphabetMin +1;
+    uint split = (alphabetSize-1)/skew + alphabetMin;
+    uint leftAlphabetMin = alphabetMin;
+    uint leftAlphabetMax = split;
+    uint rightAlphabetMin = split+1;
+    uint rightAlphabetMax = alphabetMax;
 
     bool charBit = character > split;
 

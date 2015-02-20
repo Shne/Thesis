@@ -85,8 +85,8 @@ int main(int argc, char** argv) {
     uint maxChar = 32;
     for(uint character = 0; character < maxChar; character++) {
         ulong rank = tree.rank(character, amount, skew);
-//        cout << "rank: " << rank << endl;
-        unsigned long pos = tree.select(character, rank, skew);
+        cout << "rank: " << rank << endl;
+//        unsigned long pos = tree.select(character, rank, skew);
 //        cout << "select: " << pos << endl;
     }
 

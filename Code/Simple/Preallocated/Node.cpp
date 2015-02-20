@@ -162,6 +162,18 @@ unsigned long Node::binaryRankPopcountInstruction(unsigned long pos) {
     return bitmapwordRank;
 }
 
+ulong Node::binaryRank(ulong pos) {
+    int i = 0;
+    int rank = 0;
+    for(i = 0; i < bitmap->size(); i++) {
+        if(i > pos) break;
+        bool currentBit = (*bitmap)[i];
+        if(currentBit) rank++;
+        i++;
+    }
+    return rank;
+}
+
 
 int Node::leafSelect(int character, unsigned long occurance) {
     bool charBit = this == parent->right;

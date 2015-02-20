@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
             << end_cycles - start_cycles << "\t" //real cycles
             << end_usec - start_usec << "\t" //wall time in microseconds
             << values[0] << "\t" // cycles
-            << values[1] << "\t" // cache misses
+            << values[1] << "\t" // lvl1 cache misses
             << values[2] << endl; // branch mispredictions
     
     
@@ -85,12 +85,12 @@ int main(int argc, char** argv) {
     start_cycles = PAPI_get_real_cyc();
     start_usec = PAPI_get_real_usec();
 
-    uint maxChar = 32;
+    uint maxChar = 100;
     for(uint character = 0; character < maxChar; character++) {
-        ulong rank = tree.rank(character, amount, skew);
-        cout << "rank: " << rank << endl;
-        unsigned long pos = tree.select(character, rank, skew);
-        cout << "select: " << pos << endl;
+//        ulong rank = tree.rank(character, amount, skew);
+//        cout << "rank: " << rank << endl;
+        unsigned long pos = tree.select(character, 2000, skew);
+//        cout << "select: " << pos << endl;
     }
 
     end_cycles = PAPI_get_real_cyc();
@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
             << end_cycles - start_cycles << "\t" //real cycles
             << end_usec - start_usec << "\t" //wall time in microseconds
             << values[0] << "\t" // cycles
-            << values[1] << "\t" // cache misses
+            << values[1] << "\t" // lvl1 cache misses
             << values[2] << endl; // branch mispredictions
     
     return 0;
