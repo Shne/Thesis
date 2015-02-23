@@ -13,18 +13,20 @@
 
 using namespace std;
 
-void hurr(){
+void testShrinkToFit(){
     if (PAPI_library_init(PAPI_VER_CURRENT) != PAPI_VER_CURRENT) {
         fprintf(stderr,"PAPI library init error!\n");
         exit(1);
     }
     
-    /* Check to see if papi presets ecists, exists */
-    for(int i = 0; i < PAPI_END; i++){
-        if(PAPI_query_event(i) != PAPI_OK){
-            cout << i << ": false" << endl;
+    char EventCodeStr[PAPI_MAX_STR_LEN];
+    for(int i = 0; i < 108; i++){
+        PAPI_event_code_to_name(i | PAPI_PRESET_MASK, EventCodeStr);
+        
+        if(PAPI_query_event(i | PAPI_PRESET_MASK) != PAPI_OK){                        
+            cout << EventCodeStr << ": false" << endl;
         }else{
-            cout << i << ": true" << endl;
+            cout << EventCodeStr << ": true" << endl;
         }
     }
     
@@ -35,21 +37,7 @@ Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, uint skew)
     Node* node_pt = static_cast<Node*> (::operator new (sizeof(Node)*2*alphabetSize));
     root = node_pt;
     
-//    if (PAPI_library_init(PAPI_VER_CURRENT) != PAPI_VER_CURRENT) {
-//        fprintf(stderr,"PAPI library init error!\n");
-//        exit(1);
-//    }
-//    
-//    char EventCodeStr[PAPI_MAX_STR_LEN];
-//    for(int i = 0; i < 108; i++){
-//        PAPI_event_code_to_name(i | PAPI_PRESET_MASK, EventCodeStr);
-//        
-//        if(PAPI_query_event(i | PAPI_PRESET_MASK) != PAPI_OK){                        
-//            cout << EventCodeStr << ": false" << endl;
-//        }else{
-//            cout << EventCodeStr << ": true" << endl;
-//        }
-//    }
+    testShrinkToFit();
     
     double dSkew = (double) skew;
     unsigned long bitmapSize = (unsigned long) amount * log2(alphabetSize) / log2(dSkew/(dSkew-1));
