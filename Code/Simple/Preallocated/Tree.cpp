@@ -12,7 +12,7 @@
 
 using namespace std;
 
-void testShrinkToFit(){
+void getPapiEventsOnMyComputer(){
     if (PAPI_library_init(PAPI_VER_CURRENT) != PAPI_VER_CURRENT) {
         fprintf(stderr,"PAPI library init error!\n");
         exit(1);
@@ -36,7 +36,7 @@ Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, uint skew)
     Node* node_pt = static_cast<Node*> (::operator new (sizeof(Node)*2*alphabetSize));
     root = node_pt;
     
-    //testShrinkToFit();
+    //getPapiEventsOnMyComputer();
     
     double dSkew = (double) skew;
     unsigned long bitmapSize = (unsigned long) amount * log2(alphabetSize) / log2(dSkew/(dSkew-1));

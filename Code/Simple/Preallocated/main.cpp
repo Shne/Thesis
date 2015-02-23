@@ -13,7 +13,7 @@
 #include <papi.h>
 #include "IO.h"
 
-#define NUM_EVENTS 3
+#define NUM_EVENTS 1
 
 using namespace std;
 
@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
     uint alphabetSize = pow(2, atoi(argv[2]));
     uint skew = atoi(argv[3]);
     
-    int Events[NUM_EVENTS] = { PAPI_TOT_CYC, PAPI_L1_TCM, PAPI_BR_MSP };
+    int Events[NUM_EVENTS] = { PAPI_TLB_DM };
     long_long values[NUM_EVENTS];
     long_long start_cycles, end_cycles, start_usec, end_usec;
     
@@ -48,26 +48,31 @@ int main(int argc, char** argv) {
     /***************/
     /*  BUILDING  */
     /***************/
-//    string buildOutputFilename = "../../../Output/preallocated_build_n" + string(argv[1]) + "_as" + string(argv[2]) + ".output";
-//    ofstream buildOutput(buildOutputFilename, ios::app);
-//
-//    /* Start counting events */
-//    if (PAPI_start_counters(Events, NUM_EVENTS) != PAPI_OK) handle_error(1);
-//    start_cycles = PAPI_get_real_cyc();
-//    start_usec = PAPI_get_real_usec();
-//    
+    string buildOutputFilename = "../../../Output/preallocated_build_n" + string(argv[1]) + "_as" + string(argv[2]) + ".output";
+    ofstream buildOutput(buildOutputFilename, ios::app);
+
+    /* Start counting events */
+    int retval = PAPI_start_counters(Events, NUM_EVENTS);
+    if (retval != PAPI_OK) handle_error(retval);
+    start_cycles = PAPI_get_real_cyc();
+    start_usec = PAPI_get_real_usec();
+    
     Tree tree = Tree(input, amount, alphabetSize, skew);
-    return 0;
-//    end_cycles = PAPI_get_real_cyc();
-//    end_usec = PAPI_get_real_usec();
-//    if (PAPI_stop_counters(values, NUM_EVENTS) != PAPI_OK) handle_error(1);
-//    
-//    buildOutput << skew << "\t"
-//            << end_cycles - start_cycles << "\t" //real cycles
-//            << end_usec - start_usec << "\t" //wall time in microseconds
-//            << values[0] << "\t" // cycles
-//            << values[1] << "\t" // cache misses
-//            << values[2] << endl; // branch mispredictions
+    
+    end_cycles = PAPI_get_real_cyc();
+    end_usec = PAPI_get_real_usec();
+    retval = PAPI_stop_counters(values, NUM_EVENTS);
+    if (retval != PAPI_OK) handle_error(retval);
+    
+    cout << values[0] << endl;
+    
+    buildOutput << skew << "\t"
+            << end_cycles - start_cycles << "\t" //real cycles
+            << end_usec - start_usec << "\t" //wall time in microseconds
+            << values[0] << "\t" // cycles
+            << values[1] << "\t" // cache misses
+            << values[2] << "\t" // branch mispredictions
+            << values[3] << endl; // TLB
     
     
     
@@ -78,7 +83,8 @@ int main(int argc, char** argv) {
     ofstream queryOutput(queryOutputFilename, ios::app);
     
     /* Start counting events */
-    if (PAPI_start_counters(Events, NUM_EVENTS) != PAPI_OK) handle_error(1);
+    retval = PAPI_start_counters(Events, NUM_EVENTS);
+    if (retval != PAPI_OK) handle_error(retval);
     start_cycles = PAPI_get_real_cyc();
     start_usec = PAPI_get_real_usec();
 
@@ -94,7 +100,8 @@ int main(int argc, char** argv) {
     end_usec = PAPI_get_real_usec();
 
     /* Stop counting events */
-    if (PAPI_stop_counters(values, NUM_EVENTS) != PAPI_OK) handle_error(1);
+    retval = PAPI_stop_counters(values, NUM_EVENTS);
+    if (retval != PAPI_OK) handle_error(retval);
 
 //    output << "# [SKEW] [lvl1 cache misses] [branch mispredictions]" << endl;
     queryOutput  << skew << "\t"
@@ -102,7 +109,8 @@ int main(int argc, char** argv) {
             << end_usec - start_usec << "\t" //wall time in microseconds
             << values[0] << "\t" // cycles
             << values[1] << "\t" // cache misses
-            << values[2] << endl; // branch mispredictions
+            << values[2] << "\t" // branch mispredictions
+            << values[3] << endl; // TLB
 
     return 0;
 }
