@@ -65,22 +65,21 @@ But since we are only interested in the difference between using \texttt{popcoun
 \input{valuesForPopcountDifference}
 \end{figure}
 
-In figure~\ref{fig:rankPopcountDiff} and \ref{fig:selectPopcountDiff} we see the resulting cpu cycles, wall time, cache misses and branch mispredictions for our rank and select queries, respectively.
+In figure~\ref{fig:rankPopcountDiff}, \ref{fig:selectPopcountDiff}, and \ref{fig:valuesForPopcountDiff} we see the resulting cpu cycles, wall time, cache misses and branch mispredictions for our rank and select queries, respectively.
 Notice that the y axis is logarithmic in both figures. This was done to be able to fit all the bars into one figure and not have any of them be so small that they couldn't be seen, such as the branch mispredictions when using \texttt{popcount}.
+Figure~\ref{fig:valuesForPopcountDiff} is included because getting a sense of the relative values can be difficult when using a logarithmic y-axis.
+The percentage column in Figure~\ref{fig:valuesForPopcountDiff} is the size of the improved value relative to the original.
 
-In both figures we see that the algorithm using \texttt{popcount} is much faster, using only a fraction of the time of the other algorithm, about 1.2\% for rank and 0.6\% for select.
+In all three figures we see that the algorithm using \texttt{popcount} is much faster, using only a fraction of the time of the other algorithm, about 1.2\% for rank and 0.6\% for select.
 The massive reduction in branch mispredictions likely accounts for some of the saved cpu cycles.
 Given that the branch misprediction penalty on the Ivy Bridge architecture (on which this experiment was run) is about "15 cycles or more"~\cite{agner}, we can calculate an estimate of how many cpu cycles the branch misprediction reduction has saved us.
 The number of saved branch mispredictions for rank is $\num{308338106.9} - \num{1813.8} = \num{308336293.1}$ mispredictions. Assuming a penalty of 15 cycles this becomes $\num{308336293.1} \times 15 = \num{4625044396.5}$ cpu cycles saved, which is $\num{4625044396.5} / (\num{88684352531.8} - \num{1036779101.5}) = \num{0.05276865308} = 5.28\%$ of the total amount of cpu cycles saved.
-This means that the branch mispredictions do have an effect, but it is only a small part of this increase in speed. The main improvement, we assume, comes from only using a few cpu cycles per word of the bitmap to calculate the binary rank.
+This means that the branch mispredictions do have an effect, but it is only a small part of this increase in speed. The main improvement, we assume, comes from using only a few cpu cycles per word of the bitmap to calculate the binary rank, as well as the slight decrease in cache misses.
 
-By similar calculations the saved cpu cycles from branch mispredictions for select is $48.46\%$ of the total saved. 
+By similar calculations the saved cpu cycles from branch mispredictions for select is $48.46\%$ of the total saved. We expect this is because of the much higher number of branch mispredictions and the much lower number of cycles for the original select algorithm, as well as the fact that we can't use \texttt{popcount} for every word of the bitmap but must go back to doing manual counting of the bits when we find the word the sought-after occurrence is in.
 
+\subsubsection{Further improvements}
+Looking at the values in Figure~\ref{fig:valuesForPopcountDiff}, we find that an obvious next step would be to reduce the number of cache misses. One way to do this is to control the memory layout of the nodes and their bitmaps and then make it more likely that the queries will traverse the nodes in such a way that the next item is already in cache, either in the same cacheline or one that has been prefetched.
 
-
-
-
-
-
-
-[We then had the idea of skewing the tree to reduce branch mispredictions and cache-misses. but to reduce cache misses, we also need to control the memory layout... see following section]
+We will do this by placing nodes and bitmaps consecutively in memory that are mirrored pre-order in the tree, 'mirrored' meaning we go down the right side first.
+We describe this in section~\ref{sec:memorylayout}.
