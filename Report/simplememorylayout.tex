@@ -14,7 +14,7 @@ The pointer points to the position of the last node in the array, and so before 
 
 Because the size of each bitmap is unknown at compile time, we cannot use an array, and so we must do it in another way. We still want the bitmaps stored consecutively in memory and because the bitmaps take up the most space, we would like to ensure that the bits are tightly packed.
 We allocate the bitmaps as one giant bitmap of size $n \times log_{skew}(\sigma)$, where $skew$ is the number we divide by to skew our tree, as that is the maximum possible size required to store all the bitmaps for all the nodes (TODO: verify this!). We then store an offset and a size for the bitmap in each node, so we can index into the giant bitmap and access the bits corresponding to the node.
-After having constructed the entire tree, we then shrink the giant bitmap to fit its actual size, to not waste the memory when the tree is in use for querying.
+After having constructed the entire tree, we then shrink the giant bitmap to fit its actual size, to not waste the memory when the tree is in use for querying. Shrinking the bitmap takes less than a microsecond so it does not impact the construction time in any significant way.
 If we had allocated a bitmap for each node individually, they would have been word-aligned, and the bits between the end of one bitmap and the start of another would have gone unused and so, wasted.
 
 The nodes now contain, in addition to the previously mentioned pointers, a pointer to the large bitmap, an offset and a size.
