@@ -35,6 +35,18 @@ The Naïve Wavelet Tree construction algorithm is recursively defined, calling i
 \subsection{Experiments}
 [Running time, Cache-Misses, branch miss-predictions, etc]
 
+\subsubsection{Rank and Select using Popcount}
+We wanted to see how much of an improvement using the native cpu instruction \texttt{popcount} was, and how it affected the cache misses and branch mispredictions.
+
+We wrote our program to build the tree, then run 100 rank or select queries for the characters 0 to 99.
+For the rank queries we used the size of the input string as the positional argument so that the entire tree would be used in the query.
+For the select queries we queried for the 2000th occurrence because previously run rank queries showed us that each character we queried for occurred about 2400-2600 times in the input string we used, and we could then be reasonably sure that each character in the alphabet would occur at least 2000 times.
+
+It shouldn't matter which characters we choose as they exist all throughout the string randomly placed.
+Choosing characters from the beginning of the alphabet will make the queries traverse down the left side of the tree structure, but this should also not pose a problem for this test.
+It might cause the queries to go faster compared to querying for characters chosen evenly from the alphabet as the memory for the left side likely will be kept in cache between the queries.
+But since we are only interested in the difference between using \texttt{popcount} and not using \texttt{popcount}, and both algorithms have the same advantage from the choice of characters, it should not skew our results.
+
 \begin{figure}
 \caption{Simple Binary Rank vs. Binary Rank using the Popcount instruction.}
 \label{fig:rankPopcountDiff}
@@ -44,8 +56,30 @@ The Naïve Wavelet Tree construction algorithm is recursively defined, calling i
 \begin{figure}
 \caption{Simple Binary Select vs. Binary Select using the Popcount instruction.}
 \label{fig:selectPopcountDiff}
-\input{rankPopcountDifference}
+\input{selectPopcountDifference}
 \end{figure}
+
+\begin{figure}
+\caption{Values for Figure~\ref{fig:rankPopcountDiff} and \ref{fig:selectPopcountDiff}}
+\label{fig:valuesForPopcountDiff}
+\input{valuesForPopcountDifference}
+\end{figure}
+
+In figure~\ref{fig:rankPopcountDiff} and \ref{fig:selectPopcountDiff} we see the resulting cpu cycles, wall time, cache misses and branch mispredictions for our rank and select queries, respectively.
+Notice that the y axis is logarithmic in both figures. This was done to be able to fit all the bars into one figure and not have any of them be so small that they couldn't be seen, such as the branch mispredictions when using \texttt{popcount}.
+
+In both figures we see that the algorithm using \texttt{popcount} is much faster, using only a fraction of the time of the other algorithm, about 1.2\% for rank and 0.6\% for select.
+The massive reduction in branch mispredictions likely accounts for some of the saved cpu cycles.
+Given that the branch misprediction penalty on the Ivy Bridge architecture (on which this experiment was run) is about "15 cycles or more"~\cite{agner}, we can calculate an estimate of how many cpu cycles the branch misprediction reduction has saved us.
+The number of saved branch mispredictions for rank is $\num{308338106.9} - \num{1813.8} = \num{308336293.1}$ mispredictions. Assuming a penalty of 15 cycles this becomes $\num{308336293.1} \times 15 = \num{4625044396.5}$ cpu cycles saved, which is $\num{4625044396.5} / (\num{88684352531.8} - \num{1036779101.5}) = \num{0.05276865308} = 5.28\%$ of the total amount of cpu cycles saved.
+This means that the branch mispredictions do have an effect, but it is only a small part of this increase in speed. The main improvement, we assume, comes from only using a few cpu cycles per word of the bitmap to calculate the binary rank.
+
+By similar calculations the saved cpu cycles from branch mispredictions for select is $48.46\%$ of the total saved. 
+
+
+
+
+
 
 
 
