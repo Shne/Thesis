@@ -48,26 +48,26 @@ int main(int argc, char** argv) {
     /***************/
     /*  BUILDING  */
     /***************/
-    string buildOutputFilename = "../../../Output/preallocated_build_n" + string(argv[1]) + "_as" + string(argv[2]) + ".output";
-    ofstream buildOutput(buildOutputFilename, ios::app);
-
-    /* Start counting events */
-    if (PAPI_start_counters(Events, NUM_EVENTS) != PAPI_OK) handle_error(1);
-    start_cycles = PAPI_get_real_cyc();
-    start_usec = PAPI_get_real_usec();
-    
+//    string buildOutputFilename = "../../../Output/preallocated_build_n" + string(argv[1]) + "_as" + string(argv[2]) + ".output";
+//    ofstream buildOutput(buildOutputFilename, ios::app);
+//
+//    /* Start counting events */
+//    if (PAPI_start_counters(Events, NUM_EVENTS) != PAPI_OK) handle_error(1);
+//    start_cycles = PAPI_get_real_cyc();
+//    start_usec = PAPI_get_real_usec();
+//    
     Tree tree = Tree(input, amount, alphabetSize, skew);
-    
-    end_cycles = PAPI_get_real_cyc();
-    end_usec = PAPI_get_real_usec();
-    if (PAPI_stop_counters(values, NUM_EVENTS) != PAPI_OK) handle_error(1);
-    
-    buildOutput << skew << "\t"
-            << end_cycles - start_cycles << "\t" //real cycles
-            << end_usec - start_usec << "\t" //wall time in microseconds
-            << values[0] << "\t" // cycles
-            << values[1] << "\t" // cache misses
-            << values[2] << endl; // branch mispredictions
+    return 0;
+//    end_cycles = PAPI_get_real_cyc();
+//    end_usec = PAPI_get_real_usec();
+//    if (PAPI_stop_counters(values, NUM_EVENTS) != PAPI_OK) handle_error(1);
+//    
+//    buildOutput << skew << "\t"
+//            << end_cycles - start_cycles << "\t" //real cycles
+//            << end_usec - start_usec << "\t" //wall time in microseconds
+//            << values[0] << "\t" // cycles
+//            << values[1] << "\t" // cache misses
+//            << values[2] << endl; // branch mispredictions
     
     
     
@@ -85,7 +85,7 @@ int main(int argc, char** argv) {
     uint maxChar = 32;
     for(uint character = 0; character < maxChar; character++) {
         ulong rank = tree.rank(character, amount, skew);
-        cout << "rank: " << rank << endl;
+        //cout << "rank: " << rank << endl;
 //        unsigned long pos = tree.select(character, rank, skew);
 //        cout << "select: " << pos << endl;
     }

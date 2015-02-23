@@ -54,7 +54,7 @@ FFLAGS=
 ASFLAGS=--64
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-lpapi
+LDLIBSOPTIONS=-L../../../../../../Downloads/papi-5.4.0/src -lpapi
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
