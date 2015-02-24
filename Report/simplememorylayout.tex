@@ -1,5 +1,13 @@
-\section{Simple Algorithm with controlled Memory Layout}
-Same algorithm as the Simple, Naïve approach, but with a controlled memory layout.
+\section{Simple Algorithm with controlled Memory Layout and Skew}
+\label{sec:memorylayout}
+Mostly the same algorithm as the Simple, Naïve approach, but with a controlled memory layout and a skew of the tree.
+
+\subsection{Skewing The Tree}
+We want to reduce the number of cache misses in our rank and select queries. To do this we to try and make it so that the next piece of memory the algorithm accesses is already loaded into a cacheline. One way of doing this is to have the data ordered in memory such that it will be accessed consecutively in memory, as this will mean full utilization of each cacheline as well as enabling prefetching of the next piece of memory to be effective.
+[TODO: explain prefetching, with citations]
+A way of achieving this in our case would be to skew the entire tree to one side, so that it is most likely that the queries will go to one side for most of the traversal and then control the memory layout so we can put that side of the tree next in memory.
+ 
+
 
 \subsection{Controlled Memory Layout}
 In order to reduce cache misses by skewing the tree, we needed a memory layout that would put the node that is most often accessed next in the same cache line, or if failing that, next in memory so that prefetching will have it ready.
@@ -12,17 +20,20 @@ As such, we can and do allocate the memory for the nodes by allocating an array,
 We pass a reference to a pointer into the array from parent to child nodes during construction, so they know where to allocate their child nodes.
 The pointer points to the position of the last node in the array, and so before each instantiation of a new node, we increment the pointer so it points to free space, then place the new node there.
 
+\subsection{Preallocating the Bitmaps}
 Because the size of each bitmap is unknown at compile time, we cannot use an array, and so we must do it in another way. We still want the bitmaps stored consecutively in memory and because the bitmaps take up the most space, we would like to ensure that the bits are tightly packed.
-We allocate the bitmaps as one giant bitmap of size $n \times log_{skew}(\sigma)$, where $skew$ is the number we divide by to skew our tree, as that is the maximum possible size required to store all the bitmaps for all the nodes (TODO: verify this!). We then store an offset and a size for the bitmap in each node, so we can index into the giant bitmap and access the bits corresponding to the node.
-After having constructed the entire tree, we then shrink the giant bitmap to fit its actual size, to not waste the memory when the tree is in use for querying. 
-Shrinking the bitmap takes less than a microsecond so it does not impact the construction time in any significant way. We use the \texttt{vector<bool> resize()} method to shrink the bitmap using \texttt{bitmapOffset} as parameter. 
-\texttt{bitmapOffset} is incremented in each node and will at the end of construction contain the actual size for the bitmap.
-If we had allocated a bitmap for each node individually, they would have been word-aligned, and the bits between the end of one bitmap and the start of another would have gone unused and essentially wasted.
+
+We allocate the bitmaps as one giant bitmap the size of the maximum possible size required to store all the bitmaps for all the nodes. The sum of the size of all bitmaps on one layer of the tree can at most be $n$ and we can at most have $h$ layers, so the maximum size becomes
+\[n \cdot h\]
+where $n$ is the number of characters in the string and $h$ is the max height of a skewed binary tree and is defined in~\cite{Nievergelt:1972:BST:800152.804906} to be:
+\[ h = \frac{log(2\sigma+1)}{ log(\frac{1}{1-\frac{1}{skew}})}\]
+where $skew$ is the number we divide by to skew our tree.  We then store an offset and a size for the bitmap in each node, so we can index into the giant bitmap and access the bits corresponding to the node.
+After having constructed the entire tree, we then shrink the giant bitmap to fit its actual size, to not waste the memory when the tree is in use for querying. Shrinking the bitmap takes less than a microsecond so it does not impact the construction time in any significant way. We use the \texttt{resize()} method to shrink the bitmap to the size of \texttt{bitmapOffset}, the counter that has been incremented to always point at the next free space in the bitmap during the construction and so is also the actual filled size of the bitmap.
+If we had allocated a bitmap for each node individually, they would have been word-aligned, and the bits between the end of one bitmap and the start of another would have gone unused and so, wasted.
 
 The nodes now contain, in addition to the previously mentioned pointers, a pointer to the large bitmap, an offset and a size.
-The size of each of these variables is known at compile time and doesn't preclude us from allocating the nodes in an array.
 
-\subsection{Preallocating the Memory}
+
 
 \subsection{Experiments}
 [Testing Running time, cache-misses and branch mispredictions]
