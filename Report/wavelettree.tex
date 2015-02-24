@@ -116,12 +116,7 @@ It starts from the root of the Wavelet Tree and moves down through the tree unti
 A cornerstone of the rank algorithm for a Wavelet Tree is calculating the binary rank of a character on a bitmap at a node.
 The naive implementation of \textproc{BinaryRank} where you loop through the binary number and count the number of 1s or 0s takes O(N) time, which is too much because the running time of the rank algorithm depends on the running time of \textproc{BinaryRank} since \textproc{BinaryRank} is called once per layer of the tree in order to answer a single rank query on the tree.
 
-To make binary rank fast, we use the \texttt{popcount} instruction that counts the number of 1s in a given binary number.
-The binary rank can then be found by summing the result of calling \texttt{popcount} on each machine word up to a given $Position$.
-When the index of the rank query is not a multiple of the machine word size, we need to constrain what part of the machine word is counted using \texttt{popcount}. This can be done by constructing a bitmask by bitshifting the number 1 $Position$ times towards the most significant bit and then subtracting one, as that will create a machine word where the $Position$ least significant bits are set to 1 and the rest to 0.
-Then we do a bitwise \texttt{AND} operation on this bitmask and the machine word containing the bit corresponding to $Position$, and call \texttt{popcount} on the result. 
-Using \texttt{popcount} \textproc{BinaryRank} becomes a $O(N/wordsize) = O(N)$ operation. So in theory still O(N) since $wordsize$ is a constant factor, but it has a large practical effect on performance.
-As also noted in~\citep{Navjda13}, we don't need to count the number of 0s, although required by the algorithm, as we can simply take the number of bits in the string and subtract the number of 1s to calculate the number of 0s.
+To make binary rank fast, we later used the \texttt{popcount} instruction that counts the number of 1s in the binary represenation of a given number. See section~\ref{sec:popcountBinaryRank}.
 
 \subsection{Select query}
 \textproc{Select} queries the Wavelet Tree for the position of the i'th occurrence of the specified character.
