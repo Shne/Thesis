@@ -39,7 +39,7 @@
 *.blg
 
 #netbeans specific
-**/nbproject/private/private.xml
+**/nbproject/private/*
 
 # Own choices
 Data/
@@ -48,7 +48,6 @@ Data/
 /Code/Simple/Naive/dist/
 !/Articles/*
 *callgrind.out.*
-*configurations.xml
 
 #link to boost library
 /Code/boost

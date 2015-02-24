@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
     uint alphabetSize = pow(2, atoi(argv[2]));
     uint skew = atoi(argv[3]);
     
-    int Events[NUM_EVENTS] = { PAPI_TLB_DM };
+    int Events[NUM_EVENTS] = { PAPI_TLB_DM }; //PAPI_TOT_CYC, PAPI_L1_TCM, PAPI_BR_MSP
     long_long values[NUM_EVENTS];
     long_long start_cycles, end_cycles, start_usec, end_usec;
     
@@ -63,8 +63,6 @@ int main(int argc, char** argv) {
     end_usec = PAPI_get_real_usec();
     retval = PAPI_stop_counters(values, NUM_EVENTS);
     if (retval != PAPI_OK) handle_error(retval);
-    
-//    cout << values[0] << endl;
     
     buildOutput << skew << "\t"
             << end_cycles - start_cycles << "\t" //real cycles
