@@ -42,16 +42,8 @@ This means we will keep the scopes of the root node, and those near the root, al
 The solution is to allocate these strings on the heap instead, passing pointers to the subnode constructors and having them delete them (as their input strings) once they have split them.
 Doing this reduced the memory usage so much that we could run it for input strings with a length above $10^8$ without exhausting the about 6GB available memory on machine 1.
 
-\subsection{Binary Rank}
-Binary Rank is implemented using the algorithm described in \ref{sec:TheoryBinaryRank}. 
-To do \textit{popcount} we use \textit{\_\_builtin\_popcountl} which is a built-in popcount instruction implemented by the GCC compiler \citep{Popcount-GCC-Builtin}. 
-It takes an \textit{unsigned long} as a parameter and returns the number of 1s in it. \textit{\_\_builtin\_popcountl} will automatically figure out how to do \textit{popcount} based on what CPU you are using. \textit{Popcount} is supported on both AMD \citep{AMD-Popcount} and Intel arhitectures \citep{Intel-Popcount}. We have verified that $popcount$ is calculated using an instruction $popcnt$ on our computers which we assume to be the fastest way to calculate $popcount$ since it is only a single instruction.
 
-\subsection{Binary Select}
-\label{sec:ImplBinarySelect}
-We improved \textproc{Binary Select} by again using the \textit{popcount} instruction. 
-We call \textit{popcount} for each word and sum up the result of \textit{popcount} along the way. 
-When the sum of $popcount$  is greater than the specified number of occurrences we do naive binary select within that word only and add that result to \textit{(number of words seen)} $* wordsize$ giving us the binary select value.
+
 
 
 \subsection{Bitmap implementation choice}

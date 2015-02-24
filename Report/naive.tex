@@ -30,12 +30,38 @@ The Naïve Wavelet Tree construction algorithm is recursively defined, calling i
 
 \noindent In our implementation, $Alphabet$, $LeftAlphabet$, and $RightAlphabet$ are stored as two integer values each: a minimum and a maximum. It is explained in~\ref{sec:UsingIntAsChar} how this is equivalent to storing the full alphabet and passing pointers into it around. $Bitmap$ is stored as a \texttt{vector<bool>} which is tightly packed, only using 1 bit per bool\footnote{\url{http://www.cplusplus.com/reference/vector/vector-bool/}}.
 
+\subsection{Optimizations}
+\subsubsection{Binary Rank using Popcount}
+\label{sec:popcountBinaryRank}
+Binary Rank was first implemented using the algorithm described in \ref{sec:TheoryBinaryRank}. 
+To improve on this, we found the intrinsic cpu instruction \texttt{popcount} which will count the number of 1s in the binary representation of the number we pass to it.
+We can get an \texttt{unsigned long} pointer from the \texttt{vector<bool>} bitmap into the backing array. We will therefore be working on \texttt{unsigned long}s and call their size (64 bits on machine 1) our wordsize.
+When using \texttt{popcount}, \textproc{BinaryRank} remains in theory an $O(N/wordsize) = O(N)$ operation, as \textit{wordsize} is a constant factor, but it has a large practical effect on performance as can be seen in section~\ref{sec:experimentPopcountRankSelect}.
 
+To use \texttt{popcount} we call \texttt{\_\_builtin\_popcountl} which is a function built into the GCC compiler \citep{Popcount-GCC-Builtin}. 
+It takes an \texttt{unsigned long} as a parameter and returns the number of 1s in it. \texttt{\_\_builtin\_popcountl} will automatically figure out how to do popcount based on what CPU you are using. Popcount as an intrinsic cpu instruction is supported on both AMD \citep{AMD-Popcount} and Intel arhitectures \citep{Intel-Popcount}.
+We have verified, by looking at the produced assembly code, that \texttt{popcount} is calculated using a cpu instruction \texttt{popcnt} on our computers which we assume to be the fastest way to calculate \texttt{popcount} since it is only a single instruction.
+	
+The binary rank can then be found by summing the result of calling \texttt{popcount} on each word of the bitmap up to a given \textit{position}.
+When the position argument of the rank query is not a multiple of the word size, we need to constrain what part of the last word is counted using \texttt{popcount}. This can be done by constructing a bitmask by bitshifting the number 1 \textit{position} times towards the most significant bit and then subtracting one, as that will create a word where the \textit{position} least significant bits are set to 1 and the rest to 0.
+Then we do a bitwise \texttt{AND} operation of this bitmask and the word containing the bit corresponding to \textit{position}, and call \texttt{popcount} on the result. 
+
+As also noted in~\citep{Navjda13}, we don't need to count the number of 0s, although required by the algorithm, as we can simply take the number of bits in the string and subtract the number of 1s to calculate the number of 0s.
+
+\subsubsection{Binary Select using Popcount}
+\label{sec:ImplBinarySelect}
+We improved \textproc{Binary Select} by again using the \texttt{popcount} instruction. 
+We iterate through the words of the bitmap and call \texttt{popcount} for each word and sum up the results along the way. 
+When the sum after the next word would be greater than the sought number of occurrences we discard the \texttt{popcount} result for the next word and fall back to the simple binary select for that next word to find the position within that word.
+
+Defining the input occurrence parameter as $io$, the number of words iterated through so far $w$, the sum so far $sum$, and the wordsize $ws$, the occurrence argument for that last simple binary select is then the $io - sum$ and the output position is $w \times ws + \textproc{SimpleBinaryRank}(bitmapwords[ws+1], io - sum)$.
+
+Again, when popcount for 0s instead of 1s is needed, we simply subtract the result of \texttt{popcount} from 1 to obtain the count of 0s.
 
 \subsection{Experiments}
-[Running time, Cache-Misses, branch miss-predictions, etc]
 
 \subsubsection{Rank and Select using Popcount}
+\label{sec:experimentPopcountRankSelect}
 We wanted to see how much of an improvement using the native cpu instruction \texttt{popcount} was, and how it affected the cache misses and branch mispredictions.
 
 We wrote our program to build the tree, then run 100 rank or select queries for the characters 0 to 99.
