@@ -48,6 +48,7 @@ Data/
 /Code/Simple/Naive/dist/
 !/Articles/*
 *callgrind.out.*
+Output/*.output
 
 #link to boost library
 /Code/boost
