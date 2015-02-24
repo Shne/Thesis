@@ -28,7 +28,6 @@ void getPapiEventsOnMyComputer(){
             cout << EventCodeStr << ": true" << endl;
         }
     }
-    
 }
 
 Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, uint skew) 
@@ -48,9 +47,6 @@ Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, uint skew)
 
     new (root) Node(input, 0, alphabetSize-1, nullptr, node_pt, bitmap, bitmapOffset, skew);
     bitmap->resize(bitmapOffset);
-    
-    //289130500
-    //120000000
 }
 
 int Tree::rank(int character, unsigned long index, uint skew) {
@@ -62,4 +58,3 @@ int Tree::select(int character, unsigned long occurance, uint skew) {
     Node* leaf = root->getLeaf(character, alphabetMin, alphabetMax, skew);
     return leaf->leafSelect(character, occurance);
 }
-
