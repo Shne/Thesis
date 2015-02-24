@@ -6,11 +6,13 @@ Mostly the same algorithm as the Simple, Naïve approach, but with a controlled 
 We want to reduce the number of cache misses in our rank and select queries. To do this we to try and make it so that the next piece of memory the algorithm accesses is already loaded into a cacheline. One way of doing this is to have the data ordered in memory such that it will be accessed consecutively in memory, as this will mean full utilization of each cacheline as well as enabling prefetching of the next piece of memory to be effective.
 [TODO: explain prefetching, with citations]
 A way of achieving this in our case would be to skew the entire tree to one side, so that it is most likely that the queries will go to one side for most of the traversal and then control the memory layout so we can put that side of the tree next in memory.
- 
-
+Skewing the tree is done by changing the way we find which character in the alphabet to split on in each node's construction.
+The split character is the last character in the alphabet of the left child node and to be able to skew the calculation we calculate it as
+\[ \frac{alphabetSize-1}{skew} + alphabetMin \]
+where $alphabetSize$ is the size of the alphabet at this node, $alphabetMin$ is the first character in the alphabet at this node, and $skew$ is the skew parameter which is 2 for a balanced tree and higher for skewed trees. E.g. a $skew$ value of 4 will mean we skew the tree by, in each node, putting 25\% of the alphabet into the left child node and 75\% into the right.
+Notice also that the division is integer division, meaning anything past the decimal point is thrown away, or in other words, like calling a \texttt{floor()} function on the result of the division.
 
 \subsection{Controlled Memory Layout}
-In order to reduce cache misses by skewing the tree, we needed a memory layout that would put the node that is most often accessed next in the same cache line, or if failing that, next in memory so that prefetching will have it ready.
 We still want to support dynamic input and alphabet sizes without recompilation, so the nodes must be dynamically allocated on the heap.
 It is impossible to know the size of the bitmap of each node before its input string is found by its parent, because the bitmap length in each node is the size of its input string.
 Because of this, we cannot store the bitmaps as part of the nodes and neither can we simply use an array of bitmaps to ensure they are in consecutive order in memory.
