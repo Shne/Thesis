@@ -50,9 +50,9 @@ Doing this reduced the memory usage so much that we could run it for input strin
 There are several bitmap implementations available to us. In the STL there is \texttt{std::bitset<size\_t N>} and \texttt{std::vector<bool>}. From the Boost library there is \texttt{boost::dynamic\_bitset<>}.
 \begin{description}
 \item[\texttt{std::bitset}] While it would technically be possible to use the \texttt{std::bitset}, it requires that the size of the bitset is known at compile time and passed as a template parameter. This means we would need to recompile the program for each $n$, or size of the input string. 
-We would also need to allocate a bitmap with room for $n$ bits for each subnode as that is the theoretically possible size required, making the size required for the bitmaps of the tree $O(n \times |nodes|) = O(n2^{log(\sigma)})$ instead of $O(n \times height) = O(n~log(\sigma))$.
-[TODO: later we do preallocation and fill it up along the way. try bitset there]
-We also feel that an actual practically usable implementation should be able to handle different size input at runtime instead of compiletime. 
+We would also need to allocate a bitmap with room for $n$ bits for each sub-node as that is the theoretically possible size required, making the size required for the bitmaps of the tree $O(n \times |nodes|) = O(n2^{log(\sigma)})$ instead of $O(n \times height) = O(n~log(\sigma))$.
+In the preallocated implementation of the Wavelet Tree we cannot use \texttt{std::bitset} either since it does not support pointer access, which means that we cannot do queries using \texttt{popcount}.
+We also feel that an actual practically usable implementation should be able to handle different size input at runtime instead of compile-time. 
 
 \item[\texttt{vector<bool>}] is a specialised implementation for \texttt{bool} that packs the data so that each \texttt{bool} only takes up one bit and is not an actual C++ container, though it tries to mimic some of the behaviour. 
 It is basically the STL implementation of a dynamically allocated bitset.
