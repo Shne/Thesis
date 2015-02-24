@@ -59,9 +59,6 @@
       </nativedebugger>
       <runprofile version="9">
         <runcommandpicklist>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" "../../../../../../Data/n7_as1024.data"</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" "Data/n6_as1024.data"</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" 6 1024</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" 6 12</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" 6 8</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" 2 6</runcommandpicklistitem>
@@ -69,8 +66,11 @@
           <runcommandpicklistitem>"${OUTPUT_PATH}" 8 12</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" 7 12</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" 7 12 2</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" 7 12 4</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" 7 12 8</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" 8 12 2</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}" 7 12 2</runcommand>
+        <runcommand>"${OUTPUT_PATH}" 8 12 2</runcommand>
         <rundir></rundir>
         <buildfirst>true</buildfirst>
         <terminal-type>0</terminal-type>

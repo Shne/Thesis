@@ -64,7 +64,7 @@ int main(int argc, char** argv) {
     retval = PAPI_stop_counters(values, NUM_EVENTS);
     if (retval != PAPI_OK) handle_error(retval);
     
-    cout << values[0] << endl;
+//    cout << values[0] << endl;
     
     buildOutput << skew << "\t"
             << end_cycles - start_cycles << "\t" //real cycles

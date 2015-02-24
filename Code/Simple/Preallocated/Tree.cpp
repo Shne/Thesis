@@ -39,15 +39,15 @@ Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, uint skew)
     //getPapiEventsOnMyComputer();
     
     double dSkew = (double) skew;
-    unsigned long bitmapSize = (unsigned long) amount * log2(alphabetSize) / log2(dSkew/(dSkew-1));
-    
-//    bitmap = new boost::dynamic_bitset<>(bitmapSize,0);
+//    unsigned long bitmapSize = amount * log2(alphabetSize) / log2(dSkew/(dSkew-1));
+    ulong bitmapSize = amount * log2((double)2*alphabetSize + 1) / log2(1.0/(1.0-(1.0/dSkew)));
+
     bitmap = new bitmap_t(bitmapSize);
 //    cout << bitmapSize << endl;
     unsigned long bitmapOffset = 0;
 
     new (root) Node(input, 0, alphabetSize-1, nullptr, node_pt, bitmap, bitmapOffset, skew);
-    bitmap->shrink_to_fit();
+    bitmap->resize(bitmapOffset);
     
 }
 
