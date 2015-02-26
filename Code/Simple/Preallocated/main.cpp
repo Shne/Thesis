@@ -47,7 +47,7 @@ inline void testBuildTime(char** argv, vector<uint>* input, uint amount, uint al
 
 
 int main(int argc, char** argv) {
-    if(argc < 4) { cout << "NOT ENOUGH ARGUMENTS" << endl; return 0; }
+    if(argc < 5) { cout << "NOT ENOUGH ARGUMENTS" << endl; return 0; }
     
     string inputFilename = "../../../Data/n" + string(argv[1]) + "_as" + string(argv[2]) + ".data";
     cout << inputFilename << endl;
@@ -64,18 +64,19 @@ int main(int argc, char** argv) {
     //getPapiEventsOnMyComputer();
     
     /***************/
-    /*  BUILDING  */
+    /*  Tests      */
     /***************/
-    
-//    testBuildTime(argv, input, amount, alphabetSize, skew);
-    
-    
-    /***************/
-    /*  Quering    */
-    /***************/
-    Tree tree = Tree(input, amount, alphabetSize, skew);    
-    testRankQuery(argv, amount, tree, skew);
-//    testSelectQuery(argv, tree, skew);
+    if(string(argv[4]) == "build") {
+        testBuildTime(argv, input, amount, alphabetSize, skew);
+    }
+    else if(string(argv[4]) == "rank"){
+        Tree tree = Tree(input, amount, alphabetSize, skew);    
+        testRankQuery(argv, amount, tree, skew);
+    }        
+    else if(string(argv[4]) == "select"){
+        Tree tree = Tree(input, amount, alphabetSize, skew);    
+        testSelectQuery(argv, amount, tree, skew);
+    }
 
     return 0;
 }

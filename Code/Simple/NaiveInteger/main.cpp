@@ -46,7 +46,7 @@ inline void testBuildTime(char** argv, vector<int>* input, int amount, int alpha
 
 
 int main(int argc, char** argv) {
-    if(argc < 4) { cout << "NOT ENOUGH ARGUMENTS" << endl; return 0; }
+    if(argc < 5) { cout << "NOT ENOUGH ARGUMENTS" << endl; return 0; }
     
     string filename = "../../../Data/n" + string(argv[1]) + "_as" + string(argv[2]) + ".data";
     cout << filename << endl;
@@ -62,18 +62,19 @@ int main(int argc, char** argv) {
     
     
     /***************/
-    /*  BUILDING   */
+    /*  Tests      */
     /***************/
-    
-//    testBuildTime(argv, input, amount, alphabetSize, skew);
-    
-    
-    /***************/
-    /*  Quering    */
-    /***************/
-    Tree tree = Tree(input, amount, alphabetSize, skew);    
-    testRankQuery(argv, amount, tree, skew);
-//    testSelectQuery(argv, tree, skew);
+    if(string(argv[4]) == "build") {
+        testBuildTime(argv, input, amount, alphabetSize, skew);
+    }
+    else if(string(argv[4]) == "rank"){
+        Tree tree = Tree(input, amount, alphabetSize, skew);    
+        testRankQuery(argv, amount, tree, skew);
+    }        
+    else if(string(argv[4]) == "select"){
+        Tree tree = Tree(input, amount, alphabetSize, skew);    
+        testSelectQuery(argv, amount, tree, skew);
+    }
     return 0;
 }
 
