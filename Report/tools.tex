@@ -14,10 +14,11 @@ It requires the analysed program itself to setup and initialize PAPI, but theref
 \end{description}
 
 \subsubsection{What counters did we use?}
-We calculate the CPU clock cycles using the \textit{PAPI\_TOT\_CYC} papi event which return the total number of unhalted CPU clock cycles. 
-We believe this value to be more accurate than calculating cycles using \textit{PAPI\_get\_real\_cyc()} which estimates the cycles based on wall time \citep{PAPI-get-real-cyc}. 
-This means that \textit{PAPI\_get\_real\_cyc()} depends on the Time Stamp Counter frequency which is constant. 
-Because of this The TSC frequency is not based on CPU frequency in any way and because work gets done at CPU frequency and not TSC frequency, \textit{PAPI\_TOT\_CYC} seems like the best choice. 
+We calculate the CPU clock cycles using the \texttt{PAPI\_TOT\_CYC} papi event which return the total number of unhalted CPU clock cycles, including when the CPU clock changes to a higher frequency in what Intel calls "Turbo Boost" or more generally "dynamic overclocking".
+We believe this value to be more accurate than calculating cycles using \texttt{PAPI\_get\_real\_cyc()} which estimates the cycles based on wall time \citep{PAPI-get-real-cyc}. 
+
+This means that \texttt{PAPI\_get\_real\_cyc()} depends on the Time Stamp Counter frequency which is constant. 
+Because of this The TSC frequency is not based on CPU frequency in any way and because work gets done at CPU frequency and not TSC frequency, \texttt{PAPI\_TOT\_CYC} seems like the best choice. 
 This is also recommended by Intel \citep{IntelMeasuringTheAverageUnhaltedFrequency}.
 
 \subsection{Profiler}
