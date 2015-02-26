@@ -60,7 +60,6 @@ int main(int argc, char** argv) {
     int alphabetSize = pow(2, atoi(argv[2]));
     uint skew = atoi(argv[3]);
     
-    
     /***************/
     /*  Tests      */
     /***************/
