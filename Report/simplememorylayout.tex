@@ -44,10 +44,12 @@ The nodes now contain, in addition to the previously mentioned pointers, a point
 
 
 \subsection{Experiments}
-[Testing Running time, cache-misses and branch mispredictions]
-\subsubsection{Preallocated}
 
-\subsubsection{Dynamic}
+\subsubsection{Query time when Skewing uncontrolled vs. controlled memory-layout}
+In this experiment we aim to show that the controlled memory layout is important in order to reduce cache misses, and that even though the skew might reduce branch mispredictions further, the increase in tree depth makes it not worth it for the algorithm without controlled memory layout.
+
+\subsubsection{Query vs. Build Time when skewing controlled memory-layout}
+In this experiment we aim to show that while skewing the tree for a controlled memory-layout algorithm greatly increases the speed of the queries, it also increases the building time of the tree. But we expect to find the increase in building time to be somewhat slight, and almost insignificant when compared to the increase in query speed, making it well worth it for most use cases.
 
 
 
