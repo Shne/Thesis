@@ -32,7 +32,7 @@ public:
     Node();
     Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNode, uint skew);
     int rank(int character, unsigned long index, int alphabetMin, int alphabetMax, uint skew);
-    unsigned long int binaryRankPopcountInstruction(unsigned long pos);
+    unsigned long int popcountBinaryRank(unsigned long pos);
     ulong binaryRank(ulong index);
     uint select(bool charBit, unsigned long occurance);
     uint binarySelect(bool charBit, unsigned long occurance);

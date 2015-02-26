@@ -88,7 +88,7 @@ int Node::rank(int character, unsigned long index, int alphabetMin, int alphabet
     int rightAlphabetMax = alphabetMax;
     
     bool charBit = character > split;
-    unsigned long pos = charBit ? binaryRankPopcountInstruction(index) : index - binaryRankPopcountInstruction(index);
+    unsigned long pos = charBit ? popcountBinaryRank(index) : index - popcountBinaryRank(index);
 //    unsigned long pos = charBit ? binaryRank(index) : index - binaryRank(index);
     unsigned long rank = 0;
     if(charBit && right != nullptr) {
@@ -100,7 +100,7 @@ int Node::rank(int character, unsigned long index, int alphabetMin, int alphabet
     return rank;
 }
 
-unsigned long Node::binaryRankPopcountInstruction(unsigned long pos) {
+unsigned long Node::popcountBinaryRank(unsigned long pos) {
     if(pos > bitmap.size()) cout << "position " << pos << " larger than bitmapsize " << bitmap.size() << endl;
     unsigned long bitmapwordRank = 0;
     

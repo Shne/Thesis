@@ -34,7 +34,7 @@ public:
     Node(vector<unsigned int>* input, unsigned int alphabetMin, unsigned int alphabetMax, Node* parentNode,
         Node* &node_pt, bitmap_t* in_bitmap, unsigned long &in_bitmapOffset, uint skew);
     int rank(int character, unsigned long index, int alphabetMin, int alphabetMax, uint skew);
-    unsigned long int binaryRankPopcountInstruction(unsigned long pos);
+    unsigned long int popcountBinaryRank(unsigned long pos);
     ulong binaryRank(ulong index);
     int select(int character, bool charBit, unsigned long occurance);
     int binarySelect(bool charBit, unsigned long occurance);
