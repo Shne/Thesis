@@ -12,30 +12,11 @@
 
 using namespace std;
 
-void getPapiEventsOnMyComputer(){
-    if (PAPI_library_init(PAPI_VER_CURRENT) != PAPI_VER_CURRENT) {
-        fprintf(stderr,"PAPI library init error!\n");
-        exit(1);
-    }
-    
-    char EventCodeStr[PAPI_MAX_STR_LEN];
-    for(int i = 0; i < 108; i++){
-        PAPI_event_code_to_name(i | PAPI_PRESET_MASK, EventCodeStr);
-        
-        if(PAPI_query_event(i | PAPI_PRESET_MASK) != PAPI_OK){                        
-            cout << EventCodeStr << ": false" << endl;
-        }else{
-            cout << EventCodeStr << ": true" << endl;
-        }
-    }
-}
 
 Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, uint skew) 
     : alphabetMin(0), alphabetMax(alphabetSize-1), inputSize(amount){
     Node* node_pt = static_cast<Node*> (::operator new (sizeof(Node)*2*alphabetSize));
-    root = node_pt;
-    
-    //getPapiEventsOnMyComputer();
+    root = node_pt;   
     
     double dSkew = (double) skew;
 //    unsigned long bitmapSize = amount * log2(alphabetSize) / log2(dSkew/(dSkew-1));

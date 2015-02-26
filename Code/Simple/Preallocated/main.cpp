@@ -12,19 +12,40 @@
 #include <sys/resource.h>
 #include <papi.h>
 #include "IO.h"
+#include "Tests.h"
 
-#define NUM_EVENTS 1
+#define NUM_EVENTS 3
 
 using namespace std;
 
-inline void handle_error (int retval) {
-    printf("PAPI error %d: %s\n", retval, PAPI_strerror(retval));
-    exit(1);
+inline void testSelectQuery(char** argv, Tree tree, uint skew){
+    testSelectSetup();    
+    uint maxChar = 100;
+    for(uint character = 0; character < maxChar; character++) {
+        unsigned long pos = tree.select(character, 2000, skew);
+    }
+    testSelectTearDown(argv, skew);
+
+    
 }
 
-/*
- * 
- */
+inline void testRankQuery(char** argv, int amount, Tree tree, uint skew){
+    testRankSetup(); 
+    uint maxChar = 100;
+    for(uint character = 0; character < maxChar; character++) {
+        ulong rank = tree.rank(character, amount, skew);
+    }
+    testRankTearDown(argv, skew);
+}
+
+inline void testBuildTime(char** argv, vector<uint>* input, uint amount, uint alphabetSize, uint skew){
+    testBuildSetup();    
+    Tree tree = Tree(input, amount, alphabetSize, skew);    
+    testBuildTearDown(argv, skew);
+}
+
+
+
 int main(int argc, char** argv) {
     if(argc < 4) { cout << "NOT ENOUGH ARGUMENTS" << endl; return 0; }
     
@@ -40,75 +61,21 @@ int main(int argc, char** argv) {
     uint alphabetSize = pow(2, atoi(argv[2]));
     uint skew = atoi(argv[3]);
     
-    int Events[NUM_EVENTS] = { PAPI_TLB_DM }; //PAPI_TOT_CYC, PAPI_L1_TCM, PAPI_BR_MSP
-    long_long values[NUM_EVENTS];
-    long_long start_cycles, end_cycles, start_usec, end_usec;
-    
+    //getPapiEventsOnMyComputer();
     
     /***************/
     /*  BUILDING  */
     /***************/
-    string buildOutputFilename = "../../../Output/preallocated_build_n" + string(argv[1]) + "_as" + string(argv[2]) + ".output";
-    ofstream buildOutput(buildOutputFilename, ios::app);
-
-    /* Start counting events */
-    int retval = PAPI_start_counters(Events, NUM_EVENTS);
-    if (retval != PAPI_OK) handle_error(retval);
-    start_cycles = PAPI_get_real_cyc();
-    start_usec = PAPI_get_real_usec();
     
-    Tree tree = Tree(input, amount, alphabetSize, skew);
-    
-    end_cycles = PAPI_get_real_cyc();
-    end_usec = PAPI_get_real_usec();
-    retval = PAPI_stop_counters(values, NUM_EVENTS);
-    if (retval != PAPI_OK) handle_error(retval);
-    
-    buildOutput << skew << "\t"
-            << end_cycles - start_cycles << "\t" //real cycles
-            << end_usec - start_usec << "\t" //wall time in microseconds
-            << values[0] << "\t" // cycles
-            << values[1] << "\t" // cache misses
-            << values[2] << "\t" // branch mispredictions
-            << values[3] << endl; // TLB
+//    testBuildTime(argv, input, amount, alphabetSize, skew);
     
     
-    
-    /****************/
-    /*  QUERYING   */
-    /****************/
-    string queryOutputFilename = "../../../Output/preallocated_query_n" + string(argv[1]) + "_as" + string(argv[2]) + ".output";
-    ofstream queryOutput(queryOutputFilename, ios::app);
-    
-    /* Start counting events */
-    retval = PAPI_start_counters(Events, NUM_EVENTS);
-    if (retval != PAPI_OK) handle_error(retval);
-    start_cycles = PAPI_get_real_cyc();
-    start_usec = PAPI_get_real_usec();
-
-    uint maxChar = 32;
-    for(uint character = 0; character < maxChar; character++) {
-        ulong rank = tree.rank(character, amount, skew);
-        //cout << "rank: " << rank << endl;
-//        unsigned long pos = tree.select(character, rank, skew);
-//        cout << "select: " << pos << endl;
-    }
-
-    end_cycles = PAPI_get_real_cyc();
-    end_usec = PAPI_get_real_usec();
-
-    /* Stop counting events */
-    retval = PAPI_stop_counters(values, NUM_EVENTS);
-    if (retval != PAPI_OK) handle_error(retval);
-
-//    output << "# [SKEW] [lvl1 cache misses] [branch mispredictions]" << endl;
-    queryOutput  << skew << "\t"
-            << end_cycles - start_cycles << "\t" //real cycles
-            << end_usec - start_usec << "\t" //wall time in microseconds
-            << values[0] << "\t" // cycles
-            << values[1] << "\t" // cache misses
-            << values[2] << "\t" // branch mispredictions
-            << values[3] << endl; // TLB
+    /***************/
+    /*  Quering    */
+    /***************/
+    Tree tree = Tree(input, amount, alphabetSize, skew);    
+    testRankQuery(argv, amount, tree, skew);
+//    testSelectQuery(argv, tree, skew);
 
     return 0;
 }
