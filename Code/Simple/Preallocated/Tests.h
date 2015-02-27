@@ -72,6 +72,8 @@ inline void testTearDown(uint amount, uint alphabetSize, uint skew, string test,
         end_usec = PAPI_get_real_usec();
         queryOutput << endl
             << "test=" << test << "\t"
+            << "amount=" << amount << "\t"
+            << "alphabetSize=" << alphabetSize << "\t"
             << "skew=" << skew << "\t" //skew
             << "real_cycles=" << end_cycles - start_cycles << "\t" //real cycles
             << "wall_time=" << end_usec - start_usec << "\t" //wall time in microseconds
