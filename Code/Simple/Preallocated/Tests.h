@@ -17,8 +17,6 @@
 #ifndef TESTS_H
 #define	TESTS_H
 
-//#define NUM_EVENTS 3
-//#define NUM_EVENTS2 3
 #define PATH_ARG_NUM 6
 
 
