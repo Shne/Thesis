@@ -17,36 +17,39 @@
 
 using namespace std;
 
-inline void testSelectQuery(char** argv, Tree tree, uint skew){
+inline void testSelectQuery(int argc, char** argv, Tree tree, uint skew){
     testSelectSetup();    
     uint maxChar = 100;
+    int maxPosition = 2000;
+    int positionStepSize = maxPosition/maxChar;
+    int position = positionStepSize;
     for(uint character = 0; character < maxChar; character++) {
-        unsigned long pos = tree.select(character, 2000, skew);
+        unsigned long pos = tree.select(character, position, skew);
+        position += positionStepSize;
     }
-    testSelectTearDown(argv, skew);
-
-    
+    testSelectTearDown(argc, argv, skew);    
 }
 
-inline void testRankQuery(char** argv, int amount, Tree tree, uint skew){
+inline void testRankQuery(int argc, char** argv, int amount, Tree tree, uint skew){
     testRankSetup(); 
     uint maxChar = 100;
     for(uint character = 0; character < maxChar; character++) {
         ulong rank = tree.rank(character, amount, skew);
     }
-    testRankTearDown(argv, skew);
+    testRankTearDown(argc, argv, skew);
 }
 
-inline void testBuildTime(char** argv, vector<int>* input, int amount, int alphabetSize, uint skew){
+inline void testBuildTime(int argc, char** argv, vector<int>* input, int amount, int alphabetSize, uint skew){
     testBuildSetup();    
     Tree tree = Tree(input, amount, alphabetSize, skew);    
-    testBuildTearDown(argv, skew);
+    testBuildTearDown(argc, argv, skew);
     
 }
 
 
 int main(int argc, char** argv) {
     if(argc < 5) { cout << "NOT ENOUGH ARGUMENTS" << endl; return 0; }
+    
     
     string filename = "../../../Data/n" + string(argv[1]) + "_as" + string(argv[2]) + ".data";
     cout << filename << endl;
@@ -64,15 +67,15 @@ int main(int argc, char** argv) {
     /*  Tests      */
     /***************/
     if(string(argv[4]) == "build") {
-        testBuildTime(argv, input, amount, alphabetSize, skew);
+        testBuildTime(argc, argv, input, amount, alphabetSize, skew);
     }
-    else if(string(argv[4]) == "rank"){
+    else if(string(argv[4]) == "rank") {
         Tree tree = Tree(input, amount, alphabetSize, skew);    
-        testRankQuery(argv, amount, tree, skew);
+        testRankQuery(argc, argv, amount, tree, skew);
     }        
-    else if(string(argv[4]) == "select"){
+    else if(string(argv[4]) == "select") {
         Tree tree = Tree(input, amount, alphabetSize, skew);    
-        testSelectQuery(argv, amount, tree, skew);
+        testSelectQuery(argc, argv, tree, skew);
     }
     return 0;
 }

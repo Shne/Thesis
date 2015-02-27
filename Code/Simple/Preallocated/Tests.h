@@ -20,6 +20,7 @@
 #define NUM_EVENTS 3
 
 int Events[NUM_EVENTS] = { PAPI_TOT_CYC, PAPI_L1_TCM, PAPI_BR_MSP };
+//int Events[NUM_EVENTS] = { PAPI_TLB_DM, PAPI_L2_TCM, PAPI_L3_TCM };
 long_long values[NUM_EVENTS];
 long_long start_cycles, end_cycles, start_usec, end_usec, start_virt_cycles, end_virt_cycles;
 
@@ -28,7 +29,7 @@ inline void handle_error (int retval) {
     exit(1);
 }
 
-inline void getPapiEventsOnMyComputer(){
+inline void getPapiAvailableEvents(){
     if (PAPI_library_init(PAPI_VER_CURRENT) != PAPI_VER_CURRENT) {
         fprintf(stderr,"PAPI library init error!\n");
         exit(1);
@@ -58,7 +59,7 @@ inline void testSelectSetup(){
     if (retval != PAPI_OK) handle_error(retval);
 }
 
-inline void testSelectTearDown(char** argv, uint skew){
+inline void testSelectTearDown(int argc, char** argv, uint skew){
     /* Stop counting events */
     int retval = PAPI_stop_counters(values, NUM_EVENTS);
     if (retval != PAPI_OK) handle_error(retval);
@@ -66,7 +67,12 @@ inline void testSelectTearDown(char** argv, uint skew){
     end_virt_cycles = PAPI_get_virt_cyc();
     end_usec = PAPI_get_real_usec();
     
-    string queryOutputFilename = "../../../Output/preallocated_query_n" + string(argv[1]) + "_as" + string(argv[2]) + "_popcountSelect.output";
+    string queryOutputFilename;
+    if(argc > 5) {
+        queryOutputFilename = "../../../Output/"+string(argv[5]);
+    } else {
+        queryOutputFilename = "../../../Output/preallocated_select_n" + string(argv[1]) + "_as" + string(argv[2]) + ".output";
+    }
     ofstream queryOutput(queryOutputFilename, ios::app);
 
 //    output << "# [SKEW] [lvl1 cache misses] [branch mispredictions]" << endl;
@@ -92,7 +98,7 @@ inline void testRankSetup(){
     if (retval != PAPI_OK) handle_error(retval);
 }
 
-inline void testRankTearDown(char** argv, uint skew){
+inline void testRankTearDown(int argc, char** argv, uint skew){
     /* Stop counting events */
     int retval = PAPI_stop_counters(values, NUM_EVENTS);
     if (retval != PAPI_OK) handle_error(retval);
@@ -100,7 +106,12 @@ inline void testRankTearDown(char** argv, uint skew){
     end_virt_cycles = PAPI_get_virt_cyc();
     end_usec = PAPI_get_real_usec();
     
-    string queryOutputFilename = "../../../Output/preallocated_query_n" + string(argv[1]) + "_as" + string(argv[2]) + "_popcountRank.output";
+    string queryOutputFilename;
+    if(argc > 5) {
+        queryOutputFilename = "../../../Output/"+string(argv[5]);
+    } else {
+        queryOutputFilename = "../../../Output/preallocated_rank_n" + string(argv[1]) + "_as" + string(argv[2]) + ".output";
+    }
     ofstream queryOutput(queryOutputFilename, ios::app);
 
 //    output << "# [SKEW] [lvl1 cache misses] [branch mispredictions]" << endl;
@@ -125,7 +136,7 @@ inline void testBuildSetup(){
     if (retval != PAPI_OK) handle_error(retval);
 }
 
-inline void testBuildTearDown(char** argv, uint skew){
+inline void testBuildTearDown(int argc, char** argv, uint skew){
     /* Stop counting events */
     int retval = PAPI_stop_counters(values, NUM_EVENTS);
     if (retval != PAPI_OK) handle_error(retval);
@@ -133,7 +144,12 @@ inline void testBuildTearDown(char** argv, uint skew){
     end_virt_cycles = PAPI_get_virt_cyc();
     end_usec = PAPI_get_real_usec();
     
-    string queryOutputFilename = "../../../Output/preallocated_build_n" + string(argv[1]) + "_as" + string(argv[2]) + ".output";
+    string queryOutputFilename;
+    if(argc > 5) {
+        queryOutputFilename = "../../../Output/"+string(argv[5]);
+    } else {
+        queryOutputFilename = "../../../Output/preallocated_build_n" + string(argv[1]) + "_as" + string(argv[2]) + ".output";
+    }
     ofstream queryOutput(queryOutputFilename, ios::app);
 
 //    output << "# [SKEW] [lvl1 cache misses] [branch mispredictions]" << endl;
