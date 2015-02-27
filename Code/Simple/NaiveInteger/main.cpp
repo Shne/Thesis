@@ -105,7 +105,7 @@ int main(int argc, char** argv) {
     if(argc > FILENAME_ARG_NUM) {
         pathname += string(argv[FILENAME_ARG_NUM]);
     } else {
-        pathname += "naive_default.output";
+        pathname += "default.output";
     }
     cout << pathname << endl;
     
