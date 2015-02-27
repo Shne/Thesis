@@ -44,4 +44,4 @@ def generateIntegerData(powerAmount, powerAlphabetSize):
 		randomArray.append(random.randint(0, alphabetSize-1))
 	randomArray.tofile(fd)
 
-generateIntegerData(8, 12)
+generateIntegerData(7, 18)

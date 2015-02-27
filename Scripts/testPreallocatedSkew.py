@@ -9,6 +9,8 @@ alphabetSize = 12
 program = "dist/Release/GNU-Linux-x86/preallocated"
 cwd = 'Code/Simple/Preallocated'
 
+subprocess.Popen(['make'], cwd=cwd).wait()
+
 #print("Preallocated: Build \n")
 # for skew in range(2,17):
 # 	for i in range(0, 5): #run 5 times for each skew

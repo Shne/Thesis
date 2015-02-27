@@ -9,6 +9,7 @@ alphabetSize = 12
 program = "dist/Release/GNU-Linux-x86/naiveinteger"
 cwd = 'Code/Simple/NaiveInteger'
 
+subprocess.Popen(['make'], cwd=cwd).wait()
 
 #print("Preallocated: Build \n")
 # for skew in range(2,17):
