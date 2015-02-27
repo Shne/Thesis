@@ -9,6 +9,7 @@ skew = 2
 program = "dist/Release/GNU-Linux-x86/naiveinteger"
 cwd = 'Code/Simple/NaiveInteger'
 
+subprocess.Popen(['make clean'], cwd=cwd).wait()
 subprocess.Popen(['make'], cwd=cwd).wait()
 
 for alphabetSize in range(12,19):

@@ -9,6 +9,7 @@ alphabetSize = 12
 program = "dist/Release/GNU-Linux-x86/preallocated"
 cwd = 'Code/Simple/Preallocated'
 
+subprocess.Popen(['make clean'], cwd=cwd).wait()
 subprocess.Popen(['make'], cwd=cwd).wait()
 
 #print("Preallocated: Build \n")
