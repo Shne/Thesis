@@ -71,6 +71,7 @@ inline void testTearDown(uint amount, uint alphabetSize, uint skew, string test,
         end_virt_cycles = PAPI_get_virt_cyc();
         end_usec = PAPI_get_real_usec();
         queryOutput << endl
+            << "algorithm=Preallocated" << "\t"
             << "test=" << test << "\t"
             << "amount=" << amount << "\t"
             << "alphabetSize=" << alphabetSize << "\t"
