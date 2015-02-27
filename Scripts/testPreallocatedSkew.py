@@ -9,8 +9,8 @@ alphabetSize = 12
 program = "dist/Release/GNU-Linux-x86/preallocated"
 cwd = 'Code/Simple/Preallocated'
 
-subprocess.Popen(['make', 'clean'], cwd=cwd).wait()
-subprocess.Popen(['make'], cwd=cwd).wait()
+subprocess.Popen(['make','CONF=Release', 'clean'], cwd=cwd).wait()
+subprocess.Popen(['make','CONF=Release'], cwd=cwd).wait()
 
 #print("Preallocated: Build \n")
 # for skew in range(2,17):
@@ -20,7 +20,7 @@ subprocess.Popen(['make'], cwd=cwd).wait()
 # 		p.wait()
 # 		sleep(1)
 
-print("Preallocated: Rank \n")
+print("\nPreallocated: Rank")
 for skew in range(2,11):
 	#for i in range(0, 5): #run 5 times for each skew
 	args = [program, str(amount), str(alphabetSize), str(skew), "rank"]
@@ -28,7 +28,7 @@ for skew in range(2,11):
 	p.wait()
 	sleep(1)
 
-print("Preallocated: Select \n")
+print("\nPreallocated: Select")
 for skew in range(2,11):
 	#for i in range(0, 5): #run 5 times for each skew
 	args = [program, str(amount), str(alphabetSize), str(skew), "select"]

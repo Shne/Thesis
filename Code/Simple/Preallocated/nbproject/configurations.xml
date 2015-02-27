@@ -122,9 +122,6 @@
           <architecture>2</architecture>
         </asmTool>
         <linkerTool>
-          <linkerAddLib>
-            <pElem>../../../../../../Downloads/papi-5.4.0/src</pElem>
-          </linkerAddLib>
           <linkerLibItems>
             <linkerLibLibItem>papi</linkerLibLibItem>
           </linkerLibItems>

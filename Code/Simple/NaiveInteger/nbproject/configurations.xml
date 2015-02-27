@@ -87,9 +87,6 @@
           <developmentMode>5</developmentMode>
           <architecture>2</architecture>
           <standard>8</standard>
-          <incDir>
-            <pElem>../../boost</pElem>
-          </incDir>
           <commandLine>-std=c++11 -O3 -g -march=native</commandLine>
         </ccTool>
         <fortranCompilerTool>
