@@ -17,11 +17,11 @@
 #ifndef TESTS_H
 #define	TESTS_H
 
-#define NUM_EVENTS 3
+//#define NUM_EVENTS 3
+//#define NUM_EVENTS2 3
+#define PATH_ARG_NUM 6
 
-int Events[NUM_EVENTS] = { PAPI_TOT_CYC, PAPI_L1_TCM, PAPI_BR_MSP };
-//int Events[NUM_EVENTS] = { PAPI_TLB_DM, PAPI_L2_TCM, PAPI_L3_TCM };
-long_long values[NUM_EVENTS];
+
 long_long start_cycles, end_cycles, start_usec, end_usec, start_virt_cycles, end_virt_cycles;
 
 inline void handle_error (int retval) {
@@ -47,122 +47,45 @@ inline void getPapiAvailableEvents(){
     }
 }
 
-inline void testSelectSetup(){
+inline void testSetup(int eventset, int* events, int num_events){
     PAPI_num_counters();          
     
-    /* Start counting events */
-    start_cycles = PAPI_get_real_cyc();
-    start_virt_cycles = PAPI_get_virt_cyc();
-    start_usec = PAPI_get_real_usec();
-    
-    int retval = PAPI_start_counters(Events, NUM_EVENTS);
-    if (retval != PAPI_OK) handle_error(retval);
-}
-
-inline void testSelectTearDown(int argc, char** argv, uint skew){
-    /* Stop counting events */
-    int retval = PAPI_stop_counters(values, NUM_EVENTS);
-    if (retval != PAPI_OK) handle_error(retval);
-    end_cycles = PAPI_get_real_cyc();
-    end_virt_cycles = PAPI_get_virt_cyc();
-    end_usec = PAPI_get_real_usec();
-    
-    string queryOutputFilename;
-    if(argc > 5) {
-        queryOutputFilename = "../../../Output/"+string(argv[5]);
-    } else {
-        queryOutputFilename = "../../../Output/preallocated_select_n" + string(argv[1]) + "_as" + string(argv[2]) + ".output";
+    if(eventset == 0) {
+        /* Start counting events */
+        start_cycles = PAPI_get_real_cyc();
+        start_virt_cycles = PAPI_get_virt_cyc();
+        start_usec = PAPI_get_real_usec();
     }
-    ofstream queryOutput(queryOutputFilename, ios::app);
-
-//    output << "# [SKEW] [lvl1 cache misses] [branch mispredictions]" << endl;
-    queryOutput  << skew << "\t"
-            << end_cycles - start_cycles << "\t" //real cycles
-            << end_usec - start_usec << "\t" //wall time in microseconds
-            << end_virt_cycles - start_virt_cycles << "\t" //virtual cycles
-            << values[0] << "\t" // cycles
-            << values[1] << "\t" // lvl1 cache misses
-            << values[2] << endl; // branch mispredictions
-}
-
-
-inline void testRankSetup(){
-    PAPI_num_counters();          
     
-    /* Start counting events */
-    start_cycles = PAPI_get_real_cyc();
-    start_virt_cycles = PAPI_get_virt_cyc();
-    start_usec = PAPI_get_real_usec();
-    
-    int retval = PAPI_start_counters(Events, NUM_EVENTS);
+    int retval = PAPI_start_counters(events, num_events);
     if (retval != PAPI_OK) handle_error(retval);
 }
 
-inline void testRankTearDown(int argc, char** argv, uint skew){
+inline void testTearDown(uint amount, uint alphabetSize, uint skew, string test, string pathname, int eventset, int* events, long_long* values, int num_events){
     /* Stop counting events */
-    int retval = PAPI_stop_counters(values, NUM_EVENTS);
+    int retval = PAPI_stop_counters(values, num_events);
     if (retval != PAPI_OK) handle_error(retval);
-    end_cycles = PAPI_get_real_cyc();
-    end_virt_cycles = PAPI_get_virt_cyc();
-    end_usec = PAPI_get_real_usec();
-    
-    string queryOutputFilename;
-    if(argc > 5) {
-        queryOutputFilename = "../../../Output/"+string(argv[5]);
-    } else {
-        queryOutputFilename = "../../../Output/preallocated_rank_n" + string(argv[1]) + "_as" + string(argv[2]) + ".output";
+
+    ofstream queryOutput(pathname, ios::app);
+
+    if(eventset == 0) {
+        end_cycles = PAPI_get_real_cyc();
+        end_virt_cycles = PAPI_get_virt_cyc();
+        end_usec = PAPI_get_real_usec();
+        queryOutput << endl
+            << "test=" << test << "\t"
+            << "skew=" << skew << "\t" //skew
+            << "real_cycles=" << end_cycles - start_cycles << "\t" //real cycles
+            << "wall_time=" << end_usec - start_usec << "\t" //wall time in microseconds
+            << "virt_cycles=" << end_virt_cycles - start_virt_cycles << "\t"; //virtual cycles
     }
-    ofstream queryOutput(queryOutputFilename, ios::app);
-
-//    output << "# [SKEW] [lvl1 cache misses] [branch mispredictions]" << endl;
-    queryOutput  << skew << "\t"
-            << end_cycles - start_cycles << "\t" //real cycles
-            << end_usec - start_usec << "\t" //wall time in microseconds
-            << end_virt_cycles - start_virt_cycles << "\t" //virtual cycles
-            << values[0] << "\t" // cycles
-            << values[1] << "\t" // lvl1 cache misses
-            << values[2] << endl; // branch mispredictions
-}
-
-inline void testBuildSetup(){
-    PAPI_num_counters();          
     
-    /* Start counting events */
-    start_cycles = PAPI_get_real_cyc();
-    start_virt_cycles = PAPI_get_virt_cyc();
-    start_usec = PAPI_get_real_usec();
-    
-    int retval = PAPI_start_counters(Events, NUM_EVENTS);
-    if (retval != PAPI_OK) handle_error(retval);
-}
-
-inline void testBuildTearDown(int argc, char** argv, uint skew){
-    /* Stop counting events */
-    int retval = PAPI_stop_counters(values, NUM_EVENTS);
-    if (retval != PAPI_OK) handle_error(retval);
-    end_cycles = PAPI_get_real_cyc();
-    end_virt_cycles = PAPI_get_virt_cyc();
-    end_usec = PAPI_get_real_usec();
-    
-    string queryOutputFilename;
-    if(argc > 5) {
-        queryOutputFilename = "../../../Output/"+string(argv[5]);
-    } else {
-        queryOutputFilename = "../../../Output/preallocated_build_n" + string(argv[1]) + "_as" + string(argv[2]) + ".output";
+    for(int i=0; i < num_events; i++) {
+        char EventCodeStr[PAPI_MAX_STR_LEN];
+        PAPI_event_code_to_name(events[i] | PAPI_PRESET_MASK, EventCodeStr);
+        queryOutput << EventCodeStr << "=" << values[i] << "\t";
     }
-    ofstream queryOutput(queryOutputFilename, ios::app);
-
-//    output << "# [SKEW] [lvl1 cache misses] [branch mispredictions]" << endl;
-    queryOutput  << skew << "\t"
-            << end_cycles - start_cycles << "\t" //real cycles
-            << end_usec - start_usec << "\t" //wall time in microseconds
-            << end_virt_cycles - start_virt_cycles << "\t" //virtual cycles
-            << values[0] << "\t" // cycles
-            << values[1] << "\t" // lvl1 cache misses
-            << values[2] << endl; // branch mispredictions
 }
-
-
 
 #endif	/* TESTS_H */
 
