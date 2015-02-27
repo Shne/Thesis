@@ -70,6 +70,8 @@ inline void testTearDown(uint amount, uint alphabetSize, uint skew, string test,
         end_cycles = PAPI_get_real_cyc();
         end_virt_cycles = PAPI_get_virt_cyc();
         end_usec = PAPI_get_real_usec();
+        PAPI_dmem_info_t meminfo;
+        PAPI_get_dmem_info(&meminfo);
         queryOutput << endl
             << "algorithm=Preallocated" << "\t"
             << "test=" << test << "\t"
@@ -78,7 +80,11 @@ inline void testTearDown(uint amount, uint alphabetSize, uint skew, string test,
             << "skew=" << skew << "\t" //skew
             << "real_cycles=" << end_cycles - start_cycles << "\t" //real cycles
             << "wall_time=" << end_usec - start_usec << "\t" //wall time in microseconds
-            << "virt_cycles=" << end_virt_cycles - start_virt_cycles << "\t"; //virtual cycles
+            << "virt_cycles=" << end_virt_cycles - start_virt_cycles << "\t" //virtual cycles
+            << "mem_size=" << meminfo.size << "\t"
+            << "mem_resident=" << meminfo.resident << "\t"
+            << "mem_highwatermark=" << meminfo.high_water_mark << "\t"
+            ;
     }
     
     for(int i=0; i < num_events; i++) {
