@@ -20,7 +20,7 @@ set key right bottom;
 # fit f4(x) 'Gnuplot/preallocatedSelectSkewRunningTime.data' via a,b	
 
 # plot 'naiveRankSkewRunningTime.data' using (1.0):2:(0):1
-plot 'Gnuplot/naiveRankSkewRunningTime.data' using 1:2 with points title "NaiveRank", \
-'Gnuplot/naiveSelectSkewRunningTime.data' using 1:2 with points title "NaiveSelect", \
-'Gnuplot/preallocatedRankSkewRunningTime.data' using 1:2 with points title "PreallocatedRank", \
-'Gnuplot/preallocatedSelectSkewRunningTime.data' using 1:2 with points title "PreallocatedSelect"
+plot 'Gnuplot/naiveRankSkewRunningTime.data' using 1:2 with linespoints title "NaiveRank", \
+'Gnuplot/naiveSelectSkewRunningTime.data' using 1:2 with linespoints title "NaiveSelect", \
+'Gnuplot/preallocatedRankSkewRunningTime.data' using 1:2 with linespoints title "PreallocatedRank", \
+'Gnuplot/preallocatedSelectSkewRunningTime.data' using 1:2 with linespoints title "PreallocatedSelect"
