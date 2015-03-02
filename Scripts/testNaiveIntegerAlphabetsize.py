@@ -8,6 +8,10 @@ amount = 7
 skew = 2
 program = "dist/Release/GNU-Linux-x86/naiveinteger"
 cwd = 'Code/Simple/NaiveInteger'
+outputFilename = 'default.output'
+
+def addNewline():
+	open('Output/'+outputFilename, 'a').write('\n')
 
 # program = "dist/Release/GNU-Linux-x86/preallocated"
 # cwd = 'Code/Simple/Preallocated'
@@ -20,3 +24,6 @@ for alphabetSize in range(12,19):
 	subprocess.Popen(args, cwd=cwd).wait()
 	args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(1)]
 	subprocess.Popen(args, cwd=cwd).wait()
+
+addNewline()
+addNewline()
