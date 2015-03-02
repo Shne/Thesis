@@ -64,14 +64,12 @@ Again, when popcount for 0s instead of 1s is needed, we simply subtract the resu
 \label{sec:experimentPopcountRankSelect}
 We wanted to see how much of an improvement using the native cpu instruction \texttt{popcount} was, and how it affected the cache misses and branch mispredictions.
 
-We wrote our program to build the tree, then run 100 rank or select queries for the characters 0 to 99.
+We wrote our program to build the tree, then run 100 rank or select queries for characters evenly distributed across the alphabet.
 For the rank queries we used the size of the input string as the positional argument so that the entire tree would be used in the query.
 For the select queries we queried for the 2000th occurrence because previously run rank queries showed us that each character we queried for occurred about 2400-2600 times in the input string we used, and we could then be reasonably sure that each character in the alphabet would occur at least 2000 times.
 
-It shouldn't matter which characters we choose as they exist all throughout the string randomly placed.
-Choosing characters from the beginning of the alphabet will make the queries traverse down the left side of the tree structure, but this should also not pose a problem for this test.
-It might cause the queries to go faster compared to querying for characters chosen evenly from the alphabet as the memory for the left side likely will be kept in cache between the queries.
-But since we are only interested in the difference between using \texttt{popcount} and not using \texttt{popcount}, and both algorithms have the same advantage from the choice of characters, it should not skew our results.
+By querying for characters evenly distributed along the alphabet, we ensure that the queries together traverse most of the tree, and thus try to avoid having everything cached for every query. Another option would have been to use randomly selected characters, but that would have introduced some uncertainty as to whether it was the access pattern or the change in algorithm that caused a difference in running time.
+(TODO: actually run the data again with this new selection of characters)
 
 \begin{figure}
 \caption{Simple Binary Rank vs. Binary Rank using the Popcount instruction.}
