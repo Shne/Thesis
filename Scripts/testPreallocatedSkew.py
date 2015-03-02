@@ -27,9 +27,9 @@ subprocess.Popen(['make','CONF=Release'], cwd=cwd).wait()
 print("\nPreallocated: Rank")
 for skew in range(2,11):
 	#for i in range(0, 5): #run 5 times for each skew
-	args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(0)]
+	args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(0), "Query_NaiveVsPreallocatedSkew/" + str(amount) + "_" + str(alphabetSize) + "_PreallocatedRank.output"]
 	subprocess.Popen(args, cwd=cwd).wait()
-	args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(1)]
+	args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(1), "/Query_NaiveVsPreallocatedSkew/" + str(amount) + "_" + str(alphabetSize) + "_PreallocatedRank.output"]
 	subprocess.Popen(args, cwd=cwd).wait()
 
 addNewline()
@@ -37,9 +37,9 @@ addNewline()
 print("\nPreallocated: Select")
 for skew in range(2,11):
 	#for i in range(0, 5): #run 5 times for each skew
-	args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(0)]
+	args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(0), "Query_NaiveVsPreallocatedSkew/" + str(amount) + "_" + str(alphabetSize) + "_PreallocatedSelect.output"]
 	subprocess.Popen(args, cwd=cwd).wait()
-	args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(1)]
+	args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(1), "Query_NaiveVsPreallocatedSkew/" + str(amount) + "_" + str(alphabetSize) + "_PreallocatedSelect.output"]
 	subprocess.Popen(args, cwd=cwd).wait()
 
 addNewline()
