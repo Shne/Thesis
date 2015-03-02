@@ -15,10 +15,6 @@ using namespace std;
 Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode,
         Node* &node_pt, bitmap_t* in_bitmap, unsigned long &in_bitmapOffset, uint skew)
     : isLeaf(false), left(nullptr), right(nullptr), parent(parentNode) {
-//    if(input.size() == 0) {
-//        cout << "Empty Node" << endl;
-//        return;
-//    }
     
     uint alphabetSize = alphabetMax - alphabetMin +1;
     if(alphabetSize == 1) {

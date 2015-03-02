@@ -12,10 +12,10 @@
 
 using namespace std;
 
-Node::Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNode, uint skew)
+Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, uint skew)
     : isLeaf(false), left(nullptr), right(nullptr), parent(parentNode) {
     
-    int alphabetSize = alphabetMax - alphabetMin +1;
+    uint alphabetSize = alphabetMax - alphabetMin +1;
     if(alphabetSize == 1) {
 //        cout << "LEAF:\t\t" << (*input)[0] << endl;
 //        cout << "---------------" << endl;
@@ -23,14 +23,14 @@ Node::Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNod
         return;
     }
    
-    int split = (alphabetSize-1)/skew + alphabetMin;
-    int leftAlphabetMin = alphabetMin;
-    int leftAlphabetMax = split;
-    int rightAlphabetMin = split+1;
-    int rightAlphabetMax = alphabetMax;
+    uint split = (alphabetSize-1)/skew + alphabetMin;
+    uint leftAlphabetMin = alphabetMin;
+    uint leftAlphabetMax = split;
+    uint rightAlphabetMin = split+1;
+    uint rightAlphabetMax = alphabetMax;
     
-    vector<int>* leftString = new vector<int>;
-    vector<int>* rightString = new vector<int>;
+    vector<uint>* leftString = new vector<uint>;
+    vector<uint>* rightString = new vector<uint>;
     
     for(auto it = input->begin(); it != input->end(); it++) {
         int currentChar = *it;
@@ -74,23 +74,23 @@ Node::Node(vector<int>* input, int alphabetMin, int alphabetMax, Node* parentNod
 }
 
 
-int Node::rank(int character, unsigned long index, int alphabetMin, int alphabetMax, uint skew){
+int Node::rank(uint character, ulong index, uint alphabetMin, uint alphabetMax, uint skew){
     if(isLeaf){
 //        cout << "Rank Leaf" << endl;
         return index;
     }
     
-    int alphabetSize = alphabetMax - alphabetMin +1;
-    int split = (alphabetSize-1)/skew + alphabetMin;
-    int leftAlphabetMin = alphabetMin;
-    int leftAlphabetMax = split;
-    int rightAlphabetMin = split+1;
-    int rightAlphabetMax = alphabetMax;
+    uint alphabetSize = alphabetMax - alphabetMin +1;
+    uint split = (alphabetSize-1)/skew + alphabetMin;
+    uint leftAlphabetMin = alphabetMin;
+    uint leftAlphabetMax = split;
+    uint rightAlphabetMin = split+1;
+    uint rightAlphabetMax = alphabetMax;
     
     bool charBit = character > split;
-    unsigned long pos = charBit ? popcountBinaryRank(index) : index - popcountBinaryRank(index);
+    ulong pos = charBit ? popcountBinaryRank(index) : index - popcountBinaryRank(index);
 //    unsigned long pos = charBit ? binaryRank(index) : index - binaryRank(index);
-    unsigned long rank = 0;
+    ulong rank = 0;
     if(charBit && right != nullptr) {
         rank = right->rank(character, pos, rightAlphabetMin, rightAlphabetMax, skew); //right sub tree
     }else if(left != nullptr){
@@ -100,30 +100,30 @@ int Node::rank(int character, unsigned long index, int alphabetMin, int alphabet
     return rank;
 }
 
-unsigned long Node::popcountBinaryRank(unsigned long pos) {
+ulong Node::popcountBinaryRank(ulong pos) {
     if(pos > bitmap.size()) cout << "position " << pos << " larger than bitmapsize " << bitmap.size() << endl;
-    unsigned long bitmapwordRank = 0;
+    ulong bitmapwordRank = 0;
     
-    unsigned long i;
-    unsigned long wordsize = sizeof(*bitmap.begin()._M_p) * CHAR_BIT; //vector<bool> src uses CHAR_BIT too
-    unsigned long fullWords = pos / wordsize;
+    ulong i;
+    ulong wordsize = sizeof(*bitmap.begin()._M_p) * CHAR_BIT; //vector<bool> src uses CHAR_BIT too
+    ulong fullWords = pos / wordsize;
     
     for(i = 0; i < fullWords; i++) {
-        unsigned long word = *(bitmap.begin()._M_p + i);
+        ulong word = *(bitmap.begin()._M_p + i);
         bitmapwordRank += __builtin_popcountl(word);
     }
-    unsigned long word = *(bitmap.begin()._M_p + i);
-    unsigned long shift = (pos % wordsize);
-    unsigned long mask = (1UL << shift)-1;
+    ulong word = *(bitmap.begin()._M_p + i);
+    ulong shift = (pos % wordsize);
+    ulong mask = (1UL << shift)-1;
     
-    unsigned long maskedWord = word & mask;
+    ulong maskedWord = word & mask;
     bitmapwordRank += __builtin_popcountl(maskedWord);
     return bitmapwordRank;
 }
 
 ulong Node::binaryRank(ulong pos) {
-    int i = 1;
-    int rank = 0;
+    uint i = 1;
+    uint rank = 0;
     for(auto it = bitmap.begin(); it != bitmap.end(); it++) {
         if(i > pos) break;
         bool currentBit = *it;
@@ -134,26 +134,26 @@ ulong Node::binaryRank(ulong pos) {
 }
 
 
-uint Node::leafSelect(uint character, unsigned long occurance) {
+uint Node::leafSelect(uint character, ulong occurance) {
     //a leaf has no bitmap
     bool charBit = this == parent->right;
     return parent->select(charBit, occurance);
 }
 
-uint Node::select(bool charBit, unsigned long occurance) {
+uint Node::select(bool charBit, ulong occurance) {
     if(parent == nullptr) {
         //we are root
         return popcountBinarySelect(charBit, occurance);
     }
-    int position = popcountBinarySelect(charBit, occurance);
+    uint position = popcountBinarySelect(charBit, occurance);
 
     bool parentCharBit = this == parent->right;
     return parent->select(parentCharBit, position+1);
 }
 
-uint Node::binarySelect(bool charBit, unsigned long occurance) {
-    unsigned long occ = 0;
-    for(unsigned long i = 0; i < bitmap.size(); i++) {
+uint Node::binarySelect(bool charBit, ulong occurance) {
+    ulong occ = 0;
+    for(ulong i = 0; i < bitmap.size(); i++) {
         if(bitmap[i] == charBit) { 
             if(++occ == occurance) {
                 return i;
@@ -191,9 +191,9 @@ Node* Node::getLeaf(uint character, uint alphabetMin, uint alphabetMax, uint ske
 
 
 inline ulong popcountBinarySelectAux(ulong word, bool charBit, ulong occurance) {
-    unsigned long occ = 0;
+    ulong occ = 0;
     ulong mask = 1;
-    for(unsigned long i = 0; i < sizeof(word) * CHAR_BIT; i++) {
+    for(ulong i = 0; i < sizeof(word) * CHAR_BIT; i++) {
         bool bit = (word & mask) > 0;
         if(bit == charBit) {
             if(++occ == occurance) return i;

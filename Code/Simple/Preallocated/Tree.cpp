@@ -16,7 +16,7 @@ using namespace std;
 Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, uint skew) 
     : alphabetMin(0), alphabetMax(alphabetSize-1), inputSize(amount){
     Node* node_pt = static_cast<Node*> (::operator new (sizeof(Node)*2*alphabetSize));
-    root = node_pt;   
+    root = node_pt;
     
     double dSkew = (double) skew;
 //    unsigned long bitmapSize = amount * log2(alphabetSize) / log2(dSkew/(dSkew-1));

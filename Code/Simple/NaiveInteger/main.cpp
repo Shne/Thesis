@@ -27,22 +27,22 @@ using namespace std;
 inline void testSelectQuery(uint amount, uint alphabetSize, uint skew, string pathname, int eventset, int* events, long_long* values, int num_events, Tree tree){
     testSetup(eventset, events, num_events);    
     uint maxChar = 100;
-    int maxPosition = 2000;
-    int positionStepSize = maxPosition/maxChar;
-    int position = positionStepSize;
+    uint maxPosition = 2000;
+    uint positionStepSize = maxPosition/maxChar;
+    uint position = positionStepSize;
     ulong results[maxChar]; //just to make sure nothing is optimized away
     for(uint character = 0; character < maxChar; character++) {
         results[character] = tree.select(character, position, skew);
         position += positionStepSize;
     }
     testTearDown(amount, alphabetSize, skew, "select", pathname, eventset, events, values, num_events);
-    for(int i=0; i < maxChar; i++) {
+    for(uint i=0; i < maxChar; i++) {
         cout << results[i];
     }
     cout << endl;
 }
 
-inline void testRankQuery(int amount, int alphabetSize, int skew, string pathname, int eventset, int* events, long_long* values, int num_events, Tree tree){
+inline void testRankQuery(uint amount, uint alphabetSize, uint skew, string pathname, int eventset, int* events, long_long* values, int num_events, Tree tree){
     testSetup(eventset, events, num_events); 
     uint maxChar = 100;
     ulong results[maxChar]; //just to make sure nothing is optimized away
@@ -50,13 +50,13 @@ inline void testRankQuery(int amount, int alphabetSize, int skew, string pathnam
         results[character] = tree.rank(character, amount, skew);
     }
     testTearDown(amount, alphabetSize, skew, "rank", pathname, eventset, events, values, num_events);
-    for(int i=0; i < maxChar; i++) {
+    for(uint i=0; i < maxChar; i++) {
         cout << results[i];
     }
     cout << endl;
 }
 
-inline void testBuildTime(int amount, int alphabetSize, int skew, string pathname, int eventset, int* events, long_long* values, int num_events, vector<int>* input){
+inline void testBuildTime(uint amount, uint alphabetSize, uint skew, string pathname, int eventset, int* events, long_long* values, int num_events, vector<uint>* input){
     testSetup(eventset, events, num_events);
     Tree tree = Tree(input, amount, alphabetSize, skew);
     testTearDown(amount, alphabetSize, skew, "build", pathname, eventset, events, values, num_events);
@@ -71,10 +71,10 @@ int main(int argc, char** argv) {
     
     string inputFilename = "../../../Data/n" + string(argv[N_ARG_NUM]) + "_as" + string(argv[AS_ARG_NUM]) + ".data";
     cout << inputFilename << endl;
-    int size_out = 0;
-    int* inputArr = read_file(size_out, inputFilename.c_str());
+    uint size_out = 0;
+    uint* inputArr = read_file(size_out, inputFilename.c_str());
     
-    vector<int>* input = new vector<int>(inputArr, inputArr + size_out);
+    vector<uint>* input = new vector<uint>(inputArr, inputArr + size_out);
     delete[] inputArr;
     
     uint amount = pow(10, atoi(argv[N_ARG_NUM]));
