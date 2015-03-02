@@ -32,7 +32,7 @@ inline void testSelectQuery(uint amount, uint alphabetSize, uint skew, string pa
     int position = positionStepSize;
     ulong results[maxChar]; //just to make sure nothing is optimized away
     for(uint character = 0; character < maxChar; character++) {
-        results[maxChar] = tree.select(character, position, skew);
+        results[character] = tree.select(character, position, skew);
         position += positionStepSize;
     }
     testTearDown(amount, alphabetSize, skew, "select", pathname, eventset, events, values, num_events);
