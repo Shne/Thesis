@@ -28,7 +28,6 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
         return;
     }
     
-    bitmap = in_bitmap;
     bitmapSize = input->size(); //one bit for each character in the input string
     bitmapOffset = in_bitmapOffset;
    
@@ -70,12 +69,12 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
     input->clear();
     delete input;
     
-    if(rightString->size() == 0 || leftString->size() == 0) {
-        //then kinda ignore us; reset bitmap offset
-        in_bitmapOffset = bitmapOffset;
-        bitmap = nullptr;
-        bitmapSize = 0;
-    }
+//    if(rightString->size() == 0 || leftString->size() == 0) {
+//        //then kinda ignore us; reset bitmap offset
+//        in_bitmapOffset = bitmapOffset;
+//        bitmap = nullptr;
+//        bitmapSize = 0;
+//    }
     
     //construct node, save it at right pointer location. give it incremented node_pt and bitmap_it so they point to free space.
     if(rightString->size() != 0) {
@@ -98,7 +97,7 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
 }
 
 
-int Node::rank(int character, unsigned long index, int alphabetMin, int alphabetMax, uint skew){
+int Node::rank(int character, unsigned long index, bitmap_t* bitmap, int alphabetMin, int alphabetMax, uint skew){
     if(isLeaf){
 //        cout << "Rank Leaf" << endl;
         return index;
@@ -112,18 +111,18 @@ int Node::rank(int character, unsigned long index, int alphabetMin, int alphabet
     int rightAlphabetMax = alphabetMax;
     
     bool charBit = character > split;
-    unsigned long pos = charBit ? popcountBinaryRank(index) : index - popcountBinaryRank(index);
+    unsigned long pos = charBit ? popcountBinaryRank(index, bitmap) : index - popcountBinaryRank(index, bitmap);
     unsigned long rank = 0;
     if(charBit && right != nullptr) {
-        rank = right->rank(character, pos, rightAlphabetMin, rightAlphabetMax, skew);
+        rank = right->rank(character, pos, bitmap, rightAlphabetMin, rightAlphabetMax, skew);
     }else if(left != nullptr){
-        rank = left->rank(character, pos, leftAlphabetMin, leftAlphabetMax, skew);
+        rank = left->rank(character, pos, bitmap, leftAlphabetMin, leftAlphabetMax, skew);
     }
     
     return rank;
 }
 
-unsigned long Node::popcountBinaryRank(unsigned long pos) {
+unsigned long Node::popcountBinaryRank(unsigned long pos, bitmap_t* bitmap) {
     if(pos > bitmapSize) cout << "position " << pos << " larger than bitmapsize " << bitmapSize << endl;
     unsigned long bitmapwordRank = 0;
     
@@ -162,7 +161,7 @@ unsigned long Node::popcountBinaryRank(unsigned long pos) {
     return bitmapwordRank;
 }
 
-ulong Node::binaryRank(ulong pos) {
+ulong Node::binaryRank(ulong pos, bitmap_t* bitmap) {
     int i = 0;
     int rank = 0;
     for(i = 0; i < bitmap->size(); i++) {
@@ -175,20 +174,20 @@ ulong Node::binaryRank(ulong pos) {
 }
 
 
-int Node::leafSelect(int character, unsigned long occurance) {
+int Node::leafSelect(int character, unsigned long occurance, bitmap_t* bitmap) {
     bool charBit = this == parent->right;
-    return parent->select(character, charBit, occurance);
+    return parent->select(character, charBit, occurance, bitmap);
 }
 
-int Node::select(int character, bool charBit, unsigned long occurance) {
+int Node::select(int character, bool charBit, unsigned long occurance, bitmap_t* bitmap) {
     if(parent == nullptr) {
         //we are root
-        return popcountBinarySelect(charBit, occurance);
+        return popcountBinarySelect(charBit, occurance, bitmap);
     }
-    int position = popcountBinarySelect(charBit, occurance);
+    int position = popcountBinarySelect(charBit, occurance, bitmap);
     
     bool parentCharBit = this == parent->right;
-    return parent->select(character, parentCharBit, position+1); //position+1 to go form 0-indexed position to "1-indexed" occurance
+    return parent->select(character, parentCharBit, position+1, bitmap); //position+1 to go form 0-indexed position to "1-indexed" occurance
 }
 
 //int Node::binarySelect(bool charBit, unsigned long occurance) {
@@ -216,7 +215,7 @@ inline ulong popcountBinarySelectAux(ulong word, bool charBit, ulong occurance) 
     cout << "Occurance " << occurance << " too high! saw " << occ << endl;
 }
 
-int Node::popcountBinarySelect(bool charBit, ulong occurance) {
+int Node::popcountBinarySelect(bool charBit, ulong occurance, bitmap_t* bitmap) {
     ulong occ = 0; //counter for occurances
     
     ulong i;

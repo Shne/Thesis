@@ -32,10 +32,10 @@ Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, uint skew)
 
 int Tree::rank(int character, unsigned long index, uint skew) {
     if(index > inputSize) index = inputSize;
-    return root->rank(character, index, alphabetMin, alphabetMax, skew);
+    return root->rank(character, index, bitmap, alphabetMin, alphabetMax, skew);
 }
 
 int Tree::select(int character, unsigned long occurance, uint skew) {
     Node* leaf = root->getLeaf(character, alphabetMin, alphabetMax, skew);
-    return leaf->leafSelect(character, occurance);
+    return leaf->leafSelect(character, occurance, bitmap);
 }
