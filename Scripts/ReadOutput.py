@@ -78,3 +78,17 @@ def getData(input_, algorithm, test):
 		if memHighWatermark is not None:
 			memHighWatermarkArray.append(int(memHighWatermark.group('mem_highwatermark')))
 
+def reset():
+	del skewArray[:]
+	del realCyclesArray[:]
+	del wallTimeArray[:]
+	del virtualCyclesArray[:]
+	del totalCyclesArray[:]
+	del l1TotalCacheMissesArray[:]
+	del branchMispredictionsArray[:]
+	del TLBArray[:]
+	del l2TotalCacheMissesArray[:]
+	del l3TotalCacheMissesArray[:]
+	del memSizeArray[:]
+	del memResidentArray[:]
+	del memHighWatermarkArray[:]

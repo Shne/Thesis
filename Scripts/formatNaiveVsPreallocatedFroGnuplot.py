@@ -14,7 +14,7 @@ index = 0
 for skew in ReadOutput.skewArray:
 	naiveRankGnuplotFile.write(str(skew)+ "   " + str(ReadOutput.wallTimeArray[index]) +"\n")
 	index+=1
-
+ReadOutput.reset();
 
 ReadOutput.getData(testDataFile, "SimpleNaiveInteger", "select")
 naiveSelectGnuplotFile.write("#[skew]   [Wall Time]\n")
@@ -22,6 +22,7 @@ index = 0
 for skew in ReadOutput.skewArray:
 	naiveSelectGnuplotFile.write(str(skew)+ "   " + str(ReadOutput.wallTimeArray[index]) +"\n")
 	index+=1
+ReadOutput.reset();
 
 
 ReadOutput.getData(testDataFile, "Preallocated", "rank")
@@ -30,6 +31,7 @@ index = 0
 for skew in ReadOutput.skewArray:
 	preallocatedRankGnuplotFile.write(str(skew)+ "   " + str(ReadOutput.wallTimeArray[index]) +"\n")
 	index+=1
+ReadOutput.reset();
 
 
 ReadOutput.getData(testDataFile, "Preallocated", "select")
@@ -38,6 +40,7 @@ index = 0
 for skew in ReadOutput.skewArray:
 	preallocatedSelectGnuplotFile.write(str(skew)+ "   " + str(ReadOutput.wallTimeArray[index]) +"\n")
 	index+=1
+ReadOutput.reset();
 
 
 
