@@ -94,19 +94,19 @@ inline void testTearDown(uint amount, uint alphabetSize, uint skew, string test,
     }
 }
 
+
+
 inline void testSelectQuery(uint amount, uint alphabetSize, uint skew, string pathname, int eventset, int* events, long_long* values, int num_events, Tree tree){
-    testSetup(eventset, events, num_events);    
-    uint maxChar = 100;
-    int maxPosition = 2000;
-    int positionStepSize = maxPosition/maxChar;
-    int position = positionStepSize;
-    ulong results[maxChar]; //just to make sure nothing is optimized away
-    for(uint character = 0; character < maxChar; character++) {
-        results[maxChar] = tree.select(character, position, skew);
-        position += positionStepSize;
+    testSetup(eventset, events, num_events);
+    uint queries = 100;
+    uint charStep = alphabetSize/queries;
+    uint position = 2000;
+    ulong results[queries]; //just to make sure nothing is optimized away
+    for(uint index = 0; index < queries; index++) {
+        results[index] = tree.select(index*charStep, position, skew);
     }
     testTearDown(amount, alphabetSize, skew, "select", pathname, eventset, events, values, num_events);
-    for(int i=0; i < maxChar; i++) {
+    for(uint i=0; i < queries; i++) {
         cout << results[i];
     }
     cout << endl;
@@ -114,13 +114,14 @@ inline void testSelectQuery(uint amount, uint alphabetSize, uint skew, string pa
 
 inline void testRankQuery(uint amount, uint alphabetSize, uint skew, string pathname, int eventset, int* events, long_long* values, int num_events, Tree tree){
     testSetup(eventset, events, num_events); 
-    uint maxChar = 100;
-    ulong results[maxChar]; //just to make sure nothing is optimized away
-    for(uint character = 0; character < maxChar; character++) {
-        results[character] = tree.rank(character, amount, skew);
+    uint queries = 100;
+    uint charStep = alphabetSize/queries;
+    ulong results[queries]; //just to make sure nothing is optimized away
+    for(uint index = 0; index < queries; index++) {
+        results[index] = tree.rank(index*charStep, amount, skew);
     }
     testTearDown(amount, alphabetSize, skew, "rank", pathname, eventset, events, values, num_events);
-    for(int i=0; i < maxChar; i++) {
+    for(uint i=0; i < queries; i++) {
         cout << results[i];
     }
     cout << endl;
