@@ -35,6 +35,7 @@ def getData(input_, algorithm, test):
 	memResidentReg = re.compile(match+"mem_resident=(?P<mem_resident>\d+)")
 	memHighWatermarkReg = re.compile(match+"mem_highwatermark=(?P<mem_highwatermark>\d+)")
 
+	reset()
 
 	for line in inputFile:
 		skew = skewReg.search(line)

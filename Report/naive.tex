@@ -74,31 +74,28 @@ By querying for characters evenly distributed along the alphabet, we ensure that
 \begin{figure}
 \caption{Simple Binary Rank vs. Binary Rank using the Popcount instruction.}
 \label{fig:rankPopcountDiff}
-\input{rankPopcountDifference}
+\input{popcountRankNew}
 \end{figure}
 
 \begin{figure}
 \caption{Simple Binary Select vs. Binary Select using the Popcount instruction.}
 \label{fig:selectPopcountDiff}
-\input{selectPopcountDifference}
+\input{popcountSelectNew}
 \end{figure}
 
 \begin{figure}
-\caption{Values for Figure~\ref{fig:rankPopcountDiff} and \ref{fig:selectPopcountDiff}}
+\caption{(TODO: OUTPDATED!) Values for Figure~\ref{fig:rankPopcountDiff} and \ref{fig:selectPopcountDiff}}
 \label{fig:valuesForPopcountDiff}
 \input{valuesForPopcountDifference}
 \end{figure}
 
-In Figure~\ref{fig:rankPopcountDiff}, \ref{fig:selectPopcountDiff}, and \ref{fig:valuesForPopcountDiff} we see the resulting cpu cycles, wall time, cache misses and branch mispredictions for our rank and select queries, respectively.
-Wall time is in microseconds and the rest is number-of-times-it-happened.
-Notice that the y axis is logarithmic in both figures. This was done to be able to fit all the bars into one figure and not have any of them be so small that they couldn't be seen, such as the branch mispredictions when using \texttt{popcount}.
-Figure~\ref{fig:valuesForPopcountDiff} is included because getting a sense of the relative values can be difficult when using a logarithmic y-axis.
-The percentage column in Figure~\ref{fig:valuesForPopcountDiff} is the size of the improved value relative to the original.
+In Figure~\ref{fig:rankPopcountDiff}, \ref{fig:selectPopcountDiff}, and \ref{fig:valuesForPopcountDiff} we see the resulting relative cpu cycles, wall time, branch mispredictions, translation lookaside buffer misses, and cache misses for our rank and select queries, respectively.
+That is, we have chosen the values for the queries not using popcount to be index 100 and calculated and plotted the relative values of the queries using popcount, to show which values increase, decrease and by what relative amount, all within the same graph.
 
-In all three figures we see that the algorithm using \texttt{popcount} is much faster, using only a fraction of the time of the other algorithm, about 1.2\% for rank and 0.6\% for select.
+In all three figures we see that the algorithm using \texttt{popcount} is much faster, using only a fraction of the time of the other algorithm, about (TODO)\% for rank and (TODO)\% for select.
 The massive reduction in branch mispredictions likely accounts for some of the saved cpu cycles.
 Given that the branch misprediction penalty on the Ivy Bridge architecture (on which this experiment was run) is about "15 cycles or more"~\cite{agner}, we can calculate an estimate of how many cpu cycles the branch misprediction reduction has saved us.
-The number of saved branch mispredictions for rank is then at least $\num{308338106.9} - \num{1813.8} = \num{308336293.1}$ mispredictions. Assuming a penalty of 15 cycles this becomes $\num{308336293.1} \times 15 = \num{4625044396.5}$ cpu cycles saved, which is $\num{4625044396.5} / (\num{88684352531.8} - \num{1036779101.5}) = \num{0.05276865308} = 5.28\%$ of the total amount of cpu cycles saved.
+The number of saved branch mispredictions for rank is then at least (TODO: RECALCULATE $\num{308338106.9} - \num{1813.8} = \num{308336293.1}$ mispredictions. Assuming a penalty of 15 cycles this becomes $\num{308336293.1} \times 15 = \num{4625044396.5}$ cpu cycles saved, which is $\num{4625044396.5} / (\num{88684352531.8} - \num{1036779101.5}) = \num{0.05276865308} = 5.28\%$ of the total amount of cpu cycles saved.
 This means that the branch mispredictions do have an effect, but it is only a small part of this increase in speed. The main improvement, we assume, comes from using only a few cpu cycles per word of the bitmap to calculate the binary rank, as well as the slight decrease in cache misses.
 
 By similar calculations the saved cpu cycles from branch mispredictions for select is at least $48.46\%$ of the total saved. We expect this is because of the much higher number of branch mispredictions and the much lower number of cycles for the original select algorithm, as well as the fact that we can't use \texttt{popcount} for every word of the bitmap but must go back to doing manual counting of the bits when we find the word the sought-after occurrence is in.
