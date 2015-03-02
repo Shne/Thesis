@@ -13,13 +13,40 @@ It can profile the entire system or a specific process, but not subsections of a
 It requires the analysed program itself to setup and initialize PAPI, but therefore also supports starting and stopping the counter data collection at specific points in the program, enabling profiling of subsections of the program.
 \end{description}
 
-\subsubsection{What counters did we use?}
+\subsubsection{Counters used}
 We calculate the CPU clock cycles using the \texttt{PAPI\_TOT\_CYC} papi event which return the total number of unhalted CPU clock cycles, including when the CPU clock changes to a higher frequency in what Intel calls "Turbo Boost" or more generally "dynamic overclocking".
 We believe this value to be more accurate than calculating cycles using \texttt{PAPI\_get\_real\_cyc()} which estimates the cycles based on wall time \citep{PAPI-get-real-cyc}. 
 
 This means that \texttt{PAPI\_get\_real\_cyc()} depends on the Time Stamp Counter frequency which is constant. 
 Because of this The TSC frequency is not based on CPU frequency in any way and because work gets done at CPU frequency and not TSC frequency, \texttt{PAPI\_TOT\_CYC} seems like the best choice. 
 This is also recommended by Intel \citep{IntelMeasuringTheAverageUnhaltedFrequency}.
+
+In Figure~\ref{papievents} we have listed the various counters and values we have read using PAPI and their description. Not every test uses every one of these.
+
+\begin{figure}
+\caption{PAPI counters and data sources and their description}
+\label{papievents}
+\center
+\begin{tabular}{|l|l|}
+\hline
+\textbf{PAPI Source}	& \textbf{Description} \\ \hline
+\texttt{PAPI\_get\_real\_cyc()}	& Real Cycles / Wall Time Cycles \\ \hline
+\texttt{PAPI\_get\_real\_usec()}	& Wall Time \\ \hline
+Event \texttt{PAPI\_TOT\_CYC}	& Total Cycles \\ \hline
+Event \texttt{PAPI\_L1\_TCM}		& Level 1 total cache misses \\ \hline
+Event \texttt{PAPI\_L2\_TCM}		& Level 2 total cache misses \\ \hline
+Event \texttt{PAPI\_L3\_TCM}		& Level 3 total cache misses \\ \hline
+Event \texttt{PAPI\_BR\_MSP}		& Conditional branch instructions mispred \\ \hline
+Event \texttt{PAPI\_TLB\_DM}		& Data translation lookaside buffer misses \\ \hline
+\texttt{PAPI\_get\_dmem\_info()}	& Memory information as \texttt{meminfo} object \\ \hline
+\texttt{meminfo.size}			& Size of Memory used \\ \hline
+\texttt{meminfo.resident}		& Size of Resident memory used \\ \hline
+\texttt{meminfo.high\_water\_mark}	& Size of Peak memory usage \\ \hline
+
+
+
+\end{tabular}
+\end{figure}
 
 \subsection{Profiler}
 We use these for finding hotspots in our code; which parts our program is spending most of its time in and therefore which parts we should try to optimize.
