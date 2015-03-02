@@ -24,48 +24,6 @@
 
 using namespace std;
 
-inline void testSelectQuery(uint amount, uint alphabetSize, uint skew, string pathname, int eventset, int* events, long_long* values, int num_events, Tree tree){
-    testSetup(eventset, events, num_events);    
-    uint maxChar = 100;
-    uint maxPosition = 2000;
-    uint positionStepSize = maxPosition/maxChar;
-    uint position = positionStepSize;
-    ulong results[maxChar]; //just to make sure nothing is optimized away
-    for(uint character = 0; character < maxChar; character++) {
-        results[character] = tree.select(character, position, skew);
-        position += positionStepSize;
-    }
-    testTearDown(amount, alphabetSize, skew, "select", pathname, eventset, events, values, num_events);
-    for(uint i=0; i < maxChar; i++) {
-        cout << results[i];
-    }
-    cout << endl;
-}
-
-inline void testRankQuery(uint amount, uint alphabetSize, uint skew, string pathname, int eventset, int* events, long_long* values, int num_events, Tree tree){
-    testSetup(eventset, events, num_events); 
-    uint maxChar = 100;
-    ulong results[maxChar]; //just to make sure nothing is optimized away
-    for(uint character = 0; character < maxChar; character++) {
-        results[character] = tree.rank(character, amount, skew);
-    }
-    testTearDown(amount, alphabetSize, skew, "rank", pathname, eventset, events, values, num_events);
-    for(uint i=0; i < maxChar; i++) {
-        cout << results[i];
-    }
-    cout << endl;
-}
-
-inline void testBuildTime(uint amount, uint alphabetSize, uint skew, string pathname, int eventset, int* events, long_long* values, int num_events, vector<uint>* input){
-    testSetup(eventset, events, num_events);
-    Tree tree = Tree(input, amount, alphabetSize, skew);
-    testTearDown(amount, alphabetSize, skew, "build", pathname, eventset, events, values, num_events);
-    
-    cout << tree.rank(0, amount, skew) << endl;; //just to make sure nothing is optimized away
-}
-
-
-
 int main(int argc, char** argv) {
     if(argc < NUM_REQUIRED_ARGS) { cout << "NOT ENOUGH ARGUMENTS" << endl; return 0; }
     
