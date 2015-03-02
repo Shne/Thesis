@@ -84,7 +84,6 @@ inline void testTearDown(uint amount, uint alphabetSize, uint skew, string test,
             << "mem_size=" << meminfo.size << "\t"
             << "mem_resident=" << meminfo.resident << "\t"
             << "mem_highwatermark=" << meminfo.high_water_mark << "\t"
-            << endl;
             ;
     }
     
