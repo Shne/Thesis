@@ -16,22 +16,24 @@ memSizeArray = []
 memResidentArray = []
 memHighWatermarkArray = []
 
-def getData(input_):
+def getData(input_, algorithm, test):
 	inputFile = open(input_, "rt")
 
-	skewReg = re.compile("skew=(?P<skew>\d+)")
-	realCyclesReg = re.compile("real_cycles=(?P<real_cycles>\d+)")
-	wallTimeReg = re.compile("wall_time=(?P<wall_time>\d+)")
-	virtualCyclesReg = re.compile("virt_cycles=(?P<virt_cycles>\d+)")
-	totalCyclesReg = re.compile("PAPI_TOT_CYC=(?P<PAPI_TOT_CYC>\d+)")
-	l1TotalCacheMissesReg = re.compile("PAPI_L1_TCM=(?P<PAPI_L1_TCM>\d+)")
-	branchMispredictionsReg = re.compile("PAPI_BR_MSP=(?P<PAPI_BR_MSP>\d+)")
-	TLBReg = re.compile("PAPI_TLB_DM=(?P<PAPI_TLB_DM>\d+)")
-	l2TotalCacheMissesReg = re.compile("PAPI_L2_TCM=(?P<PAPI_L2_TCM>\d+)")
-	l3TotalCacheMissesReg = re.compile("PAPI_L3_TCM=(?P<PAPI_L3_TCM>\d+)")
-	memSizeReg = re.compile("mem_size=(?P<mem_size>\d+)")
-	memResidentReg = re.compile("mem_resident=(?P<mem_resident>\d+)")
-	memHighWatermarkReg = re.compile("mem_highwatermark=(?P<mem_highwatermark>\d+)")
+	match = "algorithm="+algorithm+"\ttest="+test+".*";
+
+	skewReg = re.compile(match+"skew=(?P<skew>\d+)")
+	realCyclesReg = re.compile(match+"real_cycles=(?P<real_cycles>\d+)")
+	wallTimeReg = re.compile(match+"wall_time=(?P<wall_time>\d+)")
+	virtualCyclesReg = re.compile(match+"virt_cycles=(?P<virt_cycles>\d+)")
+	totalCyclesReg = re.compile(match+"PAPI_TOT_CYC=(?P<PAPI_TOT_CYC>\d+)")
+	l1TotalCacheMissesReg = re.compile(match+"PAPI_L1_TCM=(?P<PAPI_L1_TCM>\d+)")
+	branchMispredictionsReg = re.compile(match+"PAPI_BR_MSP=(?P<PAPI_BR_MSP>\d+)")
+	TLBReg = re.compile(match+"PAPI_TLB_DM=(?P<PAPI_TLB_DM>\d+)")
+	l2TotalCacheMissesReg = re.compile(match+"PAPI_L2_TCM=(?P<PAPI_L2_TCM>\d+)")
+	l3TotalCacheMissesReg = re.compile(match+"PAPI_L3_TCM=(?P<PAPI_L3_TCM>\d+)")
+	memSizeReg = re.compile(match+"mem_size=(?P<mem_size>\d+)")
+	memResidentReg = re.compile(match+"mem_resident=(?P<mem_resident>\d+)")
+	memHighWatermarkReg = re.compile(match+"mem_highwatermark=(?P<mem_highwatermark>\d+)")
 
 
 	for line in inputFile:

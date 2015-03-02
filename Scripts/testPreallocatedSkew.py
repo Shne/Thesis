@@ -8,8 +8,12 @@ amount = 7
 alphabetSize = 12
 program = "dist/Release/GNU-Linux-x86/preallocated"
 cwd = 'Code/Simple/Preallocated'
+<<<<<<< Updated upstream
 outputFilename = 'default.output'
 # outputFilename = "Query_NaiveVsPreallocatedSkew/" + str(amount) + "_" + str(alphabetSize) + "_PreallocatedSelect.output"
+=======
+outputFilename = 'Query_NaiveVsPreallocatedSkew.output'
+>>>>>>> Stashed changes
 
 def addNewline():
 	open('Output/'+outputFilename, 'a').write('\n')
@@ -25,23 +29,24 @@ subprocess.Popen(['make','CONF=Release'], cwd=cwd).wait()
 # 		args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(1)]
 # 		subprocess.Popen(args, cwd=cwd).wait()
 
+
 print("\nPreallocated: Rank")
 for skew in range(2,11):
-	#for i in range(0, 5): #run 5 times for each skew
-	args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(0), outputFilename]
-	subprocess.Popen(args, cwd=cwd).wait()
-	args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(1), outputFilename]
-	subprocess.Popen(args, cwd=cwd).wait()
+	for i in range(0, 5): #run 5 times for each skew
+		args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(0), outputFilename]
+		subprocess.Popen(args, cwd=cwd).wait()
+		args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(1), outputFilename]
+		subprocess.Popen(args, cwd=cwd).wait()
 
 addNewline()
 
 print("\nPreallocated: Select")
 for skew in range(2,11):
-	#for i in range(0, 5): #run 5 times for each skew
-	args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(0), outputFilename]
-	subprocess.Popen(args, cwd=cwd).wait()
-	args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(1), outputFilename]
-	subprocess.Popen(args, cwd=cwd).wait()
+	for i in range(0, 5): #run 5 times for each skew
+		args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(0), outputFilename]
+		subprocess.Popen(args, cwd=cwd).wait()
+		args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(1), outputFilename]
+		subprocess.Popen(args, cwd=cwd).wait()
 
 addNewline()
 addNewline()
