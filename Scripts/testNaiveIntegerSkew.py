@@ -4,11 +4,12 @@ import subprocess
 import os.path
 from time import sleep
 
-amount = 7
+amount = 8
 alphabetSize = 12
 program = "dist/Release/GNU-Linux-x86/naiveinteger"
 cwd = 'Code/Simple/NaiveInteger'
 outputFilename = 'default.output'
+# outputFilename = "Query_NaiveVsPreallocatedSkew/" + str(amount) + "_" + str(alphabetSize) + "_NaiveSelect.output"
 
 def addNewline():
 	open('Output/'+outputFilename, 'a').write('\n')
@@ -28,18 +29,18 @@ subprocess.Popen(['make','CONF=Release'], cwd=cwd).wait()
 print("\nNaiveInteger: Rank")
 for skew in range(2,11):
 	for i in range(0, 5): #run 5 times for each skew
-		args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(0), "/Query_NaiveVsPreallocatedSkew/" + str(amount) + "_" + str(alphabetSize) + "_NaiveRank.output"]
+		args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(0), outputFilename]
 		subprocess.Popen(args, cwd=cwd).wait()
-		args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(1), "/Query_NaiveVsPreallocatedSkew/" + str(amount) + "_" + str(alphabetSize) + "_NaiveRank.output"]
+		args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(1), outputFilename]
 		subprocess.Popen(args, cwd=cwd).wait()
 
 addNewline()
 
 print("\nNaiveInteger: Select")
 for i in range(0, 5): #run 5 times for each skew
-		args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(0), "/Query_NaiveVsPreallocatedSkew/" + str(amount) + "_" + str(alphabetSize) + "_NaiveSelect.output"]
+		args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(0), outputFilename]
 		subprocess.Popen(args, cwd=cwd).wait()
-		args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(1), "/Query_NaiveVsPreallocatedSkew/" + str(amount) + "_" + str(alphabetSize) + "_NaiveSelect.output"]
+		args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(1), outputFilename]
 		subprocess.Popen(args, cwd=cwd).wait()
 
 addNewline()
