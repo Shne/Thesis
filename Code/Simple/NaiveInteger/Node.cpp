@@ -89,7 +89,7 @@ int Node::rank(uint character, ulong index, uint alphabetMin, uint alphabetMax, 
     
     bool charBit = character > split;
     ulong pos = charBit ? popcountBinaryRank(index) : index - popcountBinaryRank(index);
-//    unsigned long pos = charBit ? binaryRank(index) : index - binaryRank(index);
+//    ulong pos = charBit ? binaryRank(index) : index - binaryRank(index);
     ulong rank = 0;
     if(charBit && right != nullptr) {
         rank = right->rank(character, pos, rightAlphabetMin, rightAlphabetMax, skew); //right sub tree
@@ -144,8 +144,10 @@ uint Node::select(bool charBit, ulong occurance) {
     if(parent == nullptr) {
         //we are root
         return popcountBinarySelect(charBit, occurance);
+//        return binarySelect(charBit, occurance);
     }
     uint position = popcountBinarySelect(charBit, occurance);
+//    uint position = binarySelect(charBit, occurance);
 
     bool parentCharBit = this == parent->right;
     return parent->select(parentCharBit, position+1);
