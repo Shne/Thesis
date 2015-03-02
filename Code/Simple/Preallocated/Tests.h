@@ -132,7 +132,7 @@ inline void testBuildTime(uint amount, uint alphabetSize, uint skew, string path
     Tree tree = Tree(input, amount, alphabetSize, skew);
     testTearDown(amount, alphabetSize, skew, "build", pathname, eventset, events, values, num_events);
     
-    cout << tree.rank(0, amount, skew) << endl;; //just to make sure nothing is optimized away
+    cout << tree.rank(0, amount, skew) << endl; //just to make sure nothing is optimized away
 }
 
 #endif	/* TESTS_H */
