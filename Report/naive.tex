@@ -92,6 +92,12 @@ By querying for characters evenly distributed along the alphabet, we ensure that
 In Figure~\ref{fig:rankPopcountDiff}, \ref{fig:selectPopcountDiff}, and \ref{fig:valuesForPopcountDiff} we see the resulting relative cpu cycles, wall time, branch mispredictions, translation lookaside buffer misses, and cache misses for our rank and select queries, respectively.
 That is, we have chosen the values for the queries not using popcount to be index 100 and calculated and plotted the relative values of the queries using popcount, to show which values increase, decrease and by what relative amount, all within the same graph.
 
+\begin{figure}
+\caption{Naive Rank Running times with increasing skew}
+\label{fig:NaiveRankSkewRunningTime}
+\input{naiveRankSkewRunningTime}
+\end{figure}
+
 In all three figures we see that the algorithm using \texttt{popcount} is much faster, using only a fraction of the time of the other algorithm, about (TODO)\% for rank and (TODO)\% for select.
 The massive reduction in branch mispredictions likely accounts for some of the saved cpu cycles.
 Given that the branch misprediction penalty on the Ivy Bridge architecture (on which this experiment was run) is about "15 cycles or more"~\cite{agner}, we can calculate an estimate of how many cpu cycles the branch misprediction reduction has saved us.
