@@ -23,6 +23,9 @@ This is also recommended by Intel \citep{IntelMeasuringTheAverageUnhaltedFrequen
 
 In Figure~\ref{papievents} we have listed the various counters and values we have read using PAPI and their description. Not every test uses every one of these.
 
+Because PAPI does not support gathering all combinations of hardware at the same time, we had to gather Translation lookaside buffer misses, level 2 cache misses, and level 3 cache misses in a separate run of the program with the same parameters.
+We do not believe this will have any significant influence on the results of our experiments.
+
 \begin{figure}
 \caption{PAPI counters and data sources and their description}
 \label{papievents}
