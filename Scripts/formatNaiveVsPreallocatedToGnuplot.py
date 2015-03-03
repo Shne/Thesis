@@ -19,23 +19,21 @@ def getMedianValues(skewList, runningTimeList):
 
 	for i in range(0, len(runningTimeList), stepsize):
 		temp = []
-		for j in range(i, len(runningTimeList)):
-			temp.append(runningTimeList[i])
-		runningTimeMedians.append(numpy.median(numpy.array(temp)))
+		for j in range(i, stepsize+i):
+			temp.append(runningTimeList[j])
+		print("temp: ")
+		print(temp)
+		median = numpy.median(numpy.array(temp))		
+		print("median: " + str(median))
+		print("")
+		runningTimeMedians.append(median)
 
 	return runningTimeMedians
 
+# 30258 30304 30463 30501 30638
 
 def getNumberOfDifferentSkewValues(skewList):
-	stepsize = 0
-	for skew in skewList:
-		if(skew == 2):
-			stepsize += 1
-
-		if(skew > 2):
-			break
-
-	return len(skewList)/stepsize
+	return len(skewList)/int(getNumberOfEqualSkews(skewList))
 
 def getUniqueSkewValues(skewList):
 	numberOfSkews = int(getNumberOfDifferentSkewValues(skewList))
