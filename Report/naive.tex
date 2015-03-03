@@ -60,6 +60,26 @@ Again, when popcount for 0s instead of 1s is needed, we simply subtract the resu
 
 \subsection{Experiments}
 
+\subsubsection{Running time of Tree Construction vs Alphabet Size}
+Looks like it's branch mispredictions...
+\begin{figure}
+	\begin{subfigure}{\textwidth}
+		\input{naiveIntegerAlphabetSize_WallTime}
+		\caption{Wall Time}
+	\end{subfigure}
+	
+	\begin{subfigure}{\textwidth}
+		\input{naiveIntegerAlphabetSize_BM}
+		\caption{Branch Mispredictions}
+	\end{subfigure}
+\end{figure}
+
+\begin{figure}
+	\input{naiveIntegerAlphabetSize_TLB_CM}
+	\caption{Translation Lookaside Buffer Misses, and Level 1-3 Cache Misses}
+\end{figure}
+
+
 \subsubsection{Rank and Select using Popcount}
 \label{sec:experimentPopcountRankSelect}
 We wanted to see how much of an improvement using the native cpu instruction \texttt{popcount} was, and how it affected the cache misses, branch mispredictions and TLB misses.

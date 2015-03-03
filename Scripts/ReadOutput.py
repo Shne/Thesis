@@ -2,6 +2,7 @@
 
 import re
 
+alphabetSizeList = []
 skewArray = []
 realCyclesArray = []
 wallTimeArray = []
@@ -21,6 +22,7 @@ def getData(input_, algorithm, test):
 
 	match = "algorithm="+algorithm+"\ttest="+test+".*";
 
+	alphabetSizeReg = re.compile(match+"alphabetSize=(?P<alphabetSize>\d+)")
 	skewReg = re.compile(match+"skew=(?P<skew>\d+)")
 	realCyclesReg = re.compile(match+"real_cycles=(?P<real_cycles>\d+)")
 	wallTimeReg = re.compile(match+"wall_time=(?P<wall_time>\d+)")
@@ -38,6 +40,7 @@ def getData(input_, algorithm, test):
 	reset()
 
 	for line in inputFile:
+		alphabetSize = alphabetSizeReg.search(line)
 		skew = skewReg.search(line)
 		realCycles = realCyclesReg.search(line)
 		wallTime = wallTimeReg.search(line)
@@ -52,6 +55,8 @@ def getData(input_, algorithm, test):
 		memResident = memResidentReg.search(line)
 		memHighWatermark = memHighWatermarkReg.search(line)
 
+		if alphabetSize is not None:
+			alphabetSizeList.append(int(alphabetSize.group('alphabetSize')))
 		if skew is not None:
 			skewArray.append(int(skew.group('skew')))
 		if realCycles is not None:

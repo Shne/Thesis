@@ -8,7 +8,7 @@ amount = 7
 skew = 2
 program = "dist/Release/GNU-Linux-x86/naiveinteger"
 cwd = 'Code/Simple/NaiveInteger'
-outputFilename = 'default.output'
+outputFilename = 'naiveIntegerAlphabetSize.output'
 
 def addNewline():
 	open('Output/'+outputFilename, 'a').write('\n')
@@ -19,11 +19,13 @@ def addNewline():
 subprocess.Popen(['make','CONF=Release', 'clean'], cwd=cwd).wait()
 subprocess.Popen(['make','CONF=Release'], cwd=cwd).wait()
 
-for alphabetSize in range(12,19):
-	args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(0), outputFilename]
-	subprocess.Popen(args, cwd=cwd).wait()
-	args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(1), outputFilename]
-	subprocess.Popen(args, cwd=cwd).wait()
-
 addNewline()
+
+for alphabetSize in range(19,21):
+	for _ in range(5):
+		args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(0), outputFilename]
+		subprocess.Popen(args, cwd=cwd).wait()
+		args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(1), outputFilename]
+		subprocess.Popen(args, cwd=cwd).wait()
+
 addNewline()
