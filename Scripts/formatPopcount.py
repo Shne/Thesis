@@ -11,7 +11,7 @@ testDataFile = 'Output/testPopcount.output'
 def avg(list):
 	return sum(list) / len(list)
 
-# def avg(list):
+# def median(list):
 # 	return numpy.median(numpy.array(list))
 
 # RANK
