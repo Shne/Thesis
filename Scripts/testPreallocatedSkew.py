@@ -8,12 +8,8 @@ amount = 7
 alphabetSize = 12
 program = "dist/Release/GNU-Linux-x86/preallocated"
 cwd = 'Code/Simple/Preallocated'
-<<<<<<< Updated upstream
 outputFilename = 'default.output'
-# outputFilename = "Query_NaiveVsPreallocatedSkew/" + str(amount) + "_" + str(alphabetSize) + "_PreallocatedSelect.output"
-=======
-outputFilename = 'Query_NaiveVsPreallocatedSkew.output'
->>>>>>> Stashed changes
+# outputFilename = 'Query_NaiveVsPreallocatedSkew.output'
 
 def addNewline():
 	open('Output/'+outputFilename, 'a').write('\n')
