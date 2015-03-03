@@ -122,7 +122,7 @@ inline void testRankQuery(uint amount, uint alphabetSize, uint skew, string path
     }
     testTearDown(amount, alphabetSize, skew, "rank", pathname, eventset, events, values, num_events);
     for(uint i=0; i < queries; i++) {
-        cout << results[i];
+        cout << results[i] << " ";
     }
     cout << endl;
 }

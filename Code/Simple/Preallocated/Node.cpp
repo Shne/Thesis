@@ -12,6 +12,8 @@
 
 using namespace std;
 
+Node::Node() {};
+
 Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode,
         Node* &node_pt, bitmap_t* in_bitmap, unsigned long &in_bitmapOffset, uint skew)
     : isLeaf(false), left(nullptr), right(nullptr), parent(parentNode) {
@@ -75,19 +77,17 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
     //construct node, save it at right pointer location. give it incremented node_pt and bitmap_it so they point to free space.
     if(rightString->size() != 0) {
         node_pt++; //increment to free space
-        right = node_pt; //store pointer to right node
-        new (node_pt) Node(rightString, rightAlphabetMin, rightAlphabetMax, this, 
-                node_pt, in_bitmap, in_bitmapOffset, skew);
+        right = new (node_pt) Node(rightString, rightAlphabetMin, rightAlphabetMax, this, node_pt, in_bitmap, in_bitmapOffset, skew);
     } else {
+        rightString->clear();
         delete rightString;
     }
     //same for left. node_pt and bitmap_it should have been incrememented by our right subnode to point to free space now.
     if(leftString->size() != 0) {
         node_pt++;
-        left = node_pt;
-        new (node_pt) Node(leftString, leftAlphabetMin, leftAlphabetMax, this, 
-                node_pt, in_bitmap, in_bitmapOffset, skew);
+        left = new (node_pt) Node(leftString, leftAlphabetMin, leftAlphabetMax, this, node_pt, in_bitmap, in_bitmapOffset, skew);
     } else {
+        leftString->clear();
         delete leftString;
     }
 }

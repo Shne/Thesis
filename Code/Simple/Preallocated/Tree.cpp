@@ -28,6 +28,7 @@ Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, uint skew)
 
     new (root) Node(input, 0, alphabetSize-1, nullptr, node_pt, bitmap, bitmapOffset, skew);
     bitmap->resize(bitmapOffset);
+    bitmap->shrink_to_fit();
 }
 
 int Tree::rank(int character, unsigned long index, uint skew) {
