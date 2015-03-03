@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import numpy
 import ReadOutput
 
 RankGnuplotFile = open("Report/Gnuplot/popcountRankNew.data", "w")
@@ -9,6 +10,9 @@ testDataFile = 'Output/testPopcount.output'
 
 def avg(list):
 	return sum(list) / len(list)
+
+# def avg(list):
+# 	return numpy.median(numpy.array(list))
 
 # RANK
 # NO POPCOUNT
@@ -32,16 +36,16 @@ Rank2CMPop = avg(ReadOutput.l2TotalCacheMissesArray)
 Rank3CMPop = avg(ReadOutput.l3TotalCacheMissesArray)
 
 printList = [RankCyclesPop/RankCyclesNoPop, RankWalltimePop/RankWalltimeNoPop, RankBranchMisPop/RankBranchMisNoPop, RankTLBPop/RankTLBNoPop, Rank1CMPop/Rank1CMNoPop, Rank2CMPop/Rank2CMNoPop, Rank3CMPop/Rank3CMNoPop]
-
+printList = [element*100 for element in printList]
 # Gnuplotfile
 for i in range(0,7):
 	number = i*3
 	RankGnuplotFile.write(str(number) + '\t' + '100' + '\n')
-	RankGnuplotFile.write(str(number+1) + '\t' + str(printList[i]*100) + '\n')
+	RankGnuplotFile.write(str(number+1) + '\t' + str(printList[i]) + '\n')
 	RankGnuplotFile.write(str(number+2) + '\t' + '\n')
 
 value = "{:,.1f}"
-percent = "{:.2}"
+percent = "{:.2f}"
 
 # Values file
 ValuesFile.write('\\begin{tabular}{|l|r|r|r|}\n')
@@ -79,11 +83,13 @@ Select2CMPop = avg(ReadOutput.l2TotalCacheMissesArray)
 Select3CMPop = avg(ReadOutput.l3TotalCacheMissesArray)
 
 printList = [SelectCyclesPop/SelectCyclesNoPop, SelectWalltimePop/SelectWalltimeNoPop, SelectBranchMisPop/SelectBranchMisNoPop, SelectTLBPop/SelectTLBNoPop, Select1CMPop/Select1CMNoPop, Select2CMPop/Select2CMNoPop, Select3CMPop/Select3CMNoPop]
+printList = [element*100 for element in printList]
 
+#gnuplot
 for i in range(0,7):
 	number = i*3
 	SelectGnuplotFile.write(str(number) + '\t' + '100' + '\n')
-	SelectGnuplotFile.write(str(number+1) + '\t' + str(printList[i]*100) + '\n')
+	SelectGnuplotFile.write(str(number+1) + '\t' + str(printList[i]) + '\n')
 	SelectGnuplotFile.write(str(number+2) + '\t' + '\n')
 
 # Values file
