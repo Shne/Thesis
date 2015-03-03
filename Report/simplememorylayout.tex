@@ -11,6 +11,7 @@ Looking at the Intel Optimization Manual~\cite{intel-optimization-manual} for ou
 
 
 \subsection{Skewing The Tree}
+\label{sec:SkewingTheTree}
 A way of achieving the sequential memory access in our case would be to skew the entire tree to one side, so that it is most likely that the queries will go to one side for most of the traversal and then control the memory layout so we can put that side of the tree next in memory.
 Skewing the tree is done by changing the way we find which character in the alphabet to split on in each node's construction.
 The split character is the last character in the alphabet of the left child node and to be able to skew the calculation we calculate it as
@@ -45,8 +46,30 @@ The nodes now contain, in addition to the previously mentioned pointers, a point
 
 \subsection{Experiments}
 
+\FloatBarrier
 \subsubsection{Query time when Skewing uncontrolled vs. controlled memory-layout}
-In this experiment we aim to show that the controlled memory layout is important in order to reduce cache misses, and that even though the skew might reduce branch mispredictions further, the increase in tree depth makes it not worth it for the algorithm without controlled memory layout.
+
+\begin{figure}
+\caption{Rank and Select Running times on Wavelet Tree with increasing skew for naive construction and preallocated construction}
+\label{fig:NaiveRankSkewRunningTime}
+\input{naiveRankSkewRunningTime}
+\end{figure}
+
+In this experiment we want to test whether querying our controlled memory version of the Wavelet Tree would be faster than querying the uncontrolled memory version for increasingly skewed trees. 
+
+We have run 100 \texttt{rank} queries and 100 \texttt{select} queries for each skew and registered the total running time for those 100 queries. 
+We did 5 sample runs for each skew and then used the median running time of these. 
+This was done to minimize the effect of outliers in the test. The 100 runs was simply done to increase the general size of the running time to better see the differences. The results can be seen in Figure ~\ref{fig:NaiveRankSkewRunningTime}.
+
+We skew the Wavelet Tree (see section~\ref{sec:SkewingTheTree}) because we hoped it would have better performance than not skewing it since data could then be stored sequentially in memory and reduce cache-misses and would then be faster to access when querying. 
+This was not the case. 
+The query time increases linearly with increasing skew for both controlled and uncontrolled memory layout.
+
+We also wanted to see if controlling the memory ourselves was better than not controlling it. 
+Looking at the results in Figure ~\ref{fig:NaiveRankSkewRunningTime} again we can see that the two approaches are quite equal for both rank and select. 
+
+Controlling the memory is in essence not better than letting the OS control it and skewing the tree is not an improvement. 
+The hight of the Wavelet Tree increases so much that query overhead is too high to gain anything from the possible faster data access.
 
 \subsubsection{Query vs. Build Time when skewing controlled memory-layout}
 In this experiment we aim to show that while skewing the tree for a controlled memory-layout algorithm greatly increases the speed of the queries, it also increases the building time of the tree. But we expect to find the increase in building time to be somewhat slight, and almost insignificant when compared to the increase in query speed, making it well worth it for most use cases.

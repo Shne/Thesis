@@ -4,7 +4,7 @@ import subprocess
 import os.path
 from time import sleep
 
-amount = 7
+amount = 8
 alphabetSize = 12
 program = "dist/Release/GNU-Linux-x86/preallocated"
 cwd = 'Code/Simple/Preallocated'
