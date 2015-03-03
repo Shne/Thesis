@@ -7,13 +7,16 @@ set ylabel "Cache Misses"
 set key font 'sans,2'
 # set xrange [2:10]
 # set yrange [30000:100000]
-# set key right bottom;
+set key left top;
 	
 
 # plot 'naiveRankSkewRunningTime.data' using (1.0):2:(0):1
-plot 'Gnuplot/naiveRankSkewCacheMisses.data' using 1:2 with linespoints title "NaiveRank L1", \
-'Gnuplot/naiveRankSkewCacheMisses.data' using 1:3 with linespoints title "NaiveRank L2", \
-'Gnuplot/naiveRankSkewCacheMisses.data' using 1:4 with linespoints title "NaiveRank L3", \
+plot 'Gnuplot/naiveRankSkewCacheMisses.data' using 1:2 with linespoints title "Naive L1", \
+'Gnuplot/naiveRankSkewCacheMisses.data' using 1:3 with linespoints title "Naive L2", \
+'Gnuplot/naiveRankSkewCacheMisses.data' using 1:4 with linespoints title "Naive L3", \
+'Gnuplot/preallocatedRankSkewCacheMisses.data' using 1:2 with linespoints title "Preallocated L1", \
+'Gnuplot/preallocatedRankSkewCacheMisses.data' using 1:3 with linespoints title "Preallocated L2", \
+'Gnuplot/preallocatedRankSkewCacheMisses.data' using 1:4 with linespoints title "Preallocated L3", \
 
 # plot 'Gnuplot/naiveSelectSkewCacheMisses.data' using 1:2 with linespoints title "NaiveSelect L1", \
 # 'Gnuplot/naiveSelectSkewCacheMisses.data' using 1:3 with linespoints title "NaiveSelect L2", \

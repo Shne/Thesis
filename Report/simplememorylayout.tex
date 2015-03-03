@@ -46,7 +46,6 @@ The nodes now contain, in addition to the previously mentioned pointers, a point
 
 \subsection{Experiments}
 
-\FloatBarrier
 \subsubsection{Query time when Skewing uncontrolled vs. controlled memory-layout}
 
 \begin{figure}
@@ -54,6 +53,14 @@ The nodes now contain, in addition to the previously mentioned pointers, a point
 \label{fig:NaiveRankSkewRunningTime}
 \input{naiveRankSkewRunningTime}
 \end{figure}
+
+\begin{figure}
+\caption{Rank Cache Misses on Wavelet Tree with increasing skew for naive construction}
+\label{fig:NaiveRankSkewCacheMisses}
+\input{NaiveVsPreallocatedSkewQueryCacheMisses}
+\end{figure}
+
+
 
 In this experiment we want to test whether querying our controlled memory version of the Wavelet Tree would be faster than querying the uncontrolled memory version for increasingly skewed trees. 
 
