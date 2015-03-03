@@ -92,12 +92,6 @@ By querying for characters evenly distributed along the alphabet, we ensure that
 In Figure~\ref{fig:rankPopcountDiff}, \ref{fig:selectPopcountDiff}, and \ref{fig:valuesForPopcountDiff} we see the resulting relative cpu cycles, wall time, branch mispredictions, translation lookaside buffer misses, and cache misses for our rank and select queries, respectively.
 That is, we have chosen the values for the queries not using popcount to be index 100 and calculated and plotted the relative values of the queries using popcount, to show which values increase, decrease and by what relative amount, all within the same graph.
 
-\begin{figure}
-\caption{Naive Rank Running times with increasing skew}
-\label{fig:NaiveRankSkewRunningTime}
-\input{naiveRankSkewRunningTime}
-\end{figure}
-
 In all three figures we see that the algorithm using \texttt{popcount} is much faster, using only a fraction of the time of the other algorithm, about (TODO)\% for rank and (TODO)\% for select.
 The massive reduction in branch mispredictions likely accounts for some of the saved cpu cycles.
 Given that the branch misprediction penalty on the Ivy Bridge architecture (on which this experiment was run) is about "15 cycles or more"~\cite{agner}, we can calculate an estimate of how many cpu cycles the branch misprediction reduction has saved us.
@@ -106,8 +100,19 @@ This means that the branch mispredictions do have an effect, but it is only a sm
 
 By similar calculations the saved cpu cycles from branch mispredictions for select is at least $48.46\%$ of the total saved. We expect this is because of the much higher number of branch mispredictions and the much lower number of cycles for the original select algorithm, as well as the fact that we can't use \texttt{popcount} for every word of the bitmap but must go back to doing manual counting of the bits when we find the word the sought-after occurrence is in.
 
+
 \subsubsection{Further improvements}
 Looking at the values in Figure~\ref{fig:valuesForPopcountDiff}, we find that an obvious next step would be to reduce the number of cache misses. One way to do this is to control the memory layout of the nodes and their bitmaps and then make it more likely that the queries will traverse the nodes in such a way that the next item is already in cache, either in the same cacheline or one that has been prefetched.
 
 We will do this by placing nodes and bitmaps consecutively in memory that are mirrored pre-order in the tree, 'mirrored' meaning we go down the right side first.
 We describe this in section~\ref{sec:memorylayout}.
+
+
+\subsubsection{Rank and Select on naive and preallocated Tawelet Tree}
+
+\begin{figure}
+\caption{Rank and Select Running times on Wavelet Tree with increasing skew for naive construction and preallocated construction}
+\label{fig:NaiveRankSkewRunningTime}
+\input{naiveRankSkewRunningTime}
+\end{figure}
+
