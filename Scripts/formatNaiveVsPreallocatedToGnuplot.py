@@ -2,6 +2,8 @@
 
 import ReadOutput
 import numpy
+import subprocess
+import os.path
 
 def getNumberOfEqualSkews(skewList):
 	stepsize = 0
@@ -13,19 +15,15 @@ def getNumberOfEqualSkews(skewList):
 			break
 	return stepsize
 
-def getMedianValues(skewList, runningTimeList):
+def getMedianValues(skewList, otherList):
 	stepsize = getNumberOfEqualSkews(skewList)
 	runningTimeMedians = []
 
-	for i in range(0, len(runningTimeList), stepsize):
+	for i in range(0, len(otherList), stepsize):
 		temp = []
 		for j in range(i, stepsize+i):
-			temp.append(runningTimeList[j])
-		print("temp: ")
-		print(temp)
-		median = numpy.median(numpy.array(temp))		
-		print("median: " + str(median))
-		print("")
+			temp.append(otherList[j])
+		median = numpy.median(numpy.array(temp))
 		runningTimeMedians.append(median)
 
 	return runningTimeMedians
@@ -44,50 +42,55 @@ def getUniqueSkewValues(skewList):
 		uniqueSkews.append(skew)
 	return uniqueSkews
 
-naiveRankGnuplotFile = open("Report/Gnuplot/naiveRankSkewRunningTime.data", "w")
-naiveSelectGnuplotFile = open("Report/Gnuplot/naiveSelectSkewRunningTime.data", "w")
-preallocatedRankGnuplotFile = open("Report/Gnuplot/preallocatedRankSkewRunningTime.data", "w")
-preallocatedSelectGnuplotFile = open("Report/Gnuplot/preallocatedSelectSkewRunningTime.data", "w")
+def writeToGnuplot(outputFile, valueListsKeys, testDataFile, constructionAlg, test, columns):
+	ReadOutput.getData(testDataFile, constructionAlg, test)
+
+	outputFile.write(columns+"\n")
+	valueLists = ReadOutput.getReadOutputLists(valueListsKeys)
+	seperatingValues = valueLists[0]
+	valueLists.remove(seperatingValues)
+
+	medianValueListList = []
+	for lst in valueLists:
+		medianValueListList.append(getMedianValues(seperatingValues, lst))
+
+	uniqueSeperators = getUniqueSkewValues(seperatingValues)
+	index = 0
+	for skew in uniqueSeperators:
+		strToWrite = str(skew)
+		for medianValueList in medianValueListList:
+			strToWrite += "   " + str(int(medianValueList[index]))
+		outputFile.write(strToWrite +"\n")
+		index+=1
+
+	ReadOutput.reset();
+
+
+
+# naiveRankGnuplotFile = open("Report/Gnuplot/naiveRankSkewRunningTime.data", "w")
+# naiveSelectGnuplotFile = open("Report/Gnuplot/naiveSelectSkewRunningTime.data", "w")
+# preallocatedRankGnuplotFile = open("Report/Gnuplot/preallocatedRankSkewRunningTime.data", "w")
+# preallocatedSelectGnuplotFile = open("Report/Gnuplot/preallocatedSelectSkewRunningTime.data", "w")
+
+naiveRankGnuplotFile = open("Report/Gnuplot/naiveRankSkewCacheMisses.data", "w")
+naiveSelectGnuplotFile = open("Report/Gnuplot/naiveSelectSkewCacheMisses.data", "w")
+preallocatedRankGnuplotFile = open("Report/Gnuplot/preallocatedRankSkewCacheMisses.data", "w")
+preallocatedSelectGnuplotFile = open("Report/Gnuplot/preallocatedSelectSkewCacheMisses.data", "w")
+
 testDataFile = 'Output/Query_NaiveVsPreallocatedSkew.output'
+# columns = "#[skew]   [Wall-Time (microsec)]"
+# valueLists = ["skewArray", "wallTimeArray"]
 
-ReadOutput.getData(testDataFile, "SimpleNaiveInteger", "rank")
-naiveRankGnuplotFile.write("#[skew]   [Wall Time]\n")
-index = 0
-madianValues = getMedianValues(ReadOutput.skewArray, ReadOutput.wallTimeArray)
-uniqueSkews = getUniqueSkewValues(ReadOutput.skewArray)
-for skew in uniqueSkews:
-	naiveRankGnuplotFile.write(str(skew)+ "   " + str(int(madianValues[index])) +"\n")
-	index+=1
-ReadOutput.reset();
+#Names of columns
+columns = "#[skew]   [L1-Cache-Misses]   [L2-Cache-Misses]   [L3-Cache-Misses]"
 
-ReadOutput.getData(testDataFile, "SimpleNaiveInteger", "select")
-naiveSelectGnuplotFile.write("#[skew]   [Wall Time]\n")
-index = 0
-madianValues = getMedianValues(ReadOutput.skewArray, ReadOutput.wallTimeArray)
-uniqueSkews = getUniqueSkewValues(ReadOutput.skewArray)
-for skew in uniqueSkews:
-	naiveSelectGnuplotFile.write(str(skew)+ "   " + str(int(madianValues[index])) +"\n")
-	index+=1
-ReadOutput.reset();
+#The data we want in our gnuplot. It is requiered that the first key is data seperating values
+testValueDataListKeys = ["skewArray", "l1TotalCacheMissesArray", "l2TotalCacheMissesArray", "l3TotalCacheMissesArray"]
 
+writeToGnuplot(naiveRankGnuplotFile, testValueDataListKeys, testDataFile, "SimpleNaiveInteger", "rank", columns)
+writeToGnuplot(naiveSelectGnuplotFile, testValueDataListKeys, testDataFile, "SimpleNaiveInteger", "select", columns)
+writeToGnuplot(preallocatedRankGnuplotFile, testValueDataListKeys, testDataFile, "Preallocated", "rank", columns)
+writeToGnuplot(preallocatedSelectGnuplotFile, testValueDataListKeys, testDataFile, "Preallocated", "select", columns)
 
-ReadOutput.getData(testDataFile, "Preallocated", "rank")
-preallocatedRankGnuplotFile.write("#[skew]   [Wall Time]\n")
-index = 0
-madianValues = getMedianValues(ReadOutput.skewArray, ReadOutput.wallTimeArray)
-uniqueSkews = getUniqueSkewValues(ReadOutput.skewArray)
-for skew in uniqueSkews:
-	preallocatedRankGnuplotFile.write(str(skew)+ "   " + str(int(madianValues[index])) +"\n")
-	index+=1
-ReadOutput.reset();
-
-ReadOutput.getData(testDataFile, "Preallocated", "select")
-preallocatedSelectGnuplotFile.write("#[skew]   [Wall Time]\n")
-index = 0
-madianValues = getMedianValues(ReadOutput.skewArray, ReadOutput.wallTimeArray)
-uniqueSkews = getUniqueSkewValues(ReadOutput.skewArray)
-for skew in uniqueSkews:
-	preallocatedSelectGnuplotFile.write(str(skew)+ "   " + str(int(madianValues[index])) +"\n")
-	index+=1
-ReadOutput.reset();
-
+cwd = 'Report'
+subprocess.Popen(['gnuplot', 'Gnuplot/NaiveVsPreallocatedSkewCacheMissesQueryScript.gnu'], cwd=cwd).wait()

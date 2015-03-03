@@ -98,3 +98,34 @@ def reset():
 	del memSizeArray[:]
 	del memResidentArray[:]
 	del memHighWatermarkArray[:]
+
+def getReadOutputLists(valueListKeys):
+	valueLists = []
+	for key in valueListKeys:
+		if(key == "skewArray"):
+			valueLists.append(skewArray)
+		elif(key == "realCyclesArray"):
+			valueLists.append(realCyclesArray)
+		elif(key == "wallTimeArray"):
+			valueLists.append(wallTimeArray)
+		elif(key == "virtualCyclesArray"):
+			valueLists.append(virtualCyclesArray)
+		elif(key == "totalCyclesArray"):
+			valueLists.append(totalCyclesArray)
+		elif(key == "l1TotalCacheMissesArray"):
+			valueLists.append(l1TotalCacheMissesArray)
+		elif(key == "branchMispredictionsArray"):
+			valueLists.append(branchMispredictionsArray)
+		elif(key == "TLBArray"):
+			valueLists.append(TLBArray)
+		elif(key == "l2TotalCacheMissesArray"):
+			valueLists.append(l2TotalCacheMissesArray)
+		elif(key == "l3TotalCacheMissesArray"):
+			valueLists.append(l3TotalCacheMissesArray)
+		elif(key == "memSizeArray"):
+			valueLists.append(memSizeArray)
+		elif(key == "memResidentArray"):
+			valueLists.append(memResidentArray)
+		elif(key == "memHighWatermarkArray"):
+			valueLists.append(memHighWatermarkArray)
+	return valueLists
