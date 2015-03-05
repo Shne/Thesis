@@ -9,6 +9,7 @@ wallTimeArray = []
 virtualCyclesArray = []
 totalCyclesArray = []
 l1TotalCacheMissesArray = []
+branchExecutedList = []
 branchMispredictionsArray = []
 TLBArray = []
 l2TotalCacheMissesArray = []
@@ -29,6 +30,7 @@ def getData(input_, algorithm, test):
 	virtualCyclesReg = re.compile(match+"virt_cycles=(?P<virt_cycles>\d+)")
 	totalCyclesReg = re.compile(match+"PAPI_TOT_CYC=(?P<PAPI_TOT_CYC>\d+)")
 	l1TotalCacheMissesReg = re.compile(match+"PAPI_L1_TCM=(?P<PAPI_L1_TCM>\d+)")
+	branchExecutedReg = re.compile(match+"PAPI_BR_CN=(?P<PAPI_BR_CN>\d+)")
 	branchMispredictionsReg = re.compile(match+"PAPI_BR_MSP=(?P<PAPI_BR_MSP>\d+)")
 	TLBReg = re.compile(match+"PAPI_TLB_DM=(?P<PAPI_TLB_DM>\d+)")
 	l2TotalCacheMissesReg = re.compile(match+"PAPI_L2_TCM=(?P<PAPI_L2_TCM>\d+)")
@@ -47,6 +49,7 @@ def getData(input_, algorithm, test):
 		virtualCycles = virtualCyclesReg.search(line)
 		totalCycles = totalCyclesReg.search(line)
 		l1TotalCacheMisses = l1TotalCacheMissesReg.search(line)
+		branchExecuted = branchExecutedReg.search(line)
 		branchMispredictions = branchMispredictionsReg.search(line)
 		TLB = TLBReg.search(line)
 		l2TotalCacheMisses = l2TotalCacheMissesReg.search(line)
@@ -69,6 +72,8 @@ def getData(input_, algorithm, test):
 			totalCyclesArray.append(int(totalCycles.group('PAPI_TOT_CYC')))
 		if l1TotalCacheMisses is not None:
 			l1TotalCacheMissesArray.append(int(l1TotalCacheMisses.group('PAPI_L1_TCM')))
+		if branchExecuted is not None:
+			branchExecutedList.append(int(branchExecuted.group('PAPI_BR_CN')))
 		if branchMispredictions is not None:
 			branchMispredictionsArray.append(int(branchMispredictions.group('PAPI_BR_MSP')))
 		if TLB is not None:

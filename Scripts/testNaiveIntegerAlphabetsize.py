@@ -21,11 +21,13 @@ subprocess.Popen(['make','CONF=Release'], cwd=cwd).wait()
 
 addNewline()
 
-for alphabetSize in range(19,21):
+for alphabetSize in range(12,21):
 	for _ in range(5):
 		args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(0), outputFilename]
 		subprocess.Popen(args, cwd=cwd).wait()
 		args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(1), outputFilename]
+		subprocess.Popen(args, cwd=cwd).wait()
+		args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(2), outputFilename]
 		subprocess.Popen(args, cwd=cwd).wait()
 
 addNewline()

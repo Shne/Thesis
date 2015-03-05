@@ -24,12 +24,13 @@ for i in range(int(len(ReadOutput.alphabetSizeList)/testsPerSize)):
 	Cycles = median(ReadOutput.totalCyclesArray[startIndex:endIndex])
 	Walltime = median(ReadOutput.wallTimeArray[startIndex:endIndex])
 	BranchMis = median(ReadOutput.branchMispredictionsArray[startIndex:endIndex])
+	BranchExe = median(ReadOutput.branchExecutedList[startIndex:endIndex])
 	TLB = median(ReadOutput.TLBArray[startIndex:endIndex])
 	L1CM = median(ReadOutput.l1TotalCacheMissesArray[startIndex:endIndex])
 	L2CM = median(ReadOutput.l2TotalCacheMissesArray[startIndex:endIndex])
 	L3CM = median(ReadOutput.l3TotalCacheMissesArray[startIndex:endIndex])
 
-	GnuplotFile.write(str(alphabetSize) +" "+ str(Walltime) +" "+ str(BranchMis) +" "+ str(TLB) +" "+ str(L1CM) +" "+ str(L2CM) +" "+ str(L3CM) +"\n")
+	GnuplotFile.write(str(alphabetSize) +" "+ str(Walltime) +" "+ str(BranchMis/BranchExe) +" "+ str(BranchMis) +" "+ str(TLB) +" "+ str(L1CM) +" "+ str(L2CM) +" "+ str(L3CM) +"\n")
 
 GnuplotFile.close()
 
