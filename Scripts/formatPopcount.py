@@ -3,8 +3,8 @@
 import numpy
 import ReadOutput
 
-RankGnuplotFile = open("Report/Gnuplot/popcountRankNew.data", "w")
-SelectGnuplotFile = open("Report/Gnuplot/popcountSelectNew.data", "w")
+RankGnuplotFile = open("Report/Gnuplot/Data/popcountRankNew.data", "w")
+SelectGnuplotFile = open("Report/Gnuplot/Data/popcountSelectNew.data", "w")
 ValuesFile = open("Report/valuesForPopcount.tex", "w")
 testDataFile = 'Output/testPopcount.output'
 

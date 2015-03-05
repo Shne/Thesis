@@ -4,7 +4,7 @@ import numpy
 import ReadOutput
 import subprocess
 
-GnuplotFile = open("Report/Gnuplot/NaiveIntegerAlphabetsize.data", "w")
+GnuplotFile = open("Report/Gnuplot/Data/NaiveIntegerAlphabetsize.data", "w")
 testDataFile = 'Output/naiveIntegerAlphabetSize.output'
 testsPerSize = 5
 
