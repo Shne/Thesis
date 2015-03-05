@@ -10,16 +10,28 @@
 
 #define SKEW 2
 
+//#define SPLITSTRINGCOUNTERS
+//#define INTERNALCOUNTERS
+//#define EMPTYALPHABETCOUNTERS
+
 #include <string>
+#include <iostream>
 #include <vector>
 #include <sstream>
 #include <algorithm>
 #include <iterator>
+#include <papi.h>
 //#include <boost/dynamic_bitset.hpp>
 
 typedef std::vector<bool> bitmap_t;
 
 using namespace std;
+
+#ifdef INTERNALCOUNTERS
+extern long_long global_values[];
+extern int global_events[];
+extern ulong global_value;
+#endif
 
 class Node {
 private:
@@ -28,7 +40,7 @@ private:
     Node* parent;
     Node* left;
     Node* right;
-public: 
+public:
     Node();
     Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, uint skew);
     int rank(uint character, ulong index, uint alphabetMin, uint alphabetMax, uint skew);
@@ -40,6 +52,8 @@ public:
     Node* getLeaf(uint character, uint alphabetMin, uint alphabetMax, uint skew);
     uint leafSelect(uint character, ulong occurance);
 };
+
+
 
 #endif	/* NODE_H */
 

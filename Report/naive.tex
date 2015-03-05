@@ -59,25 +59,41 @@ Defining the input occurrence parameter as $io$, the number of words iterated th
 Again, when popcount for 0s instead of 1s is needed, we simply subtract the result of \texttt{popcount} from 1 to obtain the count of 0s.
 
 \subsection{Experiments}
+We would like to find out whether our implementation of the constructino of the tree conforms to the theoretical running time of $O(n \log \sigma)$ and how much of an improvement using the \texttt{popcount} cpu instruction was for the queries.
+
 
 \subsubsection{Running time of Tree Construction vs Alphabet Size}
-Looks like it's branch mispredictions...
+We tested the running time of building the tree relative to the alphabet size by running the program 5 times for each size of the alphabet we tested and took the median value of the resulting measurements for each measurement type we used.
+We tested for alphabet sizes $2^n$ with $n = [10..20]$ and a constant input string length of $10^7$.
+
+In Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime} is plotted the running time in wall time for the different alphabet sizes. The graph has a logarithmic scale for the x axis so that a logarithmic curve will show up as linear, allowing us to recognise at a glance whether the running time conforms to the theoretical running time.
+Because the plot in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime} is clearly not a straight line, we can conclude that the running time of our implementation is not logarithmic on the size of the alphabet size.
+To figure our why it is not so, we turn to the other measurements we have collected, plotting them to see if any of them describe a similar growth depending on the alphabet size.
+In Figure~\ref{fig:naiveIntegerAlphabetSize_BM} we see the amount of branch mispredictions for each alphabet size, again with a logarithmic x axis to better compare with Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime}.
+We see that the branch mispredictions grow at a rate similar to the wall time.
+In Figure~\ref{fig:naiveIntegerAlphabetSize_TLB_CM} we see cache misses and translation lookaside buffer misses plotted in a similar fashion and we can see that they do not display a growth similar to the wall time and branch mispredictions.
+This leads us to conclude that branch mispredictions are likely the reason our algorithm doesn't perform as it theoretically should.
+
+
 \begin{figure}
-	\caption{Wall Time and Branch Mispredictions}
+	\caption{Tree Construction: Wall Time and Branch Mispredictions over Alphabet Size}
 	\begin{subfigure}{\textwidth}
 		\input{naiveIntegerAlphabetSize_WallTime}
 		\caption{Wall Time}
+		\label{fig:naiveIntegerAlphabetSize_WallTime}
 	\end{subfigure}
 	
 	\begin{subfigure}{\textwidth}
 		\input{naiveIntegerAlphabetSize_BM}
 		\caption{Branch Mispredictions}
+		\label{fig:naiveIntegerAlphabetSize_BM}
 	\end{subfigure}
 \end{figure}
 
 \begin{figure}
 	\input{naiveIntegerAlphabetSize_TLB_CM}
-	\caption{Translation Lookaside Buffer Misses, and Level 1-3 Cache Misses}
+	\caption{Tree Construction: Translation Lookaside Buffer Misses, and Level 1-3 Cache Misses over Alphabet Size}
+	\label{fig:naiveIntegerAlphabetSize_TLB_CM}
 \end{figure}
 
 
@@ -107,6 +123,7 @@ By querying for characters evenly distributed along the alphabet, we ensure that
 \end{figure}
 
 \begin{figure}
+\center
 \caption{Values for Figure~\ref{fig:rankPopcountDiff} and \ref{fig:selectPopcountDiff}}
 \label{fig:valuesForPopcountDiff}
 \input{valuesForPopcount}

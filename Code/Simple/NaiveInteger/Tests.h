@@ -46,7 +46,10 @@ inline void getPapiAvailableEvents(){
 }
 
 inline void testSetup(int eventset, int* events, int num_events){
-    PAPI_num_counters();          
+    PAPI_num_counters();
+#ifdef INTERNALCOUNTERS
+    return;
+#endif
     
     if(eventset == 0) {
         /* Start counting events */
@@ -60,6 +63,9 @@ inline void testSetup(int eventset, int* events, int num_events){
 }
 
 inline void testTearDown(uint amount, uint alphabetSize, uint skew, string test, string pathname, int eventset, int* events, long_long* values, int num_events){
+#ifdef INTERNALCOUNTERS
+    return;
+#endif
     /* Stop counting events */
     int retval = PAPI_stop_counters(values, num_events);
     if (retval != PAPI_OK) handle_error(retval);
@@ -132,7 +138,7 @@ inline void testBuildTime(uint amount, uint alphabetSize, uint skew, string path
     Tree tree = Tree(input, amount, alphabetSize, skew);
     testTearDown(amount, alphabetSize, skew, "build", pathname, eventset, events, values, num_events);
     
-    cout << tree.rank(0, amount, skew) << endl;; //just to make sure nothing is optimized away
+//    cout << tree.rank(0, amount, skew) << endl; //just to make sure nothing is optimized away
 }
 
 #endif	/* TESTS_H */

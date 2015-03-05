@@ -10,11 +10,20 @@
 
 using namespace std;
 
+#ifdef INTERNALCOUNTERS
+long_long global_values[1] = {0};
+int global_events[1] = { PAPI_BR_MSP };
+ulong global_value = 0;
+#endif
+
 Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, uint skew)
     : root(Node(input, 0, alphabetSize-1, nullptr, skew)),
         alphabetMin(0), alphabetMax(alphabetSize-1),
         inputSize(amount)
 {
+#ifdef INTERNALCOUNTERS
+    cout << alphabetSize << " " << global_value << endl;
+#endif
 }
 
 int Tree::rank(uint character, ulong index, uint skew) {

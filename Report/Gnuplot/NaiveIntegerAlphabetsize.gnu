@@ -4,7 +4,7 @@ set term epslatex color
 
 
 
-set logscale x
+set logscale x 2
 # set logscale y
 
 set xlabel "Alphabet Size \\small (log scale)"
