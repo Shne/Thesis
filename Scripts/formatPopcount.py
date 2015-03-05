@@ -104,3 +104,12 @@ ValuesFile.write('\\textbf{L1 CM} & '+value.format(Select1CMNoPop)+' & '+value.f
 ValuesFile.write('\\textbf{L2 CM} & '+value.format(Select2CMNoPop)+' & '+value.format(Select2CMPop)+' & '+percent.format(printList[5])+'\\% \\\\ \hline\n')
 ValuesFile.write('\\textbf{L3 CM} & '+value.format(Select3CMNoPop)+' & '+value.format(Select3CMPop)+' & '+percent.format(printList[6])+'\\% \\\\ \hline\n')
 ValuesFile.write('\\end{tabular}\\\\[5pt]\n')
+
+
+RankGnuplotFile.close()
+SelectGnuplotFile.close()
+ValuesFile.close()
+
+GnuScriptFileName = '../popcountDifferenceNew.gnu'
+cwd = 'Report/Gnuplot/Graphs'
+subprocess.Popen(['gnuplot', GnuScriptFileName], cwd=cwd).wait()

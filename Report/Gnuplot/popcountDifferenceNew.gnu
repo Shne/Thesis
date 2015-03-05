@@ -11,11 +11,11 @@ set style fill solid
 # set key font 'sans,2'
 
 set output 'popcountRankNew.tex'
-plot 'Gnuplot/popcountRankNew.data' every 3    using 1:2 title "Simple Binary Rank " with boxes ls 1,\
-     'Gnuplot/popcountRankNew.data' every 3::1 using 1:2 title "Binary Rank using Popcount" with boxes ls 2
+plot '../Data/popcountRankNew.data' every 3    using 1:2 title "Simple Binary Rank " with boxes ls 1,\
+     '../Data/popcountRankNew.data' every 3::1 using 1:2 title "Binary Rank using Popcount" with boxes ls 2
 
 set yrange [0:120]
 
 set output 'popcountSelectNew.tex'
-plot 'Gnuplot/popcountSelectNew.data' every 3    using 1:2 title "Simple Binary Select" with boxes ls 1,\
-     'Gnuplot/popcountSelectNew.data' every 3::1 using 1:2 title "Binary Select using Popcount" with boxes ls 2
+plot '../Data/popcountSelectNew.data' every 3    using 1:2 title "Simple Binary Select" with boxes ls 1,\
+     '../Data/popcountSelectNew.data' every 3::1 using 1:2 title "Binary Select using Popcount" with boxes ls 2

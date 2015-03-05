@@ -11,12 +11,12 @@ set key left top;
 	
 
 # plot 'naiveRankSkewRunningTime.data' using (1.0):2:(0):1
-plot 'Gnuplot/naiveRankSkewCacheMisses.data' using 1:2 with linespoints title "Naive L1", \
-'Gnuplot/naiveRankSkewCacheMisses.data' using 1:3 with linespoints title "Naive L2", \
-'Gnuplot/naiveRankSkewCacheMisses.data' using 1:4 with linespoints title "Naive L3", \
-'Gnuplot/preallocatedRankSkewCacheMisses.data' using 1:2 with linespoints title "Preallocated L1", \
-'Gnuplot/preallocatedRankSkewCacheMisses.data' using 1:3 with linespoints title "Preallocated L2", \
-'Gnuplot/preallocatedRankSkewCacheMisses.data' using 1:4 with linespoints title "Preallocated L3", \
+plot '../Data/naiveRankSkewCacheMisses.data' using 1:2 with linespoints title "Naive L1", \
+'../Data/naiveRankSkewCacheMisses.data' using 1:3 with linespoints title "Naive L2", \
+'../Data/naiveRankSkewCacheMisses.data' using 1:4 with linespoints title "Naive L3", \
+'../Data/preallocatedRankSkewCacheMisses.data' using 1:2 with linespoints title "Preallocated L1", \
+'../Data/preallocatedRankSkewCacheMisses.data' using 1:3 with linespoints title "Preallocated L2", \
+'../Data/preallocatedRankSkewCacheMisses.data' using 1:4 with linespoints title "Preallocated L3", \
 
 # plot 'Gnuplot/naiveSelectSkewCacheMisses.data' using 1:2 with linespoints title "NaiveSelect L1", \
 # 'Gnuplot/naiveSelectSkewCacheMisses.data' using 1:3 with linespoints title "NaiveSelect L2", \

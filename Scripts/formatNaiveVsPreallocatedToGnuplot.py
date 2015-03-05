@@ -92,5 +92,10 @@ writeToGnuplot(naiveSelectGnuplotFile, testValueDataListKeys, testDataFile, "Sim
 writeToGnuplot(preallocatedRankGnuplotFile, testValueDataListKeys, testDataFile, "Preallocated", "rank", columns)
 writeToGnuplot(preallocatedSelectGnuplotFile, testValueDataListKeys, testDataFile, "Preallocated", "select", columns)
 
+naiveRankGnuplotFile.close()
+naiveSelectGnuplotFile.close()
+preallocatedRankGnuplotFile.close()
+preallocatedSelectGnuplotFile.close()
+
 cwd = 'Report'
 subprocess.Popen(['gnuplot', 'Gnuplot/NaiveVsPreallocatedSkewCacheMissesQueryScript.gnu'], cwd=cwd).wait()
