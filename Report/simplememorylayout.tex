@@ -46,40 +46,76 @@ The nodes now contain, in addition to the previously mentioned pointers, a point
 
 \subsection{Experiments}
 
-\subsubsection{Query time when Skewing uncontrolled vs. controlled memory-layout}
+\subsubsection{Query time when skewing the Wavelet Tree using uncontrolled and controlled memory-layout}
 
 \begin{figure}
 \caption{Rank and Select Running times on Wavelet Tree with increasing skew for naive construction and preallocated construction}
-\label{fig:NaiveRankSkewRunningTime}
-\input{naiveRankSkewRunningTime}
+\label{fig:NaiveRankSelectSkewRunningTime}
+\input{naiveRankSelectSkewRunningTime}
 \end{figure}
-
-\begin{figure}
-\caption{Rank Cache Misses on Wavelet Tree with increasing skew for naive construction}
-\label{fig:NaiveRankSkewCacheMisses}
-\input{NaiveVsPreallocatedSkewQueryCacheMisses}
-\end{figure}
-
 
 
 In this experiment we want to test whether querying our controlled memory version of the Wavelet Tree would be faster than querying the uncontrolled memory version for increasingly skewed trees. 
 
 We have run 100 \texttt{rank} queries and 100 \texttt{select} queries for each skew and registered the total running time for those 100 queries. 
 We did 5 sample runs for each skew and then used the median running time of these. 
-This was done to minimize the effect of outliers in the test. The 100 runs was simply done to increase the general size of the running time to better see the differences. The results can be seen in Figure ~\ref{fig:NaiveRankSkewRunningTime}.
+This was done to minimize the effect of outliers in the test. The 100 runs was simply done to increase the general size of the running time to better see the differences. The results can be seen in Figure ~\ref{fig:NaiveRankSelectSkewRunningTime}.
 
-We skew the Wavelet Tree (see section~\ref{sec:SkewingTheTree}) because we hoped it would have better performance than not skewing it since data could then be stored sequentially in memory and reduce cache-misses and would then be faster to access when querying. 
+We skew the Wavelet Tree (see section~\ref{sec:SkewingTheTree}) because we believed it would have better performance than not skewing it since data could then be stored sequentially in memory and reduce cache-misses and would then be faster to access when querying. 
 This was not the case. 
-The query time increases linearly with increasing skew for both controlled and uncontrolled memory layout.
+The query time increases linearly with increasing skew for both controlled and uncontrolled memory layout and looking at the results in Figure ~\ref{fig:NaiveRankSelectSkewRunningTime} we can also see that the two approaches are quite equal for both rank and select in terms of running time when comparing the two construction methods.
 
-We also wanted to see if controlling the memory ourselves was better than not controlling it. 
-Looking at the results in Figure ~\ref{fig:NaiveRankSkewRunningTime} again we can see that the two approaches are quite equal for both rank and select. 
+\subsubsection{Query cache misses when skewing the Wavelet Tree using uncontrolled and controlled memory-layout}
+To see why controlling the memory ourselves is not better than not controlling it we look at cache misses, which are shown in Figure ~\ref{fig:NaiveRankSkewCacheMisses}.
+The cache misses for \textit{Level 1} (when comparing the two construction methods) are almost equal while \textit{Level 2} and \textit{Level 3} cache misses varies a bit with respect to each construction method. 
+The same tendency as in Figure ~\ref{fig:NaiveRankSelectSkewRunningTime} is observed: 
+The cache misses also increases linearly with the skew factor. 
 
-Controlling the memory is in essence not better than letting the OS control it and skewing the tree is not an improvement. 
+The reason why there are more \textit{Level 1} cache misses than \textit{Level 2} and \textit{Level 3} cache misses is because the size of the caches are larger in higher levels than in lower levels. 
+This can also explain why the difference in \textit{Level 1} cache misses is so small. 
+The \textit{Level 1} cache simply gets filled up quickly and is then often missed. \textit{Level 2} and \textit{Level 3} are larger, which means that they do not reach their limit as quickly, resulting in fewer and more varied cache miss values.
+
+\begin{figure}
+\caption{Rank Cache Misses on Wavelet Tree with increasing skew}
+\label{fig:NaiveRankSkewCacheMisses}
+\centering
+\begin{subfigure}{\textwidth}
+	\caption{Naive L1 vs. Preallocated L1}
+	\label{fig:L1NaiveRankSkewCacheMisses}
+	\input{L1NaiveVsPreallocatedSkewRankQueryCacheMisses}
+	\vspace*{5 mm}
+\end{subfigure}
+\begin{subfigure}{\textwidth}
+	\caption{Naive L2, L3 vs. Preallocated L2, L3}
+	\label{fig:L2L3NaiveRankSkewCacheMisses}
+ 	\input{L2L3NaiveVsPreallocatedSkewRankQueryCacheMisses}
+\end{subfigure}
+\end{figure}
+
+\begin{figure}
+\caption{Select Cache Misses on Wavelet Tree with increasing skew}
+\label{fig:NaiveSelectSkewCacheMisses}
+\centering
+\begin{subfigure}{\textwidth}
+	\caption{Naive L1 vs. Preallocated L1}
+	\label{fig:L1NaiveSelectSkewCacheMisses}
+	\input{L1NaiveVsPreallocatedSkewSelectQueryCacheMisses}
+	\vspace*{5 mm}
+\end{subfigure}
+\begin{subfigure}{\textwidth}
+	\caption{Naive L2, L3 vs. Preallocated L2, L3}
+	\label{fig:L2L3NaiveSelectSkewCacheMisses}
+ 	\input{L2L3NaiveVsPreallocatedSkewSelectQueryCacheMisses}
+\end{subfigure}
+\end{figure}
+
+Controlling the memory is in essence not better than letting the OS control it, which indicates that the way we want to control memory is equal to the way the OS does it.
+Skewing the tree is not an improvement over not skewing it. 
 The hight of the Wavelet Tree increases so much that query overhead is too high to gain anything from the possible faster data access.
 
+
 \subsubsection{Query vs. Build Time when skewing controlled memory-layout}
-In this experiment we aim to show that while skewing the tree for a controlled memory-layout algorithm greatly increases the speed of the queries, it also increases the building time of the tree. But we expect to find the increase in building time to be somewhat slight, and almost insignificant when compared to the increase in query speed, making it well worth it for most use cases.
+
 
 
 

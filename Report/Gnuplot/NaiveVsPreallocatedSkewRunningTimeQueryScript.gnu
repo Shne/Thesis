@@ -1,13 +1,13 @@
 #!/usr/bin/gnuplot
 
 set term epslatex color
-set output 'naiveRankSkewRunningTime.tex'
+set output 'naiveRankSelectSkewRunningTime.tex'
 set xlabel "Skew"
 set ylabel "Wall Time (microsec)"
 set key font 'sans,2'
 set xrange [2:10]
 set yrange [30000:100000]
-set key right bottom;
+set key left top;
 
 # set termoption enhanced
 # f1(x) = a*x+b;
