@@ -36,7 +36,7 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
     PAPI_start_counters(::global_events, 1);
 #endif
     for(auto it = input->begin(); it != input->end(); it++) {
-        int currentChar = *it;
+        int currentChar = *it;        
         if(currentChar <= split) {
             bitmap.push_back(false);
             leftString->push_back(currentChar);
