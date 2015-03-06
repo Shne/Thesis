@@ -94,13 +94,17 @@ def getData(input_, algorithm, test):
 		if conditionalBranches is not None:
 			conditionalBranchesArray.append(int(conditionalBranches.group('PAPI_BR_CN')))
 
+	inputFile.close()
+
 def reset():
+	del alphabetSizeList[:]
 	del skewArray[:]
 	del realCyclesArray[:]
 	del wallTimeArray[:]
 	del virtualCyclesArray[:]
 	del totalCyclesArray[:]
 	del l1TotalCacheMissesArray[:]
+	del branchExecutedList[:]
 	del branchMispredictionsArray[:]
 	del TLBArray[:]
 	del l2TotalCacheMissesArray[:]

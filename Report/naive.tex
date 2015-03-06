@@ -66,10 +66,15 @@ We would like to find out whether our implementation of the constructino of the 
 We tested the running time of building the tree relative to the alphabet size by running the program 5 times for each size of the alphabet we tested and took the median value of the resulting measurements for each measurement type we used.
 We tested for alphabet sizes $2^n$ with $n = [10..20]$ and a constant input string length of $10^7$.
 
-In Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime} is plotted the running time in wall time for the different alphabet sizes. The graph has a logarithmic scale for the x axis so that a logarithmic curve will show up as linear, allowing us to recognise at a glance whether the running time conforms to the theoretical running time.
-Because the Wall Time plot in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_BM_TLB} is clearly not a straight line, we can conclude that the running time of our implementation is not logarithmic on the size of the alphabet size.
+In Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_BM_TLB} is plotted the running time in wall time for the different alphabet sizes. The graph has a logarithmic scale for the x axis so that a logarithmic curve would show up as linear, letting us recognise at a glance whether the running time conforms to the theoretical running time that is logarithmic on $\sigma$.
+Because the Wall Time line in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_BM_TLB} is clearly not a straight line, we can conclude that the running time of our implementation is not logarithmic on the size of the alphabet size.
 To figure our why it is not so, we turn to the other measurements we have collected, plotting them to see if any of them describe a similar growth depending on the alphabet size.
 
+First we expected Branch Mispredictions might be the culprit, as it grows similarly to Wall Time as can be seen in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_BM_TLB}.
+To test the assumption, we 
+
+[TODO: first looked at BM, found rate was actually constant. THen at caches, also constant. Then the constant factor of nodes: goes to 0 (make sure!), so that's not it. Then TLB seems the likely culprit]
+[TODO: divide wall time with expected running time, see that it doesn't go towards a constant factor. This is a better way to illustrate the non-conformance of the running time than seeing that the line isn't straight.]
 
 \begin{figure}
 	\input{naiveIntegerAlphabetSize_WallTime_BM_TLB}
@@ -92,7 +97,7 @@ To figure our why it is not so, we turn to the other measurements we have collec
 
 \begin{figure}
 \input{naiveIntegerAlphabetSize_WallTime_plusSigma}
-\caption{Wall Time divided by $\sigma$}
+\caption{Wall Time divided by $log(\sigma) + \sigma$}
 \label{fig:naiveIntegerAlphabetSize_WallTime_plusSigma}
 \end{figure}
 

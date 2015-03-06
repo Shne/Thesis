@@ -9,6 +9,7 @@ set format x "$2^{%L}$"
 
 set xlabel "Alphabet Size \\small (log scale)"
 set ylabel "Wall Time (microsec)"
+set yrange [0:*]
 set output 'naiveIntegerAlphabetSize_WallTime_BM_TLB.tex'
 plot '../Data/NaiveIntegerAlphabetsize.data' using 1:2 with linespoints title "Wall Time", \
 	'../Data/NaiveIntegerAlphabetsize.data' using 1:($4/100) with linespoints title "Branch Miss (x100)", \
@@ -22,7 +23,8 @@ plot '../Data/NaiveIntegerAlphabetsize.data' using 1:2 with linespoints title "W
 set xlabel "Alphabet Size \\small (log scale)"
 set ylabel "Wall Time (microsec)"
 set output 'naiveIntegerAlphabetSize_WallTime_plusSigma.tex'
-plot '../Data/NaiveIntegerAlphabetsize.data' using 1:($2/$1) with linespoints title "Wall Time", \
+set key width 100
+plot '../Data/naiveIntegerAlphabetSize_smallN.data' using 1:($2/(log($1) + $1)) with linespoints title "$ \\frac{Wall Time}{log(\\sigma) + \\sigma}$", \
 
 set xlabel "Alphabet Size \\small (log scale)"
 set ylabel "Amount"
