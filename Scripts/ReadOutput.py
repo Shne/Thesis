@@ -17,6 +17,7 @@ l3TotalCacheMissesArray = []
 memSizeArray = []
 memResidentArray = []
 memHighWatermarkArray = []
+conditionalBranchesArray = []
 
 def getData(input_, algorithm, test):
 	inputFile = open(input_, "rt")
@@ -38,6 +39,7 @@ def getData(input_, algorithm, test):
 	memSizeReg = re.compile(match+"mem_size=(?P<mem_size>\d+)")
 	memResidentReg = re.compile(match+"mem_resident=(?P<mem_resident>\d+)")
 	memHighWatermarkReg = re.compile(match+"mem_highwatermark=(?P<mem_highwatermark>\d+)")
+	conditionalBranchesReg = re.compile(match+"PAPI_BR_CN=(?P<PAPI_BR_CN>\d+)")
 
 	reset()
 
@@ -57,6 +59,7 @@ def getData(input_, algorithm, test):
 		memSize = memSizeReg.search(line)
 		memResident = memResidentReg.search(line)
 		memHighWatermark = memHighWatermarkReg.search(line)
+		conditionalBranches = conditionalBranchesReg.search(line)
 
 		if alphabetSize is not None:
 			alphabetSizeList.append(int(alphabetSize.group('alphabetSize')))
@@ -88,6 +91,8 @@ def getData(input_, algorithm, test):
 			memResidentArray.append(int(memResident.group('mem_resident')))
 		if memHighWatermark is not None:
 			memHighWatermarkArray.append(int(memHighWatermark.group('mem_highwatermark')))
+		if conditionalBranches is not None:
+			conditionalBranchesArray.append(int(conditionalBranches.group('PAPI_BR_CN')))
 
 def reset():
 	del skewArray[:]
@@ -103,6 +108,7 @@ def reset():
 	del memSizeArray[:]
 	del memResidentArray[:]
 	del memHighWatermarkArray[:]
+	del conditionalBranchesArray[:]
 
 def getReadOutputLists(valueListKeys):
 	valueLists = []
@@ -133,4 +139,6 @@ def getReadOutputLists(valueListKeys):
 			valueLists.append(memResidentArray)
 		elif(key == "memHighWatermarkArray"):
 			valueLists.append(memHighWatermarkArray)
+		elif(key == "conditionalBranchesArray"):
+			valueLists.append(conditionalBranchesArray)
 	return valueLists

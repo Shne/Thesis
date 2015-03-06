@@ -113,6 +113,42 @@ Controlling the memory is in essence not better than letting the OS control it, 
 Skewing the tree is not an improvement over not skewing it. 
 The hight of the Wavelet Tree increases so much that query overhead is too high to gain anything from the possible faster data access.
 
+\begin{figure}
+\caption{Rank Branch Mis-predictions}
+\label{fig:NaiveVsPreallocatedSkewRankQueryBM}
+\input{NaiveVsPreallocatedSkewRankQueryBM}
+\end{figure}
+
+\begin{figure}
+\caption{Select Branch Mis-predictions}
+\label{fig:NaiveVsPreallocatedSkewSelectQueryBM}
+\input{NaiveVsPreallocatedSkewSelectQueryBM}
+\end{figure}
+
+\begin{figure}
+\caption{Rank Branch Mis-predictions rate}
+\label{fig:NaiveVsPreallocatedSkewRankQuery_BR_CN}
+\input{NaiveVsPreallocatedSkewRankQuery_BR_CN}
+\end{figure}
+
+\begin{figure}
+\caption{Select Branch Mis-predictions rate}
+\label{fig:NaiveVsPreallocatedSkewSelectQuery_BR_CN}
+\input{NaiveVsPreallocatedSkewSelectQuery_BR_CN}
+\end{figure}
+
+\begin{figure}
+\caption{Rank TLB}
+\label{fig:NaiveVsPreallocatedSkewRankQueryTLB}
+\input{NaiveVsPreallocatedSkewRankQueryTLB}
+\end{figure}
+
+\begin{figure}
+\caption{Select TLB}
+\label{fig:NaiveVsPreallocatedSkewSelectQueryTLB}
+\input{NaiveVsPreallocatedSkewSelectQueryTLB}
+\end{figure}
+
 
 \subsubsection{Query vs. Build Time when skewing controlled memory-layout}
 

@@ -65,27 +65,27 @@ def writeToGnuplot(outputFile, valueListsKeys, testDataFile, constructionAlg, te
 
 	ReadOutput.reset();
 
+testDataFile = 'Output/Query_NaiveVsPreallocatedSkew16.output'
+
+# naiveRankGnuplotFile = open("Report/Gnuplot/Data/naiveRankSkewRunningTime.data", "w")
+# naiveSelectGnuplotFile = open("Report/Gnuplot/Data/naiveSelectSkewRunningTime.data", "w")
+# preallocatedRankGnuplotFile = open("Report/Gnuplot/Data/preallocatedRankSkewRunningTime.data", "w")
+# preallocatedSelectGnuplotFile = open("Report/Gnuplot/Data/preallocatedSelectSkewRunningTime.data", "w")
+# columns = "#[skew]   [Wall-Time (microsec)]"
+# testValueDataListKeys = ["skewArray", "wallTimeArray"]
+# GnuScriptFileName = '../NaiveVsPreallocatedSkewRunningTimeQueryScript.gnu'
 
 
-naiveRankGnuplotFile = open("Report/Gnuplot/Data/naiveRankSkewRunningTime.data", "w")
-naiveSelectGnuplotFile = open("Report/Gnuplot/Data/naiveSelectSkewRunningTime.data", "w")
-preallocatedRankGnuplotFile = open("Report/Gnuplot/Data/preallocatedRankSkewRunningTime.data", "w")
-preallocatedSelectGnuplotFile = open("Report/Gnuplot/Data/preallocatedSelectSkewRunningTime.data", "w")
-
-# naiveRankGnuplotFile = open("Report/Gnuplot/Data/naiveRankSkewCacheMisses.data", "w")
-# naiveSelectGnuplotFile = open("Report/Gnuplot/Data/naiveSelectSkewCacheMisses.data", "w")
-# preallocatedRankGnuplotFile = open("Report/Gnuplot/Data/preallocatedRankSkewCacheMisses.data", "w")
-# preallocatedSelectGnuplotFile = open("Report/Gnuplot/Data/preallocatedSelectSkewCacheMisses.data", "w")
-
-testDataFile = 'Output/Query_NaiveVsPreallocatedSkew.output'
-
+naiveRankGnuplotFile = open("Report/Gnuplot/Data/naiveRankSkew.data", "w")
+naiveSelectGnuplotFile = open("Report/Gnuplot/Data/naiveSelectSkew.data", "w")
+preallocatedRankGnuplotFile = open("Report/Gnuplot/Data/preallocatedRankSkew.data", "w")
+preallocatedSelectGnuplotFile = open("Report/Gnuplot/Data/preallocatedSelectSkew.data", "w")
 #Names of columns
-# columns = "#[skew]   [L1-Cache-Misses]   [L2-Cache-Misses]   [L3-Cache-Misses]"
-columns = "#[skew]   [Wall-Time (microsec)]"
+columns = "#[skew]   [L1-Cache-Misses]   [L2-Cache-Misses]   [L3-Cache-Misses]   [Branch-Misses]   [TLB]   [Conditional Branches]"
+#The data we want in our gnuplot. It is required that the first key is data separating values
+testValueDataListKeys = ["skewArray", "l1TotalCacheMissesArray", "l2TotalCacheMissesArray", "l3TotalCacheMissesArray", "branchMispredictionsArray", "TLBArray", "conditionalBranchesArray"]
+GnuScriptFileName = '../NaiveVsPreallocatedSkewCacheMissesQueryScript.gnu'
 
-#The data we want in our gnuplot. It is requiered that the first key is data seperating values
-# testValueDataListKeys = ["skewArray", "l1TotalCacheMissesArray", "l2TotalCacheMissesArray", "l3TotalCacheMissesArray"]
-testValueDataListKeys = ["skewArray", "wallTimeArray"]
 
 writeToGnuplot(naiveRankGnuplotFile, testValueDataListKeys, testDataFile, "SimpleNaiveInteger", "rank", columns)
 writeToGnuplot(naiveSelectGnuplotFile, testValueDataListKeys, testDataFile, "SimpleNaiveInteger", "select", columns)
@@ -96,9 +96,6 @@ naiveRankGnuplotFile.close()
 naiveSelectGnuplotFile.close()
 preallocatedRankGnuplotFile.close()
 preallocatedSelectGnuplotFile.close()
-
-# GnuScriptFileName = '../NaiveVsPreallocatedSkewCacheMissesQueryScript.gnu'
-GnuScriptFileName = '../NaiveVsPreallocatedSkewRunningTimeQueryScript.gnu'
 
 cwd = 'Report/Gnuplot/Graphs'
 subprocess.Popen(['gnuplot', GnuScriptFileName], cwd=cwd).wait()

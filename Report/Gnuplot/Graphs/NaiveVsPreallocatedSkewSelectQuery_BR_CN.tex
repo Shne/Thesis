@@ -75,14 +75,16 @@
   \begin{picture}(7200.00,5040.00)%
     \gplgaddtomacro\gplbacktext{%
       \csname LTb\endcsname%
-      \put(1474,704){\makebox(0,0)[r]{\strut{} 0}}%
-      \put(1474,1286){\makebox(0,0)[r]{\strut{} 500000}}%
-      \put(1474,1867){\makebox(0,0)[r]{\strut{} 1e+06}}%
-      \put(1474,2449){\makebox(0,0)[r]{\strut{} 1.5e+06}}%
-      \put(1474,3030){\makebox(0,0)[r]{\strut{} 2e+06}}%
-      \put(1474,3612){\makebox(0,0)[r]{\strut{} 2.5e+06}}%
-      \put(1474,4193){\makebox(0,0)[r]{\strut{} 3e+06}}%
-      \put(1474,4775){\makebox(0,0)[r]{\strut{} 3.5e+06}}%
+      \put(1474,704){\makebox(0,0)[r]{\strut{} 5e-05}}%
+      \put(1474,1156){\makebox(0,0)[r]{\strut{} 0.0001}}%
+      \put(1474,1609){\makebox(0,0)[r]{\strut{} 0.00015}}%
+      \put(1474,2061){\makebox(0,0)[r]{\strut{} 0.0002}}%
+      \put(1474,2513){\makebox(0,0)[r]{\strut{} 0.00025}}%
+      \put(1474,2966){\makebox(0,0)[r]{\strut{} 0.0003}}%
+      \put(1474,3418){\makebox(0,0)[r]{\strut{} 0.00035}}%
+      \put(1474,3870){\makebox(0,0)[r]{\strut{} 0.0004}}%
+      \put(1474,4323){\makebox(0,0)[r]{\strut{} 0.00045}}%
+      \put(1474,4775){\makebox(0,0)[r]{\strut{} 0.0005}}%
       \put(1606,484){\makebox(0,0){\strut{} 2}}%
       \put(2348,484){\makebox(0,0){\strut{} 4}}%
       \put(3091,484){\makebox(0,0){\strut{} 6}}%
@@ -91,21 +93,17 @@
       \put(5318,484){\makebox(0,0){\strut{} 12}}%
       \put(6061,484){\makebox(0,0){\strut{} 14}}%
       \put(6803,484){\makebox(0,0){\strut{} 16}}%
-      \put(176,2739){\rotatebox{-270}{\makebox(0,0){\strut{}Cache Misses}}}%
+      \put(176,2739){\rotatebox{-270}{\makebox(0,0){\strut{}Branch mis-prediction rate}}}%
       \put(4204,154){\makebox(0,0){\strut{}Skew}}%
     }%
     \gplgaddtomacro\gplfronttext{%
       \csname LTb\endcsname%
-      \put(3718,4602){\makebox(0,0)[r]{\strut{}Naive L2}}%
+      \put(3322,4602){\makebox(0,0)[r]{\strut{}Naive}}%
       \csname LTb\endcsname%
-      \put(3718,4382){\makebox(0,0)[r]{\strut{}Naive L3}}%
-      \csname LTb\endcsname%
-      \put(3718,4162){\makebox(0,0)[r]{\strut{}Preallocated L2}}%
-      \csname LTb\endcsname%
-      \put(3718,3942){\makebox(0,0)[r]{\strut{}Preallocated L3}}%
+      \put(3322,4382){\makebox(0,0)[r]{\strut{}Preallocated}}%
     }%
     \gplbacktext
-    \put(0,0){\includegraphics{L2L3NaiveVsPreallocatedSkewRankQueryCacheMisses}}%
+    \put(0,0){\includegraphics{NaiveVsPreallocatedSkewSelectQuery_BR_CN}}%
     \gplfronttext
   \end{picture}%
 \endgroup
