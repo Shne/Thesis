@@ -107,11 +107,13 @@ int Node::rank(int character, unsigned long index, bitmap_t* bitmap, int alphabe
     int rightAlphabetMax = alphabetMax;
     
     bool charBit = character > split;
-    unsigned long pos = charBit ? popcountBinaryRank(index, bitmap) : index - popcountBinaryRank(index, bitmap);
+    unsigned long pos;// = charBit ? popcountBinaryRank(index, bitmap) : index - popcountBinaryRank(index, bitmap);
     unsigned long rank = 0;
     if(charBit && right != nullptr) {
+        pos = popcountBinaryRank(index, bitmap);
         rank = right->rank(character, pos, bitmap, rightAlphabetMin, rightAlphabetMax, skew);
     }else if(left != nullptr){
+        pos = index - popcountBinaryRank(index, bitmap);
         rank = left->rank(character, pos, bitmap, leftAlphabetMin, leftAlphabetMax, skew);
     }
     
