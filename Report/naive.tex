@@ -74,32 +74,29 @@ This means our implementation of the construction of a Wavelet Tree is slower th
 
 \begin{figure}
 	\input{naiveIntegerAlphabetSize_WallTime}
-	\caption{Construction Wall Time divided by theoretical running time for increasing $\sigma$}
+	\caption{Construction: Wall Time divided by theoretical running time over Alphabet Size}
 	\label{fig:naiveIntegerAlphabetSize_WallTime}
 \end{figure}
 
 To try and understand why our algorithm performs so, we turn to the many other measurements available to us through PAPI: Branch Mispredictions, Cache Misses, and the like.
 
 Looking at the raw wall time and branch misprediction numbers in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_BM} it seems natural to conclude that the branch mispredictions are to blame.
-
 \begin{figure}
 	\input{naiveIntegerAlphabetSize_WallTime_BM}
-	\caption{Tree Construction: Wall Time and Branch Mispredictions over Alphabet Size}
+	\caption{Construction: Wall Time and Branch Mispredictions over Alphabet Size}
 	\label{fig:naiveIntegerAlphabetSize_WallTime_BM}
 \end{figure}
-
 But if we plot the rate of branch mispredictions, as we have done in Figure~\ref{fig:naiveIntegerAlphabetSize_BMRate}, we can see that the rate of branch mispredictions stay constant for most the alphabet sizes, and even decrease for large alphabet sizes.
-
 \begin{figure}
 \input{naiveIntegerAlphabetSize_BMRate}
-\caption{Tree Construction: Branch Misprediction Rate}
+\caption{Construction: Branch Misprediction Rate over Alphabet Size}
 \label{fig:naiveIntegerAlphabetSize_BMRate}
 \end{figure}
 
 We next turn to look at Cache Misses, plotting all three levels in Figure~\ref{fig:naiveIntegerAlphabetSize_CM}.
 \begin{figure}
 \input{naiveIntegerAlphabetSize_CM}
-\caption{Tree Construction: Level 1-3 Cache Misses over Alphabet Size}
+\caption{Construction: Level 1-3 Cache Misses over Alphabet Size}
 \label{fig:naiveIntegerAlphabetSize_CM}
 \end{figure}
 We see that cache misses increase for larger alphabet sizes up to an alphabet size of around $2^{15}$ after which they seem to remain constant for even larger alphabet sizes.
@@ -108,19 +105,19 @@ This is in contrast to the wall time over theoretical running time plot in Figur
 We then considered that the difference in theoretical and practical running time might be explained by the fact that our algorithm spends a constant amount of time per node, constructing it, independent on the size of the input, $n$, and scaling linearly with alphabet size, $\sigma$.
 The actual running time should then be $a \cdot n \cdot log(\sigma) + b \cdot \sigma$.
 Since $n$ in our previous experiment is somewhat large ($10^7$), it might be the dominating factor in the running time.
-So to show whether the added $+ b \cdot \sigma$ term can explain the running time, we redid the experiment with a reduced length input string $n = 10^2$ and plotted it in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_plusSigma} divided by $log(\sigma) + \sigma$ to see whether it would converge on some constant as $\sigma \rightarrow \infty$.
+So to show whether the added $b \cdot \sigma$ term can explain the running time, we redid the experiment with a reduced length input string $n = 10^2$ and plotted it in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_plusSigma} divided by $log(\sigma) + \sigma$ to see whether it would converge on some constant as $\sigma \rightarrow \infty$.
 \begin{figure}
 \input{naiveIntegerAlphabetSize_WallTime_plusSigma}
-\caption{Wall Time divided by $log(\sigma) + \sigma$}
+\caption{Construction: Wall Time divided by $log(\sigma) + \sigma$ over Alphabet Size}
 \label{fig:naiveIntegerAlphabetSize_WallTime_plusSigma}
 \end{figure}
 We can see in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_plusSigma} that it does not converge on any constant value other than 0, meaning the constant factor from each node cannot explain our implementation's running time.
 
-Having not found an explanation we pull data for Translation Lookaside Buffer Misses from the experiment and plot it together with wall time, both divided by $10^7 \cdot log(\sigma)$, in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_TLB}
+Having not found an explanation we pull data for Translation Lookaside Buffer Misses from the experiment and plot it together with wall time, both divided by $log(\sigma)$, in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_TLB}
 
 \begin{figure}
 	\input{naiveIntegerAlphabetSize_WallTime_TLB}
-	\caption{Wall Time and Translation Lookaside Buffer Misses}
+	\caption{Construction: Wall Time and Translation Lookaside Buffer Misses divided by theoretical running time  over Alphabet Size}
 	\label{fig:naiveIntegerAlphabetSize_WallTime_TLB}
 \end{figure}
 
