@@ -19,24 +19,9 @@ def addNewline():
 subprocess.Popen(['make','CONF=Release', 'clean'], cwd=cwd).wait()
 subprocess.Popen(['make','CONF=Release'], cwd=cwd).wait()
 
-# addNewline()
-
-# for alphabetSize in range(12,21):
-# 	for _ in range(5):
-# 		args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(0), outputFilename]
-# 		subprocess.Popen(args, cwd=cwd).wait()
-# 		args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(1), outputFilename]
-# 		subprocess.Popen(args, cwd=cwd).wait()
-# 		args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(2), outputFilename]
-# 		subprocess.Popen(args, cwd=cwd).wait()
-
-# addNewline()
-
-# small n so n log sigma term doesn't dominate, so we can see if linear sigma term exists
-outputFilename = 'naiveIntegerAlphabetSize_smallN.output'
-amount = 2
 addNewline()
-for alphabetSize in range(12,21):
+
+for alphabetSize in range(10,12):
 	for _ in range(5):
 		args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(0), outputFilename]
 		subprocess.Popen(args, cwd=cwd).wait()
@@ -46,3 +31,18 @@ for alphabetSize in range(12,21):
 		subprocess.Popen(args, cwd=cwd).wait()
 
 addNewline()
+
+# small n so n log sigma term doesn't dominate, so we can see if linear sigma term exists
+# outputFilename = 'naiveIntegerAlphabetSize_smallN.output'
+# amount = 2
+# addNewline()
+# for alphabetSize in range(6,10):
+# 	for _ in range(5):
+# 		args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(0), outputFilename]
+# 		subprocess.Popen(args, cwd=cwd).wait()
+# 		args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(1), outputFilename]
+# 		subprocess.Popen(args, cwd=cwd).wait()
+# 		args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(2), outputFilename]
+# 		subprocess.Popen(args, cwd=cwd).wait()
+
+# addNewline()

@@ -63,45 +63,70 @@ We would like to find out whether our implementation of the constructino of the 
 
 
 \subsubsection{Running time of Tree Construction vs Alphabet Size}
-We tested the running time of building the tree relative to the alphabet size by running the program 5 times for each size of the alphabet we tested and took the median value of the resulting measurements for each measurement type we used.
+To test what Big-O notation running time our construction algorithm was running at, we implemented the following test setup.
+We tested the running time of building the tree relative to the alphabet size by running the program 5 times for each size of the alphabet we tested and took the average value of the resulting measurements for each measurement type we used.
 We tested for alphabet sizes $2^n$ with $n = [10..20]$ and a constant input string length of $10^7$.
 
-In Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_BM_TLB} is plotted the running time in wall time for the different alphabet sizes. The graph has a logarithmic scale for the x axis so that a logarithmic curve would show up as linear, letting us recognise at a glance whether the running time conforms to the theoretical running time that is logarithmic on $\sigma$.
-Because the Wall Time line in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_BM_TLB} is clearly not a straight line, we can conclude that the running time of our implementation is not logarithmic on the size of the alphabet size.
-To figure our why it is not so, we turn to the other measurements we have collected, plotting them to see if any of them describe a similar growth depending on the alphabet size.
-
-First we expected Branch Mispredictions might be the culprit, as it grows similarly to Wall Time as can be seen in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_BM_TLB}.
-To test the assumption, we 
-
-[TODO: first looked at BM, found rate was actually constant. THen at caches, also constant. Then the constant factor of nodes: goes to 0 (make sure!), so that's not it. Then TLB seems the likely culprit]
-[TODO: divide wall time with expected running time, see that it doesn't go towards a constant factor. This is a better way to illustrate the non-conformance of the running time than seeing that the line isn't straight.]
+A theoretical running time of $O(n \cdot log(\sigma))$ is equivalent to $a \cdot n \cdot log(\sigma)$ where $a$ is some constant factor.
+Assuming our construction algorithm has this running time, the graphs of the wall time divided by $n \cdot log(\sigma)$ should converge on the constant factor $a$ as $\sigma \rightarrow \infty$
+In Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime} we have plotted this graph and find that it does not appear to be converging on any constant value, but rather increase as $\sigma$ increases.
+This means our implementation of the construction of a Wavelet Tree is slower than its theoretical running time.
 
 \begin{figure}
-	\input{naiveIntegerAlphabetSize_WallTime_BM_TLB}
-	\caption{Tree Construction: Wall Time, Branch Mispredictions and Translation Lookaside Buffer Misses over Alphabet Size}
-	\label{fig:naiveIntegerAlphabetSize_WallTime_BM_TLB}
+	\input{naiveIntegerAlphabetSize_WallTime}
+	\caption{Construction Wall Time divided by theoretical running time for increasing $\sigma$}
+	\label{fig:naiveIntegerAlphabetSize_WallTime}
 \end{figure}
 
+To try and understand why our algorithm performs so, we turn to the many other measurements available to us through PAPI: Branch Mispredictions, Cache Misses, and the like.
+
+Looking at the raw wall time and branch misprediction numbers in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_BM} it seems natural to conclude that the branch mispredictions are to blame.
+
 \begin{figure}
-\input{naiveIntegerAlphabetSize_CM}
-\caption{Tree Construction: Level 1-3 Cache Misses over Alphabet Size}
-\label{fig:naiveIntegerAlphabetSize_CM}
+	\input{naiveIntegerAlphabetSize_WallTime_BM}
+	\caption{Tree Construction: Wall Time and Branch Mispredictions over Alphabet Size}
+	\label{fig:naiveIntegerAlphabetSize_WallTime_BM}
 \end{figure}
-	
+
+But if we plot the rate of branch mispredictions, as we have done in Figure~\ref{fig:naiveIntegerAlphabetSize_BMRate}, we can see that the rate of branch mispredictions stay constant for most the alphabet sizes, and even decrease for large alphabet sizes.
+
 \begin{figure}
 \input{naiveIntegerAlphabetSize_BMRate}
 \caption{Tree Construction: Branch Misprediction Rate}
 \label{fig:naiveIntegerAlphabetSize_BMRate}
 \end{figure}
-	
 
+We next turn to look at Cache Misses, plotting all three levels in Figure~\ref{fig:naiveIntegerAlphabetSize_CM}.
+\begin{figure}
+\input{naiveIntegerAlphabetSize_CM}
+\caption{Tree Construction: Level 1-3 Cache Misses over Alphabet Size}
+\label{fig:naiveIntegerAlphabetSize_CM}
+\end{figure}
+We see that cache misses increase for larger alphabet sizes up to an alphabet size of around $2^{15}$ after which they seem to remain constant for even larger alphabet sizes.
+This is in contrast to the wall time over theoretical running time plot in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime} that seem to remain somewhat constant until about $2^{15}$ after which it increases.
+
+We then considered that the difference in theoretical and practical running time might be explained by the fact that our algorithm spends a constant amount of time per node, constructing it, independent on the size of the input, $n$, and scaling linearly with alphabet size, $\sigma$.
+The actual running time should then be $a \cdot n \cdot log(\sigma) + b \cdot \sigma$.
+Since $n$ in our previous experiment is somewhat large ($10^7$), it might be the dominating factor in the running time.
+So to show whether the added $+ b \cdot \sigma$ term can explain the running time, we redid the experiment with a reduced length input string $n = 10^2$ and plotted it in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_plusSigma} divided by $log(\sigma) + \sigma$ to see whether it would converge on some constant as $\sigma \rightarrow \infty$.
 \begin{figure}
 \input{naiveIntegerAlphabetSize_WallTime_plusSigma}
 \caption{Wall Time divided by $log(\sigma) + \sigma$}
 \label{fig:naiveIntegerAlphabetSize_WallTime_plusSigma}
 \end{figure}
+We can see in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_plusSigma} that it does not converge on any constant value other than 0, meaning the constant factor from each node cannot explain our implementation's running time.
 
+Having not found an explanation we pull data for Translation Lookaside Buffer Misses from the experiment and plot it together with wall time, both divided by $10^7 \cdot log(\sigma)$, in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_TLB}
 
+\begin{figure}
+	\input{naiveIntegerAlphabetSize_WallTime_TLB}
+	\caption{Wall Time and Translation Lookaside Buffer Misses}
+	\label{fig:naiveIntegerAlphabetSize_WallTime_TLB}
+\end{figure}
+
+We see in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_TLB} that TLB Misses about double in amount from alphabet size $2^{11}$ to $2^{12}$, which might also be the explanation for the "bump" in the Wall Time graph at alphabet size $2^{12}$.
+We can also see that the TLB Misses increase drastically from alphabet size about $2^{16}$ and up.
+Having found no other reasonable explanation for the discrepancy between the theoretical and our implementation's actual running time, we find it likely that TLB Misses is the culprit.
 
 
 \subsubsection{Rank and Select using Popcount}

@@ -11,6 +11,9 @@ testsPerSize = 5
 def median(list):
 	return int(numpy.median(numpy.array(list)))
 
+def avg(list):
+	return sum(list)/len(list)
+
 ReadOutput.getData(testDataFile, "SimpleNaiveInteger", "build")
 
 #LARGE N
@@ -18,15 +21,15 @@ for i in range(int(len(ReadOutput.alphabetSizeList)/testsPerSize)):
 	startIndex = i*testsPerSize
 	endIndex = startIndex + testsPerSize
 
-	alphabetSize = median(ReadOutput.alphabetSizeList[startIndex:endIndex])
-	Cycles = median(ReadOutput.totalCyclesArray[startIndex:endIndex])
-	Walltime = median(ReadOutput.wallTimeArray[startIndex:endIndex])
-	BranchMis = median(ReadOutput.branchMispredictionsArray[startIndex:endIndex])
-	BranchExe = median(ReadOutput.branchExecutedList[startIndex:endIndex])
-	TLB = median(ReadOutput.TLBArray[startIndex:endIndex])
-	L1CM = median(ReadOutput.l1TotalCacheMissesArray[startIndex:endIndex])
-	L2CM = median(ReadOutput.l2TotalCacheMissesArray[startIndex:endIndex])
-	L3CM = median(ReadOutput.l3TotalCacheMissesArray[startIndex:endIndex])
+	alphabetSize = avg(ReadOutput.alphabetSizeList[startIndex:endIndex])
+	Cycles = avg(ReadOutput.totalCyclesArray[startIndex:endIndex])
+	Walltime = avg(ReadOutput.wallTimeArray[startIndex:endIndex])
+	BranchMis = avg(ReadOutput.branchMispredictionsArray[startIndex:endIndex])
+	BranchExe = avg(ReadOutput.branchExecutedList[startIndex:endIndex])
+	TLB = avg(ReadOutput.TLBArray[startIndex:endIndex])
+	L1CM = avg(ReadOutput.l1TotalCacheMissesArray[startIndex:endIndex])
+	L2CM = avg(ReadOutput.l2TotalCacheMissesArray[startIndex:endIndex])
+	L3CM = avg(ReadOutput.l3TotalCacheMissesArray[startIndex:endIndex])
 
 	GnuplotFile.write(str(alphabetSize) +" "+ str(Walltime) +" "+ str(BranchMis/BranchExe) +" "+ str(BranchMis) +" "+ str(TLB) +" "+ str(L1CM) +" "+ str(L2CM) +" "+ str(L3CM) +"\n")
 
@@ -48,15 +51,15 @@ for i in range(int(len(ReadOutput.alphabetSizeList)/testsPerSize)):
 	startIndex = i*testsPerSize
 	endIndex = startIndex + testsPerSize
 
-	alphabetSize = median(ReadOutput.alphabetSizeList[startIndex:endIndex])
-	Cycles = median(ReadOutput.totalCyclesArray[startIndex:endIndex])
-	Walltime = median(ReadOutput.wallTimeArray[startIndex:endIndex])
-	BranchMis = median(ReadOutput.branchMispredictionsArray[startIndex:endIndex])
-	BranchExe = median(ReadOutput.branchExecutedList[startIndex:endIndex])
-	TLB = median(ReadOutput.TLBArray[startIndex:endIndex])
-	L1CM = median(ReadOutput.l1TotalCacheMissesArray[startIndex:endIndex])
-	L2CM = median(ReadOutput.l2TotalCacheMissesArray[startIndex:endIndex])
-	L3CM = median(ReadOutput.l3TotalCacheMissesArray[startIndex:endIndex])
+	alphabetSize = avg(ReadOutput.alphabetSizeList[startIndex:endIndex])
+	Cycles = avg(ReadOutput.totalCyclesArray[startIndex:endIndex])
+	Walltime = avg(ReadOutput.wallTimeArray[startIndex:endIndex])
+	BranchMis = avg(ReadOutput.branchMispredictionsArray[startIndex:endIndex])
+	BranchExe = avg(ReadOutput.branchExecutedList[startIndex:endIndex])
+	TLB = avg(ReadOutput.TLBArray[startIndex:endIndex])
+	L1CM = avg(ReadOutput.l1TotalCacheMissesArray[startIndex:endIndex])
+	L2CM = avg(ReadOutput.l2TotalCacheMissesArray[startIndex:endIndex])
+	L3CM = avg(ReadOutput.l3TotalCacheMissesArray[startIndex:endIndex])
 
 	GnuplotFile.write(str(alphabetSize) +" "+ str(Walltime) +" "+ str(BranchMis/BranchExe) +" "+ str(BranchMis) +" "+ str(TLB) +" "+ str(L1CM) +" "+ str(L2CM) +" "+ str(L3CM) +"\n")
 
