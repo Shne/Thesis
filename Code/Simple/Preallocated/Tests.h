@@ -98,7 +98,7 @@ inline void testTearDown(uint amount, uint alphabetSize, uint skew, string test,
 
 inline void testSelectQuery(uint amount, uint alphabetSize, uint skew, string pathname, int eventset, int* events, long_long* values, int num_events, Tree tree){
     testSetup(eventset, events, num_events);
-    uint queries = 100;
+    uint queries = 1000;
     uint charStep = alphabetSize/queries;
     uint position = 2000;
     ulong results[queries]; //just to make sure nothing is optimized away
@@ -114,11 +114,11 @@ inline void testSelectQuery(uint amount, uint alphabetSize, uint skew, string pa
 
 inline void testRankQuery(uint amount, uint alphabetSize, uint skew, string pathname, int eventset, int* events, long_long* values, int num_events, Tree tree){
     testSetup(eventset, events, num_events); 
-    uint queries = 100;
+    uint queries = 1000;
     uint charStep = alphabetSize/queries;
     ulong results[queries]; //just to make sure nothing is optimized away
     for(uint index = 0; index < queries; index++) {
-        results[index] = tree.rank(index*charStep, amount, skew);
+        results[index] = tree.rank(index*charStep, amount/2, skew);
     }
     testTearDown(amount, alphabetSize, skew, "rank", pathname, eventset, events, values, num_events);
     for(uint i=0; i < queries; i++) {
