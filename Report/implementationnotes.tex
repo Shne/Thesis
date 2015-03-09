@@ -62,3 +62,10 @@ It doesn't try to mimic a container and lacks some features such as an iterator 
 It also does not guarantee that the bits will be allocated consecutively in memory and has no raw pointer access to the data in memory. 
 This is a problem when we want to call popcount on all machine words from beginning up to some index.
 \end{description}
+
+
+\subsection{Verifying the Results}
+To ensure that our implementations are correct, we implemented some simple and slow algorithms in python to calculate rank and select on the same input data we construct the wavelet trees on.
+The point being that the python implementation should be so simple and easy to understand that it would be extremely unlikely to be wrong.
+We then compare results from rank and select queries on our wavelet tree to results from the same queries using the python implementation.
+When they agree on several randomly selected sets of query parameters, we feel confident our wavelet tree construction, rank, and select implementations are correct.
