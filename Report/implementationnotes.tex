@@ -63,6 +63,9 @@ It also does not guarantee that the bits will be allocated consecutively in memo
 This is a problem when we want to call popcount on all machine words from beginning up to some index.
 \end{description}
 
+\subsection{Generating the Data}
+We implemented a small script in Python to generate our input strings and write them in binary format to files.
+This was slower than e.g. piping from \texttt{/dev/random} into a file, but we needed to constrain the alphabet and even though slow, a python script was the easiest way to achieve that.
 
 \subsection{Verifying the Results}
 To ensure that our implementations are correct, we implemented some simple and slow algorithms in python to calculate rank and select on the same input data we construct the wavelet trees on.
