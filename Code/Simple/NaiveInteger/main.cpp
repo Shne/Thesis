@@ -47,16 +47,16 @@ int main(int argc, char** argv) {
     int eventset = atoi(argv[EVENTSET_ARG_NUM]);
     if(eventset == 0) {
         num_events = 3;
-        events = new int[3] { PAPI_TOT_CYC, PAPI_L1_TCM, PAPI_BR_MSP };
+        events = new int[3] { PAPI_TOT_CYC, PAPI_L1_DCM, PAPI_BR_MSP };
         values = new long_long[3];
     } else if(eventset == 1) {
-        num_events = 3;
-        events = new int[3] { PAPI_TLB_DM, PAPI_L2_TCM, PAPI_L3_TCM };
-        values = new long_long[3];
+        num_events = 2;
+        events = new int[2] { PAPI_TLB_DM, PAPI_L2_DCM };
+        values = new long_long[2];
     } else if(eventset == 2) {
-        num_events = 1;
-        events = new int[1] { PAPI_BR_CN };
-        values = new long_long[1];
+        num_events = 3;
+        events = new int[3] { PAPI_BR_CN, PAPI_L2_DCH, PAPI_L3_TCM };
+        values = new long_long[3];
     }
     
     /***************/

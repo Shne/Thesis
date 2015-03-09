@@ -83,7 +83,7 @@ preallocatedSelectGnuplotFile = open("Report/Gnuplot/Data/preallocatedSelectSkew
 #Names of columns
 columns = "#[skew]   [L1-Cache-Misses]   [L2-Cache-Misses]   [L3-Cache-Misses]   [Branch-Misses]   [TLB]   [Conditional Branches]"
 #The data we want in our gnuplot. It is required that the first key is data separating values
-testValueDataListKeys = ["skewArray", "l1TotalCacheMissesArray", "l2TotalCacheMissesArray", "l3TotalCacheMissesArray", "branchMispredictionsArray", "TLBArray", "conditionalBranchesArray"]
+testValueDataListKeys = ["skewArray", "l1DataCacheMissesArray", "l2DataCacheMissesArray", "l3TotalCacheMissesArray", "branchMispredictionsArray", "TLBArray", "conditionalBranchesArray"]
 GnuScriptFileName = '../NaiveVsPreallocatedSkewCacheMissesQueryScript.gnu'
 
 

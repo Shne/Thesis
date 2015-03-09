@@ -27,8 +27,8 @@ for i in range(int(len(ReadOutput.alphabetSizeList)/testsPerSize)):
 	BranchMis = avg(ReadOutput.branchMispredictionsArray[startIndex:endIndex])
 	BranchExe = avg(ReadOutput.branchExecutedList[startIndex:endIndex])
 	TLB = avg(ReadOutput.TLBArray[startIndex:endIndex])
-	L1CM = avg(ReadOutput.l1TotalCacheMissesArray[startIndex:endIndex])
-	L2CM = avg(ReadOutput.l2TotalCacheMissesArray[startIndex:endIndex])
+	L1CM = avg(ReadOutput.l1DataCacheMissesArray[startIndex:endIndex])
+	L2CM = avg(ReadOutput.l2DataCacheMissesArray[startIndex:endIndex])
 	L3CM = avg(ReadOutput.l3TotalCacheMissesArray[startIndex:endIndex])
 
 	GnuplotFile.write(str(alphabetSize) +" "+ str(Walltime) +" "+ str(BranchMis/BranchExe) +" "+ str(BranchMis) +" "+ str(TLB) +" "+ str(L1CM) +" "+ str(L2CM) +" "+ str(L3CM) +"\n")
@@ -57,8 +57,8 @@ for i in range(int(len(ReadOutput.alphabetSizeList)/testsPerSize)):
 	BranchMis = avg(ReadOutput.branchMispredictionsArray[startIndex:endIndex])
 	BranchExe = avg(ReadOutput.branchExecutedList[startIndex:endIndex])
 	TLB = avg(ReadOutput.TLBArray[startIndex:endIndex])
-	L1CM = avg(ReadOutput.l1TotalCacheMissesArray[startIndex:endIndex])
-	L2CM = avg(ReadOutput.l2TotalCacheMissesArray[startIndex:endIndex])
+	L1CM = avg(ReadOutput.l1DataCacheMissesArray[startIndex:endIndex])
+	L2CM = avg(ReadOutput.l2DataCacheMissesArray[startIndex:endIndex])
 	L3CM = avg(ReadOutput.l3TotalCacheMissesArray[startIndex:endIndex])
 
 	GnuplotFile.write(str(alphabetSize) +" "+ str(Walltime) +" "+ str(BranchMis/BranchExe) +" "+ str(BranchMis) +" "+ str(TLB) +" "+ str(L1CM) +" "+ str(L2CM) +" "+ str(L3CM) +"\n")
