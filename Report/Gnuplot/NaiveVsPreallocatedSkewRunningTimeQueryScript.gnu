@@ -5,7 +5,6 @@ set output 'naiveRankSelectSkewRunningTime.tex'
 set xlabel "Skew"
 set ylabel "Wall Time (microsec)"
 set key font 'sans,2'
-set xrange [2:10]
 set yrange [30000:100000]
 set key left top;
 
