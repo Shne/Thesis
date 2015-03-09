@@ -64,12 +64,12 @@ We would like to find out whether our implementation of the constructino of the 
 
 \subsubsection{Running time of Tree Construction vs Alphabet Size}
 To test what Big-O notation running time our construction algorithm was running at, we implemented the following test setup.
-We tested the running time of building the tree relative to the alphabet size by running the program 5 times for each size of the alphabet we tested and took the average value of the resulting measurements for each measurement type we used.
-We tested for alphabet sizes $2^n$ with $n = [10..20]$ and a constant input string length of $10^7$.
+We tested the running time of building the tree relative to the alphabet size by running the program 5 times for each size of the alphabet we tested, and took the average value of the resulting measurements for each measurement type we used.
+We tested for alphabet sizes $2^a$ with $a = [6..20]$ and a constant input string length of $n = 10^7$, except in a single test where we used $n = 10^2$.
 
 A theoretical running time of $O(n \cdot log(\sigma))$ is equivalent to $a \cdot n \cdot log(\sigma)$ where $a$ is some constant factor.
-Assuming our construction algorithm has this running time, the graphs of the wall time divided by $n \cdot log(\sigma)$ should converge on the constant factor $a$ as $\sigma \rightarrow \infty$
-In Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime} we have plotted this graph and find that it does not appear to be converging on any constant value, but rather increase as $\sigma$ increases.
+Assuming our construction algorithm has this running time, a plot of the wall time divided by $n \cdot log(\sigma)$ should converge on the constant factor $a$ as $\sigma \rightarrow \infty$
+In Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime} we have plotted this, and find that it does not appear to be converging on any constant value, but rather increases as $\sigma$ increases.
 This means our implementation of the construction of a Wavelet Tree is slower than its theoretical running time.
 
 \begin{figure}
@@ -78,20 +78,20 @@ This means our implementation of the construction of a Wavelet Tree is slower th
 	\label{fig:naiveIntegerAlphabetSize_WallTime}
 \end{figure}
 
-To try and understand why our algorithm performs so, we turn to the many other measurements available to us through PAPI: Branch Mispredictions, Cache Misses, and the like.
+To try and understand why our algorithm performs so, we turn to the many other measurements available to us through PAPI: Branch Mispredictions, Cache Misses, etc.
 
-Looking at the raw wall time and branch misprediction numbers in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_BM} it seems natural to conclude that the branch mispredictions are to blame.
+Looking at the raw Wall Time and Branch Misprediction numbers in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_BM} it seems natural to conclude that the Branch Mispredictions are to blame.
 \begin{figure}
 	\input{naiveIntegerAlphabetSize_WallTime_BM}
 	\caption{Construction: Wall Time and Branch Mispredictions over Alphabet Size}
 	\label{fig:naiveIntegerAlphabetSize_WallTime_BM}
 \end{figure}
-But if we plot the rate of branch mispredictions, as we have done in Figure~\ref{fig:naiveIntegerAlphabetSize_BMRate}, we can see that the rate of branch mispredictions stay constant for most the alphabet sizes, and even decrease for large alphabet sizes.
 \begin{figure}
 \input{naiveIntegerAlphabetSize_BMRate}
 \caption{Construction: Branch Misprediction Rate over Alphabet Size}
 \label{fig:naiveIntegerAlphabetSize_BMRate}
 \end{figure}
+But if we plot the rate of Branch Mispredictions, as we have done in Figure~\ref{fig:naiveIntegerAlphabetSize_BMRate}, we can see that the rate of Branch Mispredictions stay constant for most of the tested alphabet sizes, and even decrease for large alphabet sizes.
 
 We next turn to look at Cache Misses, plotting all three levels in Figure~\ref{fig:naiveIntegerAlphabetSize_CM}.
 \begin{figure}
@@ -178,7 +178,7 @@ By similar calculations the saved cpu cycles from branch mispredictions for \tex
 
 
 \subsubsection{Further improvements}
-Looking at the values in Figure~\ref{fig:valuesForPopcountDiff}, we find that an obvious next step would be to reduce the number of cache misses. One way to do this is to control the memory layout of the nodes and their bitmaps and then make it more likely that the queries will traverse the nodes in such a way that the next item is already in cache, either in the same cacheline or one that has been prefetched.
+Looking at the values in Figure~\ref{fig:valuesForPopcountDiff}, we find that an obvious next step would be to reduce the number of cache misses. One way to do this is to control the memory layout of the nodes and their bitmaps and then arrange them in a way to make it more likely that the queries will traverse the nodes in such a way that the next item is already in cache, either in the same cacheline or one that has been prefetched.
 
 We will do this by placing nodes and bitmaps consecutively in memory that are mirrored pre-order in the tree, 'mirrored' meaning we go down the right side first.
 We describe this in section~\ref{sec:memorylayout}.

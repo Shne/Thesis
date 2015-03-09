@@ -42,7 +42,7 @@ We then compare results from rank and select queries on our wavelet tree to resu
 When they agree on several randomly selected sets of query parameters, we feel confident our wavelet tree construction, rank, and select implementations are correct.
 
 \subsection{Combating Over-Optimization}
-The Gnu C Compiler (GCC) is an optimizing compiler and can using static analysis sometimes recognize that the results and possible side-effects of a computation will not be used in the code and will in those cases completely remove that computation as an optimization.
+The GNU Compiler Collection (GCC) is an optimizing compiler and can using static analysis sometimes recognize that the results and possible side-effects of a computation will not be used in the code and will in those cases completely remove that computation as an optimization.
 This means that the compiler could potentially remove the entirety or parts of the computation for our queries when we test it, if we don't use the result for anything.
 To ensure that the compiler doesn't throw needed computations out the window in our tests, we collect the results of each query in an array and print it to stdout. We only print it after the collection of measurements is done so as to effect the running time minimally.
 
