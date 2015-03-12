@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
     if(argc < NUM_REQUIRED_ARGS) { cout << "NOT ENOUGH ARGUMENTS" << endl; return 0; }
     
     string inputFilename = "../../../Data/n" + string(argv[N_ARG_NUM]) + "_as" + string(argv[AS_ARG_NUM]) + ".data";
-//    cout << inputFilename << endl;
+    cout << inputFilename << endl;
     uint size_out = 0;
     uint* inputArr = read_file(size_out, inputFilename.c_str());
     

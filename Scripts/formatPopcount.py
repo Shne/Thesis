@@ -60,8 +60,6 @@ ValuesFile.write('\\textbf{L2 CM} & '+value.format(Rank2CMNoPop)+' & '+value.for
 ValuesFile.write('\\textbf{L3 CM} & '+value.format(Rank3CMNoPop)+' & '+value.format(Rank3CMPop)+' & '+percent.format(printList[6])+'\\% \\\\ \hline\n')
 ValuesFile.write('\\end{tabular}\\\\[5pt]\n')
 
-# CONTINUE HERE
-
 
 # SELECT
 ReadOutput.getData(testDataFile, "SimpleNaiveIntegerNoPopcount", "select")
