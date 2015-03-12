@@ -93,13 +93,19 @@ This means that it is not branch mis-predictions that causes the increase in que
 
 
 \paragraph{Cache misses}
-We now look at cache misses to see if that can explain the increase in query time. 
+We now look at cache misses to see if they can explain the increase in query time. 
 The values are shown in Figure ~\ref{fig:NaivePreallocatedRankSkewCacheMisses} for \texttt{Rank} and in Figure ~\ref{fig:NaivePreallocatedSelectSkewCacheMisses} for \texttt{Select}.
 The same tendency as in Figure ~\ref{fig:NaiveRankSelectSkewRunningTime} is observed: 
 The cache misses also increases linearly with the skew factor which could explain the linear increase in query time when skewing the tree
 
 If we think about it, it makes sense that cache misses are increasing because we are accessing a large bitmap in many nodes in the tree that cannot fit in the cache.
-Skewing the tree should decrease cache misses because of prefetching, but because rank and select stops at some position inside the bitmap and then continues to the next bitmap in the next node, they do not gain much advantage from prefetching because the prefetched data in many cases just are the rest of the current bitmap. 
+Skewing the tree should decrease cache misses because of cache prefetching, but because rank and select stops at some position inside the bitmap and then continues to the next bitmap in the next node and they do not gain much advantage from prefetching because the prefetched data in many cases are just the rest of the current bitmap. 
+
+\begin{figure}
+\caption{Why queries gain nothing from cache prefetching}
+\label{fig:QueryPrefetchFigure}
+\includegraphics[width=\textwidth]{QueryPrefetchFigure.pdf}
+\end{figure}
 
 Prefetching then only helps in the cases where the last entry of the current bitmap is the position where rank or select stops.
 A cache miss then happens almost every time the select or rank query looks at a new node until we reach a level of the tree where the bitmap has become small enough to not fill up the cache
@@ -159,6 +165,7 @@ This suggests that skewing the tree can be an improvement when taking advantage 
 \label{fig:NaiveVsPreallocatedSkewSelectQueryTLB}
 \input{NaiveVsPreallocatedSkewSelectQueryTLB}
 \end{figure}
+
 
 
 \subsubsection{Why controlled memory is not better than uncontrolled memory}
