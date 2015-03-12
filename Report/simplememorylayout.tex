@@ -98,8 +98,10 @@ The values are shown in Figure ~\ref{fig:NaivePreallocatedRankSkewCacheMisses} f
 The same tendency as in Figure ~\ref{fig:NaiveRankSelectSkewRunningTime} is observed: 
 The cache misses also increases linearly with the skew factor which could explain the linear increase in query time when skewing the tree
 
-If we think about it, it makes sense that cache misses are increasing because we are accessing a large bitmap in many nodes in the tree that cannot fit in the cache.
-Skewing the tree should decrease cache misses because of cache prefetching, but because rank and select stops at some position inside the bitmap and then continues to the next bitmap in the next node and they do not gain much advantage from prefetching because the prefetched data in many cases are just the rest of the current bitmap. 
+If we think about it, it makes sense that cache misses are increasing because we are accessing a large bitmap in most of the nodes in the tree, that cannot fit in the cache if we are working on large enough data.
+Skewing the tree should decrease cache misses because of cache prefetching, but because rank and select stops at some position inside the bitmap and then continues to the next bitmap in the next node it means that they do not gain much advantage from prefetching because the prefetched data in many cases are just the rest of the current bitmap. 
+The problem is shown in figure ~\ref{fig:QueryPrefetchFigure}. The bitmap is stored sequentially and the prefetcher prefetches the next cache line which consists of a number of words containing data of the current bitmap.
+Rank or select loops through each word in the current cache line and stops somewhere inside a word and continues to the bitmap of the next node and skips the data in the prefetched cache line of the current bitmap.
 
 \begin{figure}
 \caption{Why queries gain nothing from cache prefetching}
@@ -107,15 +109,14 @@ Skewing the tree should decrease cache misses because of cache prefetching, but 
 \includegraphics[width=\textwidth]{QueryPrefetchFigure.pdf}
 \end{figure}
 
-Prefetching then only helps in the cases where the last entry of the current bitmap is the position where rank or select stops.
-A cache miss then happens almost every time the select or rank query looks at a new node until we reach a level of the tree where the bitmap has become small enough to not fill up the cache
+Prefetching then only helps in the cases where the last entry of the current bitmap is the position where rank or select stops, which does not happen very often.
+A cache miss then happens almost every time the select or rank query looks at a new node, until we reach a level of the tree where the bitmap has become small enough to not fill up the cache, which might not happen at all since there can be so many occurrences of even a single character that it allows the bitmap to still be too large to fit in the cache even in the lower levels of the tree.
 When we skew the tree we do not split the alphabet into equal sizes anymore and therefore add more data to the right side of the tree than to the left. 
-This increases the hight of the tree and we need to look at more nodes to find the result than if the tree was balanced.
-Because of this we introduce more cache misses because we have to access more bitmaps because we generally access more nodes.
+This increases the hight of the tree and we need to look at more nodes to find the result than if the tree was balanced and as a result this we introduce more cache misses because we have to access more bitmaps.
 Increasing the height of the tree also generally increases the query time because there are more levels to search through than in a balanced tree.
 
 This is why the query time increases when we skew the tree: we get more cache misses and we have to search through more levels of the tree. 
-This suggests that skewing the tree can be an improvement when taking advantage of prefetching is possible and when a node only has to access small data that can be kept in cache.
+This suggests that skewing the tree can be an improvement when taking advantage of prefetching is possible and/or when a node only has to access small data that can be kept in cache.
 
 \begin{figure}
 \caption{Rank Cache Misses on Wavelet Tree with increasing skew}
