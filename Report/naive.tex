@@ -178,8 +178,8 @@ By similar calculations the saved cpu cycles from branch mispredictions for \tex
 
 
 \subsubsection{Further improvements}
-Looking at the values in Figure~\ref{fig:valuesForPopcountDiff}, we find that an obvious next step would be to reduce the number of cache misses. One way to do this is to control the memory layout of the nodes and their bitmaps and then arrange them in a way to make it more likely that the queries will traverse the nodes in such a way that the next item is already in cache, either in the same cacheline or one that has been prefetched.
+Looking at the values in Figure~\ref{fig:valuesForPopcountDiff}, we find that an obvious next step would be to reduce the number of cache misses. We know from~\cite{gerthSkewedBinarySearchTrees} that one way to do this for a tree structure is to skew the tree. We need to control the memory layout of the nodes and their bitmaps and then skew the tree to make it more likely that the queries will traverse the nodes in such a way that the next item is already in cache, either in the same cacheline or one that has been prefetched.
 
-We will do this by placing nodes and bitmaps consecutively in memory that are mirrored pre-order in the tree, 'mirrored' meaning we go down the right side first.
+We will do this by placing nodes and bitmaps consecutively in memory that are consecutively accessed in a Depth First Search that traverses the right subnode first.
 We describe this in section~\ref{sec:memorylayout}.
 
