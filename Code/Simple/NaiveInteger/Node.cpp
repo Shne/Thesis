@@ -12,7 +12,11 @@
 
 using namespace std;
 
+#ifdef NODEARRAY
+Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, Node* &node_pt, uint skew)
+#else
 Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, uint skew)
+#endif
     : isLeaf(false), left(nullptr), right(nullptr), parent(parentNode) {
     
     uint alphabetSize = alphabetMax - alphabetMin +1;
@@ -60,13 +64,23 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
     input->clear();
     delete input;
     if(rightString->size() > 0) {
+#ifdef NODEARRAY
+        node_pt++;
+        right = new (node_pt) Node(rightString, rightAlphabetMin, rightAlphabetMax, this, node_pt, skew);
+#else
         right = new Node(rightString, rightAlphabetMin, rightAlphabetMax, this, skew);
+#endif
     } else {
         rightString->clear();
         delete rightString;
     }
     if(leftString->size() > 0) {
+#ifdef NODEARRAY
+        node_pt++;
+        left = new (node_pt) Node(leftString, leftAlphabetMin, leftAlphabetMax, this, node_pt, skew);
+#else
         left = new Node(leftString, leftAlphabetMin, leftAlphabetMax, this, skew);
+#endif
     } else {
         leftString->clear();
         delete leftString;

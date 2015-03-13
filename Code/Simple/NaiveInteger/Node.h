@@ -14,6 +14,8 @@
 //#define INTERNALCOUNTERS
 //#define EMPTYALPHABETCOUNTERS
 
+//#define NODEARRAY
+
 #include <string>
 #include <iostream>
 #include <vector>
@@ -42,7 +44,11 @@ private:
     Node* right;
 public:
     Node();
+#ifdef NODEARRAY
+    Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, Node* &node_pt, uint skew);
+#else
     Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, uint skew);
+#endif
     int rank(uint character, ulong index, uint alphabetMin, uint alphabetMax, uint skew);
     ulong popcountBinaryRank(ulong pos);
     ulong binaryRank(ulong index);

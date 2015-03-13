@@ -18,7 +18,11 @@ using namespace std;
 class Tree {
     
 private:
+#ifdef NODEARRAY
+    Node* root;
+#else
     Node root;
+#endif
     unsigned long alphabetMin, alphabetMax, inputSize;
     
 public:

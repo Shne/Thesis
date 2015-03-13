@@ -47,9 +47,6 @@ inline void getPapiAvailableEvents(){
 
 inline void testSetup(int eventset, int* events, int num_events){
     PAPI_num_counters();
-#ifdef INTERNALCOUNTERS
-    return;
-#endif
     
     if(eventset == 0) {
         /* Start counting events */
@@ -63,9 +60,6 @@ inline void testSetup(int eventset, int* events, int num_events){
 }
 
 inline void testTearDown(uint amount, uint alphabetSize, uint skew, string test, string pathname, int eventset, int* events, long_long* values, int num_events){
-#ifdef INTERNALCOUNTERS
-    return;
-#endif
     /* Stop counting events */
     int retval = PAPI_stop_counters(values, num_events);
     if (retval != PAPI_OK) handle_error(retval);
@@ -113,7 +107,7 @@ inline void testSelectQuery(uint amount, uint alphabetSize, uint skew, string pa
     }
     testTearDown(amount, alphabetSize, skew, "select", pathname, eventset, events, values, num_events);
     for(uint i=0; i < queries; i++) {
-        cout << results[i];
+        cout << results[i] << " ";
     }
     cout << endl;
 }
@@ -128,7 +122,7 @@ inline void testRankQuery(uint amount, uint alphabetSize, uint skew, string path
     }
     testTearDown(amount, alphabetSize, skew, "rank", pathname, eventset, events, values, num_events);
     for(uint i=0; i < queries; i++) {
-        cout << results[i];
+        cout << results[i] << " ";
     }
     cout << endl;
 }
