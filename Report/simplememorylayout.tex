@@ -70,7 +70,7 @@ We did 5 sample runs for each skew and then used the median running time of thes
 This was done to minimize the effect of outliers in the test. The 100 runs was simply done to increase the general size of the running time to better see the differences. The results can be seen in Figure ~\ref{fig:NaiveRankSelectSkewRunningTime}.
 
 We skew the Wavelet Tree (see section~\ref{sec:SkewingTheTree}) because we believe it has better performance than not skewing it since data can then be stored sequentially in memory and reduce cache-misses because of prefetching and should then be faster to access when querying. 
-Skewing should also reduce branch mis-predictions since branched to the right become more probable than branching to the left. 
+Skewing should also reduce branch mis-predictions since branching to the right become more probable than branching to the left. 
 
 
 If we look at figure ~\ref{fig:NaiveRankSelectSkewRunningTime} we can see that the query time increases linearly with increasing skew for both controlled and uncontrolled memory layout. We also observe that the two memory layout approaches are almost equal for both rank and select queries in terms of running time.
