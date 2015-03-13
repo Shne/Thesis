@@ -32,9 +32,6 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
     vector<uint>* leftString = new vector<uint>;
     vector<uint>* rightString = new vector<uint>;
     
-#ifdef SPLITSTRINGCOUNTERS
-    PAPI_start_counters(::global_events, 1);
-#endif
     for(auto it = input->begin(); it != input->end(); it++) {
         int currentChar = *it;        
         if(currentChar <= split) {
@@ -45,11 +42,6 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
             rightString->push_back(currentChar);
         }
     }
-#ifdef SPLITSTRINGCOUNTERS
-    PAPI_stop_counters(::global_values, 1);
-    ::global_value += ::global_values[0];
-    ::global_values[0] = 0;
-#endif
     
     bitmap.shrink_to_fit();
     
@@ -67,41 +59,15 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
     
     input->clear();
     delete input;
-#ifdef EMPTYALPHABETCOUNTERS
-    PAPI_start_counters(::global_events, 1);
-#endif
     if(rightString->size() > 0) {
-#ifdef EMPTYALPHABETCOUNTERS
-    PAPI_stop_counters(::global_values, 1);
-    ::global_value += ::global_values[0];
-    ::global_values[0] = 0;
-#endif
         right = new Node(rightString, rightAlphabetMin, rightAlphabetMax, this, skew);
     } else {
-#ifdef EMPTYALPHABETCOUNTERS
-    PAPI_stop_counters(::global_values, 1);
-    ::global_value += ::global_values[0];
-    ::global_values[0] = 0;
-#endif
         rightString->clear();
         delete rightString;
     }
-#ifdef EMPTYALPHABETCOUNTERS
-    PAPI_start_counters(::global_events, 1);
-#endif
     if(leftString->size() > 0) {
-#ifdef EMPTYALPHABETCOUNTERS
-    PAPI_stop_counters(::global_values, 1);
-    ::global_value += ::global_values[0];
-    ::global_values[0] = 0;
-#endif
         left = new Node(leftString, leftAlphabetMin, leftAlphabetMax, this, skew);
     } else {
-#ifdef EMPTYALPHABETCOUNTERS
-    PAPI_stop_counters(::global_values, 1);
-    ::global_value += ::global_values[0];
-    ::global_values[0] = 0;
-#endif
         leftString->clear();
         delete leftString;
     }
