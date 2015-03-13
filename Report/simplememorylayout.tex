@@ -78,47 +78,44 @@ If we look at figure ~\ref{fig:NaiveRankSelectSkewRunningTime} we can see that t
 This means we can conclude that skewing the tree is not an improvement on performance. It is also not an improvement to control the memory our selves.
 
 \subsubsection{Why skewing is not an improvement}
-\paragraph{Branch Mis-predictions}
+\paragraph{Branch Mispredictions}
 To understand why skewing the tree is no improvement we need to figure out what causes the increase in query time. 
-First we look at branch mis-predictions to see if they actually decrease when we increase the skew factor. 
+First we look at branch mispredictions to see if they actually decrease when we increase the skew factor. 
 \begin{figure}
-\caption{Rank Branch Mis-predictions rate}
+\caption{Rank Branch Mispredictions rate}
 \label{fig:NaiveVsPreallocatedSkewRankQueryBMrate}
 \input{NaiveVsPreallocatedSkewRankQuery_BR_CN}
 \end{figure}
 
 \begin{figure}
-\caption{Select Branch Mis-predictions rate}
+\caption{Select Branch Mispredictions rate}
 \label{fig:NaiveVsPreallocatedSkewSelectQueryBMrate}
 \input{NaiveVsPreallocatedSkewSelectQuery_BR_CN}
 \end{figure}
  
-Figure ~\ref{fig:NaiveVsPreallocatedSkewRankQueryBMrate} and \ref{fig:NaiveVsPreallocatedSkewSelectQueryBMrate} shows the branch mis-prediction rate for rank and select queries on a wavelet tree with increasing skew factor for both the controlled and uncontrolled memory approach. 
-The branch mis-prediction rate is calculated by dividing the number of branch mis-predictions with the total number of conditional branches.
+Figure ~\ref{fig:NaiveVsPreallocatedSkewRankQueryBMrate} and \ref{fig:NaiveVsPreallocatedSkewSelectQueryBMrate} shows the branch misprediction rate for rank and select queries on a wavelet tree with increasing skew factor for both the controlled and uncontrolled memory approach. 
+The branch misprediction rate is calculated by dividing the number of branch mispredictions with the total number of conditional branches.
 
-We observe that the branch mis-prediction rate is decreasing as we expected. 
-This means that it is not branch mis-predictions that causes the increase in query time. 
+We observe that the branch misprediction rate is decreasing as we expected. 
+This means that it is not branch mispredictions that causes the increase in query time. 
 
 
 \paragraph{Cache misses}
 We now look at cache misses to see if they can explain the increase in query time. 
 The values are shown in Figure ~\ref{fig:NaivePreallocatedRankSkewCacheMisses} for \texttt{Rank} and in Figure ~\ref{fig:NaivePreallocatedSelectSkewCacheMisses} for \texttt{Select}.
 The same tendency as in Figure ~\ref{fig:NaiveRankSelectSkewRunningTime} is observed: 
-The cache misses also increases linearly with the skew factor which could explain the linear increase in query time when skewing the tree.
+The cache misses increase linearly with the skew factor which could explain the linear increase in query time when skewing the tree.
 
-It makes sense that cache misses are increasing because we are accessing a large bitmap in most of the nodes in the tree, that cannot fit in the cache if we are working on large enough data.
-Skewing the tree should decrease cache misses because of cache prefetching, but because rank and select stops at some position inside the bitmap and then continues to the next bitmap in the next node it means that they do not gain much advantage from prefetching because the prefetched data in many cases are just the rest of the current bitmap. 
+Skewing the tree should decrease cache misses because of cache prefetching, but because rank and select stops at some position inside the bitmap and then continues to the next bitmap in the next node it means that they do not take advantage from prefetching in those cases because the prefetched data is just the rest of the current bitmap. 
 The problem is shown in figure ~\ref{fig:QueryPrefetchFigure}. The bitmap is stored sequentially and the prefetcher prefetches the next cache line which consists of a number of words containing data of the current bitmap.
-Rank or select loops through each word in the current cache line and stops somewhere inside a word and continues to the bitmap of the next node and skips the data in the prefetched cache line of the current bitmap.
 
 \begin{figure}
-\caption{Why concatenating bitmaps doesn't enable cache prefetching}
+\caption{Why concatenating bitmaps doesn't enable cache prefetching between bitmaps}
 \label{fig:QueryPrefetchFigure}
 \includegraphics[width=\textwidth]{QueryPrefetchFigure.pdf}
 \end{figure}
 
-Prefetching then only helps in the cases where the last entry of the current bitmap is the position where rank or select stops, which does not happen very often.
-A cache miss then happens almost every time the select or rank query looks at a new node, until we reach a level of the tree where the bitmap has become small enough to not fill up the cache, which might not happen at all since there can be so many occurrences of even a single character that it allows the bitmap to still be too large to fit in the cache even in the lower levels of the tree.
+A cache miss happens almost every time the select or rank query looks at a new node, until we reach a level of the tree where the bitmap has become small enough to not fill up the cache, which might not happen at all since there can be so many occurrences of even a single character that it allows the bitmap to still be too large to fit in the cache even in the lower levels of the tree.
 When we skew the tree we do not split the alphabet into equal sizes anymore and therefore add more data to the right side of the tree than to the left. 
 This increases the hight of the tree and we need to look at more nodes to find the result than if the tree was balanced and as a result this we introduce more cache misses because we have to access more bitmaps.
 Increasing the height of the tree also generally increases the query time because there are more levels to search through than in a balanced tree.
@@ -178,7 +175,7 @@ This suggests that skewing the tree can be an improvement when taking advantage 
 
 
 \subsubsection{Why controlled memory is not better than uncontrolled memory}
-When we look at the graphs for cache misses and branch mis-predictions we can see that the difference between controlled and uncontrolled memory management is very small which fits very well with the fact that the query times are very close.
+When we look at the graphs for cache misses and branch mispredictions we can see that the difference between controlled and uncontrolled memory management is very small which fits very well with the fact that the query times are very close.
 The cache misses for \textit{Level 1} (when comparing the two construction methods) are almost exactly equal while \textit{Level 2} and \textit{Level 3} cache misses varies a bit as shown in figure ~\ref{fig:NaivePreallocatedRankSkewCacheMisses} and \ref{fig:NaivePreallocatedSelectSkewCacheMisses}
 This is because the size of the caches are larger in higher levels than in lower levels and \textit{Level 1} gets filled up much faster than \textit{Level 2} and \textit{Level 3} resulting in more \textit{Level 1} cache misses.
 
