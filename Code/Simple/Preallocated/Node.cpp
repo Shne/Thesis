@@ -15,7 +15,7 @@ using namespace std;
 Node::Node() {};
 
 Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode,
-        Node* &node_pt, bitmap_t* in_bitmap, unsigned long &in_bitmapOffset, uint skew)
+        Node* &node_pt, bitmap_t* in_bitmap, unsigned long &in_bitmapOffset, float skew)
     : isLeaf(false), left(nullptr), right(nullptr), parent(parentNode) {
     
     uint alphabetSize = alphabetMax - alphabetMin +1;
@@ -29,7 +29,7 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
     bitmapSize = input->size(); //one bit for each character in the input string
     bitmapOffset = in_bitmapOffset;
    
-    uint split = (alphabetSize-1)/skew + alphabetMin;
+    uint split = (uint)((alphabetSize-1)/skew + alphabetMin);
 
     uint leftAlphabetMin = alphabetMin; 
     uint leftAlphabetMax = split;
@@ -93,14 +93,14 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
 }
 
 
-int Node::rank(int character, unsigned long index, bitmap_t* bitmap, int alphabetMin, int alphabetMax, uint skew){
+int Node::rank(int character, unsigned long index, bitmap_t* bitmap, int alphabetMin, int alphabetMax, float skew){
     if(isLeaf){
 //        cout << "Rank Leaf" << endl;
         return index;
     }
     
     int alphabetSize = alphabetMax - alphabetMin +1;
-    int split = (alphabetSize-1)/skew + alphabetMin;
+    int split = (int)((alphabetSize-1)/skew + alphabetMin);
     int leftAlphabetMin = alphabetMin;
     int leftAlphabetMax = split;
     int rightAlphabetMin = split+1;
@@ -270,13 +270,13 @@ int Node::popcountBinarySelect(bool charBit, ulong occurance, bitmap_t* bitmap) 
 
 
 
-Node* Node::getLeaf(int character, int alphabetMin, int alphabetMax, uint skew) {
+Node* Node::getLeaf(int character, int alphabetMin, int alphabetMax, float skew) {
     if(isLeaf){
         return this;
     }
 
     int alphabetSize = alphabetMax - alphabetMin +1;
-    int split = (alphabetSize-1)/skew + alphabetMin;
+    int split = (int)((alphabetSize-1)/skew + alphabetMin);
     int leftAlphabetMin = alphabetMin;
     int leftAlphabetMax = split;
     int rightAlphabetMin = split+1;

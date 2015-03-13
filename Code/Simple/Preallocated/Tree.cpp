@@ -13,7 +13,7 @@
 using namespace std;
 
 
-Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, uint skew) 
+Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, float skew) 
     : alphabetMin(0), alphabetMax(alphabetSize-1), inputSize(amount){
     Node* node_pt = static_cast<Node*> (::operator new (sizeof(Node)*2*alphabetSize));
     root = node_pt;
@@ -31,12 +31,12 @@ Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, uint skew)
     bitmap->shrink_to_fit();
 }
 
-int Tree::rank(int character, unsigned long index, uint skew) {
+int Tree::rank(int character, unsigned long index, float skew) {
     if(index > inputSize) index = inputSize;
     return root->rank(character, index, bitmap, alphabetMin, alphabetMax, skew);
 }
 
-int Tree::select(int character, unsigned long occurance, uint skew) {
+int Tree::select(int character, unsigned long occurance, float skew) {
     Node* leaf = root->getLeaf(character, alphabetMin, alphabetMax, skew);
     return leaf->leafSelect(character, occurance, bitmap);
 }

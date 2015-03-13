@@ -59,7 +59,7 @@ inline void testSetup(int eventset, int* events, int num_events){
     if (retval != PAPI_OK) handle_error(retval);
 }
 
-inline void testTearDown(uint amount, uint alphabetSize, uint skew, string test, string pathname, int eventset, int* events, long_long* values, int num_events){
+inline void testTearDown(uint amount, uint alphabetSize, float skew, string test, string pathname, int eventset, int* events, long_long* values, int num_events){
     /* Stop counting events */
     int retval = PAPI_stop_counters(values, num_events);
     if (retval != PAPI_OK) handle_error(retval);
@@ -96,7 +96,7 @@ inline void testTearDown(uint amount, uint alphabetSize, uint skew, string test,
 
 
 
-inline void testSelectQuery(uint amount, uint alphabetSize, uint skew, string pathname, int eventset, int* events, long_long* values, int num_events, Tree tree){
+inline void testSelectQuery(uint amount, uint alphabetSize, float skew, string pathname, int eventset, int* events, long_long* values, int num_events, Tree tree){
     testSetup(eventset, events, num_events);
     uint queries = 1000;
     uint charStep = alphabetSize/queries;
@@ -112,7 +112,7 @@ inline void testSelectQuery(uint amount, uint alphabetSize, uint skew, string pa
     cout << endl;
 }
 
-inline void testRankQuery(uint amount, uint alphabetSize, uint skew, string pathname, int eventset, int* events, long_long* values, int num_events, Tree tree){
+inline void testRankQuery(uint amount, uint alphabetSize, float skew, string pathname, int eventset, int* events, long_long* values, int num_events, Tree tree){
     testSetup(eventset, events, num_events); 
     uint queries = 1000;
     uint charStep = alphabetSize/queries;
@@ -127,7 +127,7 @@ inline void testRankQuery(uint amount, uint alphabetSize, uint skew, string path
     cout << endl;
 }
 
-inline void testBuildTime(uint amount, uint alphabetSize, uint skew, string pathname, int eventset, int* events, long_long* values, int num_events, vector<uint>* input){
+inline void testBuildTime(uint amount, uint alphabetSize, float skew, string pathname, int eventset, int* events, long_long* values, int num_events, vector<uint>* input){
     testSetup(eventset, events, num_events);
     Tree tree = Tree(input, amount, alphabetSize, skew);
     testTearDown(amount, alphabetSize, skew, "build", pathname, eventset, events, values, num_events);
