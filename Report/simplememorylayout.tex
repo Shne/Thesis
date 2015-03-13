@@ -1,8 +1,12 @@
 \section{Simple Algorithm with controlled Memory Layout and Skew}
 \label{sec:memorylayout}
-Mostly the same algorithm as the Simple, Naïve approach, but with a controlled memory layout and a skew of the tree.
+In this section, we describe our attempt to improve the query times for the wavelet tree by controlling the memory layout and skewing the tree.
+Brodal et al.~\cite{gerthSkewedBinarySearchTrees} showed that skewing a binary search tree could reduce the amount of cache misses and branch mispredictions considerately. Enough, in fact, to increase the speed of searching the tree manyfold, even though the skewing increased the depth of the tree structure.
 
-We want to reduce the number of cache misses in our rank and select queries. To do this we to try and make it so that the next piece of memory the algorithm accesses is already loaded into a cacheline. One way of doing this is to have the data ordered in memory such that it will be accessed consecutively in memory, as this will mean full utilization of each cacheline as well as enabling prefetching of the next piece of memory to be effective.
+We want to reduce the number of cache misses in our rank and select queries. To do this we try and make it so that the next piece of memory the algorithm accesses is already loaded into a cacheline. One way of doing this is to have the data ordered in memory such that it will be accessed consecutively in memory, as this will mean full utilization of each cacheline as well as enabling prefetching of the next piece of memory to be effective.
+
+The algorithms remain mostly the same algorithm as the Simple, Naïve approach, but with modifications to handle a controlled memory layout and a skew of the tree.
+We have also altered the Naïve approach to support skewing, so we can compare whether the controlled memory layout has the desired effect.
 
 \subsection{Prefetching}
 Prefetching is a feature of the CPU whereby it can fetch other parts of the memory into cachelines even though it was not requested yet, if it believes it will be requested soon, to avoid having the program waiting for this fetching.

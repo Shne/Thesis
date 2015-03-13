@@ -178,8 +178,8 @@ By similar calculations the saved cpu cycles from branch mispredictions for \tex
 
 
 \subsubsection{Further improvements}
-Looking at the values in Figure~\ref{fig:valuesForPopcountDiff}, we find that an obvious next step would be to reduce the number of cache misses. We know from~\cite{gerthSkewedBinarySearchTrees} that one way to do this for a tree structure is to skew the tree. We need to control the memory layout of the nodes and their bitmaps and then skew the tree to make it more likely that the queries will traverse the nodes in such a way that the next item is already in cache, either in the same cacheline or one that has been prefetched.
+Looking at the values in Figure~\ref{fig:valuesForPopcountDiff}, we find that, of the measurements we collect, cache misses are among the highest and were not reduced significantly by using the \texttt{popcountl} instruction.
+Cache misses are expensive and reducing them would likely greatly increase the speed of queries on the wavelet tree.
 
-We will do this by placing nodes and bitmaps consecutively in memory that are consecutively accessed in a Depth First Search that traverses the right subnode first.
-We describe this in section~\ref{sec:memorylayout}.
+Inspired by Brodal et al.~\cite{gerthSkewedBinarySearchTrees} we will in section~\ref{sec:memorylayout} look at skewing the tree as a means to reduce cache misses and branch mispredictions.
 
