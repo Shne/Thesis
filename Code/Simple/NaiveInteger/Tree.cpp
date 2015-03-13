@@ -10,7 +10,7 @@
 
 using namespace std;
 
-Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, uint skew)
+Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, float skew)
     : alphabetMin(0), alphabetMax(alphabetSize-1),
         inputSize(amount)
 #ifndef NODEARRAY
@@ -25,7 +25,7 @@ Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, uint skew)
 #endif
 }
 
-int Tree::rank(uint character, ulong index, uint skew) {
+int Tree::rank(uint character, ulong index, float skew) {
     if(index > inputSize) index = inputSize;
 #ifdef NODEARRAY
     return root->rank(character, index, alphabetMin, alphabetMax, skew);
@@ -34,7 +34,7 @@ int Tree::rank(uint character, ulong index, uint skew) {
 #endif
 }
 
-int Tree::select(uint character, ulong occurance, uint skew) {
+int Tree::select(uint character, ulong occurance, float skew) {
 #ifdef NODEARRAY
     Node* leaf = root->getLeaf(character, alphabetMin, alphabetMax, skew);
 #else

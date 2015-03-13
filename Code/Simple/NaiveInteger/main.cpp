@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
     
     uint amount = pow(10, atoi(argv[N_ARG_NUM]));
     uint alphabetSize = pow(2, atoi(argv[AS_ARG_NUM]));
-    uint skew = atoi(argv[SKEW_ARG_NUM]);
+    float skew = atof(argv[SKEW_ARG_NUM]);
     
     /***************/
     /*  Events       */

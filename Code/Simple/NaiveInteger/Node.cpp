@@ -13,9 +13,9 @@
 using namespace std;
 
 #ifdef NODEARRAY
-Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, Node* &node_pt, uint skew)
+Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, Node* &node_pt, float skew)
 #else
-Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, uint skew)
+Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, float skew)
 #endif
     : isLeaf(false), left(nullptr), right(nullptr), parent(parentNode) {
     
@@ -27,7 +27,7 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
         return;
     }
 
-    uint split = (alphabetSize-1)/skew + alphabetMin;
+    uint split = (uint)((alphabetSize-1)/skew + alphabetMin);
     uint leftAlphabetMin = alphabetMin;
     uint leftAlphabetMax = split;
     uint rightAlphabetMin = split+1;
@@ -88,14 +88,14 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
 }
 
 
-int Node::rank(uint character, ulong index, uint alphabetMin, uint alphabetMax, uint skew){
+int Node::rank(uint character, ulong index, uint alphabetMin, uint alphabetMax, float skew){
     if(isLeaf){
 //        cout << "Rank Leaf" << endl;
         return index;
     }
     
     uint alphabetSize = alphabetMax - alphabetMin +1;
-    uint split = (alphabetSize-1)/skew + alphabetMin;
+    uint split = (uint)((alphabetSize-1)/skew + alphabetMin);
     uint leftAlphabetMin = alphabetMin;
     uint leftAlphabetMax = split;
     uint rightAlphabetMin = split+1;
@@ -181,13 +181,13 @@ uint Node::binarySelect(bool charBit, ulong occurance) {
     cout << "Occurance too high!" << endl;
 }
 
-Node* Node::getLeaf(uint character, uint alphabetMin, uint alphabetMax, uint skew) {
+Node* Node::getLeaf(uint character, uint alphabetMin, uint alphabetMax, float skew) {
     if(isLeaf){
         return this;
     }
 
     uint alphabetSize = alphabetMax - alphabetMin +1;
-    uint split = (alphabetSize-1)/skew + alphabetMin;
+    uint split = (uint)((alphabetSize-1)/skew + alphabetMin);
     uint leftAlphabetMin = alphabetMin;
     uint leftAlphabetMax = split;
     uint rightAlphabetMin = split+1;

@@ -10,11 +10,7 @@
 
 #define SKEW 2
 
-//#define SPLITSTRINGCOUNTERS
-//#define INTERNALCOUNTERS
-//#define EMPTYALPHABETCOUNTERS
-
-//#define NODEARRAY
+#define NODEARRAY
 
 #include <string>
 #include <iostream>
@@ -45,17 +41,17 @@ private:
 public:
     Node();
 #ifdef NODEARRAY
-    Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, Node* &node_pt, uint skew);
+    Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, Node* &node_pt, float skew);
 #else
     Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, uint skew);
 #endif
-    int rank(uint character, ulong index, uint alphabetMin, uint alphabetMax, uint skew);
+    int rank(uint character, ulong index, uint alphabetMin, uint alphabetMax, float skew);
     ulong popcountBinaryRank(ulong pos);
     ulong binaryRank(ulong index);
     uint select(bool charBit, ulong occurance);
     uint binarySelect(bool charBit, ulong occurance);
     ulong popcountBinarySelect(bool charBit, ulong occurance);
-    Node* getLeaf(uint character, uint alphabetMin, uint alphabetMax, uint skew);
+    Node* getLeaf(uint character, uint alphabetMin, uint alphabetMax, float skew);
     uint leafSelect(uint character, ulong occurance);
 };
 

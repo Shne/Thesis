@@ -26,9 +26,9 @@ private:
     unsigned long alphabetMin, alphabetMax, inputSize;
     
 public:
-    Tree(vector<uint>* input, uint amount, uint alphabetSize, uint skew);
-    int rank(uint character, ulong index, uint skew);
-    int select(uint character, ulong occurance, uint skew);
+    Tree(vector<uint>* input, uint amount, uint alphabetSize, float skew);
+    int rank(uint character, ulong index, float skew);
+    int select(uint character, ulong occurance, float skew);
 };
 
 
