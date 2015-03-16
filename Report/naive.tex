@@ -65,12 +65,12 @@ We would like to find out whether our implementation of the construction of the 
 \subsubsection{Running time of Tree Construction vs Alphabet Size}
 To test what Big-O notation running time our construction algorithm was running at, we implemented the following test setup.
 We tested the running time of building the tree relative to the alphabet size by running the program 5 times for each size of the alphabet we tested, and took the average value of the resulting measurements for each measurement type we used.
-We tested for alphabet sizes $2^a$ with $a = [6..20]$ and a constant input string length of $n = 10^7$, except in a single test where we used $n = 10^2$.
+We tested for alphabet sizes $2^p$ with $p = [6..22]$ and a constant input string length of $n = 10^7$, except in a single test where we used $n = 10^2$.
 
 A theoretical running time of $O(n \cdot log(\sigma))$ is equivalent to $a \cdot n \cdot log(\sigma)$ where $a$ is some constant factor.
 Assuming our construction algorithm has this running time, a plot of the wall time divided by $n \cdot log(\sigma)$ should converge on the constant factor $a$ as $\sigma \rightarrow \infty$
-In Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime} we have plotted this, and find that it does not appear to be converging on any constant value, but rather increases as $\sigma$ increases.
-This means our implementation of the construction of a Wavelet Tree is slower than its theoretical running time.
+In Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime} we have plotted this, and find that it does not appear to be converging on any constant value, but rather increases as $\sigma$ increases, especially for alphabet sizes larger than about $2^{16}$
+This means our implementation of the construction of a Wavelet Tree is not keeping within its theoretical running time.
 
 \begin{figure}
 	\input{naiveIntegerAlphabetSize_WallTime}
@@ -80,7 +80,7 @@ This means our implementation of the construction of a Wavelet Tree is slower th
 
 To try and understand why our algorithm performs so, we turn to the many other measurements available to us through PAPI: Branch Mispredictions, Cache Misses, etc.
 
-Looking at the raw Wall Time and Branch Misprediction numbers in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_BM} it seems natural to conclude that the Branch Mispredictions are to blame.
+Looking at the raw Wall Time and Branch Misprediction numbers in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_BM} it might seem natural to conclude that the Branch Mispredictions are to blame.
 \begin{figure}
 	\input{naiveIntegerAlphabetSize_WallTime_BM}
 	\caption{Construction: Wall Time and Branch Mispredictions over Alphabet Size}
@@ -99,7 +99,7 @@ We next turn to look at Cache Misses, plotting all three levels in Figure~\ref{f
 \caption{Construction: Level 1-3 Cache Misses over Alphabet Size}
 \label{fig:naiveIntegerAlphabetSize_CM}
 \end{figure}
-We see that cache misses increase for larger alphabet sizes up to an alphabet size of around $2^{15}$ after which they seem to remain constant for even larger alphabet sizes.
+We see that cache misses increase for larger alphabet sizes up to an alphabet size of around $2^{15}$ after which they seem to remain constant for even larger alphabet sizes up to about $2^{20}$ where it rises again.
 This is in contrast to the wall time over theoretical running time plot in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime} that seem to remain somewhat constant until about $2^{15}$ after which it increases.
 
 We then considered that the difference in theoretical and practical running time might be explained by the fact that our algorithm spends a constant amount of time per node, constructing it, independent on the size of the input, $n$, and scaling linearly with alphabet size, $\sigma$.

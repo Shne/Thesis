@@ -28,8 +28,11 @@ unset y2tics
 
 set ylabel "Wall Time (microsec)"
 set key spacing 2
+set yrange [*:*]
+set logscale y
 set output 'naiveIntegerAlphabetSize_WallTime_plusSigma.tex'
 plot '../Data/naiveIntegerAlphabetSize_smallN.data' using 1:($2/(log($1) + $1)) with linespoints title "\\large $\\frac{Wall Time}{log(\\sigma) + \\sigma}$"
+unset logscale y
 set key default
 
 
