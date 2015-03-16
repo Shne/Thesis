@@ -4,11 +4,11 @@ import subprocess
 import os.path
 from time import sleep
 
-amount = 7
+amount = 8
 alphabetSize = 12
 program = "dist/Release/GNU-Linux-x86/naiveinteger"
 cwd = 'Code/Simple/NaiveInteger'
-outputFilename = 'Query_NaiveVsPreallocatedSkew16-1000queries.output'
+outputFilename = 'Query_NaiveVsPreallocatedSkew-1000queries.output'
 
 def addNewline():
 	open('Output/'+outputFilename, 'a').write('\n')
@@ -42,7 +42,6 @@ for skew in frange(2,skewRange,0.2):
 		subprocess.Popen(args, cwd=cwd).wait()
 		args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(2), outputFilename]
 		subprocess.Popen(args, cwd=cwd).wait()
-	# print(str(int((skew/(skewRange-1))*100)) + "%" + " finished\n")
 addNewline()
 
 print("\nNaiveInteger: Select")
@@ -54,7 +53,6 @@ for skew in frange(2,skewRange,0.2):
 		subprocess.Popen(args, cwd=cwd).wait()
 		args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(2), outputFilename]
 		subprocess.Popen(args, cwd=cwd).wait()
-	# print(str(int((skew/(skewRange-1))*100)) + "%" + " finished\n")
 
 addNewline()
 addNewline()

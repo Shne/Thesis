@@ -8,12 +8,20 @@ import os.path
 def getNumberOfEqualSkews(skewList):
 	stepsize = 0
 	for skew in skewList:
-		if(skew == 2):
+		if(skew == 2.0):
 			stepsize += 1
 
-		if(skew > 2):
+		if(skew > 2.0):
 			break
 	return stepsize
+
+def getSkewsIncreaseFactor(skewList):
+	stepsize = 0.0
+	for skew in skewList:		
+		if(skew > 2.0):
+			stepsize = skew - 2.0
+			break
+	return float("{0:.1f}".format(stepsize))
 
 def getAverageValues(skewList, otherList):
 	stepsize = getNumberOfEqualSkews(skewList)
@@ -34,10 +42,12 @@ def getNumberOfDifferentSkewValues(skewList):
 
 def getUniqueSkewValues(skewList):
 	numberOfSkews = int(getNumberOfDifferentSkewValues(skewList))
+	skewIncreaseFactor = getSkewsIncreaseFactor(skewList)
 	uniqueSkews = []
-	skew = 1
-	for i in range(0, numberOfSkews):
-		skew += 1
+	skew = 2.0
+	uniqueSkews.append(skew)	
+	for i in range(1, numberOfSkews):
+		skew += skewIncreaseFactor
 		uniqueSkews.append(skew)
 	return uniqueSkews
 
@@ -56,15 +66,15 @@ def writeToGnuplot(outputFile, valueListsKeys, testDataFile, constructionAlg, te
 	uniqueSeperators = getUniqueSkewValues(seperatingValues)
 	index = 0
 	for skew in uniqueSeperators:
-		strToWrite = str(skew)
-		for medianValueList in averageValueListList:
-			strToWrite += "   " + str(int(medianValueList[index]))
+		strToWrite = "{0:.1f}".format(skew)
+		for averageValueList in averageValueListList:
+			strToWrite += "   " + str(averageValueList[index])
 		outputFile.write(strToWrite +"\n")
 		index+=1
 
 	ReadOutput.reset();
 
-testDataFile = 'Output/Query_NaiveVsPreallocatedSkew16-1000queries.output'
+testDataFile = 'Output/Query_NaiveVsPreallocatedSkew-1000queries.output'
 
 # naiveRankGnuplotFile = open("Report/Gnuplot/Data/naiveRankSkewRunningTime.data", "w")
 # naiveSelectGnuplotFile = open("Report/Gnuplot/Data/naiveSelectSkewRunningTime.data", "w")
@@ -79,9 +89,9 @@ naiveRankGnuplotFile = open("Report/Gnuplot/Data/naiveRankSkew.data", "w")
 naiveSelectGnuplotFile = open("Report/Gnuplot/Data/naiveSelectSkew.data", "w")
 preallocatedRankGnuplotFile = open("Report/Gnuplot/Data/preallocatedRankSkew.data", "w")
 preallocatedSelectGnuplotFile = open("Report/Gnuplot/Data/preallocatedSelectSkew.data", "w")
-columns = "#[skew]   [L1-Cache-Misses]   [L2-Cache-Misses]   [L3-Cache-Misses]   [Branch-Misses]   [TLB]   [Conditional Branches]   [Wall time (micro seconds)]"
+columns = "#[skew]   [L1-DataCache-Misses]   [L2-DataCache-Misses]   [L3-TotalCache-Misses]   [Branch-Misses]   [TLB]   [Conditional Branches]   [Wall time (micro seconds)]   [L2-DataCache-Hits]"
 testValueDataListKeys = ["skewArray", "l1DataCacheMissesArray", "l2DataCacheMissesArray", "l3TotalCacheMissesArray", 
-"branchMispredictionsArray", "TLBArray", "conditionalBranchesArray", "wallTimeArray"]
+"branchMispredictionsArray", "TLBArray", "conditionalBranchesArray", "wallTimeArray", "l2DataCacheHitsArray"]
 
 GnuScriptFileName = '../NaiveVsPreallocatedSkewCacheMissesQueryScript.gnu'
 writeToGnuplot(naiveRankGnuplotFile, testValueDataListKeys, testDataFile, "SimpleNaiveInteger", "rank", columns)

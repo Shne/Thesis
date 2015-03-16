@@ -26,7 +26,7 @@ def getData(input_, algorithm, test):
 	match = "algorithm="+algorithm+"\ttest="+test+".*";
 
 	alphabetSizeReg = re.compile(match+"alphabetSize=(?P<alphabetSize>\d+)")
-	skewReg = re.compile(match+"skew=(?P<skew>\d+)")
+	skewReg = re.compile(match+"skew=(?P<skew>\d+(\.\d*)?)")
 	realCyclesReg = re.compile(match+"real_cycles=(?P<real_cycles>\d+)")
 	wallTimeReg = re.compile(match+"wall_time=(?P<wall_time>\d+)")
 	virtualCyclesReg = re.compile(match+"virt_cycles=(?P<virt_cycles>\d+)")
@@ -67,7 +67,7 @@ def getData(input_, algorithm, test):
 		if alphabetSize is not None:
 			alphabetSizeList.append(int(alphabetSize.group('alphabetSize')))
 		if skew is not None:
-			skewArray.append(int(skew.group('skew')))
+			skewArray.append(float(skew.group('skew')))
 		if realCycles is not None:
 			realCyclesArray.append(int(realCycles.group('real_cycles')))
 		if wallTime is not None:
