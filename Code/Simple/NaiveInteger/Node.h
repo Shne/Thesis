@@ -10,7 +10,7 @@
 
 #define SKEW 2
 
-#define NODEARRAY
+//#define NODEARRAY
 
 #include <string>
 #include <iostream>
@@ -25,12 +25,6 @@ typedef std::vector<bool> bitmap_t;
 
 using namespace std;
 
-#ifdef INTERNALCOUNTERS
-extern long_long global_values[];
-extern int global_events[];
-extern ulong global_value;
-#endif
-
 class Node {
 private:
     bitmap_t bitmap;
@@ -43,7 +37,7 @@ public:
 #ifdef NODEARRAY
     Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, Node* &node_pt, float skew);
 #else
-    Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, uint skew);
+    Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, float skew);
 #endif
     int rank(uint character, ulong index, uint alphabetMin, uint alphabetMax, float skew);
     ulong popcountBinaryRank(ulong pos);
