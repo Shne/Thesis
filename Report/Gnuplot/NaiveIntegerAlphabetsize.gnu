@@ -6,7 +6,6 @@ set format x "$2^{%L}$"
 set xlabel "Alphabet Size \\small (log scale)"
 
 
-
 set ylabel "Wall Time (microsec)"
 set yrange [0:*]
 set key spacing 2
@@ -18,9 +17,11 @@ set key default
 set y2tics
 set y2label 'Branch Misses'
 set y2range [0:3e+6*100]
+set ytics nomirror
 set output 'naiveIntegerAlphabetSize_WallTime_BM.tex'
 plot '../Data/NaiveIntegerAlphabetsize.data' using 1:2 with linespoints title "Wall Time", \
 	'../Data/NaiveIntegerAlphabetsize.data' using 1:($4/100) with linespoints title "Branch Miss"
+set ytics mirror
 unset y2range
 unset y2label
 unset y2tics
@@ -56,10 +57,12 @@ set yrange [0:*]
 set y2tics
 set y2label 'TLB Misses'
 set y2range [0:*]
+set ytics nomirror
 set key spacing 2
 set output 'naiveIntegerAlphabetSize_WallTime_TLB.tex'
 plot '../Data/NaiveIntegerAlphabetsize.data' using 1:($2/log($1)) with linespoints title "\\large $\\frac{Wall Time}{log(\\sigma)}$", \
 	'../Data/NaiveIntegerAlphabetsize.data' using 1:($5/log($1)) with linespoints title "\\large $\\frac{TLB Miss}{log(\\sigma)}$"
 set key default
+set ytics mirror
 unset y2label
 unset y2tics
