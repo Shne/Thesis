@@ -1,0 +1,17 @@
+\section{Pre-calculating binary rank per page}
+
+
+
+
+\subsection{Preallocating the Bitmaps}
+It is impossible to know the size of the bitmap of each node before its input string is produced by its parent, because the bitmap length in each node is the size of its input string.
+Because the size of each bitmap is unknown at compile time, we cannot use an array, and so we must do it in another way if we want the bitmaps stored consecutively in memory.
+We allocate the bitmaps as one giant bitmap the size of the maximum possible size required to store all the bitmaps for all the nodes. The sum of the size of all bitmaps on one layer of the tree can at most be $n$ and we can at most have $h$ layers, so the maximum size becomes
+\[n \cdot h\]
+where $n$ is the number of characters in the string and $h$ is the max height of a skewed binary tree and is defined in~\cite{Nievergelt:1972:BST:800152.804906} to be:
+\[ h = \frac{log(2\sigma+1)}{ log(\frac{1}{1-\frac{1}{skew}})}\]
+where $skew$ is the number we divide by to skew our tree.  We then store an offset and a size for the bitmap in each node, so we can index into the giant bitmap and access the bits corresponding to the node.
+After having constructed the entire tree, we then shrink the giant bitmap to fit its actual size, to not waste the memory when the tree is in use for querying. Shrinking the bitmap takes less than a microsecond so it does not impact the construction time in any significant way. We use the \texttt{resize()} method to shrink the bitmap to the size of \texttt{bitmapOffset}, the counter that has been incremented to always point at the next free space in the bitmap during the construction and so is also the actual filled size of the bitmap.
+If we had allocated a bitmap for each node individually, they would have been word-aligned, and the bits between the end of one bitmap and the start of another would have gone unused and so, wasted.
+
+The nodes now contain, in addition to the previously mentioned pointers, a pointer to the large bitmap, an offset and a size.

@@ -59,7 +59,7 @@ Defining the input occurrence parameter as $io$, the number of words iterated th
 Again, when popcount for 0s instead of 1s is needed, we simply subtract the result of \texttt{popcount} from 1 to obtain the count of 0s.
 
 \subsection{Experiments}
-We would like to find out whether our implementation of the constructino of the tree conforms to the theoretical running time of $O(n \log \sigma)$ and how much of an improvement using the \texttt{popcount} cpu instruction was for the queries.
+We would like to find out whether our implementation of the construction of the tree conforms to the theoretical running time of $O(n \log \sigma)$ and how much of an improvement using the \texttt{popcount} cpu instruction was for the queries.
 
 
 \subsubsection{Running time of Tree Construction vs Alphabet Size}
@@ -125,6 +125,10 @@ We see in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_TLB} that TLB Misses
 We can also see that the TLB Misses increase drastically from alphabet size about $2^{16}$ and up.
 Having found no other reasonable explanation for the discrepancy between the theoretical and our implementation's actual running time, we find it likely that TLB Misses is the culprit.
 
+In our further experimentation of the further improvements we do we will be using an alphabet size of $2^{16}$.
+It seems like reasonably realistic use cases to use types such as \texttt{char}, \texttt{wchar16\_t} and \texttt{wchar32\_t} which are stored in 8, 16 and 32 bits respectively.
+\texttt{char}'s size of 8 bits corresponds only to the ASCII table with 256 entries and we believe that many real-world scenarios might require a larger alphabet.
+\texttt{wchar16\_t} should be enough for most use cases, we believe, and looking at the graphs from this experiment we can see that building the tree is still fairly quick, not running into much trouble with TLB misses, and not exceeding the expected asymptotically bound running time.
 
 \subsubsection{Rank and Select using Popcount}
 \label{sec:experimentPopcountRankSelect}
