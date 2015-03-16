@@ -36,6 +36,23 @@ As such, we can and do allocate the memory for the nodes by allocating an array,
 We pass a reference to a pointer into the array from parent to child nodes during construction, so they know where to allocate their child nodes.
 The pointer points to the position of the last node in the array, and so before each instantiation of a new node, we increment the pointer so it points to free space, then place the new node there.
 
+We don't control the memory layout of the bitmaps, because skewing the tree will not help the prefetcher with regards to the bitmaps, except in a few specific cases, because of the way the bitmaps are used and the resulting access patterns.
+The algorithms for rank and select stop querying each bitmap at some position inside the bitmap and then continue to the next bitmap in the next node.
+Rank stops when it reaches the position the query was searching up to, given as a parameter, and Select stops when it has found the sought number of occurrences in the bitmap.
+In both these cases the rest of the bitmap is not used and any such data the prefetcher has fetched in vain.
+The prefetcher cannot tell from the algorithms access pattern when it will jump ahead to the next bitmap, and every such jump will therefore give rise to a cache miss.
+The problem is shown in figure ~\ref{fig:QueryPrefetchFigure}. The bitmap is stored sequentially and the prefetcher prefetches the next cache line (colored green), but the algorithm stops at some position and skips ahead to the next bitmap. This makes it not utilize the prefetched data (green) and try to access memory not yet in the cache; a cache miss.
+[TODO: perhaps reword the following]
+So almost no matter which bitmap is the next, a cache miss will occur.
+The exceptions are in the cases where either the entire bitmap is used for the query, that is, when the rank query is for the entire string, or the bitmap is small enough that the beginning of the next bitmap can fit within the same word, which is rare when the input string is much bigger than the alphabet.
+
+\begin{figure}
+\caption{Why concatenating bitmaps doesn't enable cache prefetching between bitmaps}
+\label{fig:QueryPrefetchFigure}
+\includegraphics[width=\textwidth]{QueryPrefetchFigure.pdf}
+\end{figure}
+
+A cache miss happens almost every time the select or rank query looks at a new node, until we reach a level of the tree where the bitmap has become small enough to not fill up the cache, which might not happen at all since there can be so many occurrences of even a single character that it allows the bitmap to still be too large to fit in the cache even in the lower levels of the tree.
 
 
 \subsection{Experiments}
@@ -87,16 +104,6 @@ The values are shown in Figure ~\ref{fig:NaivePreallocatedRankSkewCacheMisses} f
 The same tendency as in Figure ~\ref{fig:NaiveRankSelectSkewRunningTime} is observed: 
 The cache misses increase linearly with the skew factor which could explain the linear increase in query time when skewing the tree.
 
-Skewing the tree should decrease cache misses because of cache prefetching. However, because the algorithms for rank and select stop querying the bitmap at some position inside the bitmap and then continue to the next bitmap in the next node, a cache miss will occur. The prefetcher will have prefetched data from the next consecutive addresses in memory, not from the next bitmap which it doesn't know about.
-The problem is shown in figure ~\ref{fig:QueryPrefetchFigure}. The bitmap is stored sequentially and the prefetcher prefetches the next cache line (colored green), but the algorithm stops at some position and skips ahead to the next bitmap. This makes it not utilize the prefetched data (green) and try to access memory not yet in the cache; a cache miss.
-
-\begin{figure}
-\caption{Why concatenating bitmaps doesn't enable cache prefetching between bitmaps}
-\label{fig:QueryPrefetchFigure}
-\includegraphics[width=\textwidth]{QueryPrefetchFigure.pdf}
-\end{figure}
-
-A cache miss happens almost every time the select or rank query looks at a new node, until we reach a level of the tree where the bitmap has become small enough to not fill up the cache, which might not happen at all since there can be so many occurrences of even a single character that it allows the bitmap to still be too large to fit in the cache even in the lower levels of the tree.
 When we skew the tree we do not split the alphabet into equal sizes and therefore add more data to the right side of the tree than to the left. 
 This increases the hight of the tree and we need to look at more nodes to find the result than if the tree was balanced and as a result this we introduce more cache misses because we have to access more bitmaps.
 Increasing the height of the tree also generally increases the query time because there are more levels to search through than in a balanced tree.
