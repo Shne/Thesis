@@ -51,7 +51,7 @@ set output 'NaiveVsControlledNodeMemorySkewSelectQueryTLB.tex'
 plot '../Data/naiveSelectSkew.data' using 1:6 with linespoints title "Naive", \
 '../Data/controlledNodeMemorySelectSkew.data' using 1:6 with linespoints title "ControlledNodeMemory"
 
-set ylabel "Branch mis-prediction rate"
+set ylabel "Branch Misprediction Rate"
 set output 'NaiveVsControlledNodeMemorySkewRankQuery_BMrate.tex'
 plot '../Data/naiveRankSkew.data' using 1:($5/$7) with linespoints title "Naive", \
 '../Data/controlledNodeMemoryRankSkew.data' using 1:($5/$7) with linespoints title "ControlledNodeMemory"
@@ -74,7 +74,7 @@ set yrange [0:280000]
 set ytics nomirror
 set y2tics
 set y2label "Wall Time ($\\mu$sec), controlled"
-set y2range [0:3e+5/10]
+set y2range [0:28e+5/10]
 set output 'naiveRankSelectSkewRunningTime.tex'
 plot '../Data/naiveRankSkew.data' using 1:8 with linespoints title "NaiveRank", \
 '../Data/naiveSelectSkew.data' using 1:($8*10) with linespoints title "NaiveSelect", \

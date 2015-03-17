@@ -29,7 +29,7 @@ plot '../Data/naiveSelectSkew.data' using 1:3 with linespoints title "Naive L2",
 '../Data/preallocatedSelectSkew.data' using 1:4 with linespoints title "Preallocated L3", \
 
 
-set ylabel "Branch Mis-predictions"
+set ylabel "Branch Mispredictions"
 set output 'NaiveVsPreallocatedSkewRankQueryBM.tex'
 plot '../Data/naiveRankSkew.data' using 1:5 with linespoints title "Naive", \
 '../Data/preallocatedRankSkew.data' using 1:5 with linespoints title "Preallocated", \
@@ -48,7 +48,7 @@ plot '../Data/naiveSelectSkew.data' using 1:6 with linespoints title "Naive", \
 '../Data/preallocatedSelectSkew.data' using 1:6 with linespoints title "Preallocated", \
 
 
-set ylabel "Branch mis-prediction rate"
+set ylabel "Branch Misprediction Rate"
 set output 'NaiveVsPreallocatedSkewRankQuery_BR_CN.tex'
 plot '../Data/naiveRankSkew.data' using 1:($5/$7) with linespoints title "Naive", \
 '../Data/preallocatedRankSkew.data' using 1:($5/$7) with linespoints title "Preallocated", \
