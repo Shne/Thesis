@@ -3,11 +3,10 @@
 In this section, we describe our attempt to improve the query times for the wavelet tree by controlling the memory layout and skewing the tree.
 Brodal et al.~\cite{gerthSkewedBinarySearchTrees} showed that skewing a binary search tree could reduce the amount of cache misses and branch mispredictions considerately. Enough, in fact, to increase the speed of searching the tree manyfold, even though the skewing increased the depth of the tree structure.
 
-We want to reduce the number of cache misses in our rank and select queries.
-To do this we try and make it so that the next piece of memory the algorithm accesses is already loaded into a cacheline.
-One way of doing this is to have the data ordered in memory such that the queries will access them consecutively in memory, as this will mean full utilization of each cacheline as well as enabling prefetching of the next piece of memory to be effective.
+Skewing the tree can reduce branch mispredictions by making one branch (in the direction the tree is skewed) much more likely that the other, and so enabling the branch predicter unit to more often predict correctly. 
+Skewing the tree can reduce and cache misses by making it very likely that the next piece of memory the algorithm accesses is already loaded into a cacheline by the time it is accessed.
 
-We will do this by placing nodes consecutively in memory that are consecutively accessed in a Depth First Search that traverses the right subnode first.
+To reduce cache misses by skewing the tree we must control the memory layout, because by skewing the tree to the right, we make a DFSr-like traversal more likely and so we want to place the data in memory so that a DFSr traversal through the tree would be sequential address accesses. 
 
 The algorithms remain mostly the same algorithm as the Simple, Naïve approach, but with modifications to handle a controlled memory layout and a skew of the tree.
 We have also altered the Naïve approach to support skewing, so we can compare whether the controlled memory layout has the desired effect.
@@ -15,16 +14,15 @@ We have also altered the Naïve approach to support skewing, so we can compare w
 \subsection{Prefetching}
 Prefetching is a feature of the CPU whereby it can fetch other parts of the memory into cachelines even though it was not requested yet, if it believes it will be requested soon, to avoid having the program waiting for this fetching.
 In more advanced versions, it can even look at the access into memory of the running program and try to determine a pattern and prefetch memory according to this pattern.
-Looking at the Intel Optimization Manual~\cite{intel-optimization-manual} for our architecture~\footnote{Our architecture is Ivy Bridge, but the optimization manual sections for Sandy Bridge holds true for Ivy Bridge as well, as stated in section 2.2.7 in \cite{intel-optimization-manual}.} we find that it has a streaming prefetchers loading into L1, L2, and last level cache. The streaming prefetchers detect accesses to ascending or descending addresses and can prefetch up to 20 lines ahead or behind. It also has a prefetcher that can detect strides in memory access, as well as a "Next Page Prefetcher" when detecting memory accesses near the page boundary~\footnote{See section 2.2.7 of ~\cite{intel-optimization-manual}}.
+Looking at the Intel Optimization Manual~\cite{intel-optimization-manual} for our architecture\footnote{Our architecture is Ivy Bridge, but the optimization manual sections for Sandy Bridge holds true for Ivy Bridge as well, as stated in section 2.2.7 in \cite{intel-optimization-manual}.} we find that it has streaming prefetchers loading into L1, L2, and last level cache. The streaming prefetchers detect accesses to ascending or descending addresses and can prefetch up to 20 lines ahead or behind. It also has a prefetcher that can detect strides in memory access, as well as a "Next Page Prefetcher" that can load another memory page when detecting memory accesses near the page boundary~\footnote{See section 2.2.7 of ~\cite{intel-optimization-manual}}.
 
 
 \subsection{Skewing The Tree}
 \label{sec:SkewingTheTree}
-A way of achieving the sequential memory access in our case would be to skew the entire tree to one side, so that it is most likely that the queries will go to one side for most of the traversal and then control the memory layout so we can put that side of the tree next in memory.
 Skewing the tree is done by changing the way we find which character in the alphabet to split on in each node's construction.
 The split character is the last character in the alphabet of the left child node and to be able to skew the calculation we calculate it as
 \[SplitCharacter = \lfloor \frac{alphabetSize-1}{skew} + alphabetMin \rfloor \]
-where $alphabetSize$ is the size of the alphabet at this node, $alphabetMin$ is the first character in the alphabet at this node, and $skew$ is the skew parameter which is 2 for a balanced tree and higher for skewed trees. E.g. a $skew$ value of 4 will mean we skew the tree by, in each node, putting 25\% of the alphabet into the left child node and 75\% into the right.
+where $alphabetSize$ is the size of the alphabet at this node, $alphabetMin$ is the first character in the alphabet at this node, and $skew$ is the skew parameter which is 2 for a balanced tree and higher for right-skewed trees. E.g. a $skew$ value of 4 will mean we skew the tree by, in each node, putting 25\% of the alphabet into the left child node and 75\% into the right.
 We then round the value down so it is an actual integer character instead of a decimal.
 
 
@@ -36,23 +34,25 @@ As such, we can and do allocate the memory for the nodes by allocating an array,
 We pass a reference to a pointer into the array from parent to child nodes during construction, so they know where to allocate their child nodes.
 The pointer points to the position of the last node in the array, and so before each instantiation of a new node, we increment the pointer so it points to free space, then place the new node there.
 
-We don't control the memory layout of the bitmaps, because skewing the tree will not help the prefetcher with regards to the bitmaps, except in a few specific cases, because of the way the bitmaps are used and the resulting access patterns.
+We don't control the memory layout of the bitmaps (yet), because skewing the tree will not help the prefetcher with regards to the bitmaps, except in a few specific cases, because of the way the bitmaps are used and the resulting access patterns.
 The algorithms for rank and select stop querying each bitmap at some position inside the bitmap and then continue to the next bitmap in the next node.
-Rank stops when it reaches the position the query was searching up to, given as a parameter, and Select stops when it has found the sought number of occurrences in the bitmap.
-In both these cases the rest of the bitmap is not used and any such data the prefetcher has fetched in vain.
+Rank stops when it reaches the position the query was searching up to, given as a parameter.
+Select stops when it has found the sought number of occurrences in the bitmap.
+In both these cases the rest of the bitmap is not used and any such data the prefetcher has fetched would have been in vain.
 The prefetcher cannot tell from the algorithms access pattern when it will jump ahead to the next bitmap, and every such jump will therefore give rise to a cache miss.
-The problem is shown in figure ~\ref{fig:QueryPrefetchFigure}. The bitmap is stored sequentially and the prefetcher prefetches the next cache line (colored green), but the algorithm stops at some position and skips ahead to the next bitmap. This makes it not utilize the prefetched data (green) and try to access memory not yet in the cache; a cache miss.
-[TODO: perhaps reword the following]
-So almost no matter which bitmap is the next, a cache miss will occur.
-The exceptions are in the cases where either the entire bitmap is used for the query, that is, when the rank query is for the entire string, or the bitmap is small enough that the beginning of the next bitmap can fit within the same word, which is rare when the input string is much bigger than the alphabet.
+The problem is shown in figure ~\ref{fig:QueryPrefetchFigure}. The drawing assumes the bitmap is stored sequentially and the prefetcher prefetches the next cache line (colored green), but the algorithm stops at some position and skips ahead to the next bitmap. This makes it not utilize the prefetched data (green) and try to access memory not yet in the cache; a cache miss.
+So regardless of where the bitmap accessed next is stored, following right after the first or elsewhere in memory, a cache miss will occur.
 
-\begin{figure}
+The exceptions to this are when either the entire bitmap is used for the query, that is, when the rank query is for the entire string, or the bitmap is small enough that the beginning of the next bitmap can fit within the same word.
+There are better data structures for answering rank queries on the entire string, and we believe this type of query to be rarely used on any practical use of a wavelet tree.
+The second case is rare when the input string is bigger than the alphabet, and would only happen near the leaf nodes.
+
+\begin{figure}[h]
 \caption{Why concatenating bitmaps doesn't enable cache prefetching between bitmaps}
 \label{fig:QueryPrefetchFigure}
 \includegraphics[width=\textwidth]{QueryPrefetchFigure.pdf}
 \end{figure}
 
-A cache miss happens almost every time the select or rank query looks at a new node, until we reach a level of the tree where the bitmap has become small enough to not fill up the cache, which might not happen at all since there can be so many occurrences of even a single character that it allows the bitmap to still be too large to fit in the cache even in the lower levels of the tree.
 
 
 \subsection{Experiments}
