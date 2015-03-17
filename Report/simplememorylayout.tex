@@ -77,7 +77,7 @@ Skewing should also reduce branch mispredictions since branching to the right be
 
 If we look at figure ~\ref{fig:NaiveRankSelectSkewRunningTime} we can see that the query time increases linearly with increasing skew for both controlled and uncontrolled memory layout. We also observe that the two memory layout approaches are almost equal for both rank and select queries in terms of running time.
 
-This means we can conclude that skewing the tree is not an improvement on performance. It is also not an improvement to control the memory ourselves.
+This means we can conclude that skewing the tree is not an improvement on performance.
 
 \subsubsection{Why skewing is not an improvement}
 To understand why skewing the tree is no improvement we need to figure out what causes the increase in query time. 
@@ -102,14 +102,18 @@ This means that it is not branch mispredictions that causes the increase in quer
 We now look at cache misses to see if they can explain the increase in query time. 
 The values are shown in Figure ~\ref{fig:NaivePreallocatedRankSkewCacheMisses} for rank and in Figure ~\ref{fig:NaivePreallocatedSelectSkewCacheMisses} for select.
 The same tendency as in Figure ~\ref{fig:NaiveRankSelectSkewRunningTime} is observed: 
-The cache misses increase linearly with the skew factor which could explain the linear increase in query time when skewing the tree.
+The cache misses increase linearly with the skew factor.
 
-When we skew the tree we do not split the alphabet into equal sizes and therefore add more data to the right side of the tree than to the left. 
-This increases the hight of the tree and we need to look at more nodes to find the result than if the tree was balanced and as a result this we introduce more cache misses because we have to access more bitmaps.
-Increasing the height of the tree also generally increases the query time because there are more levels to search through than in a balanced tree.
+In Figure~\ref{fig:L2L3NaivePreallocatedRankSkewCacheMisses} and \ref{fig:L2L3NaivePreallocatedSelectSkewCacheMisses} we do generally see a difference in level 2 and 3 cache misses especially for higher skew values between the controlled and uncontrolled memory layouts with fewer cache misses when controlling the memory layout. In Figure~\ref{fig:L2L3NaivePreallocatedSelectSkewCacheMisses} we see that, for select, there are more level 2 and 3 cache misses for smaller skew values, including the balances case of skew value 2, when controlling the memory layout.
 
-This is why the query time increases when we skew the tree: we get more cache misses and we have to search through more levels of the tree. 
-This suggests that skewing the tree can be an improvement when most of the searching time is spent traversing the tree, which is not the case for our wavelet tree.
+The cache misses for \textit{Level 1} (when comparing the two construction methods) are almost exactly equal while \textit{Level 2} and \textit{Level 3} cache misses varies a bit as shown in figure ~\ref{fig:NaivePreallocatedRankSkewCacheMisses} and \ref{fig:NaivePreallocatedSelectSkewCacheMisses}
+This is because the size of the caches are larger in higher levels than in lower levels and \textit{Level 1} gets filled up much faster than \textit{Level 2} and \textit{Level 3} resulting in more \textit{Level 1} cache misses.
+
+It can also explain why the difference in \textit{Level 1} cache misses is so small. 
+The \textit{Level 1} cache simply gets filled up quickly and is then often missed. \textit{Level 2} and \textit{Level 3}are larger, which means that they do not reach their limit as quickly, resulting in fewer and more varied cache miss values.
+
+Still, we do see more cache misses for higher skew values.
+This means it was not an improvement in regards to cache misses to skew the tree when querying.
 
 \begin{figure}
 \caption{Rank Cache Misses on Wavelet Tree with increasing skew}
@@ -145,8 +149,7 @@ This suggests that skewing the tree can be an improvement when most of the searc
 \end{subfigure}
 \end{figure}
 
-
-\paragraph{TLB}
+In Figure~\ref{fig:NaiveVsPreallocatedSkewRankQueryTLB} and \ref{fig:NaiveVsPreallocatedSkewSelectQueryTLB} we can see that controlling the memory layout greatly reduces TLB misses for both rank and select queries when skewing the tree. We believe ... [TODO when new graphs arrive]
 
 \begin{figure}
 \caption{Rank TLB}
@@ -163,20 +166,15 @@ This suggests that skewing the tree can be an improvement when most of the searc
 
 
 \subsubsection{Why controlled memory is not better than uncontrolled memory}
-When we look at the graphs for cache misses and branch mispredictions we can see that the difference between controlled and uncontrolled memory management is very small which fits very well with the fact that the query times are very close.
-The cache misses for \textit{Level 1} (when comparing the two construction methods) are almost exactly equal while \textit{Level 2} and \textit{Level 3} cache misses varies a bit as shown in figure ~\ref{fig:NaivePreallocatedRankSkewCacheMisses} and \ref{fig:NaivePreallocatedSelectSkewCacheMisses}
-This is because the size of the caches are larger in higher levels than in lower levels and \textit{Level 1} gets filled up much faster than \textit{Level 2} and \textit{Level 3} resulting in more \textit{Level 1} cache misses.
+When we skew the tree we do not split the alphabet into equal sizes and therefore add more data to the right side of the tree than to the left. 
+This increases the hight of the tree and we need to look at more nodes to find the result than if the tree was balanced and as a result this we do more work because we have to access more nodes and bitmaps.
 
-It can also explain why the difference in \textit{Level 1} cache misses is so small. 
-The \textit{Level 1} cache simply gets filled up quickly and is then often missed. \textit{Level 2} and \textit{Level 3}are larger, which means that they do not reach their limit as quickly, resulting in fewer and more varied cache miss values.
+We had hoped to reduce the amount of branch mispredictions and cache misses enough that they would reduce the running time more than the increase from having a deeper tree structure.
+Sadly, this was not the case. We believe the reason it worked so well for Brodal et. al.\cite{gerthSkewedBinarySearchTrees} but not for us, is that the binary search trees they worked on have much less work involved in traversing each node and so most of the time is spent traversing from node to node.
+In rank and select queries on a wavelet tree, most of the time is spent calculating the binary ranks of the bitmaps of each node as well as other calculations performed for each node.
 
-
-
-Controlling the memory is in essence not better than letting the OS control it, which indicates that the effect of how we control memory is equal to the effect of how OS does it.
-
-
-
-
-
+Skewing the tree can help reduce the time spent between nodes by reducing the performance hits from branch mispredictions and cache misses that arise because of the unpredictable nature of a balanced tree traversal, by making the path of the traversal much more predictable and pre-loadable.
+It can not, however, help reduce the work performed when reaching each node, and when the total time spent on that work is proportional to the height of the tree, as it is with a wavelet tree, it is a great reduction in speed to skew the tree and thereby increase the height of the tree.
+The total intra-node work is proportional to the height of the tree because that work is proportional to the bitmap size and the bitmap sizes are inversely proportional to the number of nodes in the same layer, as the size of all the bitmaps in one layer sum up to $n$. A skewed tree does not have each layer filled with nodes and so the rest of the bitmaps on those levels become larger, as well as any extra layer produced by skewing the tree means another number of bitmaps must appear with combined size $n$.
 
 
