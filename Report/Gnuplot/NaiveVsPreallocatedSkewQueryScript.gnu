@@ -63,3 +63,12 @@ plot '../Data/naiveRankSkew.data' using 1:8 with linespoints title "NaiveRank", 
 '../Data/naiveSelectSkew.data' using 1:8 with linespoints title "NaiveSelect", \
 '../Data/preallocatedRankSkew.data' using 1:8 with linespoints title "PreallocatedRank", \
 '../Data/preallocatedSelectSkew.data' using 1:8 with linespoints title "PreallocatedSelect"
+
+set ylabel "L2 Cache miss rate"
+set output 'NaiveVsPreallocatedSkewRankQuery_L2_DCMrate.tex'
+plot '../Data/naiveRankSkew.data' using 1:($3/$8) with linespoints title "Naive", \
+'../Data/preallocatedRankSkew.data' using 1:($3/$8) with linespoints title "Preallocated", \
+
+set output 'NaiveVsPreallocatedSkewSelectQuery_L2_DCMrate.tex'
+plot '../Data/naiveSelectSkew.data' using 1:($3/$8) with linespoints title "Naive", \
+'../Data/preallocatedSelectSkew.data' using 1:($3/$8) with linespoints title "Preallocated", \

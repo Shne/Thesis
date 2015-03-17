@@ -73,7 +73,11 @@ inline void testTearDown(uint amount, uint alphabetSize, float skew, string test
         PAPI_dmem_info_t meminfo;
         PAPI_get_dmem_info(&meminfo);
         queryOutput << endl
+        #ifdef NODEARRAY
+            << "algorithm=ControlledNodeMemory" << "\t"
+        #else
             << "algorithm=SimpleNaiveInteger" << "\t"
+        #endif
             << "test=" << test << "\t"
             << "amount=" << amount << "\t"
             << "alphabetSize=" << alphabetSize << "\t"

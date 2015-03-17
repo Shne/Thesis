@@ -128,7 +128,7 @@ ulong Node::popcountBinaryRank(ulong pos) {
         ulong word = *(bitmap.begin()._M_p + i);
         bitmapwordRank += __builtin_popcountl(word);
     }
-    ulong word = *(bitmap.begin()._M_p + i);
+    ulong word = *(bitmap.begin()._M_p + i);    
     ulong shift = (pos % wordsize);
     ulong mask = (1UL << shift)-1;
     
@@ -164,7 +164,6 @@ uint Node::select(bool charBit, ulong occurance) {
     }
     uint position = popcountBinarySelect(charBit, occurance);
 //    uint position = binarySelect(charBit, occurance);
-
     bool parentCharBit = this == parent->right;
     return parent->select(parentCharBit, position+1);
 }

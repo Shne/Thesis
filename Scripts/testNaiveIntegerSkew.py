@@ -4,8 +4,8 @@ import subprocess
 import os.path
 from time import sleep
 
-amount = 8
-alphabetSize = 12
+amount = 7
+alphabetSize = 16
 program = "dist/Release/GNU-Linux-x86/naiveinteger"
 cwd = 'Code/Simple/NaiveInteger'
 outputFilename = 'Query_NaiveVsPreallocatedSkew-1000queries.output'

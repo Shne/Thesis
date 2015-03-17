@@ -68,41 +68,36 @@ def writeToGnuplot(outputFile, valueListsKeys, testDataFile, constructionAlg, te
 	for skew in uniqueSeperators:
 		strToWrite = "{0:.1f}".format(skew)
 		for averageValueList in averageValueListList:
-			strToWrite += "   " + str(averageValueList[index])
+			strToWrite += "   " + str(int(averageValueList[index]))
 		outputFile.write(strToWrite +"\n")
 		index+=1
 
 	ReadOutput.reset();
 
-testDataFile = 'Output/Query_NaiveVsPreallocatedSkew-1000queries.output'
-
-# naiveRankGnuplotFile = open("Report/Gnuplot/Data/naiveRankSkewRunningTime.data", "w")
-# naiveSelectGnuplotFile = open("Report/Gnuplot/Data/naiveSelectSkewRunningTime.data", "w")
-# preallocatedRankGnuplotFile = open("Report/Gnuplot/Data/preallocatedRankSkewRunningTime.data", "w")
-# preallocatedSelectGnuplotFile = open("Report/Gnuplot/Data/preallocatedSelectSkewRunningTime.data", "w")
-# columns = "#[skew]   [Wall-Time (microsec)]"
-# testValueDataListKeys = ["skewArray", "wallTimeArray"]
-# GnuScriptFileName = '../NaiveVsPreallocatedSkewRunningTimeQueryScript.gnu'
-
+testDataFile = 'Output/Query_NaiveVsControlledNodeMemorySkew-1000queries.output'
 
 naiveRankGnuplotFile = open("Report/Gnuplot/Data/naiveRankSkew.data", "w")
 naiveSelectGnuplotFile = open("Report/Gnuplot/Data/naiveSelectSkew.data", "w")
-preallocatedRankGnuplotFile = open("Report/Gnuplot/Data/preallocatedRankSkew.data", "w")
-preallocatedSelectGnuplotFile = open("Report/Gnuplot/Data/preallocatedSelectSkew.data", "w")
+controlledNodeMemoryRankGnuplotFile = open("Report/Gnuplot/Data/controlledNodeMemoryRankSkew.data", "w")
+controlledNodeMemorySelectGnuplotFile = open("Report/Gnuplot/Data/controlledNodeMemorySelectSkew.data", "w")
 columns = "#[skew]   [L1-DataCache-Misses]   [L2-DataCache-Misses]   [L3-TotalCache-Misses]   [Branch-Misses]   [TLB]   [Conditional Branches]   [Wall time (micro seconds)]   [L2-DataCache-Hits]"
 testValueDataListKeys = ["skewArray", "l1DataCacheMissesArray", "l2DataCacheMissesArray", "l3TotalCacheMissesArray", 
 "branchMispredictionsArray", "TLBArray", "conditionalBranchesArray", "wallTimeArray", "l2DataCacheHitsArray"]
 
-GnuScriptFileName = '../NaiveVsPreallocatedSkewCacheMissesQueryScript.gnu'
+GnuScriptFileName = '../NaiveVsControlledNodeMemoryQuerySkew.gnu'
 writeToGnuplot(naiveRankGnuplotFile, testValueDataListKeys, testDataFile, "SimpleNaiveInteger", "rank", columns)
 writeToGnuplot(naiveSelectGnuplotFile, testValueDataListKeys, testDataFile, "SimpleNaiveInteger", "select", columns)
-writeToGnuplot(preallocatedRankGnuplotFile, testValueDataListKeys, testDataFile, "Preallocated", "rank", columns)
-writeToGnuplot(preallocatedSelectGnuplotFile, testValueDataListKeys, testDataFile, "Preallocated", "select", columns)
+writeToGnuplot(controlledNodeMemoryRankGnuplotFile, testValueDataListKeys, testDataFile, "ControlledNodeMemory", "rank", columns)
+writeToGnuplot(controlledNodeMemorySelectGnuplotFile, testValueDataListKeys, testDataFile, "ControlledNodeMemory", "select", columns)
+# writeToGnuplot(preallocatedRankGnuplotFile, testValueDataListKeys, testDataFile, "Preallocated", "rank", columns)
+# writeToGnuplot(preallocatedSelectGnuplotFile, testValueDataListKeys, testDataFile, "Preallocated", "select", columns)
 
 naiveRankGnuplotFile.close()
 naiveSelectGnuplotFile.close()
-preallocatedRankGnuplotFile.close()
-preallocatedSelectGnuplotFile.close()
+controlledNodeMemoryRankGnuplotFile.close()
+controlledNodeMemorySelectGnuplotFile.close()
+# preallocatedRankGnuplotFile.close()
+# preallocatedSelectGnuplotFile.close()
 
 cwd = 'Report/Gnuplot/Graphs'
 subprocess.Popen(['gnuplot', GnuScriptFileName], cwd=cwd).wait()

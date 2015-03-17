@@ -1,9 +1,9 @@
 %!PS-Adobe-2.0 EPSF-2.0
-%%Title: NaiveVsPreallocatedSkewRankQuery_BR_CN.tex
+%%Title: NaiveVsControlledNodeMemorySkewSelectQueryTLB.tex
 %%Creator: gnuplot 4.6 patchlevel 4
-%%CreationDate: Mon Mar 16 12:37:08 2015
+%%CreationDate: Mon Mar 16 13:51:16 2015
 %%DocumentFonts: 
-%%BoundingBox: 50 50 410 302
+%%BoundingBox: 50 50 453 287
 %%EndComments
 %%BeginProlog
 /gnudict 256 dict def
@@ -42,7 +42,7 @@ gnudict begin
 /vpt vpt_ def
 /doclip {
   ClipToBoundingBox {
-    newpath 50 50 moveto 410 50 lineto 410 302 lineto 50 302 lineto closepath
+    newpath 50 50 moveto 453 50 lineto 453 287 lineto 50 287 lineto closepath
     clip
   } if
 } def
@@ -427,13 +427,13 @@ systemdict /pdfmark known not {
   userdict /pdfmark systemdict /cleartomark get put
 } if
 SDict begin [
-  /Title (NaiveVsPreallocatedSkewRankQuery_BR_CN.tex)
+  /Title (NaiveVsControlledNodeMemorySkewSelectQueryTLB.tex)
   /Subject (gnuplot plot)
   /Creator (gnuplot 4.6 patchlevel 4)
   /Author (roland)
 %  /Producer (gnuplot)
 %  /Keywords ()
-  /CreationDate (Mon Mar 16 12:37:08 2015)
+  /CreationDate (Mon Mar 16 13:51:16 2015)
   /DOCINFO pdfmark
 end
 } ifelse
@@ -450,86 +450,90 @@ newpath
 1.000 UL
 LTb
 LCb setrgbcolor
-1474 704 M
+1210 704 M
 63 0 V
-5266 0 R
+6392 0 R
 -63 0 V
 stroke
 LTb
-1474 1213 M
+1210 1124 M
 63 0 V
-5266 0 R
+6392 0 R
 -63 0 V
-1474 1722 M
+1210 1545 M
 63 0 V
-5266 0 R
+6392 0 R
 -63 0 V
-1474 2231 M
+1210 1965 M
 63 0 V
-5266 0 R
+6392 0 R
 -63 0 V
-1474 2739 M
+1210 2385 M
 63 0 V
-5266 0 R
+6392 0 R
 -63 0 V
-1474 3248 M
+1210 2806 M
 63 0 V
-5266 0 R
+6392 0 R
 -63 0 V
-1474 3757 M
+1210 3226 M
 63 0 V
-5266 0 R
+6392 0 R
 -63 0 V
-1474 4266 M
+1210 3646 M
 63 0 V
-5266 0 R
+6392 0 R
 -63 0 V
-1474 4775 M
+1210 4067 M
 63 0 V
-5266 0 R
+6392 0 R
 -63 0 V
-1474 704 M
+1210 4487 M
+63 0 V
+6392 0 R
+-63 0 V
+1210 704 M
 0 63 V
-0 4008 R
+0 3720 R
 0 -63 V
-2140 704 M
+2017 704 M
 0 63 V
-0 4008 R
+0 3720 R
 0 -63 V
-2806 704 M
+2824 704 M
 0 63 V
-0 4008 R
+0 3720 R
 0 -63 V
-3472 704 M
+3631 704 M
 0 63 V
-0 4008 R
+0 3720 R
 0 -63 V
-4139 704 M
+4438 704 M
 0 63 V
-0 4008 R
+0 3720 R
 0 -63 V
-4805 704 M
+5244 704 M
 0 63 V
-0 4008 R
+0 3720 R
 0 -63 V
-5471 704 M
+6051 704 M
 0 63 V
-0 4008 R
+0 3720 R
 0 -63 V
-6137 704 M
+6858 704 M
 0 63 V
-0 4008 R
+0 3720 R
 0 -63 V
-6803 704 M
+7665 704 M
 0 63 V
-0 4008 R
+0 3720 R
 0 -63 V
 stroke
-1474 4775 N
-0 -4071 V
-5329 0 V
-0 4071 V
--5329 0 V
+1210 4487 N
+0 -3783 V
+6455 0 V
+0 3783 V
+-6455 0 V
 Z stroke
 1.000 UP
 1.000 UL
@@ -541,61 +545,107 @@ LC0 setrgbcolor
 LCb setrgbcolor
 LT0
 LC0 setrgbcolor
-3322 4602 M
+6810 1097 M
 591 0 V
-1474 3804 M
-266 631 V
-267 -354 V
-266 -117 V
-267 -267 V
-266 -255 V
-267 -432 V
-266 -37 V
-267 -194 V
-266 -232 V
-267 -254 V
-266 -171 V
-266 -143 V
-267 -177 V
-266 -208 V
-267 -243 V
-266 39 V
-267 -211 V
-266 -131 V
-6537 905 L
-1474 3804 Pls
-1740 4435 Pls
-2007 4081 Pls
-2273 3964 Pls
-2540 3697 Pls
-2806 3442 Pls
-3073 3010 Pls
-3339 2973 Pls
-3606 2779 Pls
-3872 2547 Pls
-4139 2293 Pls
-4405 2122 Pls
-4671 1979 Pls
-4938 1802 Pls
-5204 1594 Pls
-5471 1351 Pls
-5737 1390 Pls
-6004 1179 Pls
-6270 1048 Pls
-6537 905 Pls
-3617 4602 Pls
+1210 2545 M
+323 -10 V
+323 335 V
+322 -35 V
+323 -24 V
+323 -86 V
+323 1109 V
+322 -306 V
+3792 2488 L
+323 163 V
+323 652 V
+322 684 V
+323 284 V
+323 -317 V
+323 -755 V
+322 -553 V
+323 810 V
+323 211 V
+322 -71 V
+323 28 V
+1210 2545 Pls
+1533 2535 Pls
+1856 2870 Pls
+2178 2835 Pls
+2501 2811 Pls
+2824 2725 Pls
+3147 3834 Pls
+3469 3528 Pls
+3792 2488 Pls
+4115 2651 Pls
+4438 3303 Pls
+4760 3987 Pls
+5083 4271 Pls
+5406 3954 Pls
+5729 3199 Pls
+6051 2646 Pls
+6374 3456 Pls
+6697 3667 Pls
+7019 3596 Pls
+7342 3624 Pls
+7105 1097 Pls
 1.000 UP
 1.000 UL
 LT1
 LC1 setrgbcolor
+LCb setrgbcolor
+LT1
+LC1 setrgbcolor
+6810 877 M
+591 0 V
+1210 3175 M
+323 -185 V
+323 -13 V
+322 -68 V
+323 -130 V
+323 221 V
+323 593 V
+322 247 V
+3792 2723 L
+323 -36 V
+323 444 V
+322 1099 V
+323 -494 V
+323 -250 V
+323 -455 V
+322 -396 V
+323 839 V
+323 -266 V
+322 662 V
+323 -159 V
+1210 3175 Crs
+1533 2990 Crs
+1856 2977 Crs
+2178 2909 Crs
+2501 2779 Crs
+2824 3000 Crs
+3147 3593 Crs
+3469 3840 Crs
+3792 2723 Crs
+4115 2687 Crs
+4438 3131 Crs
+4760 4230 Crs
+5083 3736 Crs
+5406 3486 Crs
+5729 3031 Crs
+6051 2635 Crs
+6374 3474 Crs
+6697 3208 Crs
+7019 3870 Crs
+7342 3711 Crs
+7105 877 Crs
 1.000 UL
 LTb
 LCb setrgbcolor
-1474 4775 N
-0 -4071 V
-5329 0 V
-0 4071 V
--5329 0 V
+1210 4487 N
+0 -3783 V
+6455 0 V
+0 3783 V
+-6455 0 V
 Z stroke
 1.000 UP
 1.000 UL
