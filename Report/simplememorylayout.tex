@@ -177,7 +177,7 @@ In Figure~\ref{fig:NaiveVsControlledNodeMemorySkewRankQueryTLB} and \ref{fig:Nai
 \input{NaiveVsControlledNodeMemorySkewSelectQuery_L2_DCMrate}
 \end{figure}
 
-\paragraph{skewing is not an improvement}
+\paragraph{Why skewing is not an improvement}
 When we skew the tree we do not split the alphabet into equal sizes and therefore add more data to the right side of the tree than to the left. 
 This increases the hight of the tree and we need to look at more nodes to find the result than if the tree was balanced and as a result this we do more work because we have to access more nodes and bitmaps.
 
