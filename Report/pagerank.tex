@@ -1,8 +1,19 @@
-\section{Pre-calculating binary rank per page}
+\section{Precomputing Binary Rank in Blocks}
 During our experiment of skewing the tree, we concluded that most of the work during queries is performed inside each node, calculating the binary rank of each bitmap.
-It is simply a summing up of popcounts of each word, and we considered whether precalculating these sums for blocks of several words of the bitmaps could improve the query times.
+It is simply a summing up of popcounts of each word, and we considered whether precomputing these sums for blocks of several words of the bitmaps could improve the query times.
 
+The size of these precomputed blocks is a new variable that could have influence on the running time and memory usage.
+Some advantages of larger blocks is less memory usage and fewer precomputed value lookups for the same part of the bitmap.
+Some advantages of smaller blocks are that they are more often useful as exemplified by extreme case of a block size equal to the bitmap size which is of little use compared to a block size of half the bitmap size.
+The larger block size is only useful for binary rank queries for a position after the halfway point of the bitmap, where the half-size precomputed values can be useful for binary rank queries from $\nicefrac{1}{4}$ into the bitmap.
+They can be used from a position at the middle of the block size because the rank can be calculated as the precomputed block value minus the popcount value from the position to the end of the block, which is fewer popcount calculations than calculating popcount from start of bitmap to the queried position.
 
+Because TLB misses are expensive it could be a great performance improvement to be able to skip entire pages of memory in the queries, and we therefore consider the page size, and multiples of it, good candidates for the block size.
+
+Bitmaps are likely not page-aligned and some might be smaller than the block size, yet we would still like to utilize the precomputed values in these cases.
+A way of achieving this would be to concatenate all bitmaps into one giant bitmap for the entire tree and precompute values for each block, keeping them in a seperate vector, and then when needing the binary rank of a area smaller than block size, use the precomputed value and subtract the binary rank of the extra area covered by the block. 
+
+Using one giant bitmap instead of one for each node might also cause a reduction in memory usage from no longer having unused, yet stored, bits at the end of each bitmap.
 
 
 
@@ -18,3 +29,8 @@ After having constructed the entire tree, we then shrink the giant bitmap to fit
 If we had allocated a bitmap for each node individually, they would have been word-aligned, and the bits between the end of one bitmap and the start of another would have gone unused and so, wasted.
 
 The nodes now contain, in addition to the previously mentioned pointers, a pointer to the large bitmap, an offset and a size.
+
+\subsection{Experiments}
+\subsubsection{Query running time for bitmap with precomputed blocks for different block sizes}
+
+\subsubsection{Size of Concatinated vs. Individual Bitmaps}
