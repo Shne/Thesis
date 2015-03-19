@@ -3,10 +3,17 @@
 In this section, we describe our attempt to improve the query times for the wavelet tree by controlling the memory layout and skewing the tree.
 Brodal et al.~\cite{gerthSkewedBinarySearchTrees} showed that skewing a binary search tree could reduce the amount of cache misses and branch mispredictions considerately. Enough, in fact, to increase the speed of searching the tree manyfold, even though the skewing increased the depth of the tree structure.
 
-Skewing the tree can reduce branch mispredictions by making one branch (in the direction the tree is skewed) much more likely that the other, and so enabling the branch predicter unit to more often predict correctly. 
+Skewing the tree can reduce branch mispredictions by making one branch, in the direction the tree is skewed, much more likely that the other, and so enabling the branch predicter unit to more often predict correctly. 
 Skewing the tree can reduce and cache misses by making it very likely that the next piece of memory the algorithm accesses is already loaded into a cacheline by the time it is accessed.
 
-To reduce cache misses by skewing the tree we must control the memory layout, because by skewing the tree to the right, we make a DFSr-like traversal more likely and so we want to place the data in memory so that a DFSr traversal through the tree would be sequential address accesses. 
+To reduce cache misses by skewing the tree we must control the memory layout, because by skewing the tree to the right, we make a DFSr-like traversal more likely and so we want to place the data in memory so that a DFSr traversal through the tree would be sequential address accesses.
+Allocating memory dynamically as we go might produce a similar layout and controlling the memory may not lead to increased performance, but it is the only way to ensure the memory layout is as we want it.
+
+Skewing the tree has the disadvantage of increasing the height, or depth, of the tree 
+and is defined for a skewed binary tree by J.~Nievergelt and E.~M. Reingold~\cite{Nievergelt:1972:BST:800152.804906} to be:
+\[ h = \frac{log(2\sigma+1)}{ log(\frac{1}{1-\alpha})}\]
+where $\alpha = \frac{1}{skew}$ and $skew$ is the number we divide by to skew our tree, see section~\ref{sec:SkewingTheTree}.
+
 
 The algorithms remain mostly the same algorithm as the Simple, Naïve approach, but with modifications to handle a controlled memory layout and a skew of the tree.
 We have also altered the Naïve approach to support skewing, so we can compare whether the controlled memory layout has the desired effect.
@@ -24,6 +31,7 @@ The split character is the last character in the alphabet of the left child node
 \[SplitCharacter = \lfloor \frac{alphabetSize-1}{skew} + alphabetMin \rfloor \]
 where $alphabetSize$ is the size of the alphabet at this node, $alphabetMin$ is the first character in the alphabet at this node, and $skew$ is the skew parameter which is 2 for a balanced tree and higher for right-skewed trees. E.g. a $skew$ value of 4 will mean we skew the tree by, in each node, putting 25\% of the alphabet into the left child node and 75\% into the right.
 We then round the value down so it is an actual integer character instead of a decimal.
+
 
 
 \subsection{Controlled Memory Layout}
