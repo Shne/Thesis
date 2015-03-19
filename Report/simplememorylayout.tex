@@ -115,9 +115,7 @@ The cache misses increase linearly with the skew factor.
 In Figure~\ref{fig:L2L3NaiveControlledNodeMemoryRankSkewCacheMisses} and \ref{fig:L2L3NaiveControlledNodeMemorySelectSkewCacheMisses} we do generally see a difference in level 2 and 3 cache misses especially for higher skew values between the controlled and uncontrolled memory layouts. For Select queries, controlled memory layout has fewer cache misses then Naive, but for Rank the opposite true.
 
 The cache misses for level 1 for Naive and Controlled Memory are almost exactly equal while level 2 and 3 cache misses varies a bit.
-This is because the size of the caches are larger in higher levels than in lower levels and level 1 gets filled up much faster than level 2 and 3 resulting in more level 1 cache misses.
-This can also explain why the difference in level 1 cache misses is so small. 
-The level 1 cache simply gets filled up quickly and is then often missed. Level 2 and 3 are larger, which means that they do not reach their limit as quickly, resulting in fewer and more varied cache miss values.
+This is because the size of the caches are larger in higher levels than in lower levels and \textbf{[TODO: explain this. There is no such thing as \textit{filling up a cache}, they are always filled and every load evicts the previous value]}
 Looking at the level 2 cache miss rates for rank and select, as plotted in Figure~\ref{fig:NaiveVsControlledNodeMemorySkewRankQuery_L2_DCMrate} and \ref{fig:NaiveVsControlledNodeMemorySkewSelectQuery_L2_DCMrate} we can see that the Data Cache Miss Rate for the level 2 cache increases for higher values of skew, meaning that it is not only a matter of increased amount of cycles causing the higher amount of cache misses, but that more cache access miss as skew increase.
 This means it was not an improvement in regards to cache misses to skew the tree when querying.
 
