@@ -75,7 +75,7 @@ The second case is rare when the input string is bigger than the alphabet, and w
 
 In this experiment we want to test whether querying our controlled memory version of the Wavelet Tree is faster than querying the uncontrolled memory version for increasingly skewed trees. 
 
-\paragraph{Test Setup}
+\paragraph{Test Setup}~\\
 We have run 1000 \texttt{rank} queries and 1000 \texttt{select} queries for each skew and registered the total running time for each set of 1000 queries. 
 We ran did 5 such sets for each skew and then used the median running time of these. 
 This was done to minimize the effect of outliers in the test. The 1000 queries was done for characters even spread across the alphabet for both rank and select. The results can be seen in Figure ~\ref{fig:NaiveRankSelectSkewRunningTime}.
@@ -87,7 +87,7 @@ If we look at figure ~\ref{fig:NaiveRankSelectSkewRunningTime} we can see that t
 
 This means we can conclude that skewing the tree is not an improvement on performance.
 
-\paragraph{Measurements}
+\paragraph{Measurements}~\\
 To understand why skewing the tree is no improvement we need to figure out what causes the increase in query time. 
 First we look at branch mispredictions to see if they actually decrease when we increase the skew factor.%
 \begin{figure}
@@ -183,7 +183,7 @@ In Figure~\ref{fig:NaiveVsControlledNodeMemorySkewRankQueryTLB} and \ref{fig:Nai
 \input{NaiveVsControlledNodeMemorySkewSelectQuery_L2_DCMrate}
 \end{figure}
 
-\paragraph{Why skewing is not an improvement}
+\paragraph{Why skewing is not an improvement}~\\
 When we skew the tree we do not split the alphabet into equal sizes and therefore add more data to the right side of the tree than to the left. 
 This increases the hight of the tree and we need to look at more nodes to find the result than if the tree was balanced and as a result this we do more work because we have to access more nodes and bitmaps.
 
