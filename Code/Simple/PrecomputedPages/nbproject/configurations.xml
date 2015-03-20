@@ -112,7 +112,7 @@
           <developmentMode>6</developmentMode>
           <architecture>2</architecture>
           <standard>8</standard>
-          <commandLine>-g -march=native</commandLine>
+          <commandLine>-g -march=native -Ddef_pageSize=`getconf PAGESIZE`</commandLine>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>

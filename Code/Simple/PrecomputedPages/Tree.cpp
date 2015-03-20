@@ -20,8 +20,8 @@ Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, float skew)
     
     double dSkew = (double) skew;
     ulong bitmapSize = amount * log2((double)2*alphabetSize + 1) / log2(1.0/(1.0-(1.0/dSkew)));
-    
-    long pageSize = sysconf(_SC_PAGESIZE);
+    long pageSize = sysconf(_SC_PAGESIZE) * CHAR_BIT; //sysconf returns pagesize in bytes, we want it in bits
+//    cout << pageSize << " " << pageSize * CHAR_BIT << endl;
     uint pages = bitmapSize/pageSize;
     pageRanks = vector<uint>(pages, 0);
 
@@ -39,12 +39,12 @@ Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, float skew)
 
 int Tree::rank(int character, unsigned long index, float skew) {
     if(index > inputSize) index = inputSize;
-    long pageSize = sysconf(_SC_PAGESIZE);
+    long pageSize = sysconf(_SC_PAGESIZE)*CHAR_BIT;
     return root->rank(character, index, bitmap, alphabetMin, alphabetMax, skew, pageRanks, pageSize);
 }
 
 int Tree::select(int character, unsigned long occurance, float skew) {
     Node* leaf = root->getLeaf(character, alphabetMin, alphabetMax, skew);
-    long pageSize = sysconf(_SC_PAGESIZE);
+    long pageSize = sysconf(_SC_PAGESIZE)*CHAR_BIT;
     return leaf->leafSelect(character, occurance, bitmap, pageRanks, pageSize);
 }

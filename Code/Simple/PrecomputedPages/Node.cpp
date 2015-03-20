@@ -133,7 +133,7 @@ ulong Node::popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<uint> &pageRa
     uint fullWords = alignedPos / wordSize; //the amount of full words we should iterate through. 
     uint nonPageFullWordsLeft = 0;
     for(uint i = 0; i < fullWords; i++) {
-        if((ulong)wordPtr % pageSize != 0) { //check if we are page-aligned
+        if((ulong)wordPtr % (pageSize/CHAR_BIT) != 0) { //check if we are page-aligned
             bitmapwordRank += __builtin_popcountl(*wordPtr);
             wordPtr++;
         } else { //we are page-aligned

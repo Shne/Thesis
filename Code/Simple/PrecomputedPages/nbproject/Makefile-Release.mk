@@ -44,8 +44,8 @@ OBJECTFILES= \
 CFLAGS=-m64
 
 # CC Compiler Flags
-CCFLAGS=-m64 -g -march=native
-CXXFLAGS=-m64 -g -march=native
+CCFLAGS=-m64 -g -march=native -Ddef_pageSize=`getconf PAGESIZE`
+CXXFLAGS=-m64 -g -march=native -Ddef_pageSize=`getconf PAGESIZE`
 
 # Fortran Compiler Flags
 FFLAGS=
