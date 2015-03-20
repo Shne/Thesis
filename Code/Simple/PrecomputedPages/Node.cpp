@@ -130,40 +130,37 @@ ulong Node::popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<uint> &pageRa
     
     //FULL WORDS
     uint alignedPos = pos - initialOffset; //initialOffset is the amount of bits in the first unaligned word of our bitmap
-    
     uint fullWords = alignedPos / wordSize; //the amount of full words we should iterate through. 
     uint nonPageFullWordsLeft = 0;
-    uint i;
-    for(i = 0; i < fullWords; i++) {
-        wordPtr++;
-        if((ulong)wordPtr % pageSize == 0) {
+    for(uint i = 0; i < fullWords; i++) {
+        if((ulong)wordPtr % pageSize != 0) { //check if we are page-aligned
+            bitmapwordRank += __builtin_popcountl(*wordPtr);
+            wordPtr++;
+        } else { //we are page-aligned
+            //LOOKUP PRECOMPUTED PAGES
             uint fullWordsLeft = fullWords - i;
             uint wordsPerPage = (pageSize / wordSize);
             uint fullPages = fullWordsLeft / wordsPerPage;
             nonPageFullWordsLeft = fullWordsLeft % wordsPerPage;
             uint wordIndex = (wordPtr - bitmap->begin()._M_p);
-            uint firstFullPageIndex = wordIndex / wordsPerPage;
+            uint pageIndex = wordIndex / wordsPerPage;
             for(uint i = 0; i < fullPages; i++) {
-                uint index = firstFullPageIndex + i;
-                bitmapwordRank += pageRanks[index];
+                pageIndex++;
+                bitmapwordRank += pageRanks[pageIndex];
                 wordPtr += wordsPerPage;
             }
             break;
         }
-        ulong word = *wordPtr;
-        bitmapwordRank += __builtin_popcountl(word);
     }
     
     //FULL WORDS LEFT AFTER FULL PAGES
     for(uint i = 0; i < nonPageFullWordsLeft; i++) {
+        bitmapwordRank += __builtin_popcountl(*wordPtr);
         wordPtr++;
-        ulong word = *wordPtr;
-        bitmapwordRank += __builtin_popcountl(word);
     }
     
-    
     //PART OF LAST WORD (if unaligned)
-    wordPtr++;
+//    wordPtr++;
     ulong word = *wordPtr;
     ulong shift = alignedPos % wordSize; //if word-aligned, shift will be 0, making mask (below) all 0.
     ulong mask = (1UL << shift)-1UL; //if word-aligned mask will be 0
