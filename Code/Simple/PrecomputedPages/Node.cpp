@@ -112,11 +112,11 @@ ulong Node::popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<uint> &pageRa
     if(pos > bitmapSize) cout << "position " << pos << " larger than bitmapsize " << bitmapSize << endl;
     ulong bitmapwordRank = 0;
     
-    ulong wordSize = sizeof(*bitmap->begin()._M_p) * CHAR_BIT; //vector<bool> src uses CHAR_BIT too
+    uint wordSize = sizeof(*bitmap->begin()._M_p) * CHAR_BIT; //vector<bool> src uses CHAR_BIT too
     
     vector<bool>::reference ref = (*bitmap)[bitmapOffset];
     ulong initialOffset = 0;
-    ulong* firstFullWord = ref._M_p;
+    ulong* wordPtr = ref._M_p;
     
     //PART OF FIRST WORD if unaligned
     if(ref._M_mask > 1) { //mask = 1 means first part of first word is part of our bitmap, and we can just use the fullword iteration code below
@@ -125,25 +125,28 @@ ulong Node::popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<uint> &pageRa
         ulong maskedFirstWord = (*ref._M_p) & firstMask;
         bitmapwordRank += __builtin_popcountl(maskedFirstWord);
         initialOffset = __builtin_popcountl(firstMask); //the amount we should skip for our calculation of fullWords
-        firstFullWord++; ///pointer was to a word we only partially had bits in
+        wordPtr++; ///pointer was to a word we only partially had bits in
     }
     
     //FULL WORDS
     uint alignedPos = pos - initialOffset; //initialOffset is the amount of bits in the first unaligned word of our bitmap
     
     uint fullWords = alignedPos / wordSize; //the amount of full words we should iterate through. 
-    uint fullPages;
-    ulong* wordPtr;
+    uint nonPageFullWordsLeft = 0;
     uint i;
     for(i = 0; i < fullWords; i++) {
-        wordPtr = firstFullWord+i;
+        wordPtr++;
         if((ulong)wordPtr % pageSize == 0) {
-            fullPages = (fullWords - i) * wordSize / pageSize;
-            uint firstFullPageIndex = (wordPtr - bitmap->begin()._M_p) * wordSize / pageSize;
+            uint fullWordsLeft = fullWords - i;
+            uint wordsPerPage = (pageSize / wordSize);
+            uint fullPages = fullWordsLeft / wordsPerPage;
+            nonPageFullWordsLeft = fullWordsLeft % wordsPerPage;
+            uint wordIndex = (wordPtr - bitmap->begin()._M_p);
+            uint firstFullPageIndex = wordIndex / wordsPerPage;
             for(uint i = 0; i < fullPages; i++) {
                 uint index = firstFullPageIndex + i;
                 bitmapwordRank += pageRanks[index];
-                wordPtr += wordSize / pageSize;
+                wordPtr += wordsPerPage;
             }
             break;
         }
@@ -151,16 +154,17 @@ ulong Node::popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<uint> &pageRa
         bitmapwordRank += __builtin_popcountl(word);
     }
     
-    uint fullWordsLeft = (alignedPos - fullPages*pageSize) / wordSize; //the amount of full words we should iterate through. 
-    for(uint i = 0; i < fullWordsLeft; i++) {
-        ulong word = *(wordPtr + i);
+    //FULL WORDS LEFT AFTER FULL PAGES
+    for(uint i = 0; i < nonPageFullWordsLeft; i++) {
+        wordPtr++;
+        ulong word = *wordPtr;
         bitmapwordRank += __builtin_popcountl(word);
-    } //we believe i is incremented even after the condition has failed
+    }
     
     
-    //CONTINUE HERE (and previous stuff probably isn't quite right yet either)
     //PART OF LAST WORD (if unaligned)
-    ulong word = *(firstFullWord + fullWordsLeft);
+    wordPtr++;
+    ulong word = *wordPtr;
     ulong shift = alignedPos % wordSize; //if word-aligned, shift will be 0, making mask (below) all 0.
     ulong mask = (1UL << shift)-1UL; //if word-aligned mask will be 0
     ulong maskedWord = word & mask; //if word-aligned maskedWord will be 0
