@@ -16,7 +16,7 @@ Node::Node() {};
 
 Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode,
            Node* &node_pt, bitmap_t* in_bitmap, unsigned long &in_bitmapOffset,
-           float skew, vector<ushort> &pageRanks, long pageSize)
+           float skew, vector<ushort> &blockRanks, uint blockSize)
     : isLeaf(false), left(nullptr), right(nullptr), parent(parentNode) {
     
     uint alphabetSize = alphabetMax - alphabetMin +1;
@@ -46,7 +46,7 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
         } else {
             (*in_bitmap)[in_bitmapOffset] = true;
             rightString->push_back(currentChar);
-            pageRanks[in_bitmapOffset/pageSize] += 1;
+            blockRanks[in_bitmapOffset/blockSize] += 1;
         }
     }
     input->clear();
@@ -63,7 +63,7 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
     if(rightString->size() != 0) {
         node_pt++; //increment to free space
         right = new (node_pt) Node(rightString, rightAlphabetMin, rightAlphabetMax,
-                this, node_pt, in_bitmap, in_bitmapOffset, skew, pageRanks, pageSize);
+                this, node_pt, in_bitmap, in_bitmapOffset, skew, blockRanks, blockSize);
     } else {
         rightString->clear();
         delete rightString;
@@ -72,7 +72,7 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
     if(leftString->size() != 0) {
         node_pt++;
         left = new (node_pt) Node(leftString, leftAlphabetMin, leftAlphabetMax,
-                this, node_pt, in_bitmap, in_bitmapOffset, skew, pageRanks, pageSize);
+                this, node_pt, in_bitmap, in_bitmapOffset, skew, blockRanks, blockSize);
     } else {
         leftString->clear();
         delete leftString;
@@ -81,7 +81,7 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
 
 
 int Node::rank(int character, unsigned long index, bitmap_t* bitmap, int alphabetMin,
-               int alphabetMax, float skew, vector<ushort> &pageRanks, long pageSize){
+               int alphabetMax, float skew, vector<ushort> &blockRanks, uint blockSize){
     if(isLeaf){
 //        cout << "Rank Leaf" << endl;
         return index;
@@ -98,17 +98,17 @@ int Node::rank(int character, unsigned long index, bitmap_t* bitmap, int alphabe
     unsigned long pos;
     unsigned long rank = 0;
     if(charBit && right != nullptr) {
-        pos = popcountBinaryRank(index, bitmap, pageRanks, pageSize);
-        rank = right->rank(character, pos, bitmap, rightAlphabetMin, rightAlphabetMax, skew, pageRanks, pageSize);
+        pos = popcountBinaryRank(index, bitmap, blockRanks, blockSize);
+        rank = right->rank(character, pos, bitmap, rightAlphabetMin, rightAlphabetMax, skew, blockRanks, blockSize);
     }else if(left != nullptr){
-        pos = index - popcountBinaryRank(index, bitmap, pageRanks, pageSize);
-        rank = left->rank(character, pos, bitmap, leftAlphabetMin, leftAlphabetMax, skew, pageRanks, pageSize);
+        pos = index - popcountBinaryRank(index, bitmap, blockRanks, blockSize);
+        rank = left->rank(character, pos, bitmap, leftAlphabetMin, leftAlphabetMax, skew, blockRanks, blockSize);
     }
     
     return rank;
 }
 
-ulong Node::popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &pageRanks, long pageSize) {
+ulong Node::popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &blockRanks, uint blockSize) {
     if(pos > bitmapSize) cout << "position " << pos << " larger than bitmapsize " << bitmapSize << endl;
     ulong bitmapwordRank = 0;
     
@@ -133,20 +133,20 @@ ulong Node::popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &page
     uint fullWords = alignedPos / wordSize; //the amount of full words we should iterate through. 
     uint nonPageFullWordsLeft = 0;
     for(uint i = 0; i < fullWords; i++) {
-        if((ulong)wordPtr % (pageSize/CHAR_BIT) != 0) { //check if we are page-aligned
+        if((ulong)wordPtr % (blockSize/CHAR_BIT) != 0) { //check if we are page-aligned
             bitmapwordRank += __builtin_popcountl(*wordPtr);
             wordPtr++;
         } else { //we are page-aligned
             //FULL PRECOMPUTED PAGES
             uint fullWordsLeft = fullWords - i;
-            uint wordsPerPage = (pageSize / wordSize);
+            uint wordsPerPage = (blockSize / wordSize);
             uint fullPages = fullWordsLeft / wordsPerPage;
             nonPageFullWordsLeft = fullWordsLeft % wordsPerPage;
             uint wordIndex = (wordPtr - bitmap->begin()._M_p);
             uint pageIndex = wordIndex / wordsPerPage;
             for(uint i = 0; i < fullPages; i++) {
                 pageIndex++;
-                bitmapwordRank += pageRanks[pageIndex];
+                bitmapwordRank += blockRanks[pageIndex];
                 wordPtr += wordsPerPage;
             }
             break;
@@ -183,13 +183,13 @@ ulong Node::binaryRank(ulong pos, bitmap_t* bitmap) {
 }
 
 
-int Node::leafSelect(int character, ulong occurance, bitmap_t* bitmap, vector<ushort> &pageRanks, long pageSize) {
+int Node::leafSelect(int character, ulong occurance, bitmap_t* bitmap, vector<ushort> &blockRanks, uint blockSize) {
     bool charBit = this == parent->right;
-    return parent->select(character, charBit, occurance, bitmap, pageRanks, pageSize);
+    return parent->select(character, charBit, occurance, bitmap, blockRanks, blockSize);
 }
 
 int Node::select(int character, bool charBit, ulong occurance, bitmap_t* bitmap,
-                 vector<ushort> &pageRanks, long pageSize) {
+                 vector<ushort> &blockRanks, uint blockSize) {
     if(parent == nullptr) {
         //we are root
         return popcountBinarySelect(charBit, occurance, bitmap);
@@ -197,7 +197,7 @@ int Node::select(int character, bool charBit, ulong occurance, bitmap_t* bitmap,
     int position = popcountBinarySelect(charBit, occurance, bitmap);
     
     bool parentCharBit = this == parent->right;
-    return parent->select(character, parentCharBit, position+1, bitmap, pageRanks, pageSize); //position+1 to go form 0-indexed position to "1-indexed" occurance
+    return parent->select(character, parentCharBit, position+1, bitmap, blockRanks, blockSize); //position+1 to go form 0-indexed position to "1-indexed" occurance
 }
 
 //int Node::binarySelect(bool charBit, unsigned long occurance) {
