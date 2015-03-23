@@ -6,13 +6,18 @@ The size of these precomputed blocks is a new variable that could have influence
 Some advantages of larger blocks is less memory usage and fewer precomputed value lookups for the same part of the bitmap.
 Some advantages of smaller blocks are that they are more often useful as exemplified by extreme case of a block size equal to the bitmap size which is of little use compared to a block size of half the bitmap size.
 The larger block size is only useful for binary rank queries for a position after the halfway point of the bitmap, where the half-size precomputed values can be useful for binary rank queries from $\nicefrac{1}{4}$ into the bitmap.
-They can be used from a position at the middle of the block size because the rank can be calculated as the precomputed block value minus the popcount value from the position to the end of the block, which is fewer popcount calculations than calculating popcount from start of bitmap to the queried position. \textbf{[TODO: reference illustration]}
+They can be used from a position at the middle of the block size because the rank can be calculated as the precomputed block value minus the popcount value from the position to the end of the block, which is fewer popcount calculations than calculating popcount from start of bitmap to the queried position. Figure ~\ref{fig:PrecomputePopcountBlock} illustrates this.
+
+\begin{figure}[h]
+\caption{Precomputed block value minus the popcount value from the position to the end of the block}
+\label{fig:PrecomputePopcountBlock}
+\includegraphics[width=\textwidth]{PrecomputePopcountBlock.pdf}
+\end{figure}
 
 Because TLB misses are expensive it could be a great performance improvement to be able to skip entire pages of memory in the queries, and we therefore consider the page size, and multiples of it, good candidates for the block size.
 
 Bitmaps are likely not page-aligned and some might be smaller than the block size, yet we would still like to utilize the precomputed values in these cases.
-A way of achieving this would be to concatenate all bitmaps into one giant bitmap for the entire tree and precompute values for each block, keeping them in a seperate vector, and then when needing the binary rank of a area smaller than block size, use the precomputed value and subtract the binary rank of the extra area covered by the block. \textbf{[TODO: reference illustration]}
-
+A way of achieving this would be to concatenate all bitmaps into one giant bitmap for the entire tree and precompute values for each block, keeping them in a seperate vector, and then when needing the binary rank of a area smaller than block size, use the precomputed value and subtract the binary rank of the extra area covered by the block (see figure~\ref{fig:PrecomputePopcountBlock}).
 \paragraph{Extra Space Used}~\\
 Since each precomputed value cannot exceed the block size in value, assuming we don't use block sizes exceeding $2^{16} = 65536$ bits, we can store them in 16-bit unsigned short integers, which again means, since the page size on our machines are 4096 bits, that we should not use a block size larger than $\frac{65536}{4096} = 16$ pages.
 
