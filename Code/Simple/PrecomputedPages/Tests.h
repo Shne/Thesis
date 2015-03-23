@@ -73,7 +73,7 @@ inline void testTearDown(uint amount, uint alphabetSize, float skew, string test
         PAPI_dmem_info_t meminfo;
         PAPI_get_dmem_info(&meminfo);
         queryOutput << endl
-            << "algorithm=Preallocated" << "\t"
+            << "algorithm=PrecomputedBlocks" << "\t"
             << "test=" << test << "\t"
             << "amount=" << amount << "\t"
             << "alphabetSize=" << alphabetSize << "\t"
