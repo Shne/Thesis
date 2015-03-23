@@ -131,7 +131,7 @@ ulong Node::popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &bloc
     //FULL WORDS
     uint alignedPos = pos - initialOffset; //initialOffset is the amount of bits in the first unaligned word of our bitmap
     uint fullWords = alignedPos / wordSize; //the amount of full words we should iterate through. 
-    uint nonPageFullWordsLeft = 0;
+    uint nonBlockFullWordsLeft = 0;
     for(uint i = 0; i < fullWords; i++) {
         if((ulong)wordPtr % (blockSize/CHAR_BIT) != 0) { //check if we are page-aligned
             bitmapwordRank += __builtin_popcountl(*wordPtr);
@@ -139,22 +139,22 @@ ulong Node::popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &bloc
         } else { //we are page-aligned
             //FULL PRECOMPUTED PAGES
             uint fullWordsLeft = fullWords - i;
-            uint wordsPerPage = (blockSize / wordSize);
-            uint fullPages = fullWordsLeft / wordsPerPage;
-            nonPageFullWordsLeft = fullWordsLeft % wordsPerPage;
+            uint wordsPerBlock = (blockSize / wordSize);
+            uint fullPages = fullWordsLeft / wordsPerBlock;
+            nonBlockFullWordsLeft = fullWordsLeft % wordsPerBlock;
             uint wordIndex = (wordPtr - bitmap->begin()._M_p);
-            uint pageIndex = wordIndex / wordsPerPage;
+            uint pageIndex = wordIndex / wordsPerBlock;
             for(uint i = 0; i < fullPages; i++) {
                 pageIndex++;
                 bitmapwordRank += blockRanks[pageIndex];
-                wordPtr += wordsPerPage;
+                wordPtr += wordsPerBlock;
             }
             break;
         }
     }
     
     //FULL WORDS LEFT AFTER FULL PAGES
-    for(uint i = 0; i < nonPageFullWordsLeft; i++) {
+    for(uint i = 0; i < nonBlockFullWordsLeft; i++) {
         bitmapwordRank += __builtin_popcountl(*wordPtr);
         wordPtr++;
     }
