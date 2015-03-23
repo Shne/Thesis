@@ -26,13 +26,13 @@ Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, float skew)
     blockRanks = vector<ushort>(maxBlocks, 0);
 
     bitmap = new bitmap_t(maxBitmapSize);
+
     unsigned long bitmapOffset = 0;
 
     new (root) Node(input, 0, alphabetSize-1, nullptr, node_pt, bitmap, bitmapOffset, skew, blockRanks, blockSize);
-
     // Shrink vectors to fit
-    bitmap->resize(bitmapOffset);
-    bitmap->shrink_to_fit();
+//    bitmap->resize(bitmapOffset);
+//    bitmap->shrink_to_fit();
     blockRanks.resize(bitmapOffset/blockSize +1); //+1 to keep last non-full block
     blockRanks.shrink_to_fit();
 }

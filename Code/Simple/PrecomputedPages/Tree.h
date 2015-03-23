@@ -22,7 +22,7 @@ class Tree {
 
 private:
     Node* root;
-    bitmap_t* bitmap __attribute__ ((aligned(def_pageSize)));
+    bitmap_t* bitmap;// __attribute__ ((aligned(def_pageSize)));
     vector<ushort> blockRanks;
     unsigned long alphabetMin, alphabetMax, inputSize;
 public:

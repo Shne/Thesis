@@ -15,7 +15,7 @@ using namespace std;
 Node::Node() {};
 
 Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode,
-           Node* &node_pt, bitmap_t* in_bitmap, unsigned long &in_bitmapOffset,
+           Node* &node_pt, bitmap_t* in_bitmap, ulong &in_bitmapOffset,
            float skew, vector<ushort> &blockRanks, uint blockSize)
     : isLeaf(false), left(nullptr), right(nullptr), parent(parentNode) {
     
@@ -38,6 +38,7 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
     vector<uint>* leftString = new vector<uint>();
     vector<uint>* rightString = new vector<uint>();
     
+    uint bitmapMisalignment = CHAR_BIT * ((ulong)in_bitmap->begin()._M_p % (blockSize/CHAR_BIT)); //how far inside a block the bitmap starts, in bits
     for(auto it = input->begin(); it != input->end(); it++, in_bitmapOffset++) {
         uint currentChar = *it;
         if(currentChar <= split) {
@@ -46,7 +47,8 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
         } else {
             (*in_bitmap)[in_bitmapOffset] = true;
             rightString->push_back(currentChar);
-            blockRanks[in_bitmapOffset/blockSize] += 1;
+            ulong blockAlignedOffset = in_bitmapOffset + bitmapMisalignment;
+            blockRanks[blockAlignedOffset/blockSize] += 1;
         }
     }
     input->clear();
@@ -113,7 +115,6 @@ ulong Node::popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &bloc
     ulong bitmapwordRank = 0;
     
     uint wordSize = sizeof(*bitmap->begin()._M_p) * CHAR_BIT; //vector<bool> src uses CHAR_BIT too
-    
     vector<bool>::reference ref = (*bitmap)[bitmapOffset];
     ulong initialOffset = 0;
     ulong* wordPtr = ref._M_p;
@@ -133,22 +134,25 @@ ulong Node::popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &bloc
     uint fullWords = alignedPos / wordSize; //the amount of full words we should iterate through. 
     uint nonBlockFullWordsLeft = 0;
     for(uint i = 0; i < fullWords; i++) {
-        if((ulong)wordPtr % (blockSize/CHAR_BIT) != 0) { //check if we are page-aligned
+        if((ulong)wordPtr % (blockSize/CHAR_BIT) != 0) { //check if we are block-aligned
             bitmapwordRank += __builtin_popcountl(*wordPtr);
             wordPtr++;
-        } else { //we are page-aligned
-            //FULL PRECOMPUTED PAGES
+        } else { //we are block-aligned
+            //FULL PRECOMPUTED BLOCKS
             uint fullWordsLeft = fullWords - i;
             uint wordsPerBlock = (blockSize / wordSize);
-            uint fullPages = fullWordsLeft / wordsPerBlock;
+            uint fullBlocks = fullWordsLeft / wordsPerBlock;
             nonBlockFullWordsLeft = fullWordsLeft % wordsPerBlock;
+            uint bitmapMisalignment = CHAR_BIT * ((ulong)bitmap->begin()._M_p % (blockSize/CHAR_BIT)); //how far inside a block the bitmap starts, in bits
             uint wordIndex = (wordPtr - bitmap->begin()._M_p);
-            uint pageIndex = wordIndex / wordsPerBlock;
-            for(uint i = 0; i < fullPages; i++) {
-                pageIndex++;
-                bitmapwordRank += blockRanks[pageIndex];
-                wordPtr += wordsPerBlock;
+            ulong bitmapIndex = wordIndex * sizeof(*wordPtr) * CHAR_BIT;
+            ulong blockAlignedOffset = bitmapIndex + bitmapMisalignment;
+            uint blockIndex = blockAlignedOffset/blockSize;
+            for(uint i = 0; i < fullBlocks; i++) {
+                bitmapwordRank += blockRanks[blockIndex];
+                blockIndex++;
             }
+            wordPtr += fullBlocks * wordsPerBlock;
             break;
         }
     }
