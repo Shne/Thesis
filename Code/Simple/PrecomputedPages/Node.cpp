@@ -16,7 +16,7 @@ Node::Node() {};
 
 Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode,
            Node* &node_pt, bitmap_t* in_bitmap, unsigned long &in_bitmapOffset,
-           float skew, vector<uint> &pageRanks, long pageSize)
+           float skew, vector<ushort> &pageRanks, long pageSize)
     : isLeaf(false), left(nullptr), right(nullptr), parent(parentNode) {
     
     uint alphabetSize = alphabetMax - alphabetMin +1;
@@ -81,7 +81,7 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
 
 
 int Node::rank(int character, unsigned long index, bitmap_t* bitmap, int alphabetMin,
-               int alphabetMax, float skew, vector<uint> &pageRanks, long pageSize){
+               int alphabetMax, float skew, vector<ushort> &pageRanks, long pageSize){
     if(isLeaf){
 //        cout << "Rank Leaf" << endl;
         return index;
@@ -108,7 +108,7 @@ int Node::rank(int character, unsigned long index, bitmap_t* bitmap, int alphabe
     return rank;
 }
 
-ulong Node::popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<uint> &pageRanks, long pageSize) {
+ulong Node::popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &pageRanks, long pageSize) {
     if(pos > bitmapSize) cout << "position " << pos << " larger than bitmapsize " << bitmapSize << endl;
     ulong bitmapwordRank = 0;
     
@@ -137,7 +137,7 @@ ulong Node::popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<uint> &pageRa
             bitmapwordRank += __builtin_popcountl(*wordPtr);
             wordPtr++;
         } else { //we are page-aligned
-            //LOOKUP PRECOMPUTED PAGES
+            //FULL PRECOMPUTED PAGES
             uint fullWordsLeft = fullWords - i;
             uint wordsPerPage = (pageSize / wordSize);
             uint fullPages = fullWordsLeft / wordsPerPage;
@@ -170,14 +170,6 @@ ulong Node::popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<uint> &pageRa
     return bitmapwordRank;
 }
 
-ulong Node::binaryRankPages(vector<uint> &pageRanks, uint fromPage, uint toPage) {
-    ulong result = 0;
-    while(fromPage < toPage) {
-        result += pageRanks[fromPage++];
-    }
-    return result;
-}
-
 ulong Node::binaryRank(ulong pos, bitmap_t* bitmap) {
     int i = 0;
     int rank = 0;
@@ -191,13 +183,13 @@ ulong Node::binaryRank(ulong pos, bitmap_t* bitmap) {
 }
 
 
-int Node::leafSelect(int character, ulong occurance, bitmap_t* bitmap, vector<uint> &pageRanks, long pageSize) {
+int Node::leafSelect(int character, ulong occurance, bitmap_t* bitmap, vector<ushort> &pageRanks, long pageSize) {
     bool charBit = this == parent->right;
     return parent->select(character, charBit, occurance, bitmap, pageRanks, pageSize);
 }
 
 int Node::select(int character, bool charBit, ulong occurance, bitmap_t* bitmap,
-                 vector<uint> &pageRanks, long pageSize) {
+                 vector<ushort> &pageRanks, long pageSize) {
     if(parent == nullptr) {
         //we are root
         return popcountBinarySelect(charBit, occurance, bitmap);

@@ -33,19 +33,17 @@ public:
     Node();
     Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode,
          Node* &node_pt, bitmap_t* in_bitmap, ulong &in_bitmapOffset, float skew,
-         vector<uint> &pageRanks, long pageSize);
+         vector<ushort> &pageRanks, long pageSize);
     
     int rank(int character, ulong index, bitmap_t* bitmap, int alphabetMin,
-             int alphabetMax, float skew, vector<uint> &pageRanks, long pageSize);
+             int alphabetMax, float skew, vector<ushort> &pageRanks, long pageSize);
     
-    ulong popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<uint> &pageRanks, long pageSize);
-    
-    ulong binaryRankPages(vector<uint> &pageRanks, uint fromPage, uint toPage);
+    ulong popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &pageRanks, long pageSize);
     
     ulong binaryRank(ulong index, bitmap_t* bitmap);
     
     int select(int character, bool charBit, ulong occurance, bitmap_t* bitmap,
-               vector<uint> &pageRanks, long pageSize);
+               vector<ushort> &pageRanks, long pageSize);
     
     int binarySelect(bool charBit, ulong occurance, bitmap_t* bitmap);
     
@@ -53,7 +51,7 @@ public:
     
     Node* getLeaf(int character, int alphabetMin, int alphabetMax, float skew);
     
-    int leafSelect(int character, ulong occurance, bitmap_t* bitmap, vector<uint> &pageRanks, long pageSize);
+    int leafSelect(int character, ulong occurance, bitmap_t* bitmap, vector<ushort> &pageRanks, long pageSize);
     
     inline void showBits(ulong n);
 };

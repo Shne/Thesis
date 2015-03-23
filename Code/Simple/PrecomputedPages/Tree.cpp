@@ -23,7 +23,7 @@ Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, float skew)
     long pageSize = sysconf(_SC_PAGESIZE) * CHAR_BIT; //sysconf returns pagesize in bytes, we want it in bits
 //    cout << pageSize << " " << pageSize * CHAR_BIT << endl;
     uint pages = bitmapSize/pageSize;
-    pageRanks = vector<uint>(pages, 0);
+    pageRanks = vector<ushort>(pages, 0);
 
     bitmap = new bitmap_t(bitmapSize);
     unsigned long bitmapOffset = 0;

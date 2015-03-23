@@ -23,7 +23,7 @@ class Tree {
 private:
     Node* root;
     bitmap_t* bitmap __attribute__ ((aligned(def_pageSize)));
-    vector<uint> pageRanks;
+    vector<unsigned short int> pageRanks;
     unsigned long alphabetMin, alphabetMax, inputSize;
 public:
     Tree(vector<uint>* input, uint amount, uint alphabetSize, float skew);
