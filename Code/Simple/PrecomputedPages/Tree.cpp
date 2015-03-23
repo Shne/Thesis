@@ -19,14 +19,13 @@ Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, float skew)
     root = node_pt;
     
     double dSkew = (double) skew;
-    ulong bitmapSize = amount * log2((double)2*alphabetSize + 1) / log2(1.0/(1.0-(1.0/dSkew)));
+    ulong maxBitmapSize = amount * log2((double)2*alphabetSize + 1) / log2(1.0/(1.0-(1.0/dSkew)));
     long pageSize = sysconf(_SC_PAGESIZE) * CHAR_BIT; //sysconf returns pagesize in bytes, we want it in bits
     uint blockSize = pageSize;
-//    cout << pageSize << " " << pageSize * CHAR_BIT << endl;
-    uint blocks = bitmapSize/blockSize;
-    blockRanks = vector<ushort>(blocks, 0);
+    uint maxBlocks = maxBitmapSize/blockSize;
+    blockRanks = vector<ushort>(maxBlocks, 0);
 
-    bitmap = new bitmap_t(bitmapSize);
+    bitmap = new bitmap_t(maxBitmapSize);
     unsigned long bitmapOffset = 0;
 
     new (root) Node(input, 0, alphabetSize-1, nullptr, node_pt, bitmap, bitmapOffset, skew, blockRanks, blockSize);

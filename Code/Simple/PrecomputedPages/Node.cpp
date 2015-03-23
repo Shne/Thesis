@@ -109,7 +109,7 @@ int Node::rank(int character, unsigned long index, bitmap_t* bitmap, int alphabe
 }
 
 ulong Node::popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &blockRanks, uint blockSize) {
-    if(pos > bitmapSize) cout << "position " << pos << " larger than bitmapsize " << bitmapSize << endl;
+    assert(pos <= bitmapSize); //cout << "position " << pos << " larger than bitmapsize " << bitmapSize << endl;
     ulong bitmapwordRank = 0;
     
     uint wordSize = sizeof(*bitmap->begin()._M_p) * CHAR_BIT; //vector<bool> src uses CHAR_BIT too
