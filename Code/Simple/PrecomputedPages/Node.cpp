@@ -164,7 +164,7 @@ ulong Node::blockBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &blockRa
         //do popcount binary rank on smaller part and subtract from precomputed rank
         ulong startOffset = bitmapOffset - blockMisalignment;
         ulong length = blockMisalignment;
-        uint blockIndex = bitmapOffset / blockSize;
+        uint blockIndex = (bitmapOffset + bitmapMisalignment - blockMisalignment) / blockSize;
         rank = blockRanks[blockIndex] - popcountBinaryRank(startOffset, length, bitmap);
     } else {
         //do popcount binary rank on smaller part
@@ -175,7 +175,7 @@ ulong Node::blockBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &blockRa
 
     //FULL BLOCKS
     int fullBlocks = (pos - lengthToNextBlockalignment) / blockSize;
-    uint blockIndex = (bitmapOffset + lengthToNextBlockalignment) / blockSize;
+    uint blockIndex = (bitmapOffset + bitmapMisalignment + lengthToNextBlockalignment) / blockSize;
     for(uint i = 0; i < fullBlocks; i++) {
         rank += blockRanks[blockIndex];
         blockIndex++;
@@ -188,7 +188,7 @@ ulong Node::blockBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &blockRa
         //do popcount binary rank on smaller part and subtract from precomputed rank
         uint startOffset = lastBlockOffset + sizeOfLastPartialBlock;
         uint length = blockSize - sizeOfLastPartialBlock;
-        uint blockIndex = lastBlockOffset / blockSize;
+        uint blockIndex = (lastBlockOffset + bitmapMisalignment) / blockSize;
         rank += blockRanks[blockIndex] - popcountBinaryRank(startOffset, length, bitmap);
     } else {
         //do popcount binary rank directly on smaller part
