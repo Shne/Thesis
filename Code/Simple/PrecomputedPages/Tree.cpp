@@ -13,14 +13,12 @@
 using namespace std;
 
 
-Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize) 
-    : alphabetMin(0), alphabetMax(alphabetSize-1), inputSize(amount){
+Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, uint blockSize) 
+    : alphabetMin(0), alphabetMax(alphabetSize-1), inputSize(amount), blockSize(blockSize) {
     Node* node_pt = static_cast<Node*> (::operator new (sizeof(Node)*2*alphabetSize));
     root = node_pt;
     
     ulong maxBitmapSize = amount * log2((double)2*alphabetSize + 1);
-    long pageSize = sysconf(_SC_PAGESIZE) * CHAR_BIT; //sysconf returns pagesize in bytes, we want it in bits
-    uint blockSize = pageSize;
     uint maxBlocks = maxBitmapSize/blockSize;
     blockRanks = vector<ushort>(maxBlocks, 0);
 
@@ -38,12 +36,10 @@ Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize)
 
 int Tree::rank(int character, unsigned long index) {
     if(index > inputSize) index = inputSize;
-    long pageSize = sysconf(_SC_PAGESIZE)*CHAR_BIT;
-    return root->rank(character, index, bitmap, alphabetMin, alphabetMax, blockRanks, pageSize);
+    return root->rank(character, index, bitmap, alphabetMin, alphabetMax, blockRanks, blockSize);
 }
 
 int Tree::select(int character, unsigned long occurance) {
     Node* leaf = root->getLeaf(character, alphabetMin, alphabetMax);
-    long pageSize = sysconf(_SC_PAGESIZE)*CHAR_BIT;
-    return leaf->leafSelect(character, occurance, bitmap, blockRanks, pageSize);
+    return leaf->leafSelect(character, occurance, bitmap, blockRanks, blockSize);
 }

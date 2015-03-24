@@ -18,7 +18,8 @@
 #define AS_ARG_NUM 2
 #define TEST_ARG_NUM 3
 #define EVENTSET_ARG_NUM 4
-#define FILENAME_ARG_NUM 5
+#define BLOCKSIZE_ARG_NUM 5
+#define FILENAME_ARG_NUM 6
 #define NUM_REQUIRED_ARGS 5
 
 using namespace std;
@@ -40,6 +41,12 @@ int main(int argc, char** argv) {
     
     uint amount = pow(10, atoi(argv[N_ARG_NUM]));
     uint alphabetSize = pow(2, atoi(argv[AS_ARG_NUM]));
+    uint blockSize;
+    if(argc > BLOCKSIZE_ARG_NUM) {
+        blockSize = atoi(argv[BLOCKSIZE_ARG_NUM]);
+    } else {
+        blockSize = sysconf(_SC_PAGESIZE) * CHAR_BIT / 2;
+    }
     
     /***************/
     /*  Events       */
@@ -78,15 +85,15 @@ int main(int argc, char** argv) {
     /***************/
     string test = string(argv[TEST_ARG_NUM]);
     if(test == "build") {
-        testBuildTime(amount, alphabetSize, pathname, eventset, events, values, num_events, input);
+        testBuildTime(amount, alphabetSize, pathname, blockSize, eventset, events, values, num_events, input);
     }
     else if(test == "rank"){
-        Tree tree = Tree(input, amount, alphabetSize);    
-        testRankQuery(amount, alphabetSize, pathname, eventset, events, values, num_events, tree);
+        Tree tree = Tree(input, amount, alphabetSize, blockSize);
+        testRankQuery(amount, alphabetSize, pathname, blockSize, eventset, events, values, num_events, tree);
     }
     else if(test == "select"){
-        Tree tree = Tree(input, amount, alphabetSize);    
-        testSelectQuery(amount, alphabetSize, pathname, eventset, events, values, num_events, tree);
+        Tree tree = Tree(input, amount, alphabetSize, blockSize);
+        testSelectQuery(amount, alphabetSize, pathname, blockSize, eventset, events, values, num_events, tree);
     }
 
     return 0;

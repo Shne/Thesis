@@ -25,8 +25,9 @@ private:
     bitmap_t* bitmap;// __attribute__ ((aligned(def_pageSize)));
     vector<ushort> blockRanks;
     unsigned long alphabetMin, alphabetMax, inputSize;
+    uint blockSize;
 public:
-    Tree(vector<uint>* input, uint amount, uint alphabetSize);
+    Tree(vector<uint>* input, uint amount, uint alphabetSize, uint blockSize);
     int rank(int character, unsigned long index);
     int select(int character, unsigned long occurance);
 };
