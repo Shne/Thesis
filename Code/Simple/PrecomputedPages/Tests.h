@@ -59,7 +59,7 @@ inline void testSetup(int eventset, int* events, int num_events){
     if (retval != PAPI_OK) handle_error(retval);
 }
 
-inline void testTearDown(uint amount, uint alphabetSize, float skew, string test, string pathname, int eventset, int* events, long_long* values, int num_events){
+inline void testTearDown(uint amount, uint alphabetSize, string test, string pathname, int eventset, int* events, long_long* values, int num_events){
     /* Stop counting events */
     int retval = PAPI_stop_counters(values, num_events);
     if (retval != PAPI_OK) handle_error(retval);
@@ -77,7 +77,6 @@ inline void testTearDown(uint amount, uint alphabetSize, float skew, string test
             << "test=" << test << "\t"
             << "amount=" << amount << "\t"
             << "alphabetSize=" << alphabetSize << "\t"
-            << "skew=" << skew << "\t" //skew
             << "real_cycles=" << end_cycles - start_cycles << "\t" //real cycles
             << "wall_time=" << end_usec - start_usec << "\t" //wall time in microseconds
             << "virt_cycles=" << end_virt_cycles - start_virt_cycles << "\t" //virtual cycles
@@ -96,43 +95,43 @@ inline void testTearDown(uint amount, uint alphabetSize, float skew, string test
 
 
 
-inline void testSelectQuery(uint amount, uint alphabetSize, float skew, string pathname, int eventset, int* events, long_long* values, int num_events, Tree tree){
+inline void testSelectQuery(uint amount, uint alphabetSize, string pathname, int eventset, int* events, long_long* values, int num_events, Tree tree){
     testSetup(eventset, events, num_events);
     uint queries = 1000;
     uint charStep = alphabetSize/queries;
     uint position = 2000;
     ulong results[queries]; //just to make sure nothing is optimized away
     for(uint index = 0; index < queries; index++) {
-        results[index] = tree.select(index*charStep, position, skew);
+        results[index] = tree.select(index*charStep, position);
     }
-    testTearDown(amount, alphabetSize, skew, "select", pathname, eventset, events, values, num_events);
-    for(uint i=0; i < queries; i++) {
-        cout << results[i];
-    }
-    cout << endl;
-}
-
-inline void testRankQuery(uint amount, uint alphabetSize, float skew, string pathname, int eventset, int* events, long_long* values, int num_events, Tree tree){
-    testSetup(eventset, events, num_events); 
-    uint queries = 1000;
-    uint charStep = alphabetSize/queries;
-    ulong results[queries]; //just to make sure nothing is optimized away
-    for(uint index = 0; index < queries; index++) {
-        results[index] = tree.rank(index*charStep, amount/2, skew);
-    }
-    testTearDown(amount, alphabetSize, skew, "rank", pathname, eventset, events, values, num_events);
+    testTearDown(amount, alphabetSize, "select", pathname, eventset, events, values, num_events);
     for(uint i=0; i < queries; i++) {
         cout << results[i] << " ";
     }
     cout << endl;
 }
 
-inline void testBuildTime(uint amount, uint alphabetSize, float skew, string pathname, int eventset, int* events, long_long* values, int num_events, vector<uint>* input){
+inline void testRankQuery(uint amount, uint alphabetSize, string pathname, int eventset, int* events, long_long* values, int num_events, Tree tree){
+    testSetup(eventset, events, num_events); 
+    uint queries = 1000;
+    uint charStep = alphabetSize/queries;
+    ulong results[queries]; //just to make sure nothing is optimized away
+    for(uint index = 0; index < queries; index++) {
+        results[index] = tree.rank(index*charStep, amount/2);
+    }
+    testTearDown(amount, alphabetSize, "rank", pathname, eventset, events, values, num_events);
+    for(uint i=0; i < queries; i++) {
+        cout << results[i] << " ";
+    }
+    cout << endl;
+}
+
+inline void testBuildTime(uint amount, uint alphabetSize, string pathname, int eventset, int* events, long_long* values, int num_events, vector<uint>* input){
     testSetup(eventset, events, num_events);
-    Tree tree = Tree(input, amount, alphabetSize, skew);
-    testTearDown(amount, alphabetSize, skew, "build", pathname, eventset, events, values, num_events);
+    Tree tree = Tree(input, amount, alphabetSize);
+    testTearDown(amount, alphabetSize, "build", pathname, eventset, events, values, num_events);
     
-    cout << tree.rank(0, amount, skew) << endl; //just to make sure nothing is optimized away
+    cout << tree.rank(0, amount) << endl; //just to make sure nothing is optimized away
 }
 
 #endif	/* TESTS_H */

@@ -26,9 +26,9 @@ private:
     vector<ushort> blockRanks;
     unsigned long alphabetMin, alphabetMax, inputSize;
 public:
-    Tree(vector<uint>* input, uint amount, uint alphabetSize, float skew);
-    int rank(int character, unsigned long index, float skew);
-    int select(int character, unsigned long occurance, float skew);
+    Tree(vector<uint>* input, uint amount, uint alphabetSize);
+    int rank(int character, unsigned long index);
+    int select(int character, unsigned long occurance);
 };
 
 

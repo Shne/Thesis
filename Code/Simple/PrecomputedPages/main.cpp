@@ -16,11 +16,10 @@
 
 #define N_ARG_NUM 1
 #define AS_ARG_NUM 2
-#define SKEW_ARG_NUM 3
-#define TEST_ARG_NUM 4
-#define EVENTSET_ARG_NUM 5
-#define FILENAME_ARG_NUM 6
-#define NUM_REQUIRED_ARGS 6
+#define TEST_ARG_NUM 3
+#define EVENTSET_ARG_NUM 4
+#define FILENAME_ARG_NUM 5
+#define NUM_REQUIRED_ARGS 5
 
 using namespace std;
 
@@ -41,7 +40,6 @@ int main(int argc, char** argv) {
     
     uint amount = pow(10, atoi(argv[N_ARG_NUM]));
     uint alphabetSize = pow(2, atoi(argv[AS_ARG_NUM]));
-    float skew = atof(argv[SKEW_ARG_NUM]);
     
     /***************/
     /*  Events       */
@@ -80,15 +78,15 @@ int main(int argc, char** argv) {
     /***************/
     string test = string(argv[TEST_ARG_NUM]);
     if(test == "build") {
-        testBuildTime(amount, alphabetSize, skew, pathname, eventset, events, values, num_events, input);
+        testBuildTime(amount, alphabetSize, pathname, eventset, events, values, num_events, input);
     }
     else if(test == "rank"){
-        Tree tree = Tree(input, amount, alphabetSize, skew);    
-        testRankQuery(amount, alphabetSize, skew, pathname, eventset, events, values, num_events, tree);
+        Tree tree = Tree(input, amount, alphabetSize);    
+        testRankQuery(amount, alphabetSize, pathname, eventset, events, values, num_events, tree);
     }
     else if(test == "select"){
-        Tree tree = Tree(input, amount, alphabetSize, skew);    
-        testSelectQuery(amount, alphabetSize, skew, pathname, eventset, events, values, num_events, tree);
+        Tree tree = Tree(input, amount, alphabetSize);    
+        testSelectQuery(amount, alphabetSize, pathname, eventset, events, values, num_events, tree);
     }
 
     return 0;

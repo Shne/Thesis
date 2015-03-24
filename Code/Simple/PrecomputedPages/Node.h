@@ -34,11 +34,11 @@ private:
 public:
     Node();
     Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode,
-         Node* &node_pt, bitmap_t* in_bitmap, ulong &in_bitmapOffset, float skew,
+         Node* &node_pt, bitmap_t* in_bitmap, ulong &in_bitmapOffset,
          vector<ushort> &blockRanks, uint pageSize);
     
     int rank(int character, ulong index, bitmap_t* bitmap, int alphabetMin,
-             int alphabetMax, float skew, vector<ushort> &pageRanks, uint pageSize);
+             int alphabetMax, vector<ushort> &pageRanks, uint pageSize);
     
     ulong popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &pageRanks, uint pageSize);
     
@@ -51,7 +51,7 @@ public:
     
     int popcountBinarySelect(bool charBit, ulong occurance, bitmap_t* bitmap);
     
-    Node* getLeaf(int character, int alphabetMin, int alphabetMax, float skew);
+    Node* getLeaf(int character, int alphabetMin, int alphabetMax);
     
     int leafSelect(int character, ulong occurance, bitmap_t* bitmap, vector<ushort> &pageRanks, uint pageSize);
     
