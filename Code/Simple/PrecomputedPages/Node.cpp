@@ -146,17 +146,18 @@ ulong Node::popcountBinaryRank(ulong startOffset, ulong length, bitmap_t* bitmap
 ulong Node::blockBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &blockRanks, uint blockSize) {
 //    cout << pos << " " << bitmapSize << " " << flush;
     assert(pos <= bitmapSize);
-    ulong bitmapwordRank = 0;
 
 #ifdef PARTIALBLOCKS
-    uint bitmapMisalignment = CHAR_BIT * ((ulong)bitmap->begin()._M_p % (blockSize/CHAR_BIT)); //how far inside a block the bitmap starts, in bits
-    uint blockMisalignment = ((bitmapMisalignment + bitmapOffset) % blockSize); //how far inside a block our part of the bitmap starts
-    uint lengthToNextBlockalignment = blockSize - blockMisalignment;
 
     //FOR SMALL BITMAPS
     if(pos < blockSize) {
         return popcountBinaryRank(bitmapOffset, pos, bitmap);
     }
+
+    ulong rank = 0;
+    uint bitmapMisalignment = CHAR_BIT * ((ulong)bitmap->begin()._M_p % (blockSize/CHAR_BIT)); //how far inside a block the bitmap starts, in bits
+    uint blockMisalignment = ((bitmapMisalignment + bitmapOffset) % blockSize); //how far inside a block our part of the bitmap starts
+    uint lengthToNextBlockalignment = (blockSize - blockMisalignment) % blockSize; //modulo so it's 0 when blockMisalignment is 0
 
     //FIRST PARTIAL BLOCK
     if((lengthToNextBlockalignment > blockSize / 2) && (blockMisalignment < bitmapOffset)) {
@@ -164,19 +165,19 @@ ulong Node::blockBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &blockRa
         ulong startOffset = bitmapOffset - blockMisalignment;
         ulong length = blockMisalignment;
         uint blockIndex = bitmapOffset / blockSize;
-        bitmapwordRank = blockRanks[blockIndex] - popcountBinaryRank(startOffset, length, bitmap);
+        rank = blockRanks[blockIndex] - popcountBinaryRank(startOffset, length, bitmap);
     } else {
         //do popcount binary rank on smaller part
         ulong startOffset = bitmapOffset;
         ulong length = lengthToNextBlockalignment;
-        bitmapwordRank = popcountBinaryRank(startOffset, length, bitmap);
+        rank = popcountBinaryRank(startOffset, length, bitmap);
     }
 
     //FULL BLOCKS
     int fullBlocks = (pos - lengthToNextBlockalignment) / blockSize;
     uint blockIndex = (bitmapOffset + lengthToNextBlockalignment) / blockSize;
     for(uint i = 0; i < fullBlocks; i++) {
-        bitmapwordRank += blockRanks[blockIndex];
+        rank += blockRanks[blockIndex];
         blockIndex++;
     }
 
@@ -188,18 +189,19 @@ ulong Node::blockBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &blockRa
         uint startOffset = lastBlockOffset + sizeOfLastPartialBlock;
         uint length = blockSize - sizeOfLastPartialBlock;
         uint blockIndex = lastBlockOffset / blockSize;
-        bitmapwordRank += blockRanks[blockIndex] - popcountBinaryRank(startOffset, length, bitmap);
+        rank += blockRanks[blockIndex] - popcountBinaryRank(startOffset, length, bitmap);
     } else {
         //do popcount binary rank directly on smaller part
         uint startOffset = lastBlockOffset;
         uint length = sizeOfLastPartialBlock;
-        bitmapwordRank += popcountBinaryRank(startOffset, length, bitmap);
+        rank += popcountBinaryRank(startOffset, length, bitmap);
     }
 
-    return bitmapwordRank;
+    return rank;
 
 #else
 
+    ulong bitmapwordRank = 0;
     uint wordSize = sizeof(*bitmap->begin()._M_p) * CHAR_BIT; //vector<bool> src uses CHAR_BIT too
     vector<bool>::reference ref = (*bitmap)[bitmapOffset];
     ulong initialOffset = 0;

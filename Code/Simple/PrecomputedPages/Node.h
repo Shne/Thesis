@@ -8,7 +8,7 @@
 #ifndef NODE_H
 #define	NODE_H
 
-//#define PARTIALBLOCKS
+#define PARTIALBLOCKS
 
 #include <string>
 #include <vector>
