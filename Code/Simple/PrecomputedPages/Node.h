@@ -8,7 +8,7 @@
 #ifndef NODE_H
 #define	NODE_H
 
-//#define SKEW 2
+//#define PARTIALBLOCKS
 
 #include <string>
 #include <vector>
@@ -31,6 +31,7 @@ private:
     Node* parent;
     Node* left;
     Node* right;
+    ulong popcountBinaryRank(ulong startOffset, ulong length, bitmap_t* bitmap);
 public:
     Node();
     Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode,
@@ -40,7 +41,7 @@ public:
     int rank(int character, ulong index, bitmap_t* bitmap, int alphabetMin,
              int alphabetMax, vector<ushort> &pageRanks, uint pageSize);
     
-    ulong popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &pageRanks, uint pageSize);
+    ulong blockBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &pageRanks, uint pageSize);
     
     ulong binaryRank(ulong index, bitmap_t* bitmap);
     

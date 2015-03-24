@@ -100,25 +100,111 @@ int Node::rank(int character, unsigned long index, bitmap_t* bitmap, int alphabe
     unsigned long pos;
     unsigned long rank = 0;
     if(charBit && right != nullptr) {
-        pos = popcountBinaryRank(index, bitmap, blockRanks, blockSize);
+        pos = blockBinaryRank(index, bitmap, blockRanks, blockSize);
         rank = right->rank(character, pos, bitmap, rightAlphabetMin, rightAlphabetMax, blockRanks, blockSize);
     }else if(left != nullptr){
-        pos = index - popcountBinaryRank(index, bitmap, blockRanks, blockSize);
+        pos = index - blockBinaryRank(index, bitmap, blockRanks, blockSize);
         rank = left->rank(character, pos, bitmap, leftAlphabetMin, leftAlphabetMax, blockRanks, blockSize);
     }
     
     return rank;
 }
 
-ulong Node::popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &blockRanks, uint blockSize) {
-    assert(pos <= bitmapSize); //cout << "position " << pos << " larger than bitmapsize " << bitmapSize << endl;
+ulong Node::popcountBinaryRank(ulong startOffset, ulong length, bitmap_t* bitmap) {
+    ulong rank = 0;
+    ulong initialOffset = 0;
+    vector<bool>::reference ref = (*bitmap)[startOffset];
+    ulong* wordPtr = ref._M_p;
+    uint wordSize = sizeof(*bitmap->begin()._M_p) * CHAR_BIT;
+    //PART OF FIRST WORD if unaligned
+    if(startOffset % wordSize != 0) {
+        //create 111110000 type mask from 000010000 type mask
+        ulong firstMask = ~(ref._M_mask - 1UL); //the bit of _M_mask and up
+        ulong maskedFirstWord = (*ref._M_p) & firstMask;
+        rank += __builtin_popcountl(maskedFirstWord);
+        initialOffset = __builtin_popcountl(firstMask); //the amount we should skip for our calculation of fullWords
+        wordPtr++; ///pointer was to a word we only partially had bits in
+    }
+
+    //FULL WORDS
+    uint alignedPos = length - initialOffset; //initialOffset is the amount of bits in the first unaligned word of our bitmap
+    ulong fullWords = alignedPos / wordSize; //the amount of full words we should iterate through. 
+    for(uint i = 0; i < fullWords; i++) {
+        rank += __builtin_popcountl(*wordPtr);
+        wordPtr++;
+    } //we believe i is incremented even after the condition has failed
+
+    //PART OF LAST WORD (if unaligned)
+    ulong word = *wordPtr;
+    ulong shift = alignedPos % wordSize; //if word-aligned, shift will be 0, making mask (below) all 0.
+    ulong mask = (1UL << shift)-1UL; //if word-aligned mask will be 0
+    ulong maskedWord = word & mask; //if word-aligned maskedWord will be 0
+    rank += __builtin_popcountl(maskedWord);
+    return rank;
+}
+
+ulong Node::blockBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &blockRanks, uint blockSize) {
+//    cout << pos << " " << bitmapSize << " " << flush;
+    assert(pos <= bitmapSize);
     ulong bitmapwordRank = 0;
-    
+
+#ifdef PARTIALBLOCKS
+    uint bitmapMisalignment = CHAR_BIT * ((ulong)bitmap->begin()._M_p % (blockSize/CHAR_BIT)); //how far inside a block the bitmap starts, in bits
+    uint blockMisalignment = ((bitmapMisalignment + bitmapOffset) % blockSize); //how far inside a block our part of the bitmap starts
+    uint lengthToNextBlockalignment = blockSize - blockMisalignment;
+
+    //FOR SMALL BITMAPS
+    if(pos < blockSize) {
+        return popcountBinaryRank(bitmapOffset, pos, bitmap);
+    }
+
+    //FIRST PARTIAL BLOCK
+    if((lengthToNextBlockalignment > blockSize / 2) && (blockMisalignment < bitmapOffset)) {
+        //do popcount binary rank on smaller part and subtract from precomputed rank
+        ulong startOffset = bitmapOffset - blockMisalignment;
+        ulong length = blockMisalignment;
+        uint blockIndex = bitmapOffset / blockSize;
+        bitmapwordRank = blockRanks[blockIndex] - popcountBinaryRank(startOffset, length, bitmap);
+    } else {
+        //do popcount binary rank on smaller part
+        ulong startOffset = bitmapOffset;
+        ulong length = lengthToNextBlockalignment;
+        bitmapwordRank = popcountBinaryRank(startOffset, length, bitmap);
+    }
+
+    //FULL BLOCKS
+    int fullBlocks = (pos - lengthToNextBlockalignment) / blockSize;
+    uint blockIndex = (bitmapOffset + lengthToNextBlockalignment) / blockSize;
+    for(uint i = 0; i < fullBlocks; i++) {
+        bitmapwordRank += blockRanks[blockIndex];
+        blockIndex++;
+    }
+
+    //LAST PARTIAL BLOCK
+    ulong lastBlockOffset = bitmapOffset + lengthToNextBlockalignment + fullBlocks*blockSize;
+    uint sizeOfLastPartialBlock = (pos - lengthToNextBlockalignment) % blockSize;
+    if((sizeOfLastPartialBlock > blockSize / 2) && (lastBlockOffset + blockSize <= bitmap->size())) {
+        //do popcount binary rank on smaller part and subtract from precomputed rank
+        uint startOffset = lastBlockOffset + sizeOfLastPartialBlock;
+        uint length = blockSize - sizeOfLastPartialBlock;
+        uint blockIndex = lastBlockOffset / blockSize;
+        bitmapwordRank += blockRanks[blockIndex] - popcountBinaryRank(startOffset, length, bitmap);
+    } else {
+        //do popcount binary rank directly on smaller part
+        uint startOffset = lastBlockOffset;
+        uint length = sizeOfLastPartialBlock;
+        bitmapwordRank += popcountBinaryRank(startOffset, length, bitmap);
+    }
+
+    return bitmapwordRank;
+
+#else
+
     uint wordSize = sizeof(*bitmap->begin()._M_p) * CHAR_BIT; //vector<bool> src uses CHAR_BIT too
     vector<bool>::reference ref = (*bitmap)[bitmapOffset];
     ulong initialOffset = 0;
     ulong* wordPtr = ref._M_p;
-    
+
     //PART OF FIRST WORD if unaligned
     if(ref._M_mask > 1) { //mask = 1 means first part of first word is part of our bitmap, and we can just use the fullword iteration code below
         //create 111110000 type mask from 000010000 type mask
@@ -128,7 +214,7 @@ ulong Node::popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &bloc
         initialOffset = __builtin_popcountl(firstMask); //the amount we should skip for our calculation of fullWords
         wordPtr++; ///pointer was to a word we only partially had bits in
     }
-    
+
     //FULL WORDS
     uint alignedPos = pos - initialOffset; //initialOffset is the amount of bits in the first unaligned word of our bitmap
     uint fullWords = alignedPos / wordSize; //the amount of full words we should iterate through. 
@@ -156,13 +242,13 @@ ulong Node::popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &bloc
             break;
         }
     }
-    
+
     //FULL WORDS LEFT AFTER FULL PAGES
     for(uint i = 0; i < nonBlockFullWordsLeft; i++) {
         bitmapwordRank += __builtin_popcountl(*wordPtr);
         wordPtr++;
     }
-    
+
     //PART OF LAST WORD (if unaligned)
 //    wordPtr++;
     ulong word = *wordPtr;
@@ -170,8 +256,9 @@ ulong Node::popcountBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &bloc
     ulong mask = (1UL << shift)-1UL; //if word-aligned mask will be 0
     ulong maskedWord = word & mask; //if word-aligned maskedWord will be 0
     bitmapwordRank += __builtin_popcountl(maskedWord);
-    
+
     return bitmapwordRank;
+#endif
 }
 
 ulong Node::binaryRank(ulong pos, bitmap_t* bitmap) {
