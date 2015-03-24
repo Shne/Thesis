@@ -19,6 +19,8 @@ memSizeArray = []
 memResidentArray = []
 memHighWatermarkArray = []
 conditionalBranchesArray = []
+branchMissRateArray = []
+l2CacheMissRateArray = []
 
 def getData(input_, algorithm, test):
 	inputFile = open(input_, "rt")
@@ -101,6 +103,10 @@ def getData(input_, algorithm, test):
 
 	inputFile.close()
 
+	for i in range(0,len(branchMispredictionsArray)):
+		branchMissRateArray.append([float(branchMispredictionsArray[i])/conditionalBranchesArray[i]])
+		l2CacheMissRateArray.append([float(l2DataCacheMissesArray[i])/l2DataCacheHitsArray[i]])
+
 def reset():
 	del alphabetSizeList[:]
 	del skewArray[:]
@@ -119,6 +125,8 @@ def reset():
 	del memResidentArray[:]
 	del memHighWatermarkArray[:]
 	del conditionalBranchesArray[:]
+	del branchMissRateArray[:]
+	del l2CacheMissRateArray[:]
 
 def getReadOutputLists(valueListKeys):
 	valueLists = []
@@ -153,4 +161,8 @@ def getReadOutputLists(valueListKeys):
 			valueLists.append(memHighWatermarkArray)
 		elif(key == "conditionalBranchesArray"):
 			valueLists.append(conditionalBranchesArray)
+		elif(key == "branchMissRateArray"):
+			valueLists.append(branchMissRateArray)
+		elif(key == "l2CacheMissRateArray"):
+			valueLists.append(l2CacheMissRateArray)
 	return valueLists
