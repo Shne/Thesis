@@ -30,8 +30,8 @@ Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, uint blockSize)
     // Shrink vectors to fit
 //    bitmap->resize(bitmapOffset);
 //    bitmap->shrink_to_fit();
-    blockRanks.resize(bitmapOffset/blockSize +1); //+1 to keep last non-full block
-    blockRanks.shrink_to_fit();
+//    blockRanks.resize(bitmapOffset/blockSize +1); //+1 to keep last non-full block
+//    blockRanks.shrink_to_fit();
 }
 
 int Tree::rank(int character, unsigned long index) {
