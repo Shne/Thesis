@@ -85,6 +85,22 @@ def getMaxRelativeStddevStr(columnNames, testDataFile, constructionAlg, test):
 	ReadOutput.reset();
 	return maxRelativeStddev
 
+def getAvgRelativeStddevStr(columnNames, testDataFile, constructionAlg, test):
+	ReadOutput.getData(testDataFile, constructionAlg, test)	
+	dataTable = ReadOutput.getReadOutputLists(columnNames)
+	skewValues = dataTable[0]
+	dataTable.remove(skewValues)
+	uniqueSeperators = getUniqueSkewValues(skewValues)
+	stepsize = getNumberOfEqualSkews(skewValues)
+
+	maxRelativeStddev = "0"
+	for dataRow in dataTable:
+		relativeStddev = getRelativeStddev(stepsize, dataRow)
+		maxRelativeStddev += "   " + "{0:.2f}".format(numpy.average(relativeStddev)*100)
+	
+	ReadOutput.reset();
+	return maxRelativeStddev
+
 def writeToGnuplot(outputFile, valueListsKeys, testDataFile, constructionAlg, test, columns):
 	ReadOutput.getData(testDataFile, constructionAlg, test)
 	outputFile.write(columns+"\n")
@@ -99,6 +115,7 @@ def writeToGnuplot(outputFile, valueListsKeys, testDataFile, constructionAlg, te
 	uniqueSeperators = getUniqueSkewValues(seperatingValues)
 	index = 0
 	outputFile.write(getMaxRelativeStddevStr(valueListsKeys, testDataFile, constructionAlg, test) + "\n")
+	outputFile.write(getAvgRelativeStddevStr(valueListsKeys, testDataFile, constructionAlg, test) + "\n")
 	
 	for skew in uniqueSeperators:
 		strToWrite = "{0:.1f}".format(skew)
