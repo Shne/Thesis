@@ -54,11 +54,11 @@ The exceptions to this are when either the entire bitmap is used for the query, 
 There are better data structures for answering rank queries on the entire string, and we believe this type of query to be rarely used on any practical use of a wavelet tree.
 The second case is rare when the input string is bigger than the alphabet, and would only happen near the leaf nodes.
 
-\begin{figure}[h]
+\figureBegin
 \caption{Why concatenating bitmaps doesn't enable cache prefetching between bitmaps}
 \label{fig:QueryPrefetchFigure}
 \includegraphics[width=\textwidth]{QueryPrefetchFigure.pdf}
-\end{figure}
+\figureEnd
 
 
 
@@ -66,11 +66,11 @@ The second case is rare when the input string is bigger than the alphabet, and w
 
 \subsubsection{Queries when skewing the Wavelet Tree using uncontrolled and controlled memory layout}
 
-\begin{figure}
+\figureBegin
 \caption{Rank and Select Running times on Wavelet Tree with increasing skew for naive construction and ControlledNodeMemory construction}
 \label{fig:NaiveRankSelectSkewRunningTime}
 \input{naiveRankSelectSkewRunningTime}
-\end{figure}
+\figureEnd
 
 
 In this experiment we want to test whether querying our controlled memory version of the Wavelet Tree is faster than querying the uncontrolled memory version for increasingly skewed trees. 
@@ -90,16 +90,16 @@ This means we can conclude that skewing the tree is not an improvement on perfor
 \paragraph{Measurements}~\\
 To understand why skewing the tree is no improvement we need to figure out what causes the increase in query time. 
 First we look at branch mispredictions to see if they actually decrease when we increase the skew factor.%
-\begin{figure}
+\figureBegin
 \caption{Rank Branch Mispredictions rate}
 \label{fig:NaiveVsControlledNodeMemorySkewRankQueryBMrate}
 \input{NaiveVsControlledNodeMemorySkewRankQuery_BMrate}
-\end{figure}%
-\begin{figure}
+\figureEnd%
+\figureBegin
 \caption{Select Branch Mispredictions rate}
 \label{fig:NaiveVsControlledNodeMemorySkewSelectQueryBMrate}
 \input{NaiveVsControlledNodeMemorySkewSelectQuery_BMrate}
-\end{figure}
+\figureEnd
  
 Figure ~\ref{fig:NaiveVsControlledNodeMemorySkewRankQueryBMrate} and \ref{fig:NaiveVsControlledNodeMemorySkewSelectQueryBMrate} shows the branch misprediction rate for rank and select queries on a wavelet tree with increasing skew factor for both the controlled and uncontrolled memory approach. 
 The branch misprediction rate is calculated by dividing the number of branch mispredictions with the total number of conditional branches.
@@ -119,7 +119,7 @@ The cache misses for level 1 for Naive and Controlled Memory are almost exactly 
 Looking at the level 2 cache miss rates for rank and select, as plotted in Figure~\ref{fig:NaiveVsControlledNodeMemorySkewRankQuery_L2_DCMrate} and \ref{fig:NaiveVsControlledNodeMemorySkewSelectQuery_L2_DCMrate} we can see that the Data Cache Miss Rate for the level 2 cache increases for higher values of skew, meaning that it is not only a matter of increased amount of cycles causing the higher amount of cache misses, but that more cache accesses miss as skew increase meaning that the percentage of cache misses are increasing.
 This means that it is not an improvement with regards to cache misses to skew the tree when querying.
 
-\begin{figure}
+\figureBegin
 \caption{Rank Cache Misses on Wavelet Tree with increasing skew}
 \label{fig:NaiveControlledNodeMemoryRankSkewCacheMisses}
 \centering
@@ -134,9 +134,9 @@ This means that it is not an improvement with regards to cache misses to skew th
 	\label{fig:L2L3NaiveControlledNodeMemoryRankSkewCacheMisses}
  	\input{L2L3NaiveVsControlledNodeMemorySkewRankQueryCacheMisses}
 \end{subfigure}
-\end{figure}
+\figureEnd
 
-\begin{figure}
+\figureBegin
 \caption{Select Cache Misses on Wavelet Tree with increasing skew}
 \label{fig:NaiveControlledNodeMemorySelectSkewCacheMisses}
 \centering
@@ -151,34 +151,34 @@ This means that it is not an improvement with regards to cache misses to skew th
 	\label{fig:L2L3NaiveControlledNodeMemorySelectSkewCacheMisses}
  	\input{L2L3NaiveVsControlledNodeMemorySkewSelectQueryCacheMisses}
 \end{subfigure}
-\end{figure}
+\figureEnd
 
 
-\begin{figure}
+\figureBegin
 \caption{Rank L2 cache miss rate}
 \label{fig:NaiveVsControlledNodeMemorySkewRankQuery_L2_DCMrate}
 \input{NaiveVsControlledNodeMemorySkewRankQuery_L2_DCMrate}
-\end{figure}
+\figureEnd
 
-\begin{figure}
+\figureBegin
 \caption{Select L2 cache miss rate}
 \label{fig:NaiveVsControlledNodeMemorySkewSelectQuery_L2_DCMrate}
 \input{NaiveVsControlledNodeMemorySkewSelectQuery_L2_DCMrate}
-\end{figure}
+\figureEnd
 
 In Figure~\ref{fig:NaiveVsControlledNodeMemorySkewRankQueryTLB} and \ref{fig:NaiveVsControlledNodeMemorySkewSelectQueryTLB} we can see that it is no improvement with regards to TLB misses to skew the tree or to control the memory layout like we have. On the other hand, it's not a clear disadvantage either as certain skews produce a similar amount of TLB misses as the unskewed case. Our controlled memory layout seem to produce little difference for select queries, but is a clear disadvantage for rank queries when skewed with a skew value higher than 3.
 
-\begin{figure}
+\figureBegin
 \caption{Rank TLB}
 \label{fig:NaiveVsControlledNodeMemorySkewRankQueryTLB}
 \input{NaiveVsControlledNodeMemorySkewRankQueryTLB}
-\end{figure}
+\figureEnd
 
-\begin{figure}
+\figureBegin
 \caption{Select TLB}
 \label{fig:NaiveVsControlledNodeMemorySkewSelectQueryTLB}
 \input{NaiveVsControlledNodeMemorySkewSelectQueryTLB}
-\end{figure}
+\figureEnd
 
 
 \paragraph{Why skewing is not an improvement}~\\

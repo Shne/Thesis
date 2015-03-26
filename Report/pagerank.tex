@@ -49,11 +49,11 @@ Instead, we can compute the rank of the part of the block that our part doesn't 
 This is only worth doing when our part fills more than half a block, because then the other part is smaller than half a block and therefore quicker to compute.
 Figure ~\ref{fig:PrecomputePopcountBlock} illustrates this.
 
-\begin{figure}[h]
+\figureBegin
 \caption{Rank value of a part of a bitmap is equal to the precomputed value for the block minus the rank of the other remaining part.}
 \label{fig:PrecomputePopcountBlock}
 \includegraphics[width=\textwidth]{PrecomputePopcountBlock.pdf}
-\end{figure}
+\figureEnd
 
 
 

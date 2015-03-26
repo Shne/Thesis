@@ -10,15 +10,15 @@ def avg(list):
 	return sum(list)/len(list)
 
 
-def doTheThing():
+def writeGnuplotData():
 	ReadOutput.getData(testDataFile, "SimpleNaiveInteger", "build")
 	for i in range(int(len(ReadOutput.alphabetSizeList)/testsPerSize)):
 		startIndex = i*testsPerSize
 		endIndex = startIndex + testsPerSize
 
-		naive_mem_size = avg(ReadOutput.memSizeArray[startIndex:endIndex])
-		naive_mem_resident = avg(ReadOutput.memResidentArray[startIndex:endIndex])
-		naive_mem_highwater = avg(ReadOutput.memHighWatermarkArray[startIndex:endIndex])
+		naive_mem_size = avg(ReadOutput.memSizeList[startIndex:endIndex])
+		naive_mem_resident = avg(ReadOutput.memResidentList[startIndex:endIndex])
+		naive_mem_highwater = avg(ReadOutput.memHighWatermarkList[startIndex:endIndex])
 
 		
 
@@ -27,9 +27,9 @@ def doTheThing():
 		startIndex = i*testsPerSize
 		endIndex = startIndex + testsPerSize
 
-		prealloc_mem_size = avg(ReadOutput.memSizeArray[startIndex:endIndex])
-		prealloc_mem_resident = avg(ReadOutput.memResidentArray[startIndex:endIndex])
-		prealloc_mem_highwater = avg(ReadOutput.memHighWatermarkArray[startIndex:endIndex])
+		prealloc_mem_size = avg(ReadOutput.memSizeList[startIndex:endIndex])
+		prealloc_mem_resident = avg(ReadOutput.memResidentList[startIndex:endIndex])
+		prealloc_mem_highwater = avg(ReadOutput.memHighWatermarkList[startIndex:endIndex])
 
 	GnuplotFile.write("0 " + str(naive_mem_size) +"\n")
 	GnuplotFile.write("1 " + str(prealloc_mem_size) +"\n")
@@ -44,11 +44,11 @@ def doTheThing():
 
 GnuplotFile = open("Report/Gnuplot/Data/NaiveVsPreallocatedBuild_n7as12.data", "w")
 testDataFile = 'Output/NaiveVsPreallocatedBuild_n7as12.output'
-doTheThing()
+writeGnuplotData()
 
 GnuplotFile = open("Report/Gnuplot/Data/NaiveVsPreallocatedBuild_n8as12.data", "w")
 testDataFile = 'Output/NaiveVsPreallocatedBuild_n8as12.output'
-doTheThing()
+writeGnuplotData()
 
 GnuplotFile.close()
 

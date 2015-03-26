@@ -1,4 +1,4 @@
-#[skew]   [L1-DataCache-Misses]   [L2-DataCache-Misses]   [L3-TotalCache-Misses]   [Branch-Misses]   [TLB]   [Conditional Branches]   [Wall time (micro seconds)]   [L2-DataCache-Hits]   [BM Rate]
+#[skew]   [L1-DataCache-Misses]   [L2-DataCache-Misses]   [L3-TotalCache-Misses]   [Branch-Misses]   [TLB]   [Conditional Branches]   [Wall time (micro seconds)]   [L2-DataCache-Hits]   [BM Rate]   [L2 CM Rate]
 0   0.041   14.203   26.648   1.060   77.255   0.000   1.542   0.409   1.060   14.395
 0   0.02   4.59   12.87   0.64   38.80   0.00   0.32   0.16   0.64   4.57
 2.0   19637917   486351   63212   20393   3208   156322008   148616   19146762   0.0001304563590303932   0.025401362130970447
