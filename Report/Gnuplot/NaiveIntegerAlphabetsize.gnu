@@ -92,7 +92,7 @@ stddev4 = sprintf("%g",STATS_min)
 stats '../Data/NaiveIntegerAlphabetsize.data' every ::::1 using 8 nooutput
 stddev5 = sprintf("%g",STATS_min)
 set logscale x 2
-set key outside top horizontal spacing 1.5
+set key outside top horizontal spacing 1
 set output 'naiveIntegerAlphabetSize_CM.tex'
 plot '../Data/NaiveIntegerAlphabetsize.data' every ::2 using 1:6 with linespoints title "L1 CM".", $mr\\hat{\\sigma}=$".stddev." $avg\\hat{\\sigma}=$".stddev3, \
 	'../Data/NaiveIntegerAlphabetsize.data' every ::2 using 1:7 with linespoints title "L2 CM".", $mr\\hat{\\sigma}=$".stddev1." $avg\\hat{\\sigma}=$".stddev4, \
@@ -118,7 +118,7 @@ set y2tics
 set y2label 'TLB Misses'
 set y2range [0:*]
 set ytics nomirror
-set key outside top horizontal spacing 2 box
+set key outside top horizontal spacing 2
 set output 'naiveIntegerAlphabetSize_WallTime_TLB.tex'
 plot '../Data/NaiveIntegerAlphabetsize.data' every ::2 using 1:($2/log($1)) with linespoints title "\\large $\\frac{Wall Time}{log(\\sigma)}$".", $mr\\hat{\\sigma}=$".stddev." $avg\\hat{\\sigma}=$".stddev2, \
 	'../Data/NaiveIntegerAlphabetsize.data' every ::2 using 1:($5/log($1)) with linespoints title "\\large $\\frac{TLB Miss}{log(\\sigma)}$".", $mr\\hat{\\sigma}=$".stddev1." $avg\\hat{\\sigma}=$".stddev3

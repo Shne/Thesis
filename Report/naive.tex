@@ -3,7 +3,9 @@ This is the simple, straightforward, naïve implementation we did before any sma
 \subsection{Algorithm Description}
 The Naïve Wavelet Tree construction algorithm is recursively defined, calling itself to construct the left and right sub-tree from the root node and down. At each recursion the algorithm splits the given alphabet in two halves and traverses the given string putting each character into a left or right partition based on whether the character was in the left or right half of the alphabet.
 
-\begin{mdframed}[nobreak]
+\begin{algorithm}
+\caption{Construction of nodes in the Wavelet Tree}
+\label{alg:ConstructNode}
 \begin{algorithmic}
 \Function {ConstructNode} {$String, Alphabet$}
 \If{$Alphabet.Size() = 1$ or $String.Length() = 0$}
@@ -26,7 +28,7 @@ The Naïve Wavelet Tree construction algorithm is recursively defined, calling i
 
 \State \Call {ConstructNode} {InputString, InputAlphabet}
 \end{algorithmic}
-\end{mdframed}
+\end{algorithm}
 
 \noindent In our implementation, $Alphabet$, $LeftAlphabet$, and $RightAlphabet$ are stored as two integer values each: a minimum and a maximum. It is explained in~\ref{sec:UsingIntAsChar} how this is equivalent to storing the full alphabet and passing pointers into it around. $Bitmap$ is stored as a \texttt{vector<bool>} which is tightly packed, only using 1 bit per bool\footnote{\url{http://www.cplusplus.com/reference/vector/vector-bool/}}.
 

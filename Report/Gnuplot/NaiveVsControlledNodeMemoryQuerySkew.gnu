@@ -3,7 +3,7 @@
 set term epslatex size 5.2,3.1 color
 set xlabel "Skew"
 set yrange [0:*]
-set key outside top horizontal box;
+set key outside top horizontal;
 
 #max
 stats '../Data/naiveRankSkew.data' every ::::0 using 2 nooutput

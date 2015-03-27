@@ -104,8 +104,7 @@ def getAvgRelativeStddevStr(columnNames, testDataFile, constructionAlg, test):
 def writeToGnuplot(outputFile, dataTableKeys, testDataFile, constructionAlg, test, columns, i):
 	ReadOutput.getData(testDataFile, constructionAlg, test)
 	outputFile.write(columns+"\n")
-	dataTable = ReadOutput.getReadOutputLists(dataTableKeys)
-	print(str(len(dataTable)))
+	dataTable = ReadOutput.getReadOutputLists(dataTableKeys)	
 	seperatingValues = dataTable[0]
 	uniqueSeperators = getUniqueSkewValues(seperatingValues)	
 	dataTable.remove(seperatingValues)

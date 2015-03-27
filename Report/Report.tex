@@ -15,13 +15,17 @@
 \usepackage{siunitx}
 \usepackage{placeins}
 \usepackage{units}
+\usepackage{xcolor}
+\usepackage{lipsum}
+\usepackage{algorithm}
 \graphicspath{{Gnuplot/Graphs/}}
 \makeatletter
 \def\input@path{{Gnuplot/Graphs/}}
 \makeatother
 
-\newcommand{\figureBegin}{\begin{figure}\begin{framed}}
-\newcommand{\figureEnd}{\end{framed}\end{figure}}
+\newcommand{\figureBegin}{\begin{figure}\begin{mdframed}[linecolor=lightgray]}
+\newcommand{\figureEnd}{\end{mdframed}\end{figure}}
+
 
 \title{Wavelet Tree Construction}
 
