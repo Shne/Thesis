@@ -149,16 +149,34 @@ ulong Node::blockBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &blockRa
 
 #ifdef PARTIALBLOCKS
 
-    //FOR SMALL BITMAPS
-    if(pos < blockSize) {
+    //VERY SMALL BITMAPS
+    if(pos < blockSize/2) {
         return popcountBinaryRank(bitmapOffset, pos, bitmap);
     }
 
-    ulong rank = 0;
     uint bitmapMisalignment = CHAR_BIT * ((ulong)bitmap->begin()._M_p % (blockSize/CHAR_BIT)); //how far inside a block the bitmap starts, in bits
     uint blockMisalignment = ((bitmapMisalignment + bitmapOffset) % blockSize); //how far inside a block our part of the bitmap starts
     uint lengthToNextBlockalignment = (blockSize - blockMisalignment) % blockSize; //modulo so it's 0 when blockMisalignment is 0
 
+    //SMALL BITMAPS NOT CROSSING BLOCK
+    if(pos < blockSize && pos < lengthToNextBlockalignment) {
+        //do popcount binary rank on smaller parts and subtract from precomputed rank
+        
+        //Part Before Start
+        ulong preStartOffset = bitmapOffset - blockMisalignment;
+        ulong preLength = blockMisalignment;
+        ulong preRank = popcountBinaryRank(preStartOffset, preLength, bitmap);
+        //Part After End
+        uint postStartOffset = bitmapOffset + pos;
+        uint postLength = blockSize - blockMisalignment - pos;
+        ulong postRank = popcountBinaryRank(postStartOffset, postLength, bitmap);
+        
+        uint blockIndex = (bitmapOffset + bitmapMisalignment - blockMisalignment) / blockSize;
+        return blockRanks[blockIndex] - preRank - postRank;
+    }
+    
+    ulong rank = 0;
+    
     //FIRST PARTIAL BLOCK
     if((lengthToNextBlockalignment > blockSize / 2) && (blockMisalignment < bitmapOffset)) {
         //do popcount binary rank on smaller part and subtract from precomputed rank
