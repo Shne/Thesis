@@ -100,14 +100,15 @@ inline void testSelectQuery(uint amount, uint alphabetSize, float skew, string p
     testSetup(eventset, events, num_events);
     uint queries = 1000;
     uint charStep = alphabetSize/queries;
-    uint position = 2000;
+    uint maxOccurrence = 1000;
+    uint occurrenceStep = maxOccurrence / queries;
     ulong results[queries]; //just to make sure nothing is optimized away
     for(uint index = 0; index < queries; index++) {
-        results[index] = tree.select(index*charStep, position, skew);
+        results[index] = tree.select(index*charStep, (index+1)*occurrenceStep, skew);
     }
     testTearDown(amount, alphabetSize, skew, "select", pathname, eventset, events, values, num_events);
     for(uint i=0; i < queries; i++) {
-        cout << results[i];
+        cout << results[i] << " ";
     }
     cout << endl;
 }
