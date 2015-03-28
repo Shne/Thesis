@@ -93,7 +93,7 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
 }
 
 
-int Node::rank(int character, unsigned long index, bitmap_t* bitmap, int alphabetMin, int alphabetMax, float skew){
+uint Node::rank(int character, unsigned long index, bitmap_t* bitmap, int alphabetMin, int alphabetMax, float skew){
     if(isLeaf){
 //        cout << "Rank Leaf" << endl;
         return index;
@@ -120,7 +120,7 @@ int Node::rank(int character, unsigned long index, bitmap_t* bitmap, int alphabe
     return rank;
 }
 
-unsigned long Node::popcountBinaryRank(unsigned long pos, bitmap_t* bitmap) {
+ulong Node::popcountBinaryRank(unsigned long pos, bitmap_t* bitmap) {
     if(pos > bitmapSize) cout << "position " << pos << " larger than bitmapsize " << bitmapSize << endl;
     unsigned long bitmapwordRank = 0;
     
@@ -172,18 +172,18 @@ ulong Node::binaryRank(ulong pos, bitmap_t* bitmap) {
 }
 
 
-int Node::leafSelect(int character, unsigned long occurance, bitmap_t* bitmap) {
+uint Node::leafSelect(int character, unsigned long occurance, bitmap_t* bitmap) {
     bool charBit = this == parent->right;
     return parent->select(character, charBit, occurance, bitmap);
 }
 
-int Node::select(int character, bool charBit, unsigned long occurance, bitmap_t* bitmap) {
+uint Node::select(int character, bool charBit, unsigned long occurance, bitmap_t* bitmap) {
     if(parent == nullptr) {
         //we are root
         return popcountBinarySelect(charBit, occurance, bitmap);
     }
     int position = popcountBinarySelect(charBit, occurance, bitmap);
-    
+
     bool parentCharBit = this == parent->right;
     return parent->select(character, parentCharBit, position+1, bitmap); //position+1 to go form 0-indexed position to "1-indexed" occurance
 }
@@ -200,39 +200,38 @@ int Node::select(int character, bool charBit, unsigned long occurance, bitmap_t*
 //    cout << "Occurance too high!" << endl;
 //}
 
-inline ulong popcountBinarySelectAux(ulong word, bool charBit, ulong occurance) {
-    unsigned long occ = 0;
-    ulong mask = 1;
-    for(unsigned long i = 0; i < sizeof(word) * CHAR_BIT; i++) {
+inline ulong popcountBinarySelectAux(ulong word, bool charBit, ulong occurance, ulong mask) {
+    ulong occ = 0;
+    uint startAt = __builtin_ffsl(mask) - 1; //-1 because it returns 1 + index of bit
+    for(uint i = startAt; i < sizeof(word) * CHAR_BIT; i++) {
         bool bit = (word & mask) > 0;
         if(bit == charBit) {
-            if(++occ == occurance) return i;
+            if(++occ == occurance) return i - startAt;
         }
         mask <<= 1;
     }
     cout << "Occurance " << occurance << " too high! saw " << occ << endl;
 }
 
-int Node::popcountBinarySelect(bool charBit, ulong occurance, bitmap_t* bitmap) {
+uint Node::popcountBinarySelect(bool charBit, ulong occurrence, bitmap_t* bitmap) {
     ulong occ = 0; //counter for occurances
     
-    ulong i;
     ulong wordsize = sizeof(*bitmap->begin()._M_p) * CHAR_BIT; //vector<bool> src uses CHAR_BIT too
     
     vector<bool>::reference ref = (*bitmap)[bitmapOffset];
-    unsigned long initialOffset = 0;
-    unsigned long* firstFullWord = ref._M_p;
+    ulong initialOffset = 0;
+    ulong* firstFullWord = ref._M_p;
     
     //PART OF FIRST WORD if unaligned
     if(ref._M_mask > 1) { //mask = 1 means first part of first word is part of our bitmap, and we can just use the fullword iteration code below
         //create 111110000 type mask from 000010000 type mask
-        unsigned long firstMask = ~(ref._M_mask - 1UL); //the bit of _M_mask and up
-        unsigned long maskedFirstWord = (*ref._M_p) & firstMask;
-        ulong oneOccInWord = __builtin_popcountl(maskedFirstWord);
+        ulong firstMask = ~(ref._M_mask - 1UL); //the bit of _M_mask and up
+        ulong maskedFirstWord = (*ref._M_p) & firstMask;
+        ulong occInWord = __builtin_popcountl(maskedFirstWord);
         ulong sizeOfMask = __builtin_popcountl(firstMask);
-        ulong wordOcc = charBit ? oneOccInWord : sizeOfMask - oneOccInWord;
-        if(occ + wordOcc >= occurance) {
-            return popcountBinarySelectAux(maskedFirstWord, charBit, occurance - occ);
+        ulong wordOcc = charBit ? occInWord : sizeOfMask - occInWord;
+        if(wordOcc >= occurrence) {
+            return popcountBinarySelectAux(maskedFirstWord, charBit, occurrence, ref._M_mask);
         } else {
             occ += wordOcc;
         }
@@ -241,28 +240,28 @@ int Node::popcountBinarySelect(bool charBit, ulong occurance, bitmap_t* bitmap) 
     }
     
     //FULL WORDS
-    unsigned int alignedPos = bitmapSize - initialOffset; //initialOffset is the amount of bits in the first unaligned word of our bitmap
-    unsigned long fullWords = alignedPos / wordsize; //the amount of full words we should iterate through. 
-    for(i = 0; i < fullWords; i++) {
-        unsigned long word = *(firstFullWord + i);
+    ulong alignedPos = bitmapSize - initialOffset; //initialOffset is the amount of bits in the first unaligned word of our bitmap
+    uint fullWords = alignedPos / wordsize; //the amount of full words we should iterate through. 
+    for(uint i = 0; i < fullWords; i++) {
+        ulong word = *(firstFullWord + i);
         ulong wordOcc = charBit ? __builtin_popcountl(word) : wordsize - __builtin_popcountl(word);
-        if(occ + wordOcc >= occurance) {
+        if(occ + wordOcc >= occurrence) {
             ulong pos = initialOffset + i*wordsize;
-            return pos + popcountBinarySelectAux(word, charBit, occurance - occ);
+            return pos + popcountBinarySelectAux(word, charBit, occurrence - occ, 1UL);
         } else {
             occ += wordOcc;
         }
     } //we believe i is incremented even after the condition has failed
     
     //PART OF LAST WORD (if unaligned)
-    unsigned long word = *(firstFullWord + i);
-    unsigned long shift = alignedPos % wordsize; //if word-aligned, shift will be 0, making mask (below) all 0.
-    unsigned long mask = (1UL << shift)-1UL; //if word-aligned mask will be 0
-    unsigned long maskedWord = word & mask; //if word-aligned maskedWord will be 0
+    ulong word = *(firstFullWord + fullWords);
+    uint shift = alignedPos % wordsize; //if word-aligned, shift will be 0, making mask (below) all 0.
+    ulong mask = (1UL << shift)-1UL; //if word-aligned mask will be 0
+    ulong maskedWord = word & mask; //if word-aligned maskedWord will be 0
     ulong wordOcc = charBit ? __builtin_popcountl(maskedWord) : __builtin_popcountl(mask) - __builtin_popcountl(maskedWord);
-    if(occ + wordOcc >= occurance) {
-        ulong pos = initialOffset + i*wordsize;
-        return pos + popcountBinarySelectAux(maskedWord, charBit, occurance - occ);
+    if(occ + wordOcc >= occurrence) {
+        ulong pos = initialOffset + fullWords*wordsize;
+        return pos + popcountBinarySelectAux(maskedWord, charBit, occurrence - occ, 1UL);
     } else {
         occ += wordOcc;
     }
@@ -303,8 +302,8 @@ inline void Node::showBits(unsigned long n) {
 
 //    printf("\t%lu\t = ", n);
     while(mask>0) {
-            printf("%d", (n&mask)?1:0);
-            mask >>= 1;
+        printf("%d", (n&mask)?1:0);
+        mask >>= 1;
     }
     printf("\n");
 }
