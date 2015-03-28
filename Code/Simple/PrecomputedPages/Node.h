@@ -20,6 +20,7 @@
 #include <assert.h>
 
 typedef std::vector<bool> bitmap_t;
+typedef std::vector<ushort> blockRanksVector;
 
 using namespace std;
 
@@ -36,25 +37,25 @@ public:
     Node();
     Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode,
          Node* &node_pt, bitmap_t* in_bitmap, ulong &in_bitmapOffset,
-         vector<ushort> &blockRanks, uint pageSize);
+         blockRanksVector &blockRanks, uint pageSize);
     
     int rank(int character, ulong index, bitmap_t* bitmap, int alphabetMin,
-             int alphabetMax, vector<ushort> &pageRanks, uint pageSize);
+             int alphabetMax, blockRanksVector &pageRanks, uint pageSize);
     
-    ulong blockBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &pageRanks, uint pageSize);
+    ulong blockBinaryRank(ulong pos, bitmap_t* bitmap, blockRanksVector &pageRanks, uint pageSize);
     
     uint select(int character, bool charBit, uint occurance, bitmap_t* bitmap,
-               vector<ushort> &pageRanks, uint pageSize);
+               blockRanksVector &pageRanks, uint pageSize);
     
     uint binarySelect(bool charBit, ulong occurance, bitmap_t* bitmap);
     
-    uint blockBinarySelect(bool charBit, uint occurance, bitmap_t* bitmap, vector<ushort> &blockRanks, uint blockSize);
+    uint blockBinarySelect(bool charBit, uint occurance, bitmap_t* bitmap, blockRanksVector &blockRanks, uint blockSize);
     
     uint popcountBinarySelect(bool charBit, uint occurance, bitmap_t* bitmap, uint offset);
     
     Node* getLeaf(int character, int alphabetMin, int alphabetMax);
     
-    uint leafSelect(int character, uint occurance, bitmap_t* bitmap, vector<ushort> &pageRanks, uint pageSize);
+    uint leafSelect(int character, uint occurance, bitmap_t* bitmap, blockRanksVector &pageRanks, uint pageSize);
     
     inline void showBits(ulong n);
 };

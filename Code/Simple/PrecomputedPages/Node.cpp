@@ -16,7 +16,7 @@ Node::Node() {};
 
 Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode,
            Node* &node_pt, bitmap_t* in_bitmap, ulong &in_bitmapOffset,
-           vector<ushort> &blockRanks, uint blockSize)
+           blockRanksVector &blockRanks, uint blockSize)
     : isLeaf(false), left(nullptr), right(nullptr), parent(parentNode) {
     
     uint alphabetSize = alphabetMax - alphabetMin +1;
@@ -83,7 +83,7 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
 
 
 int Node::rank(int character, unsigned long index, bitmap_t* bitmap, int alphabetMin,
-               int alphabetMax, vector<ushort> &blockRanks, uint blockSize){
+               int alphabetMax, blockRanksVector &blockRanks, uint blockSize){
     if(isLeaf){
 //        cout << "Rank Leaf" << endl;
         return index;
@@ -143,7 +143,7 @@ ulong Node::popcountBinaryRank(ulong startOffset, ulong length, bitmap_t* bitmap
     return rank;
 }
 
-ulong Node::blockBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &blockRanks, uint blockSize) {
+ulong Node::blockBinaryRank(ulong pos, bitmap_t* bitmap, blockRanksVector &blockRanks, uint blockSize) {
 //    cout << pos << " " << bitmapSize << " " << flush;
     assert(pos <= bitmapSize);
 
@@ -282,13 +282,13 @@ ulong Node::blockBinaryRank(ulong pos, bitmap_t* bitmap, vector<ushort> &blockRa
 }
 
 
-uint Node::leafSelect(int character, uint occurance, bitmap_t* bitmap, vector<ushort> &blockRanks, uint blockSize) {
+uint Node::leafSelect(int character, uint occurance, bitmap_t* bitmap, blockRanksVector &blockRanks, uint blockSize) {
     bool charBit = this == parent->right;
     return parent->select(character, charBit, occurance, bitmap, blockRanks, blockSize);
 }
 
 uint Node::select(int character, bool charBit, uint occurance, bitmap_t* bitmap,
-                 vector<ushort> &blockRanks, uint blockSize) {
+                 blockRanksVector &blockRanks, uint blockSize) {
     if(parent == nullptr) {
         //we are root
         return blockBinarySelect(charBit, occurance, bitmap, blockRanks, blockSize);
@@ -299,7 +299,7 @@ uint Node::select(int character, bool charBit, uint occurance, bitmap_t* bitmap,
     return parent->select(character, parentCharBit, position+1, bitmap, blockRanks, blockSize); //position+1 to go form 0-indexed position to "1-indexed" occurance
 }
 
-uint Node::blockBinarySelect(bool charBit, uint occurrence, bitmap_t* bitmap, vector<ushort> &blockRanks, uint blockSize) {
+uint Node::blockBinarySelect(bool charBit, uint occurrence, bitmap_t* bitmap, blockRanksVector &blockRanks, uint blockSize) {
     uint bitmapMisalignment = CHAR_BIT * ((ulong)bitmap->begin()._M_p % (blockSize/CHAR_BIT)); //how far inside a block the bitmap starts, in bits
     uint blockMisalignment = ((bitmapMisalignment + bitmapOffset) % blockSize); //how far inside a block our part of the bitmap starts
     uint lengthToNextBlockalignment = (blockSize - blockMisalignment) % blockSize; //modulo so it's 0 when blockMisalignment is 0
