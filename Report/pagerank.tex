@@ -28,7 +28,7 @@ Similarly, we allocate a vector for holding the precomputed block values of size
 \[ \frac{BitmapSize}{BlockSize} \]
 
 Instead of storing a pointer to the bitmap and precomputed values vector in each node, we store them once for the whole tree and then pass them to the methods that need them.
-The nodes now contain, in addition to the previously mentioned pointers, an offset and a size.
+The nodes now additionally contain, in addition to these pointers, an offset and a size.
 
 
 \subsection{Rank Queries with Precomputed Ranks}
@@ -100,11 +100,15 @@ Though, the select can terminate early...
 
 
 \subsection{Extra Space Used}~\\
-Since each precomputed value cannot exceed the block size in value, assuming we don't use block sizes exceeding $2^{16} = 65536$ bits, we can store them in 16-bit unsigned short integers, which again means, since the page size on our machines are 4096 bits, that we should not use a block size larger than $\frac{65536}{4096} = 16$ pages.
 
-Assuming we store the precomputed values as 16-bit unsigned short integers it will only consume an extra 16 bits per block of which there are $\frac{BitmapSize}{BlockSize}$.
-This means, assuming only 1 page per block, an extra space consumption of
-\[ \frac{16}{4096} = 0.0039 = 0.39\% \]
+
+Since each precomputed value cannot exceed the block size in value, assuming we don't use block sizes exceeding $2^{16} = 65536$ bits, or $\frac{2^{16}}{8} = 8192$ bytes, we can store them in 16-bit unsigned integers, called \texttt{unsigned short int} on our machines. Since the page size on our machines are 4096 bits, that we should not use a block size larger than $\frac{65536}{4096} = 16$ pages if we want to use 16-bit unsigned integers.
+
+In Section[TODO:reference] we find that the optimal block size is 16384 bits, or 4 pages.
+
+Assuming we then store the precomputed values as 16-bit unsigned short integers it will only consume an extra 16 bits per block of which there are $\frac{BitmapSize}{BlockSize}$.
+This means, assuming 4 pages per block, an extra space consumption of
+\[ \frac{16}{16384} = 0.0009765625 = 0.098\% \]
 of the bitmaps.
 Which is even less when considering the total space used including the nodes, and would be less for larger block sizes.
 

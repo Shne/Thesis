@@ -20,7 +20,7 @@
 #include <assert.h>
 
 typedef std::vector<bool> bitmap_t;
-typedef std::vector<ushort> blockRanksVector;
+typedef std::vector<uint> blockRanksVector;
 
 using namespace std;
 
