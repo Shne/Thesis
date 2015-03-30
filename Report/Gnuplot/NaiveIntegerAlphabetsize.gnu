@@ -14,7 +14,7 @@ stddev1 = sprintf("%g",STATS_min)
 set logscale x 2
 set format x "$2^{%L}$"
 set xlabel "Alphabet Size \\small (log scale)"
-set ylabel "Wall Time (microsec)"
+set ylabel "$\\nicefrac{Wall Time}{log(\\sigma)}$"
 set yrange [0:*]
 # set key spacing 2
 set output 'naiveIntegerAlphabetSize_WallTime.tex'
@@ -32,6 +32,7 @@ stats '../Data/NaiveIntegerAlphabetsize.data' every ::::1 using 2 nooutput
 stddev2 = sprintf("%g",STATS_min)
 stats '../Data/NaiveIntegerAlphabetsize.data' every ::::1 using 4 nooutput
 stddev3 = sprintf("%g",STATS_min)
+set ylabel "Wall Time (microsec)"
 set key outside top horizontal spacing 1
 set logscale x 2
 set y2tics
@@ -54,7 +55,7 @@ stddev = sprintf("%g",STATS_min)
 stats '../Data/naiveIntegerAlphabetSize_smallN.data' every ::::1 using 2 nooutput
 stddev1 = sprintf("%g",STATS_min)
 set logscale x 2
-set ylabel "Wall Time (microsec)"
+set ylabel "$\\nicefrac{Wall Time}{log(\\sigma) + \\sigma}$"
 set yrange [*:*]
 set logscale y
 set output 'naiveIntegerAlphabetSize_WallTime_plusSigma.tex'
