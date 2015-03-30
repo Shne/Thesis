@@ -22,8 +22,6 @@ where $n$ is the number of characters in the string and $h$ is the max height of
 We then store an offset and a size for the bitmap in each node, so we can index into the giant bitmap and access the bits corresponding to the node. 
 If we had allocated a bitmap for each node individually, they would have been word-aligned, and the bits between the end of the last used bit in the last used word at the end of one bitmap and the start of another would have gone unused and so, wasted.
 
-\textbf{[TODO: memory manager is smart, doesn't use memory for allocated memory, only when actually assigned...]}
-
 Similarly, we allocate a vector for holding the precomputed block values of size
 \[ \frac{BitmapSize}{BlockSize} \]
 
