@@ -84,10 +84,8 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
 
 int Node::rank(int character, unsigned long index, bitmap_t* bitmap, int alphabetMin,
                int alphabetMax, blockRanksVector &blockRanks, uint blockSize){
-    if(isLeaf){
-//        cout << "Rank Leaf" << endl;
-        return index;
-    }
+    if(isLeaf) return index;
+    if(index == 0) return index;
     
     int alphabetSize = alphabetMax - alphabetMin +1;
     int split = (int)((alphabetSize-1)/2 + alphabetMin);
@@ -116,6 +114,11 @@ ulong Node::popcountBinaryRank(ulong startOffset, ulong length, bitmap_t* bitmap
     vector<bool>::reference ref = (*bitmap)[startOffset];
     ulong* wordPtr = ref._M_p;
     uint wordSize = sizeof(*bitmap->begin()._M_p) * CHAR_BIT;
+    
+    if(length < wordSize) {
+        return binaryRank(startOffset, length, bitmap);
+    }
+    
     //PART OF FIRST WORD if unaligned
     if(startOffset % wordSize != 0) {
         //create 111110000 type mask from 000010000 type mask
@@ -140,6 +143,16 @@ ulong Node::popcountBinaryRank(ulong startOffset, ulong length, bitmap_t* bitmap
     ulong mask = (1UL << shift)-1UL; //if word-aligned mask will be 0
     ulong maskedWord = word & mask; //if word-aligned maskedWord will be 0
     rank += __builtin_popcountl(maskedWord);
+    return rank;
+}
+
+ulong Node::binaryRank(ulong startOffset, ulong length, bitmap_t* bitmap) {
+    int rank = 0;
+    for(uint i = startOffset; i < startOffset + length; i++) {
+        bool currentBit = (*bitmap)[i];
+        if(currentBit) rank++;
+        i++;
+    }
     return rank;
 }
 

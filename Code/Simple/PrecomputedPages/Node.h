@@ -42,6 +42,8 @@ public:
     int rank(int character, ulong index, bitmap_t* bitmap, int alphabetMin,
              int alphabetMax, blockRanksVector &pageRanks, uint pageSize);
     
+    ulong binaryRank(ulong startOffset, ulong length, bitmap_t* bitmap);
+    
     ulong blockBinaryRank(ulong pos, bitmap_t* bitmap, blockRanksVector &pageRanks, uint pageSize);
     
     uint select(int character, bool charBit, uint occurance, bitmap_t* bitmap,
