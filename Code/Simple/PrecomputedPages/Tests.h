@@ -102,11 +102,14 @@ inline void testSelectQuery(uint amount, uint alphabetSize, string pathname, uin
     testSetup(eventset, events, num_events);
     uint queries = 1000;
     uint charStep = alphabetSize/queries;
+    uint occurrencePack = 10;
+    uint occurrenceStep = queries/occurrencePack;
     uint maxOccurrence = 1000;
-    uint occurrenceStep = maxOccurrence / queries;
     ulong results[queries]; //just to make sure nothing is optimized away
     for(uint index = 0; index < queries; index++) {
-        results[index] = tree.select(index*charStep, (index+1)*occurrenceStep);
+        uint occurrence = ((index+1)*occurrenceStep) % maxOccurrence + (index+1)/occurrencePack;
+        uint character = index*charStep;
+        results[index] = tree.select(character, occurrence);
     }
     testTearDown(amount, alphabetSize, "select", pathname, blockSize, eventset, events, values, num_events);
     for(uint i=0; i < queries; i++) {
@@ -120,9 +123,15 @@ inline void testRankQuery(uint amount, uint alphabetSize, string pathname, uint 
     testSetup(eventset, events, num_events); 
     uint queries = 1000;
     uint charStep = alphabetSize/queries;
+    uint posPack = 10;
+    uint maxPos = amount;
+    ulong posStep = maxPos/posPack;
+    
     ulong results[queries]; //just to make sure nothing is optimized away
     for(uint index = 0; index < queries; index++) {
-        results[index] = tree.rank(index*charStep, amount/2);
+        uint pos = ((index+1)*posStep) % maxPos + (index+1)/posPack;
+        uint character = index*charStep;
+        results[index] = tree.rank(character, pos);
     }
     testTearDown(amount, alphabetSize, "rank", pathname, blockSize, eventset, events, values, num_events);
     for(uint i=0; i < queries; i++) {
