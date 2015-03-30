@@ -94,10 +94,8 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
 
 
 uint Node::rank(int character, unsigned long index, bitmap_t* bitmap, int alphabetMin, int alphabetMax, float skew){
-    if(isLeaf){
-//        cout << "Rank Leaf" << endl;
-        return index;
-    }
+    if(isLeaf) return index;
+    if(index == 0) return index;
     
     int alphabetSize = alphabetMax - alphabetMin +1;
     int split = (int)((alphabetSize-1)/skew + alphabetMin);
@@ -127,6 +125,11 @@ ulong Node::popcountBinaryRank(unsigned long pos, bitmap_t* bitmap) {
     unsigned long i;
     unsigned long wordsize = sizeof(*bitmap->begin()._M_p) * CHAR_BIT; //vector<bool> src uses CHAR_BIT too
     
+    //SMALL POS
+    if(pos < wordsize) {
+        return binaryRank(pos, bitmap);
+    }
+    
     vector<bool>::reference ref = (*bitmap)[bitmapOffset];
     unsigned long initialOffset = 0;
     unsigned long* firstFullWord = ref._M_p;
@@ -142,7 +145,7 @@ ulong Node::popcountBinaryRank(unsigned long pos, bitmap_t* bitmap) {
     }
     
     //FULL WORDS
-    unsigned int alignedPos = pos - initialOffset; //initialOffset is the amount of bits in the first unaligned word of our bitmap
+    unsigned long alignedPos = pos - initialOffset; //initialOffset is the amount of bits in the first unaligned word of our bitmap
     unsigned long fullWords = alignedPos / wordsize; //the amount of full words we should iterate through. 
     for(i = 0; i < fullWords; i++) {
         unsigned long word = *(firstFullWord + i);
