@@ -86,6 +86,7 @@ In fact, we use a rank query to calculate the rank of the first part of the bitm
 We would like to analyse whether it is worth using a rank query to find out whether we should do a select query on the first part of the bitmap, as the rank query is purely extra work in the cases where the occurrence is in that part of the bitmap.
 
 We will assume an equal number of occurrences in the string of each character in the alphabet, a uniform distribution of each character in the string, and an equal probability of each valid parameter for the select query.
+A valid character parameter is one that exists in the input string and a valid occurrence parameter is an integer above 0 and below or equal to the number occurrences appearing in the input string.
 
 The rank query is a computation of worst-case cost $\frac{blockSize}{2}$ because it will at most popcount half of the block, because we utilize the precomputed rank value when advantageous.
 The popcount select query into the first partial block is an operation of word-case cost $blockSize$ because it can at most popcount the entire block.
@@ -93,15 +94,14 @@ So, in the worst case, when the sought-after occurrence is in the first partial 
 This means that the boundary between where using the rank query becomes a gain or a loss in performance is where the ratio between times the occurrence is to be found in and outside the first partial block of the bitmap is $\nicefrac{2}{3}$.
 That is, when the occurrence is to be found outside the first partial block of the bitmap less than two-thirds of the time, using the rank query first to see if that partial block should be select queried is a gain in performance, when considering the worst-case query time for both queries.
 
-Though, this is giving the select query a disadvantage in the analysis, as, even when the partial block is close to a block in size, it might terminate early if it found the sought-after occurrence of the character early in partial block.
+Though, this is giving the select query a disadvantage in the analysis, as, even when the partial block is close to a block in size, it might terminate early if it found the sought-after occurrence of the character early in the partial block.
 
-Though, the select can terminate early...
-
-
-
-\subsection{Extra Space Used}~\\
+It is not entirely clear whether it is an advantage to use the binary rank call, or it would be better to use popcount BinarySelect on the first partial block at all times.
+We will test this in section~\ref{sec:experimentPrecomputedBlocksRankInSelect}
 
 
+
+\subsection{Extra Space Used}
 Since each precomputed value cannot exceed the block size in value, assuming we don't use block sizes exceeding $2^{16} = 65536$ bits, or $\frac{2^{16}}{8} = 8192$ bytes, we can store them in 16-bit unsigned integers, called \texttt{unsigned short int} on our machines. Since the page size on our machines are 4096 bits, that we should not use a block size larger than $\frac{65536}{4096} = 16$ pages if we want to use 16-bit unsigned integers.
 
 In Section[TODO:reference] we find that the optimal block size is 16384 bits, or 4 pages.
@@ -117,5 +117,8 @@ Using one giant bitmap instead of one for each node might also cause a reduction
 
 \subsection{Experiments}
 \subsubsection{Query Running Time for Bitmap with Precomputed Blocks for different Block Sizes}
+
+\subsubsection{Using Rank Queries in Select Queries}
+\label{sec:experimentPrecomputedBlocksRankInSelect}
 
 \subsubsection{Memory Usage of Concatenated vs. Individual Bitmaps}
