@@ -76,11 +76,13 @@
       <compileType>
         <ccTool>
           <standard>8</standard>
-          <incDir>
-            <pElem>../../boost</pElem>
-          </incDir>
-          <commandLine>-std=c++11</commandLine>
+          <commandLine>-g -march=native</commandLine>
         </ccTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibLibItem>papi</linkerLibLibItem>
+          </linkerLibItems>
+        </linkerTool>
       </compileType>
       <item path="IO.h" ex="false" tool="3" flavor2="0">
       </item>

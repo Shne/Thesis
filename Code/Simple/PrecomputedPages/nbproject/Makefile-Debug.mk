@@ -44,8 +44,8 @@ OBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=-std=c++11
-CXXFLAGS=-std=c++11
+CCFLAGS=-g -march=native
+CXXFLAGS=-g -march=native
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -54,7 +54,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=
+LDLIBSOPTIONS=-lpapi
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -67,17 +67,17 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/precomputedpages: ${OBJECTFILES}
 ${OBJECTDIR}/Node.o: Node.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../../boost -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Node.o Node.cpp
+	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Node.o Node.cpp
 
 ${OBJECTDIR}/Tree.o: Tree.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../../boost -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Tree.o Tree.cpp
+	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Tree.o Tree.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../../boost -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:
