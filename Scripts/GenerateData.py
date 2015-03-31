@@ -44,6 +44,5 @@ def generateIntegerData(powerAmount, powerAlphabetSize):
 		randomArray.append(random.randrange(0, alphabetSize))
 	randomArray.tofile(fd)
 
-
-for i in range(8,27):
+for i in range(8,25):
 	generateIntegerData(8, i)

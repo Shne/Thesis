@@ -4,11 +4,11 @@ import subprocess
 import os.path
 from time import sleep
 
-amount = 7
+amount = 8
 alphabetSize = 16
 program = "dist/Release/GNU-Linux-x86/naiveinteger"
 cwd = 'Code/Simple/NaiveInteger'
-outputFilename = 'Query_NaiveVsPreallocatedSkew-1000queries.output'
+outputFilename = 'Query_NaiveVsControlledNodeMemorySkew-1000queries1.output'
 
 def addNewline():
 	open('Output/'+outputFilename, 'a').write('\n')
@@ -33,8 +33,9 @@ subprocess.Popen(['make','CONF=Release'], cwd=cwd).wait()
 # addNewline()
 
 skewRange = 6
+stepsize = 0.2
 print("\nNaiveInteger: Rank")
-for skew in frange(2,skewRange,0.2):
+for skew in frange(2,skewRange,stepsize):
 	for i in range(0, 5): #run 5 times for each skew
 		args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(0), outputFilename]
 		subprocess.Popen(args, cwd=cwd).wait()
@@ -42,10 +43,11 @@ for skew in frange(2,skewRange,0.2):
 		subprocess.Popen(args, cwd=cwd).wait()
 		args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(2), outputFilename]
 		subprocess.Popen(args, cwd=cwd).wait()
+	print(str(float((skew/(skewRange-stepsize))*100)) + "%" + " finished\n")
 addNewline()
 
 print("\nNaiveInteger: Select")
-for skew in frange(2,skewRange,0.2):
+for skew in frange(2,skewRange,stepsize):
 	for i in range(0, 5): #run 5 times for each skew
 		args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(0), outputFilename]
 		subprocess.Popen(args, cwd=cwd).wait()
@@ -53,6 +55,35 @@ for skew in frange(2,skewRange,0.2):
 		subprocess.Popen(args, cwd=cwd).wait()
 		args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(2), outputFilename]
 		subprocess.Popen(args, cwd=cwd).wait()
+	print(str(float((skew/(skewRange-stepsize))*100)) + "%" + " finished\n")
+addNewline()
+addNewline()
 
+# remember to recompile with NODEARRAY defined in node.h and rename executable to naiveintegerCNM
+program = "dist/Release/GNU-Linux-x86/naiveintegerCNM"
+cwd = 'Code/Simple/NaiveInteger'
+
+print("\ControlledNodeMemory: Rank")
+for skew in frange(2,skewRange,stepsize):
+	for i in range(0, 5): #run 5 times for each skew
+		args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(0), outputFilename]
+		subprocess.Popen(args, cwd=cwd).wait()
+		args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(1), outputFilename]
+		subprocess.Popen(args, cwd=cwd).wait()
+		args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(2), outputFilename]
+		subprocess.Popen(args, cwd=cwd).wait()
+	print(str(float((skew/(skewRange-stepsize))*100)) + "%" + " finished\n")
+addNewline()
+
+print("\ControlledNodeMemory: Select")
+for skew in frange(2,skewRange,stepsize):
+	for i in range(0, 5): #run 5 times for each skew
+		args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(0), outputFilename]
+		subprocess.Popen(args, cwd=cwd).wait()
+		args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(1), outputFilename]
+		subprocess.Popen(args, cwd=cwd).wait()
+		args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(2), outputFilename]
+		subprocess.Popen(args, cwd=cwd).wait()
+	print(str(float((skew/(skewRange-stepsize))*100)) + "%" + " finished\n")
 addNewline()
 addNewline()

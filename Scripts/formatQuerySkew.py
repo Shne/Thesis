@@ -153,8 +153,6 @@ testValueDataListKeys = ["skewList",
 "branchMissRateList", 
 "l2CacheMissRateList"]
 
-print(str(len(testValueDataListKeys)))
-
 GnuScriptFileName = '../NaiveVsControlledNodeMemoryQuerySkew.gnu'
 writeToGnuplot(naiveRankGnuplotFile, testValueDataListKeys, testDataFile, "SimpleNaiveInteger", "rank", columns, 1)
 writeToGnuplot(naiveSelectGnuplotFile, testValueDataListKeys, testDataFile, "SimpleNaiveInteger", "select", columns, 2)
