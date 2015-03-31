@@ -41,7 +41,9 @@ def generateIntegerData(powerAmount, powerAlphabetSize):
 
 	randomArray = array.array('I')
 	for _ in range(amount):
-		randomArray.append(random.randint(0, alphabetSize-1))
+		randomArray.append(random.randrange(0, alphabetSize))
 	randomArray.tofile(fd)
 
-generateIntegerData(7, 16)
+
+for i in range(8,27):
+	generateIntegerData(8, i)
