@@ -18,7 +18,7 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
 Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, float skew)
 #endif
     : isLeaf(false), left(nullptr), right(nullptr), parent(parentNode) {
-    
+
     uint alphabetSize = alphabetMax - alphabetMin +1;
     if(alphabetSize == 1) {
 //        cout << "LEAF:\t\t" << (*input)[0] << endl;
@@ -27,11 +27,14 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
         return;
     }
 
-    uint split = (uint)((alphabetSize-1)/skew + alphabetMin);
+    uint split = (uint) ((alphabetSize-1)/skew) + alphabetMin;
     uint leftAlphabetMin = alphabetMin;
     uint leftAlphabetMax = split;
     uint rightAlphabetMin = split+1;
     uint rightAlphabetMax = alphabetMax;
+    
+    assert(leftAlphabetMin <= leftAlphabetMax);
+    assert(rightAlphabetMin <= rightAlphabetMax);
     
     vector<uint>* leftString = new vector<uint>;
     vector<uint>* rightString = new vector<uint>;

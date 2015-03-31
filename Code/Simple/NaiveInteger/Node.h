@@ -19,7 +19,8 @@
 #include <algorithm>
 #include <iterator>
 #include <papi.h>
-//#include <boost/dynamic_bitset.hpp>
+#define NDEBUG
+#include <assert.h>
 
 typedef std::vector<bool> bitmap_t;
 

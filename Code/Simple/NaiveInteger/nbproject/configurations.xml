@@ -47,7 +47,7 @@
           <incDir>
             <pElem>../../boost</pElem>
           </incDir>
-          <commandLine>-std=c++11 -O3 -g -march=native</commandLine>
+          <commandLine>-march=native</commandLine>
         </ccTool>
         <asmTool>
           <architecture>2</architecture>
