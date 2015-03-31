@@ -4,7 +4,7 @@ import subprocess
 import os.path
 from time import sleep
 
-amount = 7
+amount = 8
 skew = 2
 program = "dist/Release/GNU-Linux-x86/naiveinteger"
 cwd = 'Code/Simple/NaiveInteger'
@@ -21,7 +21,7 @@ subprocess.Popen(['make','CONF=Release'], cwd=cwd).wait()
 
 addNewline()
 
-for alphabetSize in range(6,21):
+for alphabetSize in range(8,25):
 	for _ in range(5):
 		args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(0), outputFilename]
 		subprocess.Popen(args, cwd=cwd).wait()
@@ -36,7 +36,7 @@ addNewline()
 outputFilename = 'naiveIntegerAlphabetSize_smallN.output'
 amount = 2
 addNewline()
-for alphabetSize in range(6,21):
+for alphabetSize in range(8,25):
 	for _ in range(5):
 		args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(0), outputFilename]
 		subprocess.Popen(args, cwd=cwd).wait()
