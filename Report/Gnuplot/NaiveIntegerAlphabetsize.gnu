@@ -108,9 +108,9 @@ stddev = sprintf("%g",STATS_min)
 stats '../Data/NaiveIntegerAlphabetsize.data' every ::::0 using 5 nooutput
 stddev1 = sprintf("%g",STATS_min)
 #avg
-stats '../Data/NaiveIntegerAlphabetsize.data' every ::::0 using 2 nooutput
+stats '../Data/NaiveIntegerAlphabetsize.data' every ::::1 using 2 nooutput
 stddev2 = sprintf("%g",STATS_min)
-stats '../Data/NaiveIntegerAlphabetsize.data' every ::::0 using 5 nooutput
+stats '../Data/NaiveIntegerAlphabetsize.data' every ::::1 using 5 nooutput
 stddev3 = sprintf("%g",STATS_min)
 set logscale x 2
 set ylabel "Wall Time (microsec)"
