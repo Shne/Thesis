@@ -29,7 +29,7 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
     bitmapSize = input->size(); //one bit for each character in the input string
     bitmapOffset = in_bitmapOffset;
    
-    uint split = (uint)((alphabetSize-1)/skew + alphabetMin);
+    uint split = (uint) ((alphabetSize-1)/skew) + alphabetMin;
 
     uint leftAlphabetMin = alphabetMin; 
     uint leftAlphabetMax = split;
