@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
     if(argc > BLOCKSIZE_ARG_NUM) {
         blockSize = atoi(argv[BLOCKSIZE_ARG_NUM]) * CHAR_BIT;
     } else {
-        blockSize = sysconf(_SC_PAGESIZE) * CHAR_BIT / 2;
+        blockSize = sysconf(_SC_PAGESIZE) * CHAR_BIT;
     }
     
     /***************/

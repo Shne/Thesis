@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
     if(argc > BLOCKSIZE_ARG_NUM) {
         blockSize = atoi(argv[BLOCKSIZE_ARG_NUM]) * CHAR_BIT;
     } else {
-        blockSize = sysconf(_SC_PAGESIZE) * CHAR_BIT / 2;
+        blockSize = sysconf(_SC_PAGESIZE) * CHAR_BIT;
     }
     
     /***************/
@@ -83,11 +83,11 @@ int main(int argc, char** argv) {
         testBuildTime(amount, alphabetSize, pathname, blockSize, eventset, events, values, num_events, input);
     }
     else if(test == "rank"){
-        Tree tree = Tree(input, amount, alphabetSize);    
+        Tree tree = Tree(input, amount, alphabetSize, blockSize);    
         testRankQuery(amount, alphabetSize, pathname, blockSize, eventset, events, values, num_events, tree);
     }
     else if(test == "select"){
-        Tree tree = Tree(input, amount, alphabetSize);    
+        Tree tree = Tree(input, amount, alphabetSize, blockSize);
         testSelectQuery(amount, alphabetSize, pathname, blockSize, eventset, events, values, num_events, tree);
     }
 

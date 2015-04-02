@@ -18,7 +18,7 @@
 #include <iterator>
 #include <papi.h>
 #include <unistd.h>
-#define NDEBUG
+//#define NDEBUG
 #include <assert.h>
 
 typedef std::vector<bool> bitmap_t;
@@ -36,10 +36,12 @@ private:
     Node* right;
 public:
     Node();
-    Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode);
-    int rank(uint character, ulong index, uint alphabetMin, uint alphabetMax);
-    ulong popcountBinaryRank(ulong pos);
-    ulong binaryRank(ulong index);
+    Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, uint blockSize);
+    uint rank(uint character, uint index, uint alphabetMin, uint alphabetMax, uint blockSize);
+    uint blockBinaryRank(uint pos, uint blockSize);
+    ulong popcountBinaryRank(uint offset, uint pos);
+//    ulong binaryRank(ulong index);
+    uint binaryRank(uint offset, uint length);
     uint select(bool charBit, ulong occurance);
     uint binarySelect(bool charBit, ulong occurance);
     ulong popcountBinarySelect(bool charBit, ulong occurance);

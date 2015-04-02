@@ -12,7 +12,7 @@
 
 using namespace std;
 
-Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode)
+Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, uint blockSize)
     : isLeaf(false), left(nullptr), right(nullptr), parent(parentNode) {
 
     uint alphabetSize = alphabetMax - alphabetMin +1;
@@ -33,29 +33,37 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
     vector<uint>* leftString = new vector<uint>;
     vector<uint>* rightString = new vector<uint>;
     
+    uint blockRanksSize = (input->size()/blockSize)+2; //+2 to have space for first and last unaligned
+    blockRanks = blockRanksVector(blockRanksSize, 0);
+    uint bitmapMisalignment = CHAR_BIT * ((ulong)bitmap.begin()._M_p % (blockSize/CHAR_BIT)); //how far inside a block the bitmap starts, in bits
+    
     for(auto it = input->begin(); it != input->end(); it++) {
-        int currentChar = *it;        
+        uint currentChar = *it;
         if(currentChar <= split) {
             bitmap.push_back(false);
             leftString->push_back(currentChar);
         } else {
+            uint blockAlignedOffset = bitmap.size() + bitmapMisalignment;
+            uint blockIndex = blockAlignedOffset / blockSize;
+            assert(blockIndex < blockRanksSize);
+            blockRanks[blockIndex] += 1;
             bitmap.push_back(true);
             rightString->push_back(currentChar);
         }
     }
     
-    bitmap.shrink_to_fit();
+//    bitmap.shrink_to_fit();
     
     input->clear();
     delete input;
     if(rightString->size() > 0) {
-        right = new Node(rightString, rightAlphabetMin, rightAlphabetMax, this);
+        right = new Node(rightString, rightAlphabetMin, rightAlphabetMax, this, blockSize);
     } else {
         rightString->clear();
         delete rightString;
     }
     if(leftString->size() > 0) {
-        left = new Node(leftString, leftAlphabetMin, leftAlphabetMax, this);
+        left = new Node(leftString, leftAlphabetMin, leftAlphabetMax, this, blockSize);
     } else {
         leftString->clear();
         delete leftString;
@@ -63,7 +71,7 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
 }
 
 
-int Node::rank(uint character, ulong index, uint alphabetMin, uint alphabetMax){
+uint Node::rank(uint character, uint index, uint alphabetMin, uint alphabetMax, uint blockSize){
     if(isLeaf){
         return index;
     }
@@ -76,53 +84,124 @@ int Node::rank(uint character, ulong index, uint alphabetMin, uint alphabetMax){
     uint rightAlphabetMax = alphabetMax;
     
     bool charBit = character > split;
-    ulong pos;
-    ulong rank = 0;
+    uint pos;
+    uint rank = 0;
     if(charBit && right != nullptr) {
 //        pos = binaryRank(index);
-        pos = popcountBinaryRank(index);
-        rank = right->rank(character, pos, rightAlphabetMin, rightAlphabetMax); //right sub tree
+//        pos = popcountBinaryRank(0, index);
+        pos = blockBinaryRank(index, blockSize);
+        rank = right->rank(character, pos, rightAlphabetMin, rightAlphabetMax, blockSize);
     }else if(left != nullptr){
 //        pos = index - binaryRank(index);
-        pos = index - popcountBinaryRank(index);
-        rank = left->rank(character, pos, leftAlphabetMin, leftAlphabetMax); //right sub tree
+//        pos = index - popcountBinaryRank(0, index);
+        pos = index - blockBinaryRank(index, blockSize);
+        rank = left->rank(character, pos, leftAlphabetMin, leftAlphabetMax, blockSize);
     }
     
     return rank;
 }
 
-ulong Node::popcountBinaryRank(ulong pos) {
-    if(pos > bitmap.size()) cout << "position " << pos << " larger than bitmapsize " << bitmap.size() << endl;
-    ulong bitmapwordRank = 0;
+
+uint Node::blockBinaryRank(uint pos, uint blockSize) {
+    uint bsize = bitmap.size();
+    assert(pos <= bitmap.size());
     
-    ulong i;
-    ulong wordsize = sizeof(*bitmap.begin()._M_p) * CHAR_BIT; //vector<bool> src uses CHAR_BIT too
-    ulong fullWords = pos / wordsize;
-    
-    for(i = 0; i < fullWords; i++) {
-        ulong word = *(bitmap.begin()._M_p + i);
-        bitmapwordRank += __builtin_popcountl(word);
+    uint bitmapMisalignment = CHAR_BIT * ((ulong)bitmap.begin()._M_p % (blockSize/CHAR_BIT)); //how far inside a block the bitmap starts, in bits
+    uint lengthToNextBlockAlignment = (blockSize - bitmapMisalignment) % blockSize; //modulo so it's 0 when bitmapMisalignment is 0
+
+    //SMALL POS
+    if(pos < lengthToNextBlockAlignment) {
+        return popcountBinaryRank(0, pos);
     }
-    ulong word = *(bitmap.begin()._M_p + i);    
-    ulong shift = (pos % wordsize);
-    ulong mask = (1UL << shift)-1;
     
-    ulong maskedWord = word & mask;
-    bitmapwordRank += __builtin_popcountl(maskedWord);
-    return bitmapwordRank;
+    //FIRST PART
+    uint rank = 0;
+    if(lengthToNextBlockAlignment != 0) {
+        rank += blockRanks[0];
+    }
+    
+//    cout << rank << " " << lengthToNextBlockAlignment << " ";
+    
+    uint fullBlocks = (pos - lengthToNextBlockAlignment) / blockSize;
+    //FULL BLOCKS
+    uint blockIndex = (bitmapMisalignment + lengthToNextBlockAlignment) / blockSize;
+    for(uint i = 0; i < fullBlocks; i++) {
+        rank += blockRanks[blockIndex];
+        blockIndex++;
+    }
+    
+    //LAST PART
+    uint offset = lengthToNextBlockAlignment + fullBlocks * blockSize;
+    uint length = pos - offset;
+    rank += popcountBinaryRank(offset, length);
+    cout << rank << " ";
+    uint popcountRank = popcountBinaryRank(0, pos);
+    cout << popcountRank << " " << rank - popcountRank << endl;
+    assert(popcountRank == rank);
+    return rank;
 }
 
-ulong Node::binaryRank(ulong pos) {
-    uint i = 1;
-    uint rank = 0;
-    for(auto it = bitmap.begin(); it != bitmap.end(); it++) {
-        if(i > pos) break;
-        bool currentBit = *it;
+ulong Node::popcountBinaryRank(uint offset, uint length) {
+    assert(offset + length <= bitmap.size());
+    ulong rank = 0;
+
+    vector<bool>::reference ref = bitmap[offset];
+    ulong* wordPtr = ref._M_p;
+    ulong wordsize = sizeof(*wordPtr) * CHAR_BIT; //vector<bool> src uses CHAR_BIT too
+    uint initialOffset = 0;
+    
+    if(length < wordsize) {
+        return binaryRank(offset, length);
+    }
+    
+    //MISALIGNED FIRST PART
+    if(offset % wordsize != 0) {
+        ulong firstMask = ~(ref._M_mask - 1UL); //the bit of _M_mask and up
+        ulong maskedFirstWord = (*ref._M_p) & firstMask;
+        rank += __builtin_popcountl(maskedFirstWord);
+        initialOffset = __builtin_popcountl(firstMask); //the amount we should skip for our calculation of fullWords
+        wordPtr++;
+    }
+    
+    //FULL WORDS
+    uint alignedPos = length - initialOffset; //initialOffset is the amount of bits in the first unaligned word of our bitmap
+    ulong fullWords = (length - initialOffset) / wordsize;
+    for(uint i = 0; i < fullWords; i++) {
+        rank += __builtin_popcountl(*wordPtr);
+        wordPtr++;
+    }
+    
+    //PART OF LAST WORD (if unaligned)
+    ulong word = *wordPtr;
+    ulong shift = alignedPos % wordsize; //if word-aligned, shift will be 0, making mask (below) all 0.
+    ulong mask = (1UL << shift)-1UL; //if word-aligned mask will be 0
+    ulong maskedWord = word & mask; //if word-aligned maskedWord will be 0
+    rank += __builtin_popcountl(maskedWord);
+    return rank;
+}
+
+uint Node::binaryRank(uint offset, uint length) {
+    int rank = 0;
+    for(uint i = offset; i < offset + length; i++) {
+        bool currentBit = bitmap[i];
         if(currentBit) rank++;
         i++;
     }
     return rank;
 }
+
+
+//ulong Node::binaryRank(ulong pos) {
+//    uint i = 1;
+//    uint rank = 0;
+//    for(auto it = bitmap.begin(); it != bitmap.end(); it++) {
+//        if(i > pos) break;
+//        bool currentBit = *it;
+//        if(currentBit) rank++;
+//        i++;
+//    }
+//    return rank;
+//}
 
 
 uint Node::leafSelect(uint character, ulong occurance) {

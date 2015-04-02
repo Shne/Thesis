@@ -19,10 +19,10 @@ class Tree {
     
 private:
     Node root;
-    unsigned long alphabetMin, alphabetMax, inputSize;
-    
+    ulong alphabetMin, alphabetMax, inputSize;
+    uint blockSize;
 public:
-    Tree(vector<uint>* input, uint amount, uint alphabetSize);
+    Tree(vector<uint>* input, uint amount, uint alphabetSize, uint blockSize);
     int rank(uint character, ulong index);
     int select(uint character, ulong occurance);
 };

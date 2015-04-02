@@ -143,7 +143,7 @@ inline void testRankQuery(uint amount, uint alphabetSize, string pathname,
 inline void testBuildTime(uint amount, uint alphabetSize, string pathname, 
         uint blockSize, int eventset, int* events, long_long* values, int num_events, vector<uint>* input){
     testSetup(eventset, events, num_events);
-    Tree tree = Tree(input, amount, alphabetSize);
+    Tree tree = Tree(input, amount, alphabetSize, blockSize);
     testTearDown(amount, alphabetSize, "build", pathname, blockSize, eventset, events, values, num_events);
     
     cout << tree.rank(0, amount) << endl; //just to make sure nothing is optimized away

@@ -44,9 +44,6 @@
         <ccTool>
           <architecture>2</architecture>
           <standard>8</standard>
-          <incDir>
-            <pElem>../../boost</pElem>
-          </incDir>
           <commandLine>-march=native</commandLine>
         </ccTool>
         <asmTool>
