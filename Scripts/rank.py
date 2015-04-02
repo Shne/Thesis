@@ -24,8 +24,8 @@ def select(character, occourance):
 		pos = pos + 1
 	return pos
 
-powerAmount = 7
-alphabetSize = 12
+powerAmount = 8
+alphabetSize = 16
 
 amount = pow(10, powerAmount)
 
@@ -34,13 +34,13 @@ fileHandle = open(fileName, "rb")
 intArray = array.array('I')
 intArray.fromfile(fileHandle, amount)
 
-symbol = 3;
+symbol = 0;
 #print(intArray)
-rank = rank(symbol, amount)
-print("rank: " + str(rank))
-position = select(symbol, 2000)
+# rank = rank(symbol, amount/2)
+# print("rank: " + str(rank))
+position = select(symbol, 1)
 print("select: " + str(position))
-print(intArray[position])
+# print(intArray[position])
 
 
 

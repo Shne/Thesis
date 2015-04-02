@@ -109,9 +109,11 @@ int Node::rank(uint character, ulong index, uint alphabetMin, uint alphabetMax, 
 //    ulong pos = charBit ? binaryRank(index) : index - binaryRank(index);
     ulong rank = 0;
     if(charBit && right != nullptr) {
+//        pos = binaryRank(index);
         pos = popcountBinaryRank(index);
         rank = right->rank(character, pos, rightAlphabetMin, rightAlphabetMax, skew); //right sub tree
     }else if(left != nullptr){
+//        pos = index - binaryRank(index);
         pos = index - popcountBinaryRank(index);
         rank = left->rank(character, pos, leftAlphabetMin, leftAlphabetMax, skew); //right sub tree
     }
