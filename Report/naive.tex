@@ -125,7 +125,7 @@ Having not found an explanation we pull data for Translation Lookaside Buffer Mi
 \figureEnd
 
 
-We can also see that the TLB Misses increase drastically from alphabet size about $2^{20}$ and up.
+We can see that the TLB Misses increase drastically from alphabet size about $2^{20}$ and up.
 Having found no other reasonable explanation for the discrepancy between the theoretical and our implementation's actual running time, we find it likely that TLB Misses is the culprit.
 
 In our further experimentation of the further improvements we do we will be using an alphabet size of $2^{16}$.
@@ -134,7 +134,7 @@ It is a realistic use cases to use types such as \texttt{char}, \texttt{wchar16\
 \texttt{wchar16\_t} enables an alphabet up to $2^{16} = 65,536$, which should be enough for many use cases, such as full text indexing.
 Zachery B. Simpson~\citep{bookWordStatistics} has found that no book found in the Gutenberg Project uses more than 43113 distinct words.
 According to one website~\footnote{http://testyourvocab.com/blog/2013-05-10-Summary-of-results}, their testing suggests an average adult has a vocabulary of 20,000 - 35,000 words. 
-Others~\footnote{http://www.worldwidewords.org/articles/howmany.htm}~\footnote{http://english.stackexchange.com/questions/93289/are-there-acknowledged-studies-about-the-relationship-of-vocabulary-and-comprehe} cite researchers saying about 60,000 words is the actual limit when including names.
+Others~\footnote{http://www.worldwidewords.org/articles/howmany.htm}~\footnote{http://english.stackexchange.com/questions/93289} cite researchers saying about 60,000 words is the actual limit when including names.
 Whichever is the actual number, they all suggest an alphabet size of $2^{16}$ is sufficient to index all the occurring words in a realistic use case text.
 
 Looking at the graphs from this experiment we can see that building the tree using an alphabet size of $2^{16}$ is still fairly quick, not running into much trouble with TLB misses, and not exceeding the expected asymptotically bound running time.
@@ -185,11 +185,11 @@ For the rank queries, we see little improvement in TLBM and L1 CM, as well as a 
 
 The massive reduction in branch mispredictions likely accounts for some of the saved cpu cycles.
 Given that the branch misprediction penalty on the Ivy Bridge architecture (on which this experiment was run) is about "15 cycles or more"~\cite{agner}, we can calculate an estimate of how many cpu cycles the branch misprediction reduction has saved us.
-The number of saved branch mispredictions for \textproc{rank} is then 309,342,424.4 - 1,882.6 = 309,340,541.8 mispredictions. Assuming a penalty of 15 cycles this becomes 309,340,541.8 $\cdot$ 15 = 4,640,108,127 cpu cycles saved, and given that the total number of cycles saved is 88,918,629,772.2 - 994,895,919.6 = 87,923,733,852.6, it is 4,640,108,127 / 87,923,733,852.6 = 0.0527742388 = 5.28\% of the total amount of cpu cycles saved.
+The number of saved branch mispredictions for \textproc{rank} is then 1,396,757,616.4 - 22,682.2 = 1,396,734,934.2 mispredictions. Assuming a penalty of 15 cycles this becomes 1,396,734,934.2 $\cdot$ 15 = 20,951,024,013 cpu cycles saved, and given that the total number of cycles saved is 397,345,711,110.4 - 4,423,412,635.0 = 392,922,298,475, it is 20,951,024,013 / 392,922,298,475 = 0.05332103597 = 5.33\% of the total amount of cpu cycles saved.
 This means that the branch mispredictions do have an effect, but it is only a small part of this increase in speed. The main improvement, we expect, comes from using only a few cpu cycles per word of the bitmap to calculate the binary rank, as well as possibly the slight decrease in L1 and L3 cache misses.
 
 
-By similar calculations the saved cpu cycles from branch mispredictions for \textproc{select} is at least 48,38\% of the total saved. We expect this is because of the much higher number of branch mispredictions and the lower number of cycles for the original select algorithm, as well as the fact that we can't use \texttt{popcount} for every word of the bitmap but must go back to doing manual counting of the bits when we find the word the sought-after occurrence is in.
+By similar calculations the saved cpu cycles from branch mispredictions for \textproc{select} is at least 48,84\% of the total saved. We expect this is because of the much higher number of branch mispredictions and the lower number of cycles for the original select algorithm, as well as the fact that we can't use \texttt{popcount} for every word of the bitmap but must go back to doing manual counting of the bits when we find the word the sought-after occurrence is in.
 
 
 \subsubsection{Further improvements}

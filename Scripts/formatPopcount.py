@@ -2,6 +2,7 @@
 
 import numpy
 import ReadOutput
+import subprocess
 
 RankGnuplotFile = open("Report/Gnuplot/Data/popcountRankNew.data", "w")
 SelectGnuplotFile = open("Report/Gnuplot/Data/popcountSelectNew.data", "w")
