@@ -40,13 +40,13 @@ public:
     uint rank(uint character, uint index, uint alphabetMin, uint alphabetMax, uint blockSize);
     uint blockBinaryRank(uint pos, uint blockSize);
     ulong popcountBinaryRank(uint offset, uint pos);
-//    ulong binaryRank(ulong index);
     uint binaryRank(uint offset, uint length);
-    uint select(bool charBit, ulong occurance);
-    uint binarySelect(bool charBit, ulong occurance);
-    ulong popcountBinarySelect(bool charBit, ulong occurance);
     Node* getLeaf(uint character, uint alphabetMin, uint alphabetMax);
-    uint leafSelect(uint character, ulong occurance);
+    uint leafSelect(uint character, ulong occurance, uint blockSize);
+    uint select(bool charBit, ulong occurance, uint blockSize);
+    uint blockBinarySelect(bool charBit, uint occurrence, uint blockSize);
+    uint popcountBinarySelect(bool charBit, uint occurrence, uint offset);
+    uint binarySelect(bool charBit, ulong occurance);
 };
 
 

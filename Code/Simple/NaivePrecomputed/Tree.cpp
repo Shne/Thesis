@@ -23,5 +23,5 @@ int Tree::rank(uint character, ulong index) {
 
 int Tree::select(uint character, ulong occurance) {
     Node* leaf = root.getLeaf(character, alphabetMin, alphabetMax);
-    return leaf->leafSelect(character, occurance);
+    return leaf->leafSelect(character, occurance, blockSize);
 }
