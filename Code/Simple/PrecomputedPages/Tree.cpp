@@ -18,7 +18,7 @@ Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, uint blockSize)
     Node* node_pt = static_cast<Node*> (::operator new (sizeof(Node)*2*alphabetSize));
     root = node_pt;
     
-    ulong maxBitmapSize = amount * log2((double)2*alphabetSize + 1);
+    ulong maxBitmapSize = amount * log2(2*alphabetSize);
     uint maxBlocks = maxBitmapSize/blockSize;
     blockRanks = blockRanksVector(maxBlocks, 0);
 
