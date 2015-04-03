@@ -151,7 +151,6 @@ ulong Node::binaryRank(ulong startOffset, ulong length, bitmap_t* bitmap) {
     for(uint i = startOffset; i < startOffset + length; i++) {
         bool currentBit = (*bitmap)[i];
         if(currentBit) rank++;
-        i++;
     }
     return rank;
 }
