@@ -10,18 +10,6 @@ def avg(list):
 	if len(list) is 0: return 0
 	return sum(list)/len(list)
 
-
-def getNumberOfEqualAlphabetValues(alphabetList):
-	amount = 0
-	for alphabet in alphabetList:
-		if(alphabet == alphabetList[0]):			
-			amount += 1
-
-		if(alphabet > alphabetList[0]):
-			break
-	return amount
-
-
 def getRelativeStddev(stepsize, inputList):
 	relativeStddevList = []
 	for i in range(0, len(inputList), stepsize):
@@ -36,12 +24,10 @@ def getRelativeStddev(stepsize, inputList):
 
 	return relativeStddevList
 
-
-def getMaxRelativeStddevStr(ReadOutput, columnNames):
+def getMaxRelativeStddevStr(ReadOutput, columnNames, stepsize):
 	dataTable = ReadOutput.getReadOutputLists(columnNames)
 	alphabetValues = dataTable[0]
 	dataTable.remove(alphabetValues)
-	stepsize = getNumberOfEqualAlphabetValues(alphabetValues)
 	
 	maxRelativeStddev = "0"
 	for dataRow in dataTable:
@@ -54,12 +40,11 @@ def getMaxRelativeStddevStr(ReadOutput, columnNames):
 	
 	return maxRelativeStddev
 
-def getAvgRelativeStddevStr(ReadOutput, columnNames):
+def getAvgRelativeStddevStr(ReadOutput, columnNames, stepsize):
 
 	dataTable = ReadOutput.getReadOutputLists(columnNames)
 	alphabetValues = dataTable[0]
 	dataTable.remove(alphabetValues)
-	stepsize = getNumberOfEqualAlphabetValues(alphabetValues)	
 
 	avgRelativeStddev = "0"
 	for dataRow in dataTable:
@@ -78,8 +63,8 @@ def writeGnuplotHeader(gnuplotFile):
 
 def formatAndWriteValues(ReadOutput, gnuplotFile, dataListKeys, testsPerSize):
 
-	gnuplotFile.write(getMaxRelativeStddevStr(ReadOutput, dataListKeys) + "\n")
-	gnuplotFile.write(getAvgRelativeStddevStr(ReadOutput, dataListKeys) + "\n")
+	gnuplotFile.write(getMaxRelativeStddevStr(ReadOutput, dataListKeys, testsPerSize) + "\n")
+	gnuplotFile.write(getAvgRelativeStddevStr(ReadOutput, dataListKeys, testsPerSize) + "\n")
 	for i in range(int(len(ReadOutput.alphabetSizeList)/testsPerSize)):
 		startIndex = i*testsPerSize
 		endIndex = startIndex + testsPerSize
