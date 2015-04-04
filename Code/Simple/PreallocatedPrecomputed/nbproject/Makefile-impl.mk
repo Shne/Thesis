@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=PrecomputedPages
+PROJECTNAME=PreallocatedPrecomputed
 
 # Active Configuration
 DEFAULTCONF=Debug

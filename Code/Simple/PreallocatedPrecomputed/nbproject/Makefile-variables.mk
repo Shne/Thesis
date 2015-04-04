@@ -9,19 +9,19 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=GNU-Linux-x86
 CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-Linux-x86
-CND_ARTIFACT_NAME_Debug=precomputedpages
-CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/precomputedpages
+CND_ARTIFACT_NAME_Debug=preallocatedprecomputed
+CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/preallocatedprecomputed
 CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Debug=precomputedpages.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/precomputedpages.tar
+CND_PACKAGE_NAME_Debug=preallocatedprecomputed.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/preallocatedprecomputed.tar
 # Release configuration
 CND_PLATFORM_Release=GNU-Linux-x86
 CND_ARTIFACT_DIR_Release=dist/Release/GNU-Linux-x86
-CND_ARTIFACT_NAME_Release=precomputedpages
-CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/precomputedpages
+CND_ARTIFACT_NAME_Release=preallocatedprecomputed
+CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/preallocatedprecomputed
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Release=precomputedpages.tar
-CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/precomputedpages.tar
+CND_PACKAGE_NAME_Release=preallocatedprecomputed.tar
+CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/preallocatedprecomputed.tar
 #
 # include compiler specific variables
 #
