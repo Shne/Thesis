@@ -5,7 +5,7 @@ import subprocess
 import Utils
 
 testDataFile = 'Output/PrecomputedRankBlockSize_n8as16.output'
-dataListKeys = ["alphabetSizeList", "blockSizeList", "wallTimeList", "branchMissRateList", "branchMispredictionsList", "TLBList", "l1DataCacheMissesList", "l2DataCacheMissesList", "l3TotalCacheMissesList"]
+dataListKeys = ["alphabetSizeList", "blockSizeList", "wallTimeList", "branchMissRateList", "branchMispredictionsList", "TLBList", "l1DataCacheMissesList", "l2DataCacheMissesList", "l3TotalCacheMissesList", "memSizeList", "memResidentList", "memHighWatermarkList"]
 testsPerSize = 1
 
 
