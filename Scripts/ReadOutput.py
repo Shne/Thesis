@@ -3,6 +3,7 @@
 import re
 
 alphabetSizeList = []
+blockSizeList = []
 skewList = []
 realCyclesList = []
 wallTimeList = []
@@ -27,6 +28,7 @@ def getData(input_, algorithm, test):
 	match = "algorithm="+algorithm+"\ttest="+test+".*";
 
 	alphabetSizeReg = re.compile(match+"alphabetSize=(?P<alphabetSize>\d+)")
+	blockSizeReg = re.compile(match+"blockSize=(?P<blockSize>\d+)")
 	skewReg = re.compile(match+"skew=(?P<skew>\d+(\.\d*)?)")
 	realCyclesReg = re.compile(match+"real_cycles=(?P<real_cycles>\d+)")
 	wallTimeReg = re.compile(match+"wall_time=(?P<wall_time>\d+)")
@@ -47,6 +49,7 @@ def getData(input_, algorithm, test):
 
 	for line in inputFile:
 		alphabetSize = alphabetSizeReg.search(line)
+		blockSize = blockSizeReg.search(line)
 		skew = skewReg.search(line)
 		realCycles = realCyclesReg.search(line)
 		wallTime = wallTimeReg.search(line)
@@ -65,6 +68,8 @@ def getData(input_, algorithm, test):
 
 		if alphabetSize is not None:
 			alphabetSizeList.append(int(alphabetSize.group('alphabetSize')))
+		if blockSize is not None:
+			blockSizeList.append(int(blockSize.group('blockSize')))
 		if skew is not None:
 			skewList.append(float(skew.group('skew')))
 		if realCycles is not None:
@@ -104,6 +109,7 @@ def getData(input_, algorithm, test):
 
 def reset():
 	del alphabetSizeList[:]
+	del blockSizeList[:]
 	del skewList[:]
 	del realCyclesList[:]
 	del wallTimeList[:]
@@ -127,6 +133,8 @@ def getReadOutputLists(valueListKeys):
 	for key in valueListKeys:
 		if(key == "alphabetSizeList"):
 			valueLists.append(alphabetSizeList)
+		elif(key == "blockSizeList"):
+			valueLists.append(blockSizeList)
 		elif(key == "skewList"):
 			valueLists.append(skewList)
 		elif(key == "realCyclesList"):
