@@ -52,3 +52,9 @@ Utils.formatAndWriteValues(ReadOutput, gnuplotFile, dataListKeys, testsPerSize)
 # Utils.writeGnuplotHeader(gnuplotFile)
 # ReadOutput.getData(testDataFile, "UnalignedNaivePrecomputed", "select")
 # Utils.formatAndWriteValues(ReadOutput, gnuplotFile, dataListKeys, testsPerSize)
+
+
+
+GnuScriptFileName = '../PrecomputedRankBlockSize.gnu'
+cwd = 'Report/Gnuplot/Graphs'
+subprocess.Popen(['gnuplot', GnuScriptFileName], cwd=cwd).wait()
