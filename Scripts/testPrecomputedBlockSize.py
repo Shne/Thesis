@@ -8,8 +8,9 @@ amount = 8
 alphabetSize = 16
 
 naiveIntegerProgram = "dist/Release/GNU-Linux-x86/naiveinteger"
-naiveIntegerCwd = 'Code/Simple/NaiveInteger'reallocatedPrecomputedProgram = "dist/Release/GNU-Linux-x86/preallocatedprecomputedblocks"
-preallocatedPrecomputedCwd = 'Code/Simple/PreallocatedPrecomputedBlocks'
+naiveIntegerCwd = 'Code/Simple/NaiveInteger'
+preallocatedPrecomputedProgram = "dist/Release/GNU-Linux-x86/preallocatedprecomputed"
+preallocatedPrecomputedCwd = 'Code/Simple/PreallocatedPrecomputed'
 naivePrecomputedProgram = "dist/Release/GNU-Linux-x86/naiveprecomputed"
 naivePrecomputedCwd = 'Code/Simple/NaivePrecomputed'
 unalignedNaivePrecomputedProgram = "dist/Release/GNU-Linux-x86/unalignednaiveprecomputed"
@@ -29,8 +30,7 @@ subprocess.Popen(['make','CONF=Release'], cwd=naivePrecomputedCwd).wait()
 subprocess.Popen(['make','CONF=Release', 'clean'], cwd=unalignedNaivePrecomputedCwd).wait()
 subprocess.Popen(['make','CONF=Release'], cwd=unalignedNaivePrecomputedCwd).wait()
 
-# repeats = 5
-repeats = 1
+repeats = 5
 
 pageSize = 4096
 blockSizeRange = [pageSize/4, pageSize/2, pageSize, pageSize*2, pageSize*3, pageSize*4, pageSize*5, pageSize*6]

@@ -74,7 +74,7 @@ inline void testTearDown(uint amount, uint alphabetSize, string test, string pat
         PAPI_dmem_info_t meminfo;
         PAPI_get_dmem_info(&meminfo);
         queryOutput << endl
-            << "algorithm=NaivePrecomputed" << "\t"
+            << "algorithm=UnalignedNaivePrecomputed" << "\t"
             << "test=" << test << "\t"
             << "amount=" << amount << "\t"
             << "alphabetSize=" << alphabetSize << "\t"
