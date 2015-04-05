@@ -28,8 +28,8 @@ def getMaxRelativeStddevStr(ReadOutput, columnNames, stepsize):
 	dataTable = ReadOutput.getReadOutputLists(columnNames)
 	alphabetValues = dataTable[0]
 	dataTable.remove(alphabetValues)
-	
-	maxRelativeStddev = "0"
+
+	maxRelativeStddev = "0.000"
 	for dataRow in dataTable:
 		relativeStddev = getRelativeStddev(stepsize, dataRow)
 		if len(dataRow) == 0:
@@ -46,7 +46,7 @@ def getAvgRelativeStddevStr(ReadOutput, columnNames, stepsize):
 	alphabetValues = dataTable[0]
 	dataTable.remove(alphabetValues)
 
-	avgRelativeStddev = "0"
+	avgRelativeStddev = "0.00"
 	for dataRow in dataTable:
 		relativeStddev = getRelativeStddev(stepsize, dataRow)
 		if len(dataRow) == 0:
@@ -59,7 +59,7 @@ def getAvgRelativeStddevStr(ReadOutput, columnNames, stepsize):
 	return avgRelativeStddev
 
 def writeGnuplotHeader(gnuplotFile):
-	gnuplotFile.write("#[alphabetSize] [Walltime] [BlockSize] [BranchMissRate] [BranchMis] [TLB] [L1CM] [L2CM] [L3CM]" +"\n")
+	gnuplotFile.write("#[alphabetSize] [Walltime] [BlockSize] [BranchMissRate] [BranchMis] [TLB] [L1CM] [L2CM] [L3CM] [MemSize] [ResidentMem] [MemHighWatermark]\n")
 
 def formatAndWriteValues(ReadOutput, gnuplotFile, dataListKeys, testsPerSize):
 
@@ -80,5 +80,19 @@ def formatAndWriteValues(ReadOutput, gnuplotFile, dataListKeys, testsPerSize):
 		L1CM = avg(ReadOutput.l1DataCacheMissesList[startIndex:endIndex])
 		L2CM = avg(ReadOutput.l2DataCacheMissesList[startIndex:endIndex])
 		L3CM = avg(ReadOutput.l3TotalCacheMissesList[startIndex:endIndex])
+		MemSize = avg(ReadOutput.memSizeList[startIndex:endIndex])
+		MemResident = avg(ReadOutput.memResidentList[startIndex:endIndex])
+		MemHighWatermark = avg(ReadOutput.memHighWatermarkList[startIndex:endIndex])
 
-		gnuplotFile.write(str(alphabetSize) +" "+ str(Walltime) +" "+ str(blockSize) +" "+ str(BranchMissRate) +" "+ str(BranchMis) +" "+ str(TLB) +" "+ str(L1CM) +" "+ str(L2CM) +" "+ str(L3CM) +"\n")
+		gnuplotFile.write(str(alphabetSize)+" "+
+			str(Walltime)+" "+
+			str(blockSize)+" "+
+			str(BranchMissRate)+" "+
+			str(BranchMis)+" "+
+			str(TLB)+" "+
+			str(L1CM)+" "+
+			str(L2CM)+" "+
+			str(L3CM)+" "+
+			str(MemSize)+" "+
+			str(MemResident)+" "+
+			str(MemHighWatermark)+"\n")
