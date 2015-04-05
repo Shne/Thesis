@@ -14,10 +14,10 @@ preallocatedprecomputed_avg_stddev_rank = sprintf("%g",STATS_min)
 stats '../Data/PrecomputedRankBlockSize_PreallocatedPrecomputed_Rank.data' every ::::1 using 2 nooutput #max
 preallocatedprecomputed_max_stddev_rank = sprintf("%g",STATS_min)
 
-# stats '../Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Rank.data' every ::::0 using 2 nooutput #avg
-# unalignednaiveprecomputed_avg_stddev_rank = sprintf("%g",STATS_min)
-# stats '../Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Rank.data' every ::::1 using 2 nooutput #max
-# unalignednaiveprecomputed_max_stddev_rank = sprintf("%g",STATS_min)
+stats '../Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Rank.data' every ::::0 using 2 nooutput #avg
+unalignednaiveprecomputed_avg_stddev_rank = sprintf("%g",STATS_min)
+stats '../Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Rank.data' every ::::1 using 2 nooutput #max
+unalignednaiveprecomputed_max_stddev_rank = sprintf("%g",STATS_min)
 
 
 stats '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Select.data' every ::::0 using 2 nooutput #avg
@@ -30,10 +30,10 @@ preallocatedprecomputed_avg_stddev_select = sprintf("%g",STATS_min)
 stats '../Data/PrecomputedRankBlockSize_PreallocatedPrecomputed_Select.data' every ::::1 using 2 nooutput #max
 preallocatedprecomputed_max_stddev_select = sprintf("%g",STATS_min)
 
-# stats '../Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Select.data' every ::::0 using 2 nooutput #avg
-# unalignednaiveprecomputed_avg_stddev_select = sprintf("%g",STATS_min)
-# stats '../Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Select.data' every ::::1 using 2 nooutput #max
-# unalignednaiveprecomputed_max_stddev_select = sprintf("%g",STATS_min)
+stats '../Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Select.data' every ::::0 using 2 nooutput #avg
+unalignednaiveprecomputed_avg_stddev_select = sprintf("%g",STATS_min)
+stats '../Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Select.data' every ::::1 using 2 nooutput #max
+unalignednaiveprecomputed_max_stddev_select = sprintf("%g",STATS_min)
 
 
 

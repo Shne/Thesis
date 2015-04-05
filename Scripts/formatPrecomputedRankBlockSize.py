@@ -6,7 +6,7 @@ import Utils
 
 testDataFile = 'Output/PrecomputedRankBlockSize_n8as16.output'
 dataListKeys = ["alphabetSizeList", "blockSizeList", "wallTimeList", "branchMissRateList", "branchMispredictionsList", "TLBList", "l1DataCacheMissesList", "l2DataCacheMissesList", "l3TotalCacheMissesList", "memSizeList", "memResidentList", "memHighWatermarkList"]
-testsPerSize = 1
+testsPerSize = 5
 
 
 # NAIVEINTEGER
@@ -43,15 +43,14 @@ Utils.formatAndWriteValues(ReadOutput, gnuplotFile, dataListKeys, testsPerSize)
 
 
 #UNALIGNED NAIVE PRECOMPUTED
-# testsPerSize = 1
-# gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Rank.data", "w")
-# Utils.writeGnuplotHeader(gnuplotFile)
-# ReadOutput.getData(testDataFile, "UnalignedNaivePrecomputed", "rank")
-# Utils.formatAndWriteValues(ReadOutput, gnuplotFile, dataListKeys, testsPerSize)
-# gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Select.data", "w")
-# Utils.writeGnuplotHeader(gnuplotFile)
-# ReadOutput.getData(testDataFile, "UnalignedNaivePrecomputed", "select")
-# Utils.formatAndWriteValues(ReadOutput, gnuplotFile, dataListKeys, testsPerSize)
+gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Rank.data", "w")
+Utils.writeGnuplotHeader(gnuplotFile)
+ReadOutput.getData(testDataFile, "UnalignedNaivePrecomputed", "rank")
+Utils.formatAndWriteValues(ReadOutput, gnuplotFile, dataListKeys, testsPerSize)
+gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Select.data", "w")
+Utils.writeGnuplotHeader(gnuplotFile)
+ReadOutput.getData(testDataFile, "UnalignedNaivePrecomputed", "select")
+Utils.formatAndWriteValues(ReadOutput, gnuplotFile, dataListKeys, testsPerSize)
 
 
 
