@@ -86,7 +86,7 @@ The Wavelet Tree can be constructed in $O(n \log \sigma)$ time.
 
 \subsection{Rank Query}
 Rank counts the number of occurrences of the specified character up to and including the specified position. 
-It starts from the root of the Wavelet Tree and moves down through the tree until it hits the leaf of the input character, \citep{Claude08practicalrankselect}.
+It starts from the root of the Wavelet Tree and moves down through the tree until it hits the leaf of the input character, \citep[Section 2.2]{Claude08practicalrankselect}.
 
 \begin{algorithm}
 \caption{Rank}
@@ -121,7 +121,7 @@ To make binary rank fast, we later used the \texttt{popcount} instruction that c
 
 \subsection{Select query}
 \textproc{Select} queries the Wavelet Tree for the position of the i'th occurrence of the specified character.
-It starts from the leaf of the character and queries up through the tree, which means you need to know the leaf of the character in advance \citep{Claude08practicalrankselect}. 
+It starts from the leaf of the character and queries up through the tree, which means you need to know the leaf of the character in advance \citep[Section 2.2]{Claude08practicalrankselect}. 
 
 
 \begin{algorithm}
@@ -168,6 +168,46 @@ This takes O(N) time making \textproc{BinarySelect} a huge bottleneck for \textp
 In \ref{sec:ImplBinarySelect} we describe how to improve the practical running time of \textproc{BinarySelect} using the \textit{popcount} instruction.
 
 \subsection{Applications}
+\subsubsection{Compression}
+The Wavelet Tree is used for compression of data in a lot of ways where two of the main techniques are using specific encodings on bitmaps and changing the shape of the tree \citep[Section~3]{Navjda13}.
+The type of encoding on bitmaps that is used most often is entropy coding.
+
+Entropy coding can be explained by splitting it into two parts: Modelling and Coding.
+Modelling assigns probabilities to the symbols, and coding produces a bit sequence from these probabilities.
+The probability of a symbol is based on how often it appears in a given data set. 
+Higher frequency gives a higher probability.
+Entropy coding can be done with a coding scheme, which uses a discrete number of bits for each symbol, for example Huffman coding. 
+
+Entropy represents a lower bound to the average numbers of bits needed to represent each symbol in S, according to the coding theorem of Shannon (todo reference).
+Entropy is defined in the following way:
+
+\begin{mdframed}[nobreak, linecolor=lightgray]
+\textbf{Definition}: Entropy. \\
+Let \textit{S} be a sequence of \textit{n} symbols from an alphabet $\Sigma = \lbrace c_1 ... c_\sigma \rbrace$ of cardinality $\sigma$.
+Then \textit{entropy} H is defined as
+\begin{center}
+$H = \sum_{i=1}^{\sigma} p_i log_2(\frac{1}{p_i})$
+\end{center}
+where $p_i$ is the probability of the i-th symbol in the alphabet appearing in \textit{S}. 
+\end{mdframed}
+
+But this theoretical definition of entropy is often replaced in scientific literature by a more practical definition: \textit{empirical entropy}.
+There are two versions: \textit{empirical zero-order entropy} $H_0$ and \textit{empirical k-th order entropy} $H_k$. $H_k$ takes the size \textit{k} context of the symbol appearances into account while $H_0$ does not and looks at symbols independently instead. 
+
+\begin{mdframed}[nobreak, linecolor=lightgray]
+\textbf{Definition}: \textit{Empirical zero-order entropy}, $H_0$ \\
+Let \textit{S} be a sequence of \textit{n} symbols from an alphabet $\Sigma = \lbrace c_1 ... c_\sigma \rbrace$ of cardinality $\sigma$.
+Then \textit{entropy} $H_0$ is defined as
+\begin{center}
+$H_0 = \sum_{c_i \in \Sigma} \frac{n_i}{n} log_2(\frac{n}{n_i})$
+\end{center}
+where $n_i$ is the number of appearances of character $c_i$ in $S$.
+\end{mdframed}
+
+\textbf{TODO: Make definition of k order entropy}
+
+The wavelet tree can be used to both achieve \textit{zero-order entropy} and \textit{k-th order entropy} space. To achieve \textit{zero-order entropy} a Huffman shaped wavelet tree can be used. But when the alphabet is very large that is not a good approach with regards to compression, because storing the huffman symbol assignments and wavelet tree pointers ends up using too much space . \citep[Section~3]{Claude08practicalrankselect} describes a way to also have \textit{zero-order entropy} space usage for large alphabets. 
+
 
 
 
