@@ -133,7 +133,7 @@ def writeToGnuplot(outputFile, dataTableKeys, testDataFile, constructionAlg, tes
 
 	
 
-testDataFile = 'Output/Query_NaiveVsControlledNodeMemorySkew-1000queries.output'
+testDataFile = 'Output/Query_NaiveVsControlledNodeMemorySkew-1000queries1.output'
 
 naiveRankGnuplotFile = open("Report/Gnuplot/Data/naiveRankSkew.data", "w")
 naiveSelectGnuplotFile = open("Report/Gnuplot/Data/naiveSelectSkew.data", "w")

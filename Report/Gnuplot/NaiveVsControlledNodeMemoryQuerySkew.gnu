@@ -193,15 +193,16 @@ stats '../Data/controlledNodeMemoryRankSkew.data' every ::::1 using 8 nooutput
 stddevControlledRankTime1 = sprintf("%g",STATS_min)
 stats '../Data/controlledNodeMemorySelectSkew.data' every ::::1 using 8 nooutput
 stddevControlledSelectTime1 = sprintf("%g",STATS_min)
-set term epslatex size 5.6,4.3 color
+
+set term epslatex size 5.4,4.3 color
 set ylabel "Wall Time ($\\mu$sec), naive"
-set yrange [0:280000]
-set ytics nomirror
-set y2tics
-set y2label "Wall Time ($\\mu$sec), controlled"
-set y2range [0:280000/10]
+# set yrange [0:280000]
+# set ytics nomirror
+# set y2tics
+# set y2label "Wall Time ($\\mu$sec), controlled"
+# set y2range [0:280000/10]
 set output 'naiveRankSelectSkewRunningTime.tex'
 plot '../Data/naiveRankSkew.data' every ::2 using 1:8 with linespoints title "NaiveRank $mr\\hat{\\sigma}=$".stddevNaiveRankTime." $avg\\hat{\\sigma}=$".stddevNaiveRankTime1, \
-'../Data/naiveSelectSkew.data' every ::2 using 1:($8*10) with linespoints title "NaiveSelect $mr\\hat{\\sigma}=$".stddevNaiveSelectTime." $avg\\hat{\\sigma}=$".stddevNaiveSelectTime1, \
+'../Data/naiveSelectSkew.data' every ::2 using 1:8 with linespoints title "NaiveSelect $mr\\hat{\\sigma}=$".stddevNaiveSelectTime." $avg\\hat{\\sigma}=$".stddevNaiveSelectTime1, \
 '../Data/controlledNodeMemoryRankSkew.data' every ::2 using 1:8 with linespoints title "ControlledNodeRank $mr\\hat{\\sigma}=$".stddevControlledRankTime." $avg\\hat{\\sigma}=$".stddevControlledRankTime1, \
-'../Data/controlledNodeMemorySelectSkew.data' every ::2 using 1:($8*10) with linespoints title "ControlledNodeSelect $mr\\hat{\\sigma}=$".stddevControlledSelectTime." $avg\\hat{\\sigma}=$".stddevControlledSelectTime1, \
+'../Data/controlledNodeMemorySelectSkew.data' every ::2 using 1:8 with linespoints title "ControlledNodeSelect $mr\\hat{\\sigma}=$".stddevControlledSelectTime." $avg\\hat{\\sigma}=$".stddevControlledSelectTime1
