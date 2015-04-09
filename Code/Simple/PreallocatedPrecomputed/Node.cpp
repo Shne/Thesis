@@ -15,8 +15,8 @@ using namespace std;
 Node::Node() {};
 
 Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode,
-            bitmap_t* in_bitmap, uint &in_bitmapOffset, blockRanksVector &blockRanks,
-            uint blockSize)
+           Node* &node_pt, bitmap_t* in_bitmap, ulong &in_bitmapOffset,
+           blockRanksVector &blockRanks, uint blockSize)
     : isLeaf(false), left(nullptr), right(nullptr), parent(parentNode) {
     
     uint alphabetSize = alphabetMax - alphabetMin +1;
@@ -63,16 +63,18 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
     
     //construct node, save it at right pointer location. give it incremented node_pt and bitmap_it so they point to free space.
     if(rightString->size() != 0) {
-        right = new Node(rightString, rightAlphabetMin, rightAlphabetMax,
-                this, in_bitmap, in_bitmapOffset, blockRanks, blockSize);
+        node_pt++; //increment to free space
+        right = new (node_pt) Node(rightString, rightAlphabetMin, rightAlphabetMax,
+                this, node_pt, in_bitmap, in_bitmapOffset, blockRanks, blockSize);
     } else {
         rightString->clear();
         delete rightString;
     }
     //same for left. node_pt and bitmap_it should have been incrememented by our right subnode to point to free space now.
     if(leftString->size() != 0) {
-        left = new Node(leftString, leftAlphabetMin, leftAlphabetMax,
-                this, in_bitmap, in_bitmapOffset, blockRanks, blockSize);
+        node_pt++;
+        left = new (node_pt) Node(leftString, leftAlphabetMin, leftAlphabetMax,
+                this, node_pt, in_bitmap, in_bitmapOffset, blockRanks, blockSize);
     } else {
         leftString->clear();
         delete leftString;
