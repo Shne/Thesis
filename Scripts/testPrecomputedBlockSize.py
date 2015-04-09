@@ -33,8 +33,8 @@ subprocess.Popen(['make','CONF=Release'], cwd=unalignedNaivePrecomputedCwd).wait
 repeats = 5
 
 pageSize = 4096
-blockSizeRange = [pageSize/5, pageSize/4, pageSize/3, pageSize/2, pageSize, pageSize*2, pageSize*3, pageSize*4, pageSize*5]
-# blockSizeRange = range(pageSize, pageSize*8, pageSize)
+# blockSizeRange = [pageSize/4, pageSize/2, pageSize, pageSize*2, pageSize*3, pageSize*4, pageSize*5, pageSize*6]
+blockSizeRange = [pageSize/5, pageSize/3] # and not using pageSize*6
 
 print("NaiveInteger Rank")
 test = 'rank'
