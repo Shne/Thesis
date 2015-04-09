@@ -26,8 +26,8 @@ using namespace std;
 
 class Node {
 private:
-    unsigned long bitmapOffset;
-    unsigned long bitmapSize;
+    ulong bitmapOffset;
+    uint bitmapSize;
     bool isLeaf;
     Node* parent;
     Node* left;
