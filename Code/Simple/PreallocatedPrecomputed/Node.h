@@ -26,8 +26,8 @@ using namespace std;
 
 class Node {
 private:
-    unsigned long bitmapOffset;
-    unsigned long bitmapSize;
+    ulong bitmapOffset;
+    uint bitmapSize;
     bool isLeaf;
     Node* parent;
     Node* left;
@@ -36,7 +36,7 @@ private:
 public:
     Node();
     Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode,
-         bitmap_t* in_bitmap, uint &in_bitmapOffset, blockRanksVector &blockRanks,
+         bitmap_t* in_bitmap, ulong &in_bitmapOffset, blockRanksVector &blockRanks,
          uint pageSize);
     
     int rank(int character, ulong index, bitmap_t* bitmap, int alphabetMin,

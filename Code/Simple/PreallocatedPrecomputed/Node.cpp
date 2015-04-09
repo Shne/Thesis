@@ -15,7 +15,7 @@ using namespace std;
 Node::Node() {};
 
 Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode,
-            bitmap_t* in_bitmap, uint &in_bitmapOffset, blockRanksVector &blockRanks,
+            bitmap_t* in_bitmap, ulong &in_bitmapOffset, blockRanksVector &blockRanks,
             uint blockSize)
     : isLeaf(false), left(nullptr), right(nullptr), parent(parentNode) {
     
