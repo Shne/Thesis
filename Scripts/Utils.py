@@ -52,7 +52,8 @@ def getAvgRelativeStddevStr(ReadOutput, columnNames, stepsize):
 		if len(dataRow) == 0:
 			formattedResult = "0.00"
 		else:
-			formattedResult = "{0:.2f}".format(numpy.average(relativeStddev)*100)
+			result = numpy.average(relativeStddev)*100
+			formattedResult = "{0:.2f}".format(result)
 		
 		avgRelativeStddev += "   " + formattedResult
 	
@@ -61,8 +62,8 @@ def getAvgRelativeStddevStr(ReadOutput, columnNames, stepsize):
 def writeGnuplotHeader(gnuplotFile):
 	gnuplotFile.write("#[alphabetSize] [Walltime] [BlockSize] [BranchMissRate] [BranchMis] [TLB] [L1CM] [L2CM] [L3CM] [MemSize] [ResidentMem] [MemHighWatermark]\n")
 
-def formatAndWriteValues(ReadOutput, gnuplotFile, dataListKeys, testsPerSize):
-
+def formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize):
+	dataListKeys = ["alphabetSizeList", "wallTimeList", "blockSizeList", "branchMissRateList", "branchMispredictionsList", "TLBList", "l1DataCacheMissesList", "l2DataCacheMissesList", "l3TotalCacheMissesList", "memSizeList", "memResidentList", "memHighWatermarkList"]
 	gnuplotFile.write(getMaxRelativeStddevStr(ReadOutput, dataListKeys, testsPerSize) + "\n")
 	gnuplotFile.write(getAvgRelativeStddevStr(ReadOutput, dataListKeys, testsPerSize) + "\n")
 	for i in range(int(len(ReadOutput.alphabetSizeList)/testsPerSize)):
