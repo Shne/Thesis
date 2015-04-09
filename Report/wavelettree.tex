@@ -173,13 +173,11 @@ The Wavelet Tree is used for compression of data in a lot of ways where two of t
 The type of encoding on bitmaps that is used most often is entropy coding.
 
 Entropy coding can be explained by splitting it into two parts: Modelling and Coding.
-Modelling assigns probabilities to the symbols, and coding produces a bit sequence from these probabilities.
+Modelling assigns probabilities to the symbols of the string, and coding produces a bit sequence from these probabilities.
 The probability of a symbol is based on how often it appears in a given data set. 
 Higher frequency gives a higher probability.
 Entropy coding can be done with a coding scheme, which uses a discrete number of bits for each symbol, for example Huffman coding. 
-
-Entropy represents a lower bound to the average numbers of bits needed to represent each symbol in S, according to the coding theorem of Shannon (todo reference).
-Entropy is defined in the following way:
+Entropy can be defined as:
 
 \begin{mdframed}[nobreak, linecolor=lightgray]
 \textbf{Definition}: Entropy. \\
@@ -191,22 +189,30 @@ $H = \sum_{i=1}^{\sigma} p_i log_2(\frac{1}{p_i})$
 where $p_i$ is the probability of the i-th symbol in the alphabet appearing in \textit{S}. 
 \end{mdframed}
 
+Entropy represents a lower bound to the average numbers of bits needed to represent each symbol in S, according to the coding theorem of Shannon (todo reference) and so is a useful value to compare with when trying to achieve good compression.
+
 But this theoretical definition of entropy is often replaced in scientific literature by a more practical definition: \textit{empirical entropy}.
-There are two versions: \textit{empirical zero-order entropy} $H_0$ and \textit{empirical k-th order entropy} $H_k$. $H_k$ takes the size \textit{k} context of the symbol appearances into account while $H_0$ does not and looks at symbols independently instead. 
+There are two versions: \textit{empirical zero-order entropy} $H_0$ and \textit{empirical k-th order entropy} $H_k$. $H_k$ takes the size \textit{k} context of the symbol appearances into account while $H_0$ does not and treats symbols independently instead. 
 
 \begin{mdframed}[nobreak, linecolor=lightgray]
 \textbf{Definition}: \textit{Empirical zero-order entropy}, $H_0$ \\
 Let \textit{S} be a sequence of \textit{n} symbols from an alphabet $\Sigma = \lbrace c_1 ... c_\sigma \rbrace$ of cardinality $\sigma$.
 Then \textit{entropy} $H_0$ is defined as
 \begin{center}
-$H_0 = \sum_{c_i \in \Sigma} \frac{n_i}{n} log_2(\frac{n}{n_i})$
+$H_0 = \sum\limits_{c_i \in \Sigma} \frac{n_i}{n} log_2(\frac{n}{n_i})$
 \end{center}
 where $n_i$ is the number of appearances of character $c_i$ in $S$.
 \end{mdframed}
 
-\textbf{TODO: Make definition of k order entropy}
+\begin{mdframed}[nobreak, linecolor=lightgray]
+\textbf{Definition}: \textit{Empirical k-th order entropy}, $H_k$ \\
+For a string $w \in \Sigma^k$ let us denote with $w_S$ the subsequence of characters that follow \textit{w} in \textit{S}, then the k-th order empirical entropy of \textit{S}, is defined as follows:
+\begin{center}
+$H_k(S) = \frac{1}{n} \sum\limits_{w \in \Sigma^k} | w_S |H_0(w_S)$
+\end{center}
+\end{mdframed}
 
-The wavelet tree can be used to both achieve \textit{zero-order entropy} and \textit{k-th order entropy} space. To achieve \textit{zero-order entropy} a Huffman shaped wavelet tree can be used. But when the alphabet is very large that is not a good approach with regards to compression, because storing the huffman symbol assignments and wavelet tree pointers ends up using too much space . \citep[Section~3]{Claude08practicalrankselect} describes a way to also have \textit{zero-order entropy} space usage for large alphabets. 
+The wavelet tree can be used to both achieve space within \textit{zero-order entropy} and \textit{k-th order entropy}. To achieve \textit{zero-order entropy} a Huffman shaped wavelet tree (todo: reference) can be used. But when the alphabet is very large that is not a good approach with regards to compression, because storing the huffman symbol assignments and wavelet tree pointers ends up using too much space . \citep[Section~3]{Claude08practicalrankselect} describes a way to also have \textit{zero-order entropy} space usage for large alphabets. 
 
 
 
