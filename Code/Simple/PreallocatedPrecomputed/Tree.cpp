@@ -22,7 +22,7 @@ Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, uint blockSize)
 
     bitmap = new bitmap_t(maxBitmapSize);
 
-    ulong bitmapOffset = 0;
+    uint bitmapOffset = 0;
     root = Node(input, (uint)0, alphabetSize-1, nullptr, bitmap, bitmapOffset, blockRanks, blockSize);
 
 //    bitmap->resize(bitmapOffset);
