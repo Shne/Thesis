@@ -14,9 +14,9 @@ We now go into more detail about how it all works as described by \citep{Navjda1
 
 \vspace{0.5 cm}
 \begin{mdframed}[nobreak, linecolor=lightgray]
-\textbf{Definition 1:} String representation in a Wavelet Tree
-
+\begin{definition}: String representation in a Wavelet Tree\\\\
 Let $S[1,n] = S_1 S_2 ... S_n$ be a sequence of symbols where $s_i \in \Sigma$ and $\Sigma = [1 .. \sigma]$ is the alphabet. $S$ can then be represented in plain form using $n \lceil \log \sigma \rceil = n \log \sigma = O(n)$ bits.
+\end{definition}
 \end{mdframed}
 \vspace{0.5 cm}
 
@@ -59,21 +59,16 @@ Otherwise it has an internal root node $v_{root}$ that represents the string $S[
 \end{algorithm}
 
 
-Knowing how to construct the bitmap in the root of the Wavelet Tree we now define (Definition 2) how string is split in two and saved in the roots of right and left sub=trees which are also Wavelet Trees.
+Knowing how to construct the bitmap in the root of the Wavelet Tree we now define (Definition 2) how string is split in two and saved in the roots of right and left sub-trees which are also Wavelet Trees themselves.
 
 
 \vspace{0.5 cm}
-\begin{mdframed}[nobreak]
-\textbf{Definition 2:} Splitting the string. \\
-
-\noindent
-Let $S_0[1,n_0] =$ subsequence of $S[1,n]$ formed by symbols $c \leq (a + b)$/2.
-
-\noindent
-Let $S_1[1,n_1] =$ subsequence of $S[1,n]$ formed by symbols $c > (a + b)$/2.
-\\ \linebreak
-\noindent
+\begin{mdframed}[nobreak, linecolor=lightgray]
+\begin{definition} Splitting the string. \\\\
+Let $S_0[1,n_0] =$ subsequence of $S[1,n]$ formed by symbols $c \leq (a + b)$/2.\\
+Let $S_1[1,n_1] =$ subsequence of $S[1,n]$ formed by symbols $c > (a + b)$/2.\\\\
 Then the left child of $v_{root}$ is a Wavelet Tree for $S_0[1,n_0]$ over alphabet $[a .. \lfloor (a + b)/2 \rfloor]$ and right child of $v_{root}$ is a Wavelet Tree for $S_1[1,n_1]$ over alphabet $[1 + \lfloor (a + b)/2 \rfloor .. b]$. 
+\end{definition}
 \end{mdframed}
 \vspace{0.5 cm}
 
@@ -176,17 +171,20 @@ Entropy coding can be explained by splitting it into two parts: Modelling and Co
 Modelling assigns probabilities to the symbols of the string, and coding produces a bit sequence from these probabilities.
 The probability of a symbol is based on how often it appears in a given data set. 
 Higher frequency gives a higher probability.
-Entropy coding can be done with a coding scheme, which uses a discrete number of bits for each symbol, for example Huffman coding. 
-Entropy can be defined as:
+Entropy coding can for instance be done with a coding scheme, which uses a discrete number of bits for each symbol, for example Huffman Coding \citep{HuffmanCoding} where symbols that appear with a higher frequency gets a code value with a small number of bits and those symbols that appear with less frequency gets a code value with a higher number of bits.
+
+The main advantage of the wavelet tree with regards to compression is that it supports entropy bounds in the attained space complexity of the various wavelet tree compression methods \citep[Section~2.1]{WTSurvey}.
+According to \citep[Section~1]{WTSurvey} entropy can be defined as:
 
 \begin{mdframed}[nobreak, linecolor=lightgray]
-\textbf{Definition}: Entropy. \\
+\begin{definition}: Entropy \\\\
 Let \textit{S} be a sequence of \textit{n} symbols from an alphabet $\Sigma = \lbrace c_1 ... c_\sigma \rbrace$ of cardinality $\sigma$.
 Then \textit{entropy} H is defined as
 \begin{center}
 $H = \sum_{i=1}^{\sigma} p_i log_2(\frac{1}{p_i})$
 \end{center}
-where $p_i$ is the probability of the i-th symbol in the alphabet appearing in \textit{S}. 
+where $p_i$ is the probability of the i-th symbol in the alphabet appearing in \textit{S}.
+\end{definition} 
 \end{mdframed}
 
 Entropy represents a lower bound to the average numbers of bits needed to represent each symbol in S, according to the coding theorem of Shannon (todo reference) and so is a useful value to compare with when trying to achieve good compression.
@@ -195,22 +193,23 @@ But this theoretical definition of entropy is often replaced in scientific liter
 There are two versions: \textit{empirical zero-order entropy} $H_0$ and \textit{empirical k-th order entropy} $H_k$. $H_k$ takes the size \textit{k} context of the symbol appearances into account while $H_0$ does not and treats symbols independently instead. 
 
 \begin{mdframed}[nobreak, linecolor=lightgray]
-\textbf{Definition}: \textit{Empirical zero-order entropy}, $H_0$ \\
+\begin{definition}: \textit{Empirical zero-order entropy}, $H_0$ \\
 Let \textit{S} be a sequence of \textit{n} symbols from an alphabet $\Sigma = \lbrace c_1 ... c_\sigma \rbrace$ of cardinality $\sigma$.
 Then \textit{entropy} $H_0$ is defined as
 \begin{center}
 $H_0 = \sum\limits_{c_i \in \Sigma} \frac{n_i}{n} log_2(\frac{n}{n_i})$
 \end{center}
 where $n_i$ is the number of appearances of character $c_i$ in $S$.
-\end{mdframed}
-
-\begin{mdframed}[nobreak, linecolor=lightgray]
-\textbf{Definition}: \textit{Empirical k-th order entropy}, $H_k$ \\
-For a string $w \in \Sigma^k$ let us denote with $w_S$ the subsequence of characters that follow \textit{w} in \textit{S}, then the k-th order empirical entropy of \textit{S}, is defined as follows:
+\end{definition}
+\begin{definition}: \textit{Empirical k-th order entropy}, $H_k$ \\
+For a string $w \in \Sigma^k$ let us define $w_S$ as the subsequence of characters that follow \textit{w} in \textit{S}. 
+Then the k-th order empirical entropy of \textit{S}, is defined as follows:
 \begin{center}
 $H_k(S) = \frac{1}{n} \sum\limits_{w \in \Sigma^k} | w_S |H_0(w_S)$
 \end{center}
+\end{definition}
 \end{mdframed}
+$H_k$ thus defines a lower bound for bit space usage that is smaller than the lower bound for $H_0$.
 
 The wavelet tree can be used to both achieve space within \textit{zero-order entropy} and \textit{k-th order entropy}. To achieve \textit{zero-order entropy} a Huffman shaped wavelet tree (todo: reference) can be used. But when the alphabet is very large that is not a good approach with regards to compression, because storing the huffman symbol assignments and wavelet tree pointers ends up using too much space . \citep[Section~3]{Claude08practicalrankselect} describes a way to also have \textit{zero-order entropy} space usage for large alphabets. 
 
