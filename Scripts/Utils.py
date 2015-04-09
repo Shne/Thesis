@@ -29,13 +29,13 @@ def getMaxRelativeStddevStr(ReadOutput, columnNames, stepsize):
 	alphabetValues = dataTable[0]
 	dataTable.remove(alphabetValues)
 
-	maxRelativeStddev = "0.000"
+	maxRelativeStddev = "0.00"
 	for dataRow in dataTable:
 		relativeStddev = getRelativeStddev(stepsize, dataRow)
 		if len(dataRow) == 0:
-			formattedResult = "0.000"
+			formattedResult = "0.00"
 		else:
-			formattedResult = "{0:.3f}".format(max(relativeStddev)*100)
+			formattedResult = "{0:.2f}".format(max(relativeStddev)*100)
 		maxRelativeStddev += "   " + formattedResult
 	
 	return maxRelativeStddev
