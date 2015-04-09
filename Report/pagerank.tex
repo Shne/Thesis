@@ -116,6 +116,18 @@ Using one giant bitmap instead of one for each node might also cause a reduction
 \subsection{Experiments}
 \subsubsection{Query Running Time for Bitmap with Precomputed Blocks for different Block Sizes}
 
+\figureBegin
+\caption{Rank queries on wavelet trees with precomputed ranks of varying block sizes}
+\label{fig:PrecomputedRankBlockSize_Rank_WallTime}
+\input{PrecomputedRankBlockSize_Rank_WallTime}
+\figureEnd
+
+\figureBegin
+\caption{Select queries on wavelet trees with precomputed ranks of varying block sizes}
+\label{fig:PrecomputedRankBlockSize_Select_WallTime}
+\input{PrecomputedRankBlockSize_Select_WallTime}
+\figureEnd
+
 \subsubsection{Using Rank Queries in Select Queries}
 \label{sec:experimentPrecomputedBlocksRankInSelect}
 
