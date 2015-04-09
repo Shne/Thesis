@@ -21,7 +21,7 @@ using namespace std;
 class Tree {
 
 private:
-    Node* root;
+    Node root;
     bitmap_t* bitmap;// __attribute__ ((aligned(def_pageSize)));
     blockRanksVector blockRanks;
     unsigned long alphabetMin, alphabetMax, inputSize;
