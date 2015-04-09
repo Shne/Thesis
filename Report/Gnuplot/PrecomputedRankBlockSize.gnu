@@ -4,36 +4,36 @@ set key outside top horizontal spacing 2
 set term epslatex size 5.2,3.1 color
 set border
 
-stats '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Rank.data' every ::::0 using 2 nooutput #avg
-naiveprecomputed_avg_stddev_rank = sprintf("%g",STATS_min)
-stats '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Rank.data' every ::::1 using 2 nooutput #max
-naiveprecomputed_max_stddev_rank = sprintf("%g",STATS_min)
+stats '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Rank.data' every ::::1 using 2 nooutput #avg
+naiveprecomputed_avg_stddev_rank = sprintf("%.2f",STATS_min)
+stats '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Rank.data' every ::::0 using 2 nooutput #max
+naiveprecomputed_max_stddev_rank = sprintf("%.2f",STATS_min)
 
-stats '../Data/PrecomputedRankBlockSize_PreallocatedPrecomputed_Rank.data' every ::::0 using 2 nooutput #avg
-preallocatedprecomputed_avg_stddev_rank = sprintf("%g",STATS_min)
-stats '../Data/PrecomputedRankBlockSize_PreallocatedPrecomputed_Rank.data' every ::::1 using 2 nooutput #max
-preallocatedprecomputed_max_stddev_rank = sprintf("%g",STATS_min)
+stats '../Data/PrecomputedRankBlockSize_PreallocatedPrecomputed_Rank.data' every ::::1 using 2 nooutput #avg
+preallocatedprecomputed_avg_stddev_rank = sprintf("%.2f",STATS_min)
+stats '../Data/PrecomputedRankBlockSize_PreallocatedPrecomputed_Rank.data' every ::::0 using 2 nooutput #max
+preallocatedprecomputed_max_stddev_rank = sprintf("%.2f",STATS_min)
 
-stats '../Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Rank.data' every ::::0 using 2 nooutput #avg
-unalignednaiveprecomputed_avg_stddev_rank = sprintf("%g",STATS_min)
-stats '../Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Rank.data' every ::::1 using 2 nooutput #max
-unalignednaiveprecomputed_max_stddev_rank = sprintf("%g",STATS_min)
+stats '../Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Rank.data' every ::::1 using 2 nooutput #avg
+unalignednaiveprecomputed_avg_stddev_rank = sprintf("%.2f",STATS_min)
+stats '../Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Rank.data' every ::::0 using 2 nooutput #max
+unalignednaiveprecomputed_max_stddev_rank = sprintf("%.2f",STATS_min)
 
 
-stats '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Select.data' every ::::0 using 2 nooutput #avg
-naiveprecomputed_avg_stddev_select = sprintf("%g",STATS_min)
-stats '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Select.data' every ::::1 using 2 nooutput #max
-naiveprecomputed_max_stddev_select = sprintf("%g",STATS_min)
+stats '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Select.data' every ::::1 using 2 nooutput #avg
+naiveprecomputed_avg_stddev_select = sprintf("%.2f",STATS_min)
+stats '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Select.data' every ::::0 using 2 nooutput #max
+naiveprecomputed_max_stddev_select = sprintf("%.2f",STATS_min)
 
-stats '../Data/PrecomputedRankBlockSize_PreallocatedPrecomputed_Select.data' every ::::0 using 2 nooutput #avg
-preallocatedprecomputed_avg_stddev_select = sprintf("%g",STATS_min)
-stats '../Data/PrecomputedRankBlockSize_PreallocatedPrecomputed_Select.data' every ::::1 using 2 nooutput #max
-preallocatedprecomputed_max_stddev_select = sprintf("%g",STATS_min)
+stats '../Data/PrecomputedRankBlockSize_PreallocatedPrecomputed_Select.data' every ::::1 using 2 nooutput #avg
+preallocatedprecomputed_avg_stddev_select = sprintf("%.2f",STATS_min)
+stats '../Data/PrecomputedRankBlockSize_PreallocatedPrecomputed_Select.data' every ::::0 using 2 nooutput #max
+preallocatedprecomputed_max_stddev_select = sprintf("%.2f",STATS_min)
 
-stats '../Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Select.data' every ::::0 using 2 nooutput #avg
+stats '../Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Select.data' every ::::1 using 2 nooutput #avg
 unalignednaiveprecomputed_avg_stddev_select = sprintf("%g",STATS_min)
-stats '../Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Select.data' every ::::1 using 2 nooutput #max
-unalignednaiveprecomputed_max_stddev_select = sprintf("%g",STATS_min)
+stats '../Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Select.data' every ::::0 using 2 nooutput #max
+unalignednaiveprecomputed_max_stddev_select = sprintf("%.2f",STATS_min)
 
 
 # WALL TIME
