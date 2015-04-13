@@ -50,7 +50,7 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
         }
     }
     
-    bitmap.shrink_to_fit();
+//    bitmap.shrink_to_fit();
     
 //    stringstream str, leftstr, rightstr;
 //    copy(input->begin(), input->end(), ostream_iterator<int>(str, " "));

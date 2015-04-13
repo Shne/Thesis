@@ -35,21 +35,21 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
     
     uint blockRanksSize = (input->size()/blockSize)+2; //+2 to have space for first and last unaligned
     blockRanks = blockRanksVector(blockRanksSize, 0);
-    bitmap = new bitmap_t(input->size(), false);
+    bitmap = bitmap_t(input->size(), false);
     
-    uint bitmapMisalignment = CHAR_BIT * (((ulong)bitmap->begin()._M_p) % (blockSize/CHAR_BIT)); //how far inside a block the bitmap starts, in bits
+    uint bitmapMisalignment = CHAR_BIT * (((ulong)bitmap.begin()._M_p) % (blockSize/CHAR_BIT)); //how far inside a block the bitmap starts, in bits
     
     uint i = 0;
     for(auto it = input->begin(); it != input->end(); it++, i++) {
         uint currentChar = *it;
         if(currentChar <= split) {
-            (*bitmap)[i] = false;
+            bitmap[i] = false;
             leftString->push_back(currentChar);
         } else {
             uint blockAlignedOffset = i + bitmapMisalignment;
             uint blockIndex = blockAlignedOffset / blockSize;
             blockRanks[blockIndex] += 1;
-            (*bitmap)[i] = true;
+            bitmap[i] = true;
             rightString->push_back(currentChar);
         }
     }
@@ -103,7 +103,7 @@ uint Node::rank(uint character, uint index, uint alphabetMin, uint alphabetMax, 
 
 
 uint Node::blockBinaryRank(uint pos, uint blockSize) {
-    uint bitmapMisalignment = CHAR_BIT * ((ulong)bitmap->begin()._M_p % (blockSize/CHAR_BIT)); //how far inside a block the bitmap starts, in bits
+    uint bitmapMisalignment = CHAR_BIT * ((ulong)bitmap.begin()._M_p % (blockSize/CHAR_BIT)); //how far inside a block the bitmap starts, in bits
     uint lengthToNextBlockAlignment = (blockSize - bitmapMisalignment) % blockSize; //modulo so it's 0 when bitmapMisalignment is 0
 
     //SMALL POS
@@ -133,10 +133,10 @@ uint Node::blockBinaryRank(uint pos, uint blockSize) {
 }
 
 ulong Node::popcountBinaryRank(uint offset, uint length) {
-    assert(offset + length <= bitmap->size());
+    assert(offset + length <= bitmap.size());
     ulong rank = 0;
 
-    vector<bool>::reference ref = (*bitmap)[offset];
+    vector<bool>::reference ref = bitmap[offset];
     ulong* wordPtr = ref._M_p;
     ulong wordsize = sizeof(*wordPtr) * CHAR_BIT; //vector<bool> src uses CHAR_BIT too
     uint initialOffset = 0;
@@ -174,7 +174,7 @@ ulong Node::popcountBinaryRank(uint offset, uint length) {
 uint Node::binaryRank(uint offset, uint length) {
     int rank = 0;
     for(uint i = offset; i < offset + length; i++) {
-        bool currentBit = (*bitmap)[i];
+        bool currentBit = bitmap[i];
         if(currentBit) rank++;
     }
     return rank;
@@ -202,8 +202,8 @@ uint Node::select(bool charBit, ulong occurrence, uint blockSize) {
 
 uint Node::binarySelect(bool charBit, ulong occurance) {
     ulong occ = 0;
-    for(ulong i = 0; i < bitmap->size(); i++) {
-        if((*bitmap)[i] == charBit) { 
+    for(ulong i = 0; i < bitmap.size(); i++) {
+        if(bitmap[i] == charBit) { 
             if(++occ == occurance) {
                 return i;
             }
@@ -240,11 +240,11 @@ Node* Node::getLeaf(uint character, uint alphabetMin, uint alphabetMax) {
 
 
 uint Node::blockBinarySelect(bool charBit, uint occurrence, uint blockSize) {
-    uint bitmapMisalignment = CHAR_BIT * ((ulong)bitmap->begin()._M_p % (blockSize/CHAR_BIT)); //how far inside a block the bitmap starts, in bits
+    uint bitmapMisalignment = CHAR_BIT * ((ulong)bitmap.begin()._M_p % (blockSize/CHAR_BIT)); //how far inside a block the bitmap starts, in bits
     uint lengthToNextBlockalignment = (blockSize - bitmapMisalignment) % blockSize; //modulo so it's 0 when blockMisalignment is 0
     
     //SMALL BITMAPS
-    if(bitmap->size() < lengthToNextBlockalignment) {
+    if(bitmap.size() < lengthToNextBlockalignment) {
         return popcountBinarySelect(charBit, occurrence, 0);
     }
     
@@ -292,8 +292,8 @@ inline uint popcountBinarySelectAux(ulong word, bool charBit, uint occurance, ul
 uint Node::popcountBinarySelect(bool charBit, uint occurrence, uint offset) {
     uint occCounter = 0; //counter for occurances
 
-    uint wordsize = sizeof(*bitmap->begin()._M_p) * CHAR_BIT; //vector<bool> src uses CHAR_BIT too
-    vector<bool>::reference ref = (*bitmap)[offset];
+    uint wordsize = sizeof(*bitmap.begin()._M_p) * CHAR_BIT; //vector<bool> src uses CHAR_BIT too
+    vector<bool>::reference ref = bitmap[offset];
     unsigned long initialOffset = 0;
     unsigned long* firstFullWord = ref._M_p;
     
@@ -315,7 +315,7 @@ uint Node::popcountBinarySelect(bool charBit, uint occurrence, uint offset) {
     }
     
     //FULL WORDS
-    uint alignedPos = bitmap->size() - initialOffset; //initialOffset is the amount of bits in the first unaligned word of our bitmap
+    uint alignedPos = bitmap.size() - initialOffset; //initialOffset is the amount of bits in the first unaligned word of our bitmap
     uint fullWords = alignedPos / wordsize; //the amount of full words we should iterate through. 
     for(uint i = 0; i < fullWords; i++) {
         ulong word = *(firstFullWord + i);
