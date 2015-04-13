@@ -37,7 +37,7 @@ unalignednaiveprecomputed_max_stddev_select = sprintf("%.2f",STATS_min)
 
 
 # WALL TIME
-set xlabel "Block Size (x1000 bits)"
+set xlabel "Block Size (number of page sizes)"
 set ylabel "Wall Time"
 set yrange [0:*]
 set output 'PrecomputedRankBlockSize_Rank_WallTime.tex'
@@ -51,7 +51,7 @@ plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Select.data' every ::2 u
 
 
 # MEMORY
-set xlabel "Block Size  (x32768 bits)"
+set xlabel "Block Size (number of page sizes)"
 set ylabel "Memory Usage"
 set yrange [*:*]
 set output 'PrecomputedRankBlockSize_MemoryUsage.tex'
