@@ -108,7 +108,7 @@ We will test this in section~\ref{sec:experimentPrecomputedBlocksRankInSelect}
 
 
 \subsection{Extra Space Used by Precomputed Values}
-Since each precomputed value cannot exceed the block size in value, assuming we don't use block sizes exceeding $2^{16} = 65536$ bits, or $\frac{2^{16}}{8} = 8192$ bytes, we can store them in 16-bit unsigned integers, called \texttt{unsigned short int} in C++ on our machines.
+Since each precomputed value cannot exceed the block size in bits, assuming we don't use block sizes exceeding $2^{16} = 65536$ bits, or $\frac{2^{16}}{8} = 8192$ bytes, we can store them in 16-bit unsigned integers, called \texttt{unsigned short int} in C++ on our machines.
 Since the page size on our machines are 4096 bytes we should not use a block size larger than $\frac{8192}{4096} = 2$ pages if we want to use 16-bit unsigned integers.
 
 In Section[TODO:reference] we find that the optimal block size is ? bits = ? bytes = ? pages.
