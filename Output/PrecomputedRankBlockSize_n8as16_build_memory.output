@@ -1,0 +1,16 @@
+algorithm=NaiveInteger blockSize=N/A heap=743552663 extra=4476505 stacks=4232 
+algorithm=PrecomputedPages blockSize=1024 heap=744458511 extra=1483913 stacks=5640 
+algorithm=PrecomputedPages blockSize=1365 heap=744373191 extra=1483889 stacks=5416 
+algorithm=PrecomputedPages blockSize=2048 heap=744291847 extra=1483905 stacks=5416 
+algorithm=PrecomputedPages blockSize=4096 heap=744194191 extra=1483897 stacks=5416 
+algorithm=PrecomputedPages blockSize=8192 heap=744112811 extra=1483917 stacks=5640 
+algorithm=NaivePrecomputed blockSize=1024 heap=738348633 extra=5237479 stacks=2856 
+algorithm=NaivePrecomputed blockSize=1365 heap=738279983 extra=5247025 stacks=2856 
+algorithm=NaivePrecomputed blockSize=2048 heap=738186813 extra=5264835 stacks=2856 
+algorithm=NaivePrecomputed blockSize=4096 heap=738111723 extra=5279941 stacks=2856 
+algorithm=NaivePrecomputed blockSize=8192 heap=738077059 extra=5288013 stacks=2856 
+algorithm=UnalignedNaivePrecomputed blockSize=1024 heap=747976827 extra=5649557 stacks=4456 
+algorithm=UnalignedNaivePrecomputed blockSize=1365 heap=747912777 extra=5659687 stacks=4456 
+algorithm=UnalignedNaivePrecomputed blockSize=2048 heap=747810099 extra=5679317 stacks=4512 
+algorithm=UnalignedNaivePrecomputed blockSize=4096 heap=747743323 extra=5695189 stacks=4456 
+algorithm=UnalignedNaivePrecomputed blockSize=8192 heap=747706901 extra=5704139 stacks=4456 
