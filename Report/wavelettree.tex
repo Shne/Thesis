@@ -49,7 +49,7 @@ Algorithm~\ref{alg:BitmapConstruction}: \textproc{BitmapConstruction}  describes
 \label{alg:BitmapConstruction}
 \begin{algorithmic}
 \Function{BitmapConstruction}{$S$}
-\If{ $S[i] \leq (a + b)/2$ }
+\If{ $S[i] \in \sigma_{left}$ }
 	\State $Bitmap[i] \gets 0$
 \Else
 	\State $Bitmap[i] \gets 1$
@@ -58,33 +58,47 @@ Algorithm~\ref{alg:BitmapConstruction}: \textproc{BitmapConstruction}  describes
 \end{algorithmic}
 \end{algorithm}
 
-\textproc{BitmapConstruction} works by first splitting the alphabet in two pieces of equal size: one for the left child and one for the right child.
-If the length of the alphabet is odd then the left alphabet has one more symbol than the right one. 
-Each symbol in the string is then represented as either 1 or 0 in the bitmap based on whether it appears in the left or right alphabet. The symbols in the left alphabet gets represented as 0 and the ones in the right alphabet gets represented as 1.
+\textproc{BitmapConstruction} works by representing each symbol in the string is as either 1 or 0 in the bitmap based on whether it appears in the left or right alphabet. The symbols in the left alphabet gets represented as 0 and the ones in the right alphabet gets represented as 1.
 
-Knowing how to construct the bitmap in the root of the Wavelet Tree we now define (Definition 2) how the string is split in two and saved in the roots of the right and left sub-trees which as a result also are Wavelet Trees by themselves.
+Knowing how to construct the bitmap in each node of the Wavelet Tree we now define (Definition 2) how the string is split in two and saved in the roots of the right and left sub-trees which as a result also are Wavelet Trees by themselves.
 
 
 \vspace{0.5 cm}
 \begin{mdframed}[nobreak, linecolor=lightgray]
 \begin{definition} Splitting the string. \\\\
-Let $S_0[1,n_0] =$ subsequence of $S[1,n]$ formed by symbols $c \leq (a + b)$/2.\\
-Let $S_1[1,n_1] =$ subsequence of $S[1,n]$ formed by symbols $c > (a + b)$/2.\\\\
+Let $S_0[1,n_0] =$ subsequence of $S[1,n]$ formed by symbols $c \leq \sigma/2$.\\
+Let $S_1[1,n_1] =$ subsequence of $S[1,n]$ formed by symbols $c > \sigma/2$.\\\\
 Then the left child of $v_{root}$ is a Wavelet Tree for $S_0[1,n_0]$ over alphabet $[a .. \lfloor (a + b)/2 \rfloor]$ and right child of $v_{root}$ is a Wavelet Tree for $S_1[1,n_1]$ over alphabet $[1 + \lfloor (a + b)/2 \rfloor .. b]$. 
 \end{definition}
 \end{mdframed}
 \vspace{0.5 cm}
 
-Having generated the left and right sub-trees the construction process (splitting of string and bitmap construction) continues recursively on the root of each of the sub-trees until it end up in a leaf.
+The string is split by first splitting the alphabet in two pieces of equal size: one for the left child and one for the right child.
+If the length of the alphabet is odd then the left alphabet has one more symbol than the right one. 
+The symbols in the left alphabet are concatenated in the order they appear in $S$ and saved in $S_0$ and the symbols of the right alphabet is saved using the same procedure.
+ 
+Having generated the left and right sub-trees the construction process (splitting of string and bitmap construction) continues recursively on the right and left children until there are no more children left which is indicated by a node only having one symbol in it's alphabet.
+If this is the case then the node is a \textit{leaf}.
 
 \subsubsection{Complexity}
 The height of the Wavelet Tree is  $\lceil \log \sigma \rceil$ and it has $\sigma$ leaves and $\sigma - 1$ internal nodes. 
-At each level in the tree n bits are stored and in the last level at most n bits are stored. $n \lceil \log \sigma \rceil$ is an upper bound to the total number of bits that the Wavelet Tree stores. 
-The Wavelet Tree can be constructed in $O(n \log \sigma)$ time.
+At each level in the tree exactly \textit{n} bits are stored and in the last level at most \textit{n} bits are stored. $n \lceil \log \sigma \rceil$ is an upper bound to the total number of bits that the Wavelet Tree stores. 
+The Wavelet Tree can be constructed in $O(n \log \sigma)$ time. 
+(Todo: references to why or possibly explain it ourselves)
 
 \subsection{Rank Query}
 Rank counts the number of occurrences of the specified character up to and including the specified position. 
-It starts from the root of the Wavelet Tree and moves down through the tree until it hits the leaf of the input character, \citep[Section 2.2]{Claude08practicalrankselect}.
+It starts from the root of the Wavelet Tree and moves down through the tree until it hits the leaf of the input character, \citep[Section 2.2]{Claude08practicalrankselect}. 
+In each level of the tree \textproc{BinaryRank} is calculated for the character. 
+The result of \textproc{BinaryRank} is saved as the position to find rank for in the next recursive call. 
+When the leaf of the input symbol is reached the \textit{Position} variable contains the rank of the input symbol up to the original input position.
+Whether we query towards the left or right child in the recursive call is decided by what alphabet (right or left?) the symbol is represented by in the next level.
+A way to calculate this would be to calculate the split character of the current alphabet and the check whether the input symbol is lexicographically less than or equal to the split character. 
+If this is the case the input symbol is represented by 0 since it would be in the alphabet of the left child.
+If it is not the case then the input symbol is represented as 1.
+This is the way we do it in our implementation. \\
+
+\textproc{Rank($Character, Position$)} in our implementation is defined on each node, which is why it is called on the root node and the right and left child nodes in stead of specifying the node as a parameter to the \textproc{Rank} function, in the pseudo-code.
 
 \begin{algorithm}
 \caption{Rank}
@@ -109,9 +123,6 @@ It starts from the root of the Wavelet Tree and moves down through the tree unti
 
 
 
-
-\noindent \textproc{Rank($Character, Position$)} in our implementation is defined on each node, which is why it is called on the root node and the right and left child nodes in stead of specifying the node as a parameter to the \textproc{Rank} function, here in the pseudo-code.
-
 \subsubsection{Binary Rank} 
 \label{sec:TheoryBinaryRank}
 
@@ -134,7 +145,7 @@ It starts from the root of the Wavelet Tree and moves down through the tree unti
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
-A cornerstone of the \textproc{Rank} query on the Wavelet Tree is calculating the \textproc{BinaryRank} of a character on a bitmap at a node.
+A bottleneck in the \textproc{Rank} query on the Wavelet Tree is calculating the \textproc{BinaryRank} of a character on a bitmap at a node.
 \textproc{BinaryRank} loops through the binary number and counts the number of 1s or 0s and takes O(N) time. \textproc{BinaryRank} is called once per layer of the tree in order to answer a single rank query on the tree. 
 
 To improve the running time of \textproc{Rank} we therefore try to make \textproc{BinaryRank} faster by using use the \texttt{popcount} instruction, which counts the number of 1s in the binary representation of a given binary number in O(1) time, to improve the running time of \textproc{BinaryRank}. 
@@ -142,7 +153,7 @@ This process in described in greater detail in section~\ref{sec:popcountBinaryRa
 
 \subsection{Select query}
 \textproc{Select} queries the Wavelet Tree for the position of the i'th occurrence of the specified character.
-It starts from the leaf of the character and queries up through the tree, which means you need to know the leaf of the character in advance \citep[Section 2.2]{Claude08practicalrankselect}. 
+It starts from the leaf of the character and queries up through the tree, which means it is necessary to know the leaf of the character in advance \citep[Section 2.2]{Claude08practicalrankselect}. 
 
 
 \begin{algorithm}

@@ -37,6 +37,7 @@
 *.toc
 *.bbl
 *.blg
+*.dvi
 
 #netbeans specific
 **/nbproject/private/*
