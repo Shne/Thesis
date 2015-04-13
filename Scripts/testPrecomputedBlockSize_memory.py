@@ -68,7 +68,7 @@ subprocess.Popen(args, cwd=naiveIntegerCwd).wait()
 writeMassifData(programName, 'N/A')
 addNewline()
 
-programName = "PrecomputedPages"
+programName = "PreallocatedPrecomputed"
 print(programName)
 for blockSize in blockSizeRange:
 	args = massif + [preallocatedPrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
