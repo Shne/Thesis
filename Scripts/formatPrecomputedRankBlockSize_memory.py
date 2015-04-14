@@ -21,6 +21,7 @@ def getTotalMemoryForSpecificTest(dataFile, algorithm, blockSize):
 
 pageSize = 4096
 blockSizeRange = [int(pageSize/4), int(pageSize/3), int(pageSize/2), pageSize, pageSize*2]
+# int(pageSize-pageSize/3), int(pageSize-pageSize/4), 
 
 testDataFile = open(testDataFileName, 'r')
 naiveIntegerMem = getTotalMemoryForSpecificTest(testDataFile, 'NaiveInteger', 'N/A')

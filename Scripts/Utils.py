@@ -60,10 +60,10 @@ def getAvgRelativeStddevStr(ReadOutput, columnNames, stepsize):
 	return avgRelativeStddev
 
 def writeGnuplotHeader(gnuplotFile):
-	gnuplotFile.write("#[alphabetSize] [Walltime] [BlockSize] [BranchMissRate] [BranchMis] [TLB] [L1CM] [L2CM] [L3CM] [MemSize] [ResidentMem] [MemHighWatermark]\n")
+	gnuplotFile.write("#[alphabetSize] [Walltime] [BlockSize] [BranchMissRate] [BranchMis] [TLB] [L1CM] [L2CM] [L2CH] [L3CM] [Cycles]\n")
 
 def formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize):
-	dataListKeys = ["alphabetSizeList", "wallTimeList", "blockSizeList", "branchMissRateList", "branchMispredictionsList", "TLBList", "l1DataCacheMissesList", "l2DataCacheMissesList", "l3TotalCacheMissesList", "memSizeList", "memResidentList", "memHighWatermarkList"]
+	dataListKeys = ["alphabetSizeList", "wallTimeList", "blockSizeList", "branchMissRateList", "branchMispredictionsList", "TLBList", "l1DataCacheMissesList", "l2DataCacheMissesList", "l2DataCacheHitsList", "l3TotalCacheMissesList", "totalCyclesList"]
 	gnuplotFile.write(getMaxRelativeStddevStr(ReadOutput, dataListKeys, testsPerSize) + "\n")
 	gnuplotFile.write(getAvgRelativeStddevStr(ReadOutput, dataListKeys, testsPerSize) + "\n")
 	for i in range(int(len(ReadOutput.alphabetSizeList)/testsPerSize)):
@@ -80,10 +80,11 @@ def formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize):
 		TLB = avg(ReadOutput.TLBList[startIndex:endIndex])
 		L1CM = avg(ReadOutput.l1DataCacheMissesList[startIndex:endIndex])
 		L2CM = avg(ReadOutput.l2DataCacheMissesList[startIndex:endIndex])
+		L2CH = avg(ReadOutput.l2DataCacheHitsList[startIndex:endIndex])
 		L3CM = avg(ReadOutput.l3TotalCacheMissesList[startIndex:endIndex])
-		MemSize = avg(ReadOutput.memSizeList[startIndex:endIndex])
-		MemResident = avg(ReadOutput.memResidentList[startIndex:endIndex])
-		MemHighWatermark = avg(ReadOutput.memHighWatermarkList[startIndex:endIndex])
+		# MemSize = avg(ReadOutput.memSizeList[startIndex:endIndex])
+		# MemResident = avg(ReadOutput.memResidentList[startIndex:endIndex])
+		# MemHighWatermark = avg(ReadOutput.memHighWatermarkList[startIndex:endIndex])
 
 		gnuplotFile.write(str(alphabetSize)+" "+
 			str(Walltime)+" "+
@@ -93,7 +94,9 @@ def formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize):
 			str(TLB)+" "+
 			str(L1CM)+" "+
 			str(L2CM)+" "+
+			str(L2CH)+" "+
 			str(L3CM)+" "+
-			str(MemSize)+" "+
-			str(MemResident)+" "+
-			str(MemHighWatermark)+"\n")
+			# str(MemSize)+" "+
+			# str(MemResident)+" "+
+			# str(MemHighWatermark)+" "+
+			str(Cycles)+"\n")

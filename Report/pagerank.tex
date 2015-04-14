@@ -68,8 +68,11 @@ More precisely, we might at most load $2 \cdot \left( \lceil\frac{blockSize}{pag
 
 If we page-align the blocks, and use block sizes divisible by the page size or that the page is divisible by, the extra $+1$ will disappear, because a block can no longer span more pages than its size is a multiple of the page size.
 This means we can ensure that at most $2 \cdot \lceil\frac{blockSize}{pageSize}\rceil$ memory pages of the bitmap are loaded for each node by page-aligning the blocks.
-With an alphabet size of $2^{16}$ this amounts to saving 16 page loads per query.
+With an alphabet size of $2^{16}$ this amounts to saving up to 16 page loads per query.
 
+While this could potentially save us some expensive TLB misses it will also require more computations to find the correct block to access in a query, in the data structure not using concatenated bitmaps.
+For the data structure using concatenated bitmaps, these computations are needed regardless of block alignment, and so we believe it can only be an improvement to page-align the blocks in this case. \textbf{[TODO: should we test this anyway?]}
+Whether this is a worthwhile modification when not using concatenated bitmaps will be tested in section~\ref{sec:queryRunTimePrecomputedBlockSizes}.
 
 
 \subsection{Select Queries with Precomputed Ranks}
@@ -104,6 +107,7 @@ Though, this is giving the select query a disadvantage in the analysis, as, even
 
 It is not entirely clear whether it is an advantage to use the binary rank call, or it would be better to use popcount BinarySelect on the first partial block at all times.
 We will test this in section~\ref{sec:experimentPrecomputedBlocksRankInSelect}
+\textbf{[TODO]}
 
 
 
@@ -111,11 +115,11 @@ We will test this in section~\ref{sec:experimentPrecomputedBlocksRankInSelect}
 Since each precomputed value cannot exceed the block size in bits, assuming we don't use block sizes exceeding $2^{16} = 65536$ bits, or $\frac{2^{16}}{8} = 8192$ bytes, we can store them in 16-bit unsigned integers, called \texttt{unsigned short int} in C++ on our machines.
 Since the page size on our machines are 4096 bytes we should not use a block size larger than $\frac{8192}{4096} = 2$ pages if we want to use 16-bit unsigned integers.
 
-In Section[TODO:reference] we find that the optimal block size is ? bits = ? bytes = ? pages.
+In Section~\ref{sec:queryRunTimePrecomputedBlockSizes} we find that the optimal block size is 16384 bits = 2048 bytes = $\nicefrac{1}{2}$ page.
 
 Assuming we then store the precomputed values as 16-bit unsigned short integers it will only consume an extra 16 bits or 2 bytes per block of which there are $\frac{BitmapSize}{BlockSize}$.
-This means, assuming ? bytes per block, a relative extra space consumption of
-\[ \frac{ 2 \cdot \frac{BitmapSize}{BlockSize} }{BitmapSize} = \frac{2}{BlockSize} = \frac{2}{??blockSize??} = 0.XXXXXXXXX = 0.XXX\% \]
+This means, assuming a block size of 2048 bytes, a relative extra space consumption of
+\[ \frac{ 2 \cdot \frac{BitmapSize}{BlockSize} }{BitmapSize} = \frac{2}{BlockSize} = \frac{2}{2048} = 0.0009765625 = 0.098\% \]
 of the bitmaps.
 Which is even less when considering the total space used including the nodes, and would be less for larger block sizes.
 
@@ -124,20 +128,137 @@ Which is even less when considering the total space used including the nodes, an
 We will test and compare the Rank and Select running times and memory usage of three wavelet trees using precomputed rank values for blocks: one using concatenated bitmaps and aligned blocks, one only using aligned blocks and one using neither.
 
 \subsubsection{Query Running Time for Bitmap with Precomputed Blocks for different Block Sizes}
+\label{sec:queryRunTimePrecomputedBlockSizes}
+
+\paragraph{Rank Queries}~\\
+In Figure~\ref{fig:PrecomputedRankBlockSize_Rank_WallTime} we have plotted the wall time in $\mu s$ for the algorithms using precomputed rank values.
+Not included in the graph is the running time for the non-precomputed case NaiveInteger that is about a factor 375 of the fastest running time in this graph.
+
+We see that PreallocatedPrecomputed is consistently worse than the other two, as expected, taking about 90\% more time than UnalignedNaivePrecomputed with block size = 0.5 page where Unaligned is fastest and 63\% more with block size = 1 page where Preallocated is fastest.
+
+We can also see that page-aligning the blocks when not using concatenated bitmaps is not an improvement in regards to rank query wall time.
+Whether it actually does reduce TLB misses can be seen in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_TLB} where we see that it does reduce TLB misses, but only by about 4,45\% at block size = $\nicefrac{1}{2}$ page size which is even within the average relative standard deviation of both NaivePrecomputed and UnalignedNaivePrecomputed.
+
+
+
 
 \figureBegin
-\caption{Rank queries on wavelet trees with precomputed ranks of varying block sizes}
+\caption{Wall Time of Rank queries on wavelet trees with precomputed ranks of varying block sizes}
 \label{fig:PrecomputedRankBlockSize_Rank_WallTime}
 \input{PrecomputedRankBlockSize_Rank_WallTime}
 \figureEnd
 
 \figureBegin
-\caption{Select queries on wavelet trees with precomputed ranks of varying block sizes}
+\caption{Branch Mispredictions for Rank queries on wavelet trees with precomputed ranks of varying block sizes}
+\label{fig:PrecomputedRankBlockSize_Rank_BranchMiss}
+\input{PrecomputedRankBlockSize_Rank_BranchMiss}
+\figureEnd
+
+
+\figureBegin
+\caption{Branch Misprediction Rate for Rank queries on wavelet trees with precomputed ranks of varying block sizes}
+\label{fig:PrecomputedRankBlockSize_Rank_BranchMissRate}
+\input{PrecomputedRankBlockSize_Rank_BranchMissRate}
+\figureEnd
+
+
+\figureBegin
+\caption{TLB Misses for Rank queries on wavelet trees with precomputed ranks of varying block sizes}
+\label{fig:PrecomputedRankBlockSize_Rank_TLB}
+\input{PrecomputedRankBlockSize_Rank_TLB}
+\figureEnd
+
+
+\figureBegin
+\caption{Level 1 Data Cache Misses for Rank queries on wavelet trees with precomputed ranks of varying block sizes}
+\label{fig:PrecomputedRankBlockSize_Rank_L1CacheMiss}
+\input{PrecomputedRankBlockSize_Rank_L1CacheMiss}
+\figureEnd
+
+
+\figureBegin
+\caption{Level 2 Data Cache Misses for Rank queries on wavelet trees with precomputed ranks of varying block sizes}
+\label{fig:PrecomputedRankBlockSize_Rank_L2CacheMiss}
+\input{PrecomputedRankBlockSize_Rank_L2CacheMiss}
+\figureEnd
+
+
+\figureBegin
+\caption{Level 2 Data Cache Miss Rate for Rank queries on wavelet trees with precomputed ranks of varying block sizes}
+\label{fig:PrecomputedRankBlockSize_Rank_L2CacheMissRate}
+\input{PrecomputedRankBlockSize_Rank_L2CacheMissRate}
+\figureEnd
+
+
+\figureBegin
+\caption{Level 3 Total Cache Misses for Rank queries on wavelet trees with precomputed ranks of varying block sizes}
+\label{fig:PrecomputedRankBlockSize_Rank_L3CacheMiss}
+\input{PrecomputedRankBlockSize_Rank_L3CacheMiss}
+\figureEnd
+
+
+
+
+
+
+
+
+\paragraph{Select Queries}~\\
+
+
+\figureBegin
+\caption{Wall Time of Select queries on wavelet trees with precomputed ranks of varying block sizes}
 \label{fig:PrecomputedRankBlockSize_Select_WallTime}
 \input{PrecomputedRankBlockSize_Select_WallTime}
 \figureEnd
 
+\figureBegin
+\caption{Branch Mispredictions for Select queries on wavelet trees with precomputed ranks of varying block sizes}
+\label{fig:PrecomputedRankBlockSize_Select_BranchMiss}
+\input{PrecomputedRankBlockSize_Select_BranchMiss}
+\figureEnd
 
+
+\figureBegin
+\caption{Branch Misprediction Rate for Select queries on wavelet trees with precomputed ranks of varying block sizes}
+\label{fig:PrecomputedRankBlockSize_Select_BranchMissRate}
+\input{PrecomputedRankBlockSize_Select_BranchMissRate}
+\figureEnd
+
+
+\figureBegin
+\caption{TLB Misses for Select queries on wavelet trees with precomputed ranks of varying block sizes}
+\label{fig:PrecomputedRankBlockSize_Select_TLB}
+\input{PrecomputedRankBlockSize_Select_TLB}
+\figureEnd
+
+
+\figureBegin
+\caption{Level 1 Data Cache Misses for Select queries on wavelet trees with precomputed ranks of varying block sizes}
+\label{fig:PrecomputedRankBlockSize_Select_L1CacheMiss}
+\input{PrecomputedRankBlockSize_Select_L1CacheMiss}
+\figureEnd
+
+
+\figureBegin
+\caption{Level 2 Data Cache Misses for Select queries on wavelet trees with precomputed ranks of varying block sizes}
+\label{fig:PrecomputedRankBlockSize_Select_L2CacheMiss}
+\input{PrecomputedRankBlockSize_Select_L2CacheMiss}
+\figureEnd
+
+
+\figureBegin
+\caption{Level 2 Data Cache Miss Rate for Select queries on wavelet trees with precomputed ranks of varying block sizes}
+\label{fig:PrecomputedRankBlockSize_Select_L2CacheMissRate}
+\input{PrecomputedRankBlockSize_Select_L2CacheMissRate}
+\figureEnd
+
+
+\figureBegin
+\caption{Level 3 Total Cache Misses for Select queries on wavelet trees with precomputed ranks of varying block sizes}
+\label{fig:PrecomputedRankBlockSize_Select_L3CacheMiss}
+\input{PrecomputedRankBlockSize_Select_L3CacheMiss}
+\figureEnd
 
 
 \subsubsection{Memory Usage of Concatenated vs. Individual Bitmaps}
