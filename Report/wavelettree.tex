@@ -87,19 +87,6 @@ The Wavelet Tree can be constructed in $O(n \log \sigma)$ time.
 (Todo: references to why or possibly explain it ourselves)
 
 \subsection{Rank Query}
-Rank counts the number of occurrences of the specified character up to and including the specified position. 
-It starts from the root of the Wavelet Tree and moves down through the tree until it hits the leaf of the input character, \citep[Section 2.2]{Claude08practicalrankselect}. 
-In each level of the tree \textproc{BinaryRank} is calculated for the character. 
-The result of \textproc{BinaryRank} is saved as the position to find rank for in the next recursive call. 
-When the leaf of the input symbol is reached the \textit{Position} variable contains the rank of the input symbol up to the original input position.
-Whether we query towards the left or right child in the recursive call is decided by what alphabet (right or left?) the symbol is represented by in the next level.
-A way to calculate this would be to calculate the split character of the current alphabet and the check whether the input symbol is lexicographically less than or equal to the split character. 
-If this is the case the input symbol is represented by 0 since it would be in the alphabet of the left child.
-If it is not the case then the input symbol is represented as 1.
-This is the way we do it in our implementation. \\
-
-\textproc{Rank($Character, Position$)} in our implementation is defined on each node, which is why it is called on the root node and the right and left child nodes in stead of specifying the node as a parameter to the \textproc{Rank} function, in the pseudo-code.
-
 \begin{algorithm}
 \caption{Rank}
 \label{alg:rank}
@@ -109,11 +96,11 @@ This is the way we do it in our implementation. \\
 \State \Return $Position$
 \EndIf
 \State $CharBit \gets$ bit representing $Character$ in bitmap of current node
-\State $Position \gets$ \Call {BinaryRank} {$CharBit, Position, BitMap$}
+\State $Occourance \gets$ \Call {BinaryRank} {$CharBit, Position, BitMap$}
 \If{$CharBit = 1$}
 	\State $Rank \gets$ RightChildNode.\Call {Rank} {$CharBit, Position$}
 \Else
-	\State $Rank \gets$ LeftChildNode.\Call {Rank} {$CharBit, Position$}
+	\State $Rank \gets$ LeftChildNode.\Call {Rank} {$CharBit, Occourance$}
 \EndIf
 \State \Return $Rank$ 
 \EndFunction
@@ -121,11 +108,21 @@ This is the way we do it in our implementation. \\
 \end{algorithmic}
 \end{algorithm}
 
+Rank counts the number of occurrences of the specified character up to and including the specified position. 
+It starts from the root of the Wavelet Tree and moves down through the tree until it hits the leaf of the input character, \citep[Section 2.2]{Claude08practicalrankselect}. 
+In each level of the tree \textproc{BinaryRank} is calculated for the character. 
+The result of \textproc{BinaryRank} is saved as the position to find rank for in the next recursive call. 
+When the leaf of the input symbol is reached the \textit{Position} variable contains the rank of the input symbol up to the original input position.
+Whether we query towards the left or right child in the recursive call is decided by what the symbol in represented as in the bitmap of the current node.
+A way to calculate this would be to calculate the split character of the current alphabet and the check whether the input symbol is lexicographically less than or equal to the split character. 
+If this is the case the input symbol is represented by 0 since it would be in the alphabet of the left child.
+If it is not the case then the input symbol is represented as 1.
+This is the way we do it in our implementation. \\
 
+\textproc{Rank($Character, Position$)} in our implementation is defined on each node, which is why it is called on the root node and the right and left child nodes in stead of specifying the node as a parameter to the \textproc{Rank} function, in the pseudo-code.
 
 \subsubsection{Binary Rank} 
 \label{sec:TheoryBinaryRank}
-
 \begin{algorithm}
 \caption{BinaryRank}
 \label{alg:binaryrank}
@@ -152,21 +149,18 @@ To improve the running time of \textproc{Rank} we therefore try to make \textpro
 This process in described in greater detail in section~\ref{sec:popcountBinaryRank}.
 
 \subsection{Select query}
-\textproc{Select} queries the Wavelet Tree for the position of the i'th occurrence of the specified character.
-It starts from the leaf of the character and queries up through the tree, which means it is necessary to know the leaf of the character in advance \citep[Section 2.2]{Claude08practicalrankselect}. 
-
-
 \begin{algorithm}
 \caption{Select}
 \label{alg:select}
 \begin{algorithmic} 
 \Function {Select} {$Character, Occurrence$}
-\If{$CurrentNode$ is $RightChild$}
+\State $Leaf \gets GetLeaf(Character)$
+\If{$Leaf$ is $RightChild$}
 	\State $CharBit \gets 1$
 \Else
 	\State $CharBit \gets 0$
 \EndIf
-\State \Return $Parent.$\textproc{SelectRec}$(CharBit, Occurrence)$
+\State \Return $Leaf.Parent.$\textproc{SelectRec}$(CharBit, Occurrence)$
 \EndFunction
 
 \vspace{1cm}
@@ -183,15 +177,36 @@ It starts from the leaf of the character and queries up through the tree, which 
 \EndIf
 \State \Return $Parent.$\textproc{SelectRec}$(CharBit, Position)$
 \EndFunction
+
+\vspace{1cm}
+
+\Function {GetLeaf} {$Character$}
+\State $CharBit \gets character > alphabet/2$
+\If{$CharBit == 1$ AND this node has a right child}
+	\State RightChild.GetLeaf($Character$)
+\ElsIf{$CharBit == 0$ AND this node has a left child}
+	\State LeftChild.GetLeaf($Character$)
+\EndIf
+\State \Return CurrentNode
+\EndFunction
 \end{algorithmic}
 \end{algorithm}
 
+\textproc{Select} queries the Wavelet Tree for the position of the i-th occurrence of the specified character.
+It starts from the leaf of the character and queries up through the tree, which means it is necessary to know the leaf of the character. \citep[Section 2.2]{Claude08practicalrankselect}. 
+This is accomplished using the \textproc{GetLeaf} method, which works by recursing down the tree from the root and choosing the right or left path based on whether the character is represented as a 0 or a 1 in the bitmap of the current node.
+The recursion stops when the leaf of the character is found which is indicated by the fact that there are no left or right children of the current node.
+After having found the leaf the \textproc{Select} function calculates the \textit{CharBit} based on whether the found leaf is a right or left child of it's parent.
 
-We split Select into two functions; \textproc{Select} which is called on the leaf and \textproc{SelectRec} which is called from \textproc{Select} on the parent of the leaf and continues recursively until the root is reached. 
-This makes sense because it saves us a check for whether we are a leaf or not at each recursive call and since we start out in a leaf and will never meet one again that check would only be true once. 
+\textproc{SelectRec} is then called on the parent of the leaf and recurses up the tree towards the root to find the position of the specified occurrence of the input character.
+It does so by calling \textproc{BinarySelect} which returns the position of the specified occurrence of the \textproc{CharBit} in the bitmap of the current node. 
+This position is then used as the occurrence to find the position of in the next recursive call.
+When the \textit{root} is reached the result of \textproc{BinarySelect} gives us the position of the specified occurrence of the character in the string.
+
+Select is split into the \textproc{Select} and \textproc{SelectRec} functions because it saves us a check for whether the current node is a leaf or not at each recursive call and since we start out in a leaf and will never meet one again that check would only be true once during the execution.
 
 Figuring out the \textproc{CharBit} is a lot easier for \textproc{Select} than for \textproc{Rank} since we query bottom-up and can just check whether the current node is a left child or a right child. 
-In \textproc{Rank} one needs to calculate the split character and then check whether the input character is before or after it in the alphabet.
+In \textproc{Rank} one needs to calculate the split character and then check whether the input character is before or after it in the alphabet in every recursive step.
 
 \subsubsection{Binary Select}
 \begin{algorithm}
@@ -273,7 +288,9 @@ The wavelet tree can be used to both achieve space usage within \textit{zero-ord
 We can therefore get space usage within \textit{zero-order entropy} even for large alphabets using the wavelet tree. 
 
 \noindent\textbf{(Todo: describe what a Huffman shaped wavelet tree is)}\\
-\textbf{(Todo: describe how the burrows wheeler transformation works and why)}
+\textbf{(Todo: describe how the burrows wheeler transformation works and why)} \\
+\textbf{(Todo: describe run length encoding)} \\
+\textbf{(Todo: Figure out how to do queries when the input is Burrows-Wheeler transformed and the bitmaps are run length encoded.)}
 
 
 

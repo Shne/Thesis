@@ -42,13 +42,13 @@ We then compare results from rank and select queries on our wavelet tree to resu
 When they agree on several randomly selected sets of query parameters, we feel confident our wavelet tree construction, rank, and select implementations are correct.
 
 \subsection{Combating Over-Optimization}
-The GNU Compiler Collection (GCC) is an optimizing compiler and can using static analysis sometimes recognize that the results and possible side-effects of a computation will not be used in the code and will in those cases completely remove that computation as an optimization.
+The GNU Compiler Collection (GCC) is an optimizing compiler and can sometimes using static analysis recognize that the results and possible side-effects of a computation will not be used in the code and will in those cases completely remove that computation as an optimization.
 This means that the compiler could potentially remove the entirety or parts of the computation for our queries when we test it, if we don't use the result for anything.
 To ensure that the compiler doesn't throw needed computations out the window in our tests, we collect the results of each query in an array and print it to stdout. We only print it after the collection of measurements is done so as to effect the running time minimally.
 
 \subsection{Reducing Construction Time Memory Usage}
 Since the Wavelet tree is a recursively defined data structure, we also implement it recursively. 
-Since it is also binary (or $d$-ary) we recursive into several sub-node constructors in the construction of a node, which means our compiler can't do tail-recursion optimisation (TODO: check that this is true!). 
+Since it is also binary (or $d$-ary) we recurse into several sub-node constructors in the construction of a node, which means our compiler can't do tail-recursion optimisation (TODO: check that this is true!). 
 This further causes any stack-allocated variables to be held in memory until we leave the scope of the constructor function.
 We traverse and split the input string into its left and right parts in each node constructor and thus end up holding the input string twice in memory: once in the variable holding the input string, once in the two variables holding the left and right split strings.
 This is wasted memory because we don't actually need the input string any longer once we have split it into its left and right parts.
@@ -64,14 +64,14 @@ There are several bitmap implementations available to us. In the STL there is \t
 \item[\texttt{std::bitset}] While it would technically be possible to use the \texttt{std::bitset}, it requires that the size of the bitset is known at compile time and passed as a template parameter. This means we would need to recompile the program for each $n$, or size of the input string. 
 We would also need to allocate a bitmap with room for $n$ bits for each sub-node as that is the theoretically possible size required, making the size required for the bitmaps of the tree $O(n \times |nodes|) = O(n2^{log(\sigma)})$ instead of $O(n \times height) = O(n~log(\sigma))$.
 In the preallocated implementation of the Wavelet Tree we cannot use \texttt{std::bitset} either since it does not support pointer access, which means that we cannot do queries using \texttt{popcount}.
-We also feel that an actual practically usable implementation should be able to handle different size input at runtime instead of compile-time. 
-
-\item[\texttt{vector<bool>}] is a specialised implementation for \texttt{bool} that packs the data so that each \texttt{bool} only takes up one bit and is not an actual C++ container, though it tries to mimic some of the behaviour. 
-It is basically the STL implementation of a dynamically allocated bitset.
+We also feel that an actual usable practical implementation should be able to handle different sizes of input at runtime instead of compile-time. 
 
 \item[\texttt{boost::dynamic\_bitset}] is the Boost library's take on a dynamic bitset. 
 It doesn't try to mimic a container and lacks some features such as an iterator because of that. 
 It also does not guarantee that the bits will be allocated consecutively in memory and has no raw pointer access to the data in memory. 
 This is a problem when we want to call popcount on all machine words from beginning up to some index.
+
+\item[\texttt{vector<bool>}] is a specialised implementation for \texttt{bool} that packs the data so that each \texttt{bool} only takes up one bit and is not an actual C++ container, though it tries to mimic some of the behaviour. 
+It is basically the STL implementation of a dynamically allocated bitset. This is the implementation we decided to use for our bitmap because it allows dynamic allocation and pointer access.
 \end{description}
 
