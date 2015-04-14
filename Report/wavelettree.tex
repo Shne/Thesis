@@ -312,12 +312,15 @@ $H_k(S) = \frac{1}{n} \sum\limits_{w \in \Sigma^k} | w_S |H_0(w_S)$
 \end{definition}
 \end{mdframed}
 $H_k$ thus defines a lower bound for bit space usage that is smaller than the lower bound for $H_0$.
-The problem is that it is difficult to achieve compression within the $H_k$ lower bound or at least it was a problem before the wavelet tree was invented. 
-Using the Burrows-Wheeler transformation on the input the problem gets reduced from achieving $H_k$ compression to achieving $H_0$ compression.
-In other words, if we have a good compression algorithm that achieves compression within the $H_0$ lower bound, then by using that algorithm on the Burrows-Wheeler transformation of the input we can achieve compression within the $H_k$ lower bound. (Todo: explain the theory behind this)
 
-The wavelet tree can be used to both achieve space usage within \textit{zero-order entropy} and \textit{k-th order entropy}. To achieve \textit{zero-order entropy} a Huffman shaped wavelet tree (todo: reference) can be used. But when the alphabet is very large that is not a good approach with regards to compression, because storing the huffman symbol assignments and wavelet tree pointers ends up using too much space . \citep[Section~3]{Claude08practicalrankselect} describes a way to also have \textit{zero-order entropy} space usage for large alphabets. 
-We can therefore get space usage within \textit{zero-order entropy} even for large alphabets using the wavelet tree. \textit{zero-order entropy} can also be achieved by run-length encoding the bitmaps in the wavelet tree.
+Using the Burrows-Wheeler transformation on the input the we can reduce the problem of achieving $H_k$ compression to achieving $H_0$ compression.
+In other words, if we have a good compression algorithm that achieves compression within the $H_0$ lower bound, then by using that algorithm on the Burrows-Wheeler transformation of the input we can achieve compression within the $H_k$ lower bound. (Todo: explain the theory behind this)
+The problem then for a long time was that there existed no good way to achieve compression within the $H_0$ lower bound or at least it was a problem before the wavelet tree was invented. \textbf{(todo: describe why it was a problem)} 
+
+To achieve \textit{zero-order entropy} a Huffman shaped wavelet tree (todo: reference) can be used. But when the alphabet is very large that is not a good approach with regards to compression, because storing the huffman symbol assignments and wavelet tree pointers ends up using too much space . \citep[Section~3]{Claude08practicalrankselect} describes a way to also have \textit{zero-order entropy} space usage for large alphabets. 
+We can therefore get space usage within \textit{zero-order entropy} even for large alphabets using the wavelet tree. 
+\textit{Zero-order entropy} can also be achieved by run-length encoding the bitmaps in the wavelet tree, which is the approach that is used when compressing the bwt using the wavelet tree \citep[Introduction (\textbf{B})]{waveletTreeEntropy}.
+Using a combination of run-length encoding and bwt on the wavelet tree it is possible to achieve a lower bound within \textit{k-th order entropy}
 
 \noindent\textbf{(Todo: describe what a Huffman shaped wavelet tree is)}\\
 \textbf{(Todo: describe how the burrows wheeler transformation works and why)} \\
