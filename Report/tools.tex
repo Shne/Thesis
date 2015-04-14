@@ -18,7 +18,7 @@ We calculate the CPU clock cycles using the \texttt{PAPI\_TOT\_CYC} papi event w
 We believe this value to be more accurate than calculating cycles using \texttt{PAPI\_get\_real\_cyc()} which estimates the cycles based on wall time \citep{PAPI-get-real-cyc}. 
 
 This means that \texttt{PAPI\_get\_real\_cyc()} depends on the Time Stamp Counter frequency which is constant. 
-Because of this The TSC frequency is not based on CPU frequency in any way and because work gets done at CPU frequency and not TSC frequency, \texttt{PAPI\_TOT\_CYC} seems like the best choice. 
+Because of this the TSC frequency is not based on CPU frequency in any way and because work gets done at CPU frequency and not TSC frequency, \texttt{PAPI\_TOT\_CYC} seems like the best choice. 
 This is also recommended by Intel \citep{IntelMeasuringTheAverageUnhaltedFrequency}.
 
 In Figure~\ref{papievents} we have listed the various counters and values we have read using PAPI and their description. Not every test uses every one of these.
