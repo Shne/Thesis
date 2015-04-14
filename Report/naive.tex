@@ -1,36 +1,7 @@
 \section{Simple, Naïve Algorithm}
 This is the simple, straightforward, naïve implementation we did before any smart ideas and optimizations.
 \subsection{Algorithm Description}
-The Naïve Wavelet Tree construction algorithm is recursively defined, calling itself to construct the left and right sub-tree from the root node and down. At each recursion the algorithm splits the given alphabet in two halves and traverses the given string putting each character into a left or right partition based on whether the character was in the left or right half of the alphabet.
-
-\begin{algorithm}
-\caption{Construction of nodes in the Wavelet Tree}
-\label{alg:ConstructNode}
-\begin{algorithmic}
-\Function {ConstructNode} {$String, Alphabet$}
-\If{$Alphabet.Size() = 1$ or $String.Length() = 0$}
-	\State \Return
-\EndIf
-\State Split $Alphabet$ into $LeftAlphabet$ and $RightAlphabet$
-\State $Split \gets$ middle character in $Alphabet$
-\ForAll {$Character$ in $String$}
-	\If {$Character < Split$}
-		\State $LeftString.Append(Character)$
-		\State $Bitmap.Append(0)$
-	\Else
-		\State $RightString.Append(Character)$
-		\State $Bitmap.Append(1)$
-	\EndIf
-\EndFor
-\State $LeftNode \gets$ \Call {ConstructNode} {$LeftAlphabet, LeftString$}
-\State $RightNode \gets$ \Call {ConstructNode} {$RightAlphabet, RightString$}
-\EndFunction
-
-\State \Call {ConstructNode} {InputString, InputAlphabet}
-\end{algorithmic}
-\end{algorithm}
-
-\noindent In our implementation, $Alphabet$, $LeftAlphabet$, and $RightAlphabet$ are stored as two integer values each: a minimum and a maximum. It is explained in~\ref{sec:UsingIntAsChar} how this is equivalent to storing the full alphabet and passing pointers into it around. $Bitmap$ is stored as a \texttt{vector<bool>} which is tightly packed, only using 1 bit per bool\footnote{\url{http://www.cplusplus.com/reference/vector/vector-bool/}}.
+\noindent The construction of the wavelet tree is implemented based on the pseudo-code in section~\ref{sec:nodeconstruction}. In our implementation, $Alphabet$, $LeftAlphabet$, and $RightAlphabet$ are stored as two integer values each: a minimum and a maximum. It is explained in~\ref{sec:UsingIntAsChar} how this is equivalent to storing the full alphabet and passing pointers into it around. $Bitmap$ is stored as a \texttt{vector<bool>} which is tightly packed, only using 1 bit per bool\footnote{\url{http://www.cplusplus.com/reference/vector/vector-bool/}}.
 
 \subsection{Optimizations}
 \subsubsection{Binary Rank using Popcount}

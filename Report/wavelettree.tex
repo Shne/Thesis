@@ -86,6 +86,38 @@ At each level in the tree exactly \textit{n} bits are stored and in the last lev
 The Wavelet Tree can be constructed in $O(n \log \sigma)$ time. 
 (Todo: references to why or possibly explain it ourselves)
 
+
+\subsection{Constructing the Wavelet Tree}
+\label{sec:nodeconstruction}
+The Wavelet Tree construction algorithm is recursively defined, calling itself to construct the left and right sub-tree from the root node and down. At each recursion the algorithm splits the given alphabet in two halves and traverses the given string putting each character into a left or right partition based on whether the character was in the left or right half of the alphabet.
+
+\begin{algorithm}
+\caption{Construction of nodes in the Wavelet Tree}
+\label{alg:ConstructNode}
+\begin{algorithmic}
+\Function {ConstructNode} {$String, Alphabet$}
+\If{$Alphabet.Size() = 1$ or $String.Length() = 0$}
+	\State \Return
+\EndIf
+\State Split $Alphabet$ into $LeftAlphabet$ and $RightAlphabet$
+\State $Split \gets$ middle character in $Alphabet$
+\ForAll {$Character$ in $String$}
+	\If {$Character < Split$}
+		\State $LeftString.Append(Character)$
+		\State $Bitmap.Append(0)$
+	\Else
+		\State $RightString.Append(Character)$
+		\State $Bitmap.Append(1)$
+	\EndIf
+\EndFor
+\State $LeftNode \gets$ \Call {ConstructNode} {$LeftAlphabet, LeftString$}
+\State $RightNode \gets$ \Call {ConstructNode} {$RightAlphabet, RightString$}
+\EndFunction
+
+\State \Call {ConstructNode} {InputString, InputAlphabet}
+\end{algorithmic}
+\end{algorithm}
+
 \subsection{Rank Query}
 \begin{algorithm}
 \caption{Rank}
@@ -285,7 +317,7 @@ Using the Burrows-Wheeler transformation on the input the problem gets reduced f
 In other words, if we have a good compression algorithm that achieves compression within the $H_0$ lower bound, then by using that algorithm on the Burrows-Wheeler transformation of the input we can achieve compression within the $H_k$ lower bound. (Todo: explain the theory behind this)
 
 The wavelet tree can be used to both achieve space usage within \textit{zero-order entropy} and \textit{k-th order entropy}. To achieve \textit{zero-order entropy} a Huffman shaped wavelet tree (todo: reference) can be used. But when the alphabet is very large that is not a good approach with regards to compression, because storing the huffman symbol assignments and wavelet tree pointers ends up using too much space . \citep[Section~3]{Claude08practicalrankselect} describes a way to also have \textit{zero-order entropy} space usage for large alphabets. 
-We can therefore get space usage within \textit{zero-order entropy} even for large alphabets using the wavelet tree. 
+We can therefore get space usage within \textit{zero-order entropy} even for large alphabets using the wavelet tree. \textit{zero-order entropy} can also be achieved by run-length encoding the bitmaps in the wavelet tree.
 
 \noindent\textbf{(Todo: describe what a Huffman shaped wavelet tree is)}\\
 \textbf{(Todo: describe how the burrows wheeler transformation works and why)} \\
