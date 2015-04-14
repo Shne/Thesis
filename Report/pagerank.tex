@@ -132,12 +132,15 @@ We will test and compare the Rank and Select running times and memory usage of t
 
 \paragraph{Rank Queries}~\\
 In Figure~\ref{fig:PrecomputedRankBlockSize_Rank_WallTime} we have plotted the wall time in $\mu s$ for the algorithms using precomputed rank values.
-Not included in the graph is the running time for the non-precomputed case NaiveInteger that is about a factor 375 of the fastest running time in this graph.
+Not included in the graph is the wall time for the non-precomputed case, NaiveInteger, that is about a factor 375 of the fastest running time in this graph, UnalignedNaivePrecomputed at block size = 0.5 page.
 
-We see that PreallocatedPrecomputed is consistently worse than the other two, as expected, taking about 90\% more time than UnalignedNaivePrecomputed with block size = 0.5 page where Unaligned is fastest and 63\% more with block size = 1 page where Preallocated is fastest.
+We see that PreallocatedPrecomputed is consistently slower than the other two, as expected, taking about 90\% more time than UnalignedNaivePrecomputed with block size = 0.5 page where Unaligned is fastest, and 63\% more with block size = 1 page where Preallocated is fastest.
+
+While much of the increased running time of Rank queries on the PreallocatedPrecomputed wavelet tree can likely be explained by the increased amount of instructions needed, as can be seen by comparing the pseudocode in Algorithm~\ref{alg:TODO} and Algorithm~\ref{alg:TODO} \textbf{[TODO]}, part of the increase is also due to the increased number of branches in the code.
+We come to this conclusion by examining Figure~\ref{fig:PrecomputedRankBlockSize_Rank_BranchMiss} and \ref{fig:PrecomputedRankBlockSize_Rank_BranchMissRate} 
 
 We can also see that page-aligning the blocks when not using concatenated bitmaps is not an improvement in regards to rank query wall time.
-Whether it actually does reduce TLB misses can be seen in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_TLB} where we see that it does reduce TLB misses, but only by about 4,45\% at block size = $\nicefrac{1}{2}$ page size which is even within the average relative standard deviation of both NaivePrecomputed and UnalignedNaivePrecomputed.
+In Figure~\ref{fig:PrecomputedRankBlockSize_Rank_TLB} we can however see that it actually does reduce TLB misses compared to the unaligned case, as was the intention of the modification, but only by about 4,45\% at block size = 0.5 page size which is even within the average relative standard deviation of both NaivePrecomputed and UnalignedNaivePrecomputed, making it close to pointless.
 
 
 
@@ -146,6 +149,13 @@ Whether it actually does reduce TLB misses can be seen in Figure~\ref{fig:Precom
 \caption{Wall Time of Rank queries on wavelet trees with precomputed ranks of varying block sizes}
 \label{fig:PrecomputedRankBlockSize_Rank_WallTime}
 \input{PrecomputedRankBlockSize_Rank_WallTime}
+\figureEnd
+
+
+\figureBegin
+\caption{Total Cycles of Rank queries on wavelet trees with precomputed ranks of varying block sizes}
+\label{fig:PrecomputedRankBlockSize_Rank_TotalCycles}
+\input{PrecomputedRankBlockSize_Rank_TotalCycles}
 \figureEnd
 
 \figureBegin

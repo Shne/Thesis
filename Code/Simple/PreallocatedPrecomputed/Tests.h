@@ -74,7 +74,11 @@ inline void testTearDown(uint amount, uint alphabetSize, string test, string pat
         PAPI_dmem_info_t meminfo;
         PAPI_get_dmem_info(&meminfo);
         queryOutput << endl
+#ifdef PARTIALBLOCKS
+            << "algorithm=PreallocatedPrecomputedPartialBlocks" << "\t"
+#else
             << "algorithm=PreallocatedPrecomputed" << "\t"
+#endif
             << "test=" << test << "\t"
             << "amount=" << amount << "\t"
             << "alphabetSize=" << alphabetSize << "\t"
