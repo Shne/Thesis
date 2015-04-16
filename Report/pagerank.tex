@@ -265,11 +265,11 @@ This is also the case, as we can see in Figure~\ref{fig:PrecomputedRankBlockSize
 \figureEnd
 
 
-\figureBegin
-\caption{Level 3 Total Cache Misses for Rank queries on wavelet trees with precomputed ranks of varying block sizes}
-\label{fig:PrecomputedRankBlockSize_Rank_L3CacheMiss}
-\input{PrecomputedRankBlockSize_Rank_L3CacheMiss}
-\figureEnd
+%\figureBegin
+%\caption{Level 3 Total Cache Misses for Rank queries on wavelet trees with precomputed ranks of varying block sizes}
+%\label{fig:PrecomputedRankBlockSize_Rank_L3CacheMiss}
+%\input{PrecomputedRankBlockSize_Rank_L3CacheMiss}
+%\figureEnd
 
 
 
@@ -281,7 +281,10 @@ This is also the case, as we can see in Figure~\ref{fig:PrecomputedRankBlockSize
 \paragraph{Select Queries}~\\
 In Figure~\ref{fig:PrecomputedRankBlockSize_Select_WallTime} we see the wall time of 1000 Select queries for the different wavelet trees using precomputed rank values.
 We can see that all have the best running time at half a page per block.
-The main reason for this is likely to be found in the level 1 data cache performance data again, which can be found in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L1CacheMiss}.
+The main reason for this is likely to be found in the level 1 data cache performance data, which can be found in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L1CacheMiss} as we can see that it displays better level 1 data cache performance at lower values, down to about $\frac{1}{3}$ page per block below which it has worse performance.
+
+Just as with rank queries, we see higher level 2 data cache miss rate at lower block sizes in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L2CacheMissRate}, and again the level 1 data cache misses are lower at smaller block sizes in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L1CacheMiss}, but unlike for rank queries, the amount of level 2 data cache misses are not lower for smaller block sizes, in fact they are higher.
+\textbf{[TODO: why?]}
 
 \figureBegin
 \caption{Wall Time of Select queries on wavelet trees with precomputed ranks of varying block sizes}
@@ -290,7 +293,7 @@ The main reason for this is likely to be found in the level 1 data cache perform
 \figureEnd
 
 \figureBegin
-\caption{Branch Mispredictions for Select queries on wavelet trees with precomputed ranks of varying block sizes}
+\caption{Branch Mispredictions for Select queries on wavelet trees with precomputed ranks of varying block sizes. Notice the y-axis not starting at 0.}
 \label{fig:PrecomputedRankBlockSize_Select_BranchMiss}
 \input{PrecomputedRankBlockSize_Select_BranchMiss}
 \figureEnd
