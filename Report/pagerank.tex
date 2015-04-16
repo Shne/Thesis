@@ -26,6 +26,9 @@ We allocate the bitmaps as one giant bitmap the size of the maximum possible siz
 \[n \cdot h\]
 where $n$ is the number of characters in the string and $h$ is the max height of the binary wavelet tree which is
 \[ h = log(\sigma) \]
+Luckily for us, memory allocation in Linux doesn't actually take up space, only when it is accessed will the actual physical memory be used.
+So over-allocating the bitmap should not take up any more space than will actually be needed.
+
 We then store an offset and a size for the bitmap in each node, so we can index into the giant bitmap and access the bits corresponding to the node.
 This should also cause an decrease in memory usage as the offset and size are stored in an unsigned long and unsigned int respectively, taking a total of $64+32=96$ bits per node, where each individual bitmap requires storage of at least a pointer to it, a point to where its internal array starts and a pointer to where it ends, taking up $3*64=192$ bits per node.
 Additionally, when using an individual bitmap for each node, they would have been word-aligned, and the bits between the last used bit and the end of the last used word would have gone unused and so, wasted.
@@ -92,8 +95,10 @@ If we page-align the blocks, and use block sizes divisible by the page size or t
 This means we can ensure that at most $2 \cdot \lceil\frac{blockSize}{pageSize}\rceil$ memory pages of the bitmap are loaded for each node by page-aligning the blocks.
 With an alphabet size of $2^{16}$ this amounts to saving up to 16 page loads per query.
 
-While we expect that this will save some expensive TLB misses it will also require some additional computations to find the correct block to access in a query.
-For the wavelet trees using concatenated bitmaps, these computations are needed regardless of block alignment, as the blocks are already unlikely to be aligned with the individual bitmaps, and so we believe it can only be an improvement to page-align the blocks in this case. \textbf{[TODO: should we test this anyway?]}
+While we expect that this will save some expensive TLB misses it also has some drawbacks, especially when not using concatenated bitmaps.
+For a wavelet tree not using concatenated bitmaps, using page-aligned blocks will cause the first precomputed value of each non-page-aligned bitmap to not cover an entire block, increasing the number of precomputed values needed to cover the bitmap as well as additional computations to calculate exactly which part of the bitmap it covers.
+For the wavelet trees using concatenated bitmaps, these computations are needed regardless of block alignment, as the blocks are already not aligned with the individual bitmaps, and so we believe it can only be an improvement to page-align the blocks in this case. \textbf{[TODO: should we test this anyway?]}
+
 We will test whether it increases the performance of rank and select queries when not using concatenated bitmaps in section~\ref{sec:queryRunTimePrecomputedBlockSizes}.
 
 
@@ -175,9 +180,17 @@ In Figure~\ref{fig:PrecomputedRankBlockSize_Rank_WallTime} we have plotted the r
 
 We see that PreallocatedPrecomputed is consistently slower than the other two, as expected, taking about ??\% more time than UnalignedNaivePrecomputed with block size = 0.5 page where Unaligned is fastest, and ??\% more with block size = 1 page where Preallocated is fastest.
 
-While much of the increased running time of Rank queries on the PreallocatedPrecomputed wavelet tree can likely be explained by the increased amount of instructions needed to calculate the rank of the first part inside the first block of each bitmap when not page aligned, as well as the ineffectiveness of utilizing the precomputed rank values for small bitmaps.
-However, part of the increase is also due to the increased number of branches in the code.
-We come to this conclusion by examining Figure~\ref{fig:PrecomputedRankBlockSize_Rank_BranchMiss} and \ref{fig:PrecomputedRankBlockSize_Rank_BranchMissRate} where we can see that 
+Much of the increased running time of Rank queries on the PreallocatedPrecomputed wavelet tree can likely be explained by the increased amount of instructions needed to calculate the rank of the first part inside the first block of each bitmap because the precomputed value includes part of the preceding bitmap, as well as the ineffectiveness of utilizing the precomputed rank values for small bitmaps, for the same reason.
+However, by examining Figure~\ref{fig:PrecomputedRankBlockSize_Rank_BranchMiss} and \ref{fig:PrecomputedRankBlockSize_Rank_BranchMissRate} we can conclude that part of the increase, at least in comparison with NaiveInteger, is also due to the increased number of branch misses.
+
+In Figure~\ref{fig:PrecomputedRankBlockSize_Rank_BranchMissRate} we also see a surprising increase in the branch misprediction rate of UnalignedNaivePrecomputed for smaller block sizes.
+When looking at Figure~\ref{fig:PrecomputedRankBlockSize_Rank_BranchMiss} we see that it follows the same increase in amount for smaller block sizes as the others, making us conclude that UnalignedNaivePrecomputed must simply run less branching code than the others for smaller block sizes.
+This is likely simply a result of UnalignedNaivePrecomputed not having to do any calculations to figure out what part of the bitmap the first precomputed value covers, as it always covers an entire block of the bitmap.
+
+Looking at Figure~\ref{fig:PrecomputedRankBlockSize_Rank_TLB} we can see that our expressed goal of reducing TLB misses is achieved when both concatenated bitmaps and page-aligned blocks are used. \textbf{[TODO: we should probably implement and test a concat.-bitmap-using non-page-aligned-blocks tree]}
+
+
+
 
 We can also see that page-aligning the blocks when not using concatenated bitmaps is not an improvement in regards to rank query wall time.
 In Figure~\ref{fig:PrecomputedRankBlockSize_Rank_TLB} we can however see that it actually does reduce TLB misses compared to the unaligned case, as was the intention of the modification, but only by about 4,45\% at block size = 0.5 page size which is even within the average relative standard deviation of both NaivePrecomputed and UnalignedNaivePrecomputed, making it close to pointless.
