@@ -188,7 +188,7 @@ When looking at Figure~\ref{fig:PrecomputedRankBlockSize_Rank_BranchMiss} we see
 This is likely simply a result of UnalignedNaivePrecomputed not having to do any calculations to figure out what part of the bitmap the first precomputed value covers, as it always covers an entire block of the bitmap.
 
 Looking at Figure~\ref{fig:PrecomputedRankBlockSize_Rank_TLB} we can see that our expressed goal of reducing TLB misses is achieved when both concatenated bitmaps and page-aligned blocks are used. \textbf{[TODO: we should probably implement and test a concat.-bitmap-using non-page-aligned-blocks tree]}
-
+Page-aligning the blocks when not using concatenated bitmaps doesn't appear to be reducing the TLB misses, and so doesn't seem to be an improvement in and of itself.
 
 
 
@@ -197,6 +197,19 @@ In Figure~\ref{fig:PrecomputedRankBlockSize_Rank_TLB} we can however see that it
 
 
 
+Looking at the level 1 data cache misses, it is clear that there are fewest cache misses at block size = 0.5 page size, which is also likely the main reason that UnalignedNaivePrecomputed exhibits the best running time at at that block size.
+The strange thing is that PreallocatedPrecomputed also seems to have the best level data cache performance for rank queries at half a page per block, while the wall time is best at a full page per block.
+Something else must be impacting the performance enough to skew the result to 1 page block size.
+But when we look at the other figures, we don't see any noticeable improvement for PreallocatedPrecomputed at 1 page per block versus half a page per block.
+The only other improvement is the amount of branch mispredictions seen in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_BranchMiss}, but both NaivePrecomputed and UnalignedNaivePrecomputed exhibit the same improvement in branch mispredictions for higher block sizes as PreallocatedPrecomputed, yet they .
+
+Looking at Level 2 data cache misses in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_L2CacheMiss} and the level 2 data cache miss rate in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_L2CacheMissRate}, we don't see much difference between the different tree implementations, at least not enough to really conclude much about.
+It is interesting, though, that they all have a somewhat high, $0.35-0.4$, level 2 data cache miss rate around 0.5 page per block, where they all have good wall time performance.
+This is likely because of the good level 1 data cache performance.
+Let's assume there is a fixed amount of operations accessing memory that is hard for the cache to have beforehand independent of the block size, such as when the queried-for position is reached in a bitmap and the rank algorithm jumps to a different node and a different bitmap.
+When the first cache level can handle more and more of the 'easy' memory operations, fewer of those are left to be handled by the second cache level, yet the same amount of 'hard' memory accesses are hitting the second cache level, and so the miss rate will increase for the second cache level, while the total amount of cache misses for level 2 could easily decrease, as the first level handles more accesses.
+This is also the case, as we can see in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L2CacheMiss}.
+
 \figureBegin
 \caption{Wall Time of Rank queries on wavelet trees with precomputed ranks of varying block sizes}
 \label{fig:PrecomputedRankBlockSize_Rank_WallTime}
@@ -204,11 +217,11 @@ In Figure~\ref{fig:PrecomputedRankBlockSize_Rank_TLB} we can however see that it
 \figureEnd
 
 
-\figureBegin
-\caption{Total Cycles of Rank queries on wavelet trees with precomputed ranks of varying block sizes}
-\label{fig:PrecomputedRankBlockSize_Rank_TotalCycles}
-\input{PrecomputedRankBlockSize_Rank_TotalCycles}
-\figureEnd
+%\figureBegin
+%\caption{Total Cycles of Rank queries on wavelet trees with precomputed ranks of varying block sizes}
+%\label{fig:PrecomputedRankBlockSize_Rank_TotalCycles}
+%\input{PrecomputedRankBlockSize_Rank_TotalCycles}
+%\figureEnd
 
 \figureBegin
 \caption{Branch Mispredictions for Rank queries on wavelet trees with precomputed ranks of varying block sizes}
@@ -266,7 +279,9 @@ In Figure~\ref{fig:PrecomputedRankBlockSize_Rank_TLB} we can however see that it
 
 
 \paragraph{Select Queries}~\\
-
+In Figure~\ref{fig:PrecomputedRankBlockSize_Select_WallTime} we see the wall time of 1000 Select queries for the different wavelet trees using precomputed rank values.
+We can see that all have the best running time at half a page per block.
+The main reason for this is likely to be found in the level 1 data cache performance data again, which can be found in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L1CacheMiss}.
 
 \figureBegin
 \caption{Wall Time of Select queries on wavelet trees with precomputed ranks of varying block sizes}
