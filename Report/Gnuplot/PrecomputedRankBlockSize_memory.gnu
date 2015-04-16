@@ -11,7 +11,7 @@ naiveIntegerValue = STATS_min
 set xlabel "Block Size (number of page sizes)"
 set ylabel "Memory Usage (MB)"
 set y2label "Relative to NaiveInteger"
-set xrange [0:4]
+set xrange [0:2]
 set yrange [710:720]
 set ytics nomirror
 set y2tics
