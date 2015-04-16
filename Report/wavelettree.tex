@@ -22,18 +22,18 @@ Let $S[1,n] = S_1 S_2 ... S_n$ be a sequence of symbols where $s_i \in \Sigma$ a
 
 
 \figureBegin
-\caption{Wavelet Tree on string \textit{adsfadaadsfaads}}				
+\caption{Wavelet Tree on string \textit{adsfadaadsfaads} with alphabet $\sigma = adfs$}				
 \Tree
 %root
 [.adsfadaadsfaads\\001100000110001 !\qsetw{5cm} 
 	%left child
 	[.adadaadaad\\0101001001 !\qsetw{5cm}
 		%left -> left,right child 
-		[.aaaaaa\\000000 !\qsetw{5cm} ] [.dddd\\1111 !\qsetw{5cm} ]] 
+		[.aaaaaa !\qsetw{5cm} ] [.dddd !\qsetw{5cm} ]] 
 	%right child
 	[.sfsfs\\10101 !\qsetw{5cm} 
 		%right -> left,right child
-		[.ff\\00 !\qsetw{5.3cm} ] [.sss\\111 !\qsetw{5.3cm} ]]] 
+		[.ff !\qsetw{5.3cm} ] [.sss !\qsetw{5.3cm} ]]] 
 \vspace{1 cm}
 \label{fig:WaveletTreeExample}
 \figureEnd
@@ -328,33 +328,88 @@ The \textit{bwt} of \textit{S} is then the concatenation of the last characters 
 
 \begin{center}
 $\begin{bmatrix}
-	abcbadbd\\
-	bcbadbda\\
-	cbadbdab\\
-	badbdabc\\
-	adbdabcb\\
-	dbdabcba\\
-	bdabcbad\\
-	dabcbadb
+	abcbadbd\#\\
+	bcbadbd\#a\\
+	cbadbd\#ab\\
+	badbd\#abc\\
+	adbd\#abcb\\
+	dbd\#abcba\\
+	bd\#abcbad\\
+	d\#abcbadb
 \end{bmatrix} \Rightarrow
 \begin{bmatrix}
-abcbadbd\\
-	adbdabcb\\
-	badbdabc\\
-	bcbadbda\\
-	bdabcbad\\
-	cbadbdab\\
-	dabcbadb\\
-	dbdabcba
+	\textbf{a}bcbadbd\#\\
+	\textbf{a}dbd\#abcb\\
+	\textbf{b}adbd\#abc\\
+	\textbf{b}cbadbd\#a\\
+	\textbf{b}d\#abcbad\\
+	\textbf{c}badbd\#ab\\
+	\textbf{d}\#abcbadb\\
+	\textbf{d}bd\#abcba
 \end{bmatrix}$
 \end{center}
 
 The list to the left is the permuted versions of \textit{S} and the list to the right is the lexicographically sorted permutations of \textit{S}.
-Taking the character at the first index in each column, the Burrows-Wheeler transformation of S becomes $bwt(s) = aabbbcdd$.
+The \# is added to keep track of the end of the original string.
+Taking the character at the first index in each column, the Burrows-Wheeler transformation of S becomes $bwt(s) = aabbbcdd$. The index of the the original string in the right list is also returned. 
+The original string is identified by having a \# at the end.
+It is possible that the original string might appear more than once like if $S = cabcab$.
+In that case it is the index of the first occurrence that is returned.
+
 Looking at \textit{bwt(s)} we can see that equal characters are now grouped together.
-This effect of the \textit{bwt} enables better compression when using something like run-length encoding.
+This effect enables better compression when using compression techniques like run-length encoding.
 
 \subsubsection{Run-Length encoding}
+Run-length encoding (RLE) is a simple process where the number of consecutive repeats of each symbol is stored in stead of storing the symbols them selves. 
+If we have the string \textit{aaaaacccaaaaabbbaa} we can run-length encode this to \textit{a5c3a5b3a2} which is a smaller string containing the same information.
+It is necessary to store the symbol and it's number of consecutive repeating occurrences because we need to be able to identify which symbol occurs where and how many times in order to be able to reproduce the original string.
+The longer the sequence of a repeating symbol is the less space is used, since it can be stored as one number plus the related symbol.
+
+When representing the string using a wavelet tree problem gets reduced to run-length encoding a string of bits (the bitmap in each node).
+Since a binary number only has an alphabet with the cardinality of two we do not need to the symbol and it's occurrence but only the occurrence.
+If we define that the first number is always the amount of 0s and the second number is always the amount of 1s and so forth. 
+Then by looking at the bitmap of \textit{aaaaacccaaaaabbbaa} which is \textit{000001110000000000} we can encode it into \textit{{5 3 10}}.
+Figure~\ref{ig:RleWaveletTree} shows an example of a wavelet tree with run-length encoded bitmaps.
+
+If we do not consider how a computer saves numbers but only consider the amount of numbers that needs to be stored then $RLE(000001110000000000)$ achieves a great reduction in space.
+From 18 numbers to only 3 numbers, which contain the same information.
+I do consider how a computer saves numbers then the reduction above is not that great.
+If we assume that each number above is represented as an integer, then the run-length encoded bitmap uses more space than just storing the original bitmap. 
+This is because an integer uses 4 bytes of space which is 32 bits and we need to store three integers giving us a total of $32 bits \times 3 = 96 bits$ which is significantly larger than just the 18 bits we need to store for the original bitmap assuming we can store 1 an 0 using only 1 bit \footnote{This can be accomplished using c++ and vector$<$bool$>$}. 
+
+\figureBegin
+\caption{RLE Wavelet Tree on string \textit{abcbadbd} with alphabet $\sigma = abcd$}				
+\Tree
+%root
+[.abcbadbd\\212111 !\qsetw{5cm} 
+	%left child
+	[.abbab\\1211  !\qsetw{5cm}
+		%left -> left,right child 
+		[.aa\\2 !\qsetw{5cm} ] [.bbb\\3 !\qsetw{5cm} ]] 
+	%right child
+	[.cdd\\12 !\qsetw{5cm} 
+		%right -> left,right child
+		[.c\\1 !\qsetw{5.3cm} ] [.dd\\2 !\qsetw{5.3cm} ]]] 
+\vspace{1 cm}
+\label{fig:RleWaveletTree}
+\figureEnd
+
+\figureBegin
+\caption{RLE Wavelet Tree on BWT of string \textit{abcbadbd} with alphabet $\sigma = abcd$}				
+\Tree
+%root
+[.aabbbcdd\\\textbf{53} !\qsetw{5cm} 
+	%left child
+	[.aabbb\\\textbf{23}  !\qsetw{5cm}
+		%left -> left,right child 
+		[.aa\\2 !\qsetw{5cm} ] [.bbb\\3 !\qsetw{5cm} ]] 
+	%right child
+	[.cdd\\12 !\qsetw{5cm} 
+		%right -> left,right child
+		[.c\\1 !\qsetw{5.3cm} ] [.dd\\2 !\qsetw{5.3cm} ]]] 
+\vspace{1 cm}
+\label{fig:BwtRleWaveletTree}
+\figureEnd
 
 
 \noindent\textbf{(Todo: describe what a Huffman shaped wavelet tree is)}\\
