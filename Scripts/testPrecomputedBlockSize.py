@@ -35,7 +35,7 @@ repeats = 5
 pageSize = 4096
 # blockSizeRange = [int(pageSize/5), int(pageSize/4), int(pageSize/3), int(pageSize/2), int(pageSize-pageSize/3), int(pageSize-pageSize/4), pageSize, int(pageSize+(pageSize/2)), pageSize*2, pageSize*3]
 quartPage = int(pageSize/4)
-blockSizeRange = range(quartPage, pageSize*2, quartPage)
+blockSizeRange = range(quartPage, pageSize*2 +1, quartPage)
 
 print("NaiveInteger Rank")
 test = 'rank'
