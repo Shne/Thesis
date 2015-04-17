@@ -16,12 +16,12 @@ def getTotalMemoryForSpecificTest(dataFile, algorithm, blockSize):
 		if m is not None:
 			dataFile.seek(0)
 			return int(m.group('heap')) + int(m.group('extra')) + int(m.group('stacks'))
-	print(algorithm)
-	print(blockSize)
 
 pageSize = 4096
-blockSizeRange = [int(pageSize/4), int(pageSize/3), int(pageSize/2), pageSize, pageSize*2]
+# blockSizeRange = [int(pageSize/4), int(pageSize/3), int(pageSize/2), pageSize, pageSize*2]
 # int(pageSize-pageSize/3), int(pageSize-pageSize/4), 
+quartPage = int(pageSize/4)
+blockSizeRange = range(quartPage, pageSize*2 +1, quartPage)
 
 testDataFile = open(testDataFileName, 'r')
 naiveIntegerMem = getTotalMemoryForSpecificTest(testDataFile, 'NaiveInteger', 'N/A')
