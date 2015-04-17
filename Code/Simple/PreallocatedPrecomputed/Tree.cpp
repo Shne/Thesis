@@ -19,7 +19,7 @@ Tree::Tree(vector<uint>* input, uint amount, uint alphabetSize, uint blockSize)
     root = node_pt;
     
     ulong maxBitmapSize = amount * log2(alphabetSize);
-    uint maxBlocks = maxBitmapSize/blockSize;
+    uint maxBlocks = maxBitmapSize/blockSize+1;
     blockRanks = blockRanksVector(maxBlocks, 0);
 
     bitmap = new bitmap_t(maxBitmapSize);
