@@ -38,14 +38,15 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
     
     vector<uint>* leftString = new vector<uint>;
     vector<uint>* rightString = new vector<uint>;
+    bitmap = bitmap_t(input->size(), false);
     
-    for(auto it = input->begin(); it != input->end(); it++) {
+    uint i = 0;
+    for(auto it = input->begin(); it != input->end(); it++, i++) {
         int currentChar = *it;        
         if(currentChar <= split) {
-            bitmap.push_back(false);
             leftString->push_back(currentChar);
         } else {
-            bitmap.push_back(true);
+            bitmap[i] = true;
             rightString->push_back(currentChar);
         }
     }

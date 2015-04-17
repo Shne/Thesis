@@ -43,7 +43,6 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
     for(auto it = input->begin(); it != input->end(); it++, i++) {
         uint currentChar = *it;
         if(currentChar <= split) {
-            bitmap[i] = false;
             leftString->push_back(currentChar);
         } else {
             uint blockAlignedOffset = i + bitmapMisalignment;
