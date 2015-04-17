@@ -27,10 +27,8 @@ using namespace std;
 inline uint* read_file(uint& size_out, const char* filename) {
     streampos size;
     uint * arr = nullptr;
-//    vector<int>* arr = new vector<int>(size/sizeof(int));
     ifstream file(filename, ios::in|ios::binary|ios::ate);
-    if(file.is_open())
-    {
+    if(file.is_open()) {
         size = file.tellg();
 //        cout << "Size: " << size << endl;
 //        cout << "sizeof(int): " << sizeof(int) << endl;
@@ -39,9 +37,7 @@ inline uint* read_file(uint& size_out, const char* filename) {
         arr = new uint[size/sizeof(uint)];
         file.seekg(0, ios::beg);
         file.read((char*) arr, size);
-    }
-    else 
-    {
+    } else {
         cout << "IO ERROR" << endl;
     }
     return arr;
