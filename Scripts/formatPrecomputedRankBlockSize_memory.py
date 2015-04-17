@@ -1,36 +1,55 @@
 #!/usr/bin/python3
 
-import re
+import ReadOutput
 import subprocess
+import Utils
 
-testDataFileName = 'Output/PrecomputedRankBlockSize_n8as16_build_memory.output'
-testsPerSize = 5
-
-gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_memory.data", "w")
-gnuplotFile.write("#[blockSize] [NaiveInteger] [PreallocatedPrecomputed] [NaivePrecomputed] [UnalignedNaivePrecomputed]\n")
-
-
-def getTotalMemoryForSpecificTest(dataFile, algorithm, blockSize):
-	for line in dataFile:
-		m = re.search('algorithm='+algorithm+' blockSize='+str(blockSize)+' heap=(?P<heap>\d+) extra=(?P<extra>\d+) stacks=(?P<stacks>\d+)', line)
-		if m is not None:
-			dataFile.seek(0)
-			return int(m.group('heap')) + int(m.group('extra')) + int(m.group('stacks'))
+testDataFile = 'Output/PrecomputedRankBlockSize_n8as16_build.output'
+testsPerSize = 1
 
 pageSize = 4096
-# blockSizeRange = [int(pageSize/4), int(pageSize/3), int(pageSize/2), pageSize, pageSize*2]
-# int(pageSize-pageSize/3), int(pageSize-pageSize/4), 
 quartPage = int(pageSize/4)
 blockSizeRange = range(quartPage, pageSize*2 +1, quartPage)
 
-testDataFile = open(testDataFileName, 'r')
-naiveIntegerMem = getTotalMemoryForSpecificTest(testDataFile, 'NaiveInteger', 'N/A')
+def PadNaiveInteger(ReadOutput):
+	MemSize = ReadOutput.memSizeList[:]
+	# MemResident = ReadOutput.memResidentList[:]
+	# MemHighWatermark = ReadOutput.memHighWatermarkList[:]
+	ReadOutput.reset()
+	for blockSize in blockSizeRange:
+		for i in range(testsPerSize):
+			ReadOutput.blockSizeList.append(blockSize*8)
+			ReadOutput.memSizeList.append(MemSize[i])
+			# ReadOutput.memResidentList.append(MemResident[i])
+			# ReadOutput.memHighWatermarkList.append(MemHighWatermark[i])
 
-for blockSize in blockSizeRange:
-	PreallocatedPrecomputedMem = getTotalMemoryForSpecificTest(testDataFile, 'PreallocatedPrecomputed', blockSize)
-	NaivePrecomputedMem = getTotalMemoryForSpecificTest(testDataFile, 'NaivePrecomputed', blockSize)
-	UnalignedNaivePrecomputedMem = getTotalMemoryForSpecificTest(testDataFile, 'UnalignedNaivePrecomputed', blockSize)
-	gnuplotFile.write(str(blockSize)+" "+str(naiveIntegerMem)+" "+str(PreallocatedPrecomputedMem)+" "+str(NaivePrecomputedMem)+" "+str(UnalignedNaivePrecomputedMem)+"\n")
+# NAIVEINTEGER
+gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_NaiveInteger_Build.data", "w")
+Utils.writeMemGnuplotHeader(gnuplotFile)
+ReadOutput.getData(testDataFile, "SimpleNaiveInteger", "build")
+PadNaiveInteger(ReadOutput)
+Utils.formatAndWriteMemValues(ReadOutput, gnuplotFile, testsPerSize)
+
+#PREALLOCATED PRECOMPUTED
+gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_PreallocatedPrecomputed_Build.data", "w")
+Utils.writeMemGnuplotHeader(gnuplotFile)
+ReadOutput.getData(testDataFile, "PreallocatedPrecomputed", "build")
+Utils.formatAndWriteMemValues(ReadOutput, gnuplotFile, testsPerSize)
+
+
+#NAIVE PRECOMPUTED
+gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_NaivePrecomputed_Build.data", "w")
+Utils.writeMemGnuplotHeader(gnuplotFile)
+ReadOutput.getData(testDataFile, "NaivePrecomputed", "build")
+Utils.formatAndWriteMemValues(ReadOutput, gnuplotFile, testsPerSize)
+
+
+#UNALIGNED NAIVE PRECOMPUTED
+gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Build.data", "w")
+Utils.writeMemGnuplotHeader(gnuplotFile)
+ReadOutput.getData(testDataFile, "UnalignedNaivePrecomputed", "build")
+Utils.formatAndWriteMemValues(ReadOutput, gnuplotFile, testsPerSize)
+
 
 gnuplotFile.close()
 

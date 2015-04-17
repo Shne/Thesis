@@ -102,8 +102,7 @@ def getData(input_, algorithm, test):
 			memHighWatermarkList.append(int(memHighWatermark.group('mem_highwatermark')))
 
 	inputFile.close()
-
-	for i in range(0,len(branchMispredictionsList)):
+	for i in range(0,len(branchExecutedList)):
 		branchMissRateList.append([float(branchMispredictionsList[i])/branchExecutedList[i]])
 		l2CacheMissRateList.append([float(l2DataCacheMissesList[i])/l2DataCacheHitsList[i]])
 
