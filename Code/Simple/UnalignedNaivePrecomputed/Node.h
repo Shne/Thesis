@@ -28,7 +28,7 @@ using namespace std;
 
 class Node {
 private:
-    bitmap_t* bitmap;
+    bitmap_t bitmap;
     blockRanksVector blockRanks;
     bool isLeaf;
     Node* parent;
