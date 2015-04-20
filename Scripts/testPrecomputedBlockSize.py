@@ -11,6 +11,8 @@ naiveIntegerProgram = "dist/Release/GNU-Linux-x86/naiveinteger"
 naiveIntegerCwd = 'Code/Simple/NaiveInteger'
 preallocatedPrecomputedProgram = "dist/Release/GNU-Linux-x86/preallocatedprecomputed"
 preallocatedPrecomputedCwd = 'Code/Simple/PreallocatedPrecomputed'
+unalignedPreallocatedPrecomputedProgram = "dist/Release/GNU-Linux-x86/unalignedpreallocatedprecomputed"
+unalignedPreallocatedPrecomputedCwd = 'Code/Simple/UnalignedPreallocatedPrecomputed'
 naivePrecomputedProgram = "dist/Release/GNU-Linux-x86/naiveprecomputed"
 naivePrecomputedCwd = 'Code/Simple/NaivePrecomputed'
 unalignedNaivePrecomputedProgram = "dist/Release/GNU-Linux-x86/unalignednaiveprecomputed"
@@ -25,6 +27,8 @@ subprocess.Popen(['make','CONF=Release', 'clean'], cwd=naiveIntegerCwd).wait()
 subprocess.Popen(['make','CONF=Release'], cwd=naiveIntegerCwd).wait()
 subprocess.Popen(['make','CONF=Release', 'clean'], cwd=preallocatedPrecomputedCwd).wait()
 subprocess.Popen(['make','CONF=Release'], cwd=preallocatedPrecomputedCwd).wait()
+subprocess.Popen(['make','CONF=Release', 'clean'], cwd=unalignedPreallocatedPrecomputedCwd).wait()
+subprocess.Popen(['make','CONF=Release'], cwd=unalignedPreallocatedPrecomputedCwd).wait()
 subprocess.Popen(['make','CONF=Release', 'clean'], cwd=naivePrecomputedCwd).wait()
 subprocess.Popen(['make','CONF=Release'], cwd=naivePrecomputedCwd).wait()
 subprocess.Popen(['make','CONF=Release', 'clean'], cwd=unalignedNaivePrecomputedCwd).wait()
@@ -33,7 +37,6 @@ subprocess.Popen(['make','CONF=Release'], cwd=unalignedNaivePrecomputedCwd).wait
 repeats = 5
 
 pageSize = 4096
-# blockSizeRange = [int(pageSize/5), int(pageSize/4), int(pageSize/3), int(pageSize/2), int(pageSize-pageSize/3), int(pageSize-pageSize/4), pageSize, int(pageSize+(pageSize/2)), pageSize*2, pageSize*3]
 quartPage = int(pageSize/4)
 blockSizeRange = range(quartPage, pageSize*2 +1, quartPage)
 
@@ -62,7 +65,7 @@ for _ in range(repeats):
 
 addNewline()
 
-print("PrecomputedPages: Rank \n")
+print("PreallocatedPrecomputed: Rank \n")
 for blockSize in blockSizeRange:
 	test = 'rank'
 	for _ in range(repeats):
@@ -75,7 +78,7 @@ for blockSize in blockSizeRange:
 
 addNewline()
 
-print("PrecomputedPages: Select \n")
+print("PreallocatedPrecomputed: Select \n")
 for blockSize in blockSizeRange:
 	test = 'select'
 	for _ in range(repeats):
@@ -85,6 +88,32 @@ for blockSize in blockSizeRange:
 		subprocess.Popen(args, cwd=preallocatedPrecomputedCwd).wait()
 		args = [preallocatedPrecomputedProgram, str(amount), str(alphabetSize), test, str(2), str(blockSize), outputFilename]
 		subprocess.Popen(args, cwd=preallocatedPrecomputedCwd).wait()
+
+addNewline()
+
+print("UnalignedPreallocatedPrecomputed: Rank \n")
+for blockSize in blockSizeRange:
+	test = 'rank'
+	for _ in range(repeats):
+		args = [unalignedPreallocatedPrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
+		subprocess.Popen(args, cwd=unalignedPreallocatedPrecomputedCwd).wait()
+		args = [unalignedPreallocatedPrecomputedProgram, str(amount), str(alphabetSize), test, str(1), str(blockSize), outputFilename]
+		subprocess.Popen(args, cwd=unalignedPreallocatedPrecomputedCwd).wait()
+		args = [unalignedPreallocatedPrecomputedProgram, str(amount), str(alphabetSize), test, str(2), str(blockSize), outputFilename]
+		subprocess.Popen(args, cwd=unalignedPreallocatedPrecomputedCwd).wait()
+
+addNewline()
+
+print("UnalignedPreallocatedPrecomputed: Select \n")
+for blockSize in blockSizeRange:
+	test = 'select'
+	for _ in range(repeats):
+		args = [unalignedPreallocatedPrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
+		subprocess.Popen(args, cwd=unalignedPreallocatedPrecomputedCwd).wait()
+		args = [unalignedPreallocatedPrecomputedProgram, str(amount), str(alphabetSize), test, str(1), str(blockSize), outputFilename]
+		subprocess.Popen(args, cwd=unalignedPreallocatedPrecomputedCwd).wait()
+		args = [unalignedPreallocatedPrecomputedProgram, str(amount), str(alphabetSize), test, str(2), str(blockSize), outputFilename]
+		subprocess.Popen(args, cwd=unalignedPreallocatedPrecomputedCwd).wait()
 
 addNewline()
 
