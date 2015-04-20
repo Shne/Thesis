@@ -321,6 +321,29 @@ It is therefore possible to get space usage within \textit{zero-order entropy} e
 \textit{Zero-order entropy} can also be achieved by run-length encoding the bitmaps in the wavelet tree, which is also the approach that is used when compressing the bwt of the input string using the wavelet tree \citep[Introduction (\textbf{B})]{waveletTreeEntropy}.
 This means that using a combination of run-length encoding of bitmaps and taking the Burrows-Wheeler transformation of the input string using the wavelet tree it is possible to achieve a lower bound within \textit{k-th order entropy}.
 
+\subsubsection{Run-Length encoding}
+Run-length encoding (RLE) is a simple process where the number of consecutive repeats of each symbol is stored in stead of storing the symbols them selves. 
+If we have the string \textit{aaaaacccaaaaabbbaa} we can run-length encode this to \textit{a5c3a5b3a2} which is a smaller string containing the same information.
+It is necessary to store the symbol and it's number of consecutive repeating occurrences because we need to be able to identify which symbol occurs where and how many times in order to be able to reproduce the original string.
+The longer the sequence of a repeating symbol is the less space is used, since it can be stored as one number plus the related symbol.
+
+When representing the string using a wavelet tree problem gets reduced to run-length encoding a string of bits (the bitmap in each node).
+Since a binary number only has an alphabet with the cardinality of two we do not need to the symbol and it's occurrence but only the occurrence.
+If we define that the first number is always the amount of 0s and the second number is always the amount of 1s and so forth. 
+Then by looking at the bitmap of \textit{aaaaacccaaaaabbbaa} which is \textit{000001110000000000} when stored in a wavelet tree we can encode it into $(5,3,10)$.
+Figure~\ref{fig:RleWaveletTree} shows an example of a wavelet tree with run-length encoded bitmaps.
+
+If we do not consider how a computer saves numbers but only consider the amount of numbers that needs to be stored then $RLE(000001110000000000)$ achieves a great reduction in space.
+From 18 numbers to only 3 numbers, which contain the same information.
+
+If we do consider how a computer saves numbers then the reduction is not that great because if we assume that each number is represented as an integer, then the run-length encoded bitmap uses more space than just storing the original bitmap. 
+This is because an integer uses 4 bytes of space which is 32 bits and we need to store three integers giving us a total of $32 bits \times 3 = 96 bits$ which is significantly larger than just the 18 bits we need to store for the original bitmap assuming we can store 1 an 0 using only 1 bit \footnote{This can be accomplished using c++ and vector$<$bool$>$}. 
+This means that a symbol needs to repeat consecutively more than 32 times before RLE achieves better space usage than just storing the bitmaps.
+
+RLE is still very useful despite of this because you usually want to compress very large data and if that data uses an alphabet that is small enough then, as previously stated RLE can achieve compression close to the \textit{zero order entropy} when working with binary alphabets.
+
+If the Burrows-Wheeler transformation is applied to the string before it is saved in the wavelet tree and run-length encoded then the number of consecutive repeats of a symbol is increased which enables even greater compression.
+
 \subsubsection{Burrows-Wheeler transformation}
 Having a string \textit{S} of \textit{n} characters the Burrows-Wheeler transformation \citep{BWToriginalArticle} transforms \textit{S} by forming \textit{n} cyclic shifts of \textit{S}. 
 These \textit{n} permutations of \textit{S} are then sorted in lexicographical order.
@@ -355,39 +378,25 @@ Taking the character at the first index in each column, the Burrows-Wheeler tran
 The original string is identified by having a \# at the end.
 It is possible that the original string might appear more than once like if $S = cabcab$.
 In that case it is the index of the first occurrence that is returned.
+\citep[Section~2]{BWToriginalArticle} also describes an algorithm for getting the original string from the Burrows-Wheeler transformed string.
 
 Looking at \textit{bwt(s)} we can see that equal characters are now grouped together.
 This effect enables better compression when using compression techniques like run-length encoding.
+Figure~\ref{fig:BwtRleWaveletTree} depicts a RLE Wavelet tree on on \textit{bwt(abcbadbd)}. We can see, as indicated by the numbers in bold that fewer Run-length encoded values needs to be stored than for the non-Burrows-Wheeler transformed case as shown in figure~\ref{fig:RleWaveletTree}.
 
-\subsubsection{Run-Length encoding}
-Run-length encoding (RLE) is a simple process where the number of consecutive repeats of each symbol is stored in stead of storing the symbols them selves. 
-If we have the string \textit{aaaaacccaaaaabbbaa} we can run-length encode this to \textit{a5c3a5b3a2} which is a smaller string containing the same information.
-It is necessary to store the symbol and it's number of consecutive repeating occurrences because we need to be able to identify which symbol occurs where and how many times in order to be able to reproduce the original string.
-The longer the sequence of a repeating symbol is the less space is used, since it can be stored as one number plus the related symbol.
 
-When representing the string using a wavelet tree problem gets reduced to run-length encoding a string of bits (the bitmap in each node).
-Since a binary number only has an alphabet with the cardinality of two we do not need to the symbol and it's occurrence but only the occurrence.
-If we define that the first number is always the amount of 0s and the second number is always the amount of 1s and so forth. 
-Then by looking at the bitmap of \textit{aaaaacccaaaaabbbaa} which is \textit{000001110000000000} we can encode it into \textit{{5 3 10}}.
-Figure~\ref{ig:RleWaveletTree} shows an example of a wavelet tree with run-length encoded bitmaps.
-
-If we do not consider how a computer saves numbers but only consider the amount of numbers that needs to be stored then $RLE(000001110000000000)$ achieves a great reduction in space.
-From 18 numbers to only 3 numbers, which contain the same information.
-I do consider how a computer saves numbers then the reduction above is not that great.
-If we assume that each number above is represented as an integer, then the run-length encoded bitmap uses more space than just storing the original bitmap. 
-This is because an integer uses 4 bytes of space which is 32 bits and we need to store three integers giving us a total of $32 bits \times 3 = 96 bits$ which is significantly larger than just the 18 bits we need to store for the original bitmap assuming we can store 1 an 0 using only 1 bit \footnote{This can be accomplished using c++ and vector$<$bool$>$}. 
 
 \figureBegin
 \caption{RLE Wavelet Tree on string \textit{abcbadbd} with alphabet $\sigma = abcd$}				
 \Tree
 %root
-[.abcbadbd\\212111 !\qsetw{5cm} 
+[.abcbadbd\\2,1,2,1,1,1 !\qsetw{5cm} 
 	%left child
-	[.abbab\\1211  !\qsetw{5cm}
+	[.abbab\\1,2,1,1  !\qsetw{5cm}
 		%left -> left,right child 
 		[.aa\\2 !\qsetw{5cm} ] [.bbb\\3 !\qsetw{5cm} ]] 
 	%right child
-	[.cdd\\12 !\qsetw{5cm} 
+	[.cdd\\1,2 !\qsetw{5cm} 
 		%right -> left,right child
 		[.c\\1 !\qsetw{5.3cm} ] [.dd\\2 !\qsetw{5.3cm} ]]] 
 \vspace{1 cm}
@@ -398,13 +407,13 @@ This is because an integer uses 4 bytes of space which is 32 bits and we need to
 \caption{RLE Wavelet Tree on BWT of string \textit{abcbadbd} with alphabet $\sigma = abcd$}				
 \Tree
 %root
-[.aabbbcdd\\\textbf{53} !\qsetw{5cm} 
+[.aabbbcdd\\\textbf{5,3} !\qsetw{5cm} 
 	%left child
-	[.aabbb\\\textbf{23}  !\qsetw{5cm}
+	[.aabbb\\\textbf{2,3}  !\qsetw{5cm}
 		%left -> left,right child 
 		[.aa\\2 !\qsetw{5cm} ] [.bbb\\3 !\qsetw{5cm} ]] 
 	%right child
-	[.cdd\\12 !\qsetw{5cm} 
+	[.cdd\\1,2 !\qsetw{5cm} 
 		%right -> left,right child
 		[.c\\1 !\qsetw{5.3cm} ] [.dd\\2 !\qsetw{5.3cm} ]]] 
 \vspace{1 cm}
@@ -412,10 +421,13 @@ This is because an integer uses 4 bytes of space which is 32 bits and we need to
 \figureEnd
 
 
-\noindent\textbf{(Todo: describe what a Huffman shaped wavelet tree is)}\\
-\textbf{(Todo: describe how the burrows wheeler transformation works and why)} \\
-\textbf{(Todo: describe run length encoding)} \\
-\textbf{(Todo: Figure out how to do queries when the input is Burrows-Wheeler transformed and the bitmaps are run length encoded.)}
+\noindent\textbf{(Todo: describe what a Huffman shaped wavelet tree is and how it requires symbol frequencies and is best when the data is non-uniform so some symbol frequencies are higher than others.)}\\
+\textbf{(Todo: Figure out how to do queries when the input is Burrows-Wheeler transformed and the bitmaps are run length encoded where the answers must be the same as when the tree is uncompressed - is it even possible.)}
+
+\subsection{Information Retrieval}
+1. Wavelet tree as a Range Searching Data Structure.\\
+2. Using the wavelet tree to support efficient range quantile queries in a list \textit{S} of \textit{n} numbers.\\
+
 
 
 

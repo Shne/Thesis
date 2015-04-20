@@ -16,7 +16,7 @@ naivePrecomputedCwd = 'Code/Simple/NaivePrecomputed'
 unalignedNaivePrecomputedProgram = "dist/Release/GNU-Linux-x86/unalignednaiveprecomputed"
 unalignedNaivePrecomputedCwd = 'Code/Simple/UnalignedNaivePrecomputed'
 
-outputFilename = 'PrecomputedRankBlockSize_n8as16_build.output'
+outputFilename = 'PrecomputedRankBlockSize_n8as16_build_memory.output'
 
 def addNewline():
 	open('Output/'+outputFilename, 'a').write('\n')
