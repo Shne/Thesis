@@ -11,6 +11,9 @@ It supports reading and reporting various counters from the \textit{hardware}, m
 It can profile the entire system or a specific process, but not subsections of a program.
 \item[PAPI]~\citep{PAPI} (Performance Application Programming Interface) can use the perf kernel driver but pre-dates perf.
 It requires the analysed program itself to setup and initialize PAPI, but therefore also supports starting and stopping the counter data collection at specific points in the program, enabling profiling of subsections of the program.
+\item[Massif]~\citep{massif} is a heap profiler. It can count how much heap memory a program is using during its run by recording calls to malloc, calloc, realloc, memalign, new and new[] and other similar functions.
+It then gathers them in a number of snapshots and detailed snapshots, which can be very useful for finding which parts of a program uses most memory.
+
 \end{description}
 
 \subsubsection{Counters used}

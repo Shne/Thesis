@@ -12,11 +12,13 @@ Some advantages of larger blocks is less memory usage and fewer precomputed valu
 Some advantages of smaller blocks are that they can cover more precisely the part of the bitmap that is relevant to the query, leading to fewer calls to popcount.
 We will experiment to find an optimal value for our system.
 
-To further reduce the space used by the precomputed values, we considered concatenating all the bitmaps into one big bitmap as that would eliminate the many cases where the length of a bitmap doesn't align with the block size and the last precomputed value for that bitmap will therefore not cover an entire block, leading to more precomputed values than minimally needed to cover all the bitmaps.
+To further reduce the space used by the precomputed values, we considered concatenating all the bitmaps into one big bitmap and keeping a single vector of precomputed rank values for blocks for the entire bitmap. 
+That would eliminate the many cases where the length of a bitmap doesn't align with the block size and the last precomputed value for that bitmap will therefore not cover an entire block, leading to more precomputed values than minimally needed to cover all the bitmaps.
 
 We also considered the cost of TLB misses and how ensuring that entire pages are skipped as often as possible might increase the query performance. We try to achieve this by page-aligning the blocks.
 
-We will test and compare the Rank and Select running times and memory usage of three wavelet trees using precomputed rank values for blocks: one using concatenated bitmaps and aligned blocks, one only using aligned blocks and one using neither.
+We will test and compare the Rank and Select running times and memory usage of four wavelet trees using precomputed rank values for blocks: one using concatenated bitmaps and aligned blocks, one using concatenated bitmaps but not aligned blocks, one only using aligned blocks and one using neither.
+
 
 
 
@@ -97,7 +99,8 @@ With an alphabet size of $2^{16}$ this amounts to saving up to 16 page loads per
 
 While we expect that this will save some expensive TLB misses it also has some drawbacks, especially when not using concatenated bitmaps.
 For a wavelet tree not using concatenated bitmaps, using page-aligned blocks will cause the first precomputed value of each non-page-aligned bitmap to not cover an entire block, increasing the number of precomputed values needed to cover the bitmap as well as additional computations to calculate exactly which part of the bitmap it covers.
-For the wavelet trees using concatenated bitmaps, these computations are needed regardless of block alignment, as the blocks are already not aligned with the individual bitmaps, and so we believe it can only be an improvement to page-align the blocks in this case. \textbf{[TODO: should we test this anyway?]}
+For the wavelet trees using concatenated bitmaps, these computations are needed regardless of block alignment, as the blocks are already not aligned with the individual bitmaps, and so we believe it can only be an improvement to page-align the blocks in this case.
+We test this by implementing a variation of the wavelet tree using concatenated bitmaps that doesn't page-align the blocks.
 
 We will test whether it increases the performance of rank and select queries when not using concatenated bitmaps in section~\ref{sec:queryRunTimePrecomputedBlockSizes}.
 
@@ -123,10 +126,10 @@ We will assume an equal number of occurrences in the string of each character in
 A valid character parameter is one that exists in the input string and a valid occurrence parameter is an integer above 0 and below or equal to the number occurrences appearing in the input string.
 
 The rank query is a computation of worst-case cost $\frac{blockSize}{2}$ because it will at most popcount half of the block, because we utilize the precomputed rank value when advantageous.
-The popcount select query into the first partial block is an operation of word-case cost $blockSize$ because it can at most popcount the entire block.
+The popcount select query into the first partial block is an operation of worst-case cost $blockSize$ because it can at most popcount the entire block.
 So, in the worst case, when the sought-after occurrence is in the first partial block of the bitmap, $\frac{blockSize}{2}$ work is wasted, yet when the occurrence is elsewhere, $blockSize$ work is saved.
 This means that the boundary between where using the rank query becomes a gain or a loss in performance is where the ratio between times the occurrence is to be found in and outside the first partial block of the bitmap is $\nicefrac{2}{3}$.
-That is, when the occurrence is to be found outside the first partial block of the bitmap less than two-thirds of the time, using the rank query first to see if that partial block should be select queried is a gain in performance, when considering the worst-case query time for both queries.
+That is, when considering the worst-case query time for both queries, if the occurrence is to be found outside the first partial block of the bitmap more than one-third of the time, using the rank query first to see if that partial block should be select queried is a gain in performance.
 
 Though, this is giving the select query a disadvantage in the analysis, as, even when the partial block is close to a block in size, it might terminate early if it found the sought-after occurrence of the character early in the partial block.
 
@@ -159,17 +162,17 @@ However, we expect most of the difference to come from the space used by the bit
 
 
 \subsection{Experiments}
-We will test and compare the Rank and Select running times of three wavelet trees using precomputed rank values for varying block sizes: one using concatenated bitmaps and aligned blocks named PreallocatedPrecomputed, one using aligned blocks but not concatenated bitmaps, called NaivePrecomputed,
+We will test and compare the Rank and Select running times of three wavelet trees using precomputed rank values for varying block sizes: one using concatenated bitmaps and aligned blocks named PreallocatedPrecomputed, one using concatenated bitmaps but not aligned blocks named UnalignedPreallocatedPrecomputed, one using aligned blocks but not concatenated bitmaps, called NaivePrecomputed,
 and one using unaligned blocks and non-concatenated bitmaps called UnalignedNaivePrecomputed.
 In table-form:\\
-\begin{tabular}{|l|c|c|}
+\begin{tabular}{|lcc|}
 \hline
-Name							& Concat. Bitmaps	& Page-aligned Blocks	\\ \hline
-PreallocatedPrecomputed		& yes				& yes					\\ \hline
-NaivePrecomputed				& no					& yes					\\ \hline
-UnalignedNaivePrecomputed	& no					& no						\\ \hline
+Name							& Concat. B.M.	& Page-aligned Blocks	\\ \hline
+PreallocatedPrecomputed		& yes			& yes					\\ \hline
+UnalignedPreallocatedPrecomputed	& yes		& no						\\ \hline
+NaivePrecomputed				& no				& yes					\\ \hline
+UnalignedNaivePrecomputed	& no				& no						\\ \hline
 \end{tabular}
-
 Later, we will compare the memory usage and query times with the non-precomputed version, called NaiveInteger.
 
 \subsubsection{Query Running Time for Bitmap with Precomputed Blocks for different Block Sizes}
@@ -341,10 +344,18 @@ Just as with rank queries, we see higher level 2 data cache miss rate at lower b
 \figureEnd
 
 
-\subsubsection{Memory Usage of Concatenated vs. Individual Bitmaps}
+\subsubsection{Memory Usage of Precomputed Rank Values}
+We have used Massif, the heap profiler included in the Valgrind Suite to record the heap memory usage of our programs.
+We have not simply used the snapshots produced automatically by Massif, but rather used the Client Request mechanism of valgrind to send a 'snapshot' command to the valgrind gdbserver, telling it to take a snapshot right after we've finished building the tree.
 
 \figureBegin
 \caption{Difference in Memory Usage of wavelet trees with precomputed ranks of varying block size. Notice the y-axis not starting at 0. Limited to 2 times page size because of use of \texttt{ushort}}
 \label{fig:PrecomputedRankBlockSize_Build_Memory}
 \input{PrecomputedRankBlockSize_Build_Memory}
+\figureEnd
+
+\figureBegin
+\caption{Difference in Memory Usage of wavelet trees with precomputed ranks of varying block size. Notice the y-axis not starting at 0. Limited to 2 times page size because of use of \texttt{ushort}}
+\label{fig:PrecomputedRankBlockSize_MemoryUsage}
+\input{PrecomputedRankBlockSize_MemoryUsage}
 \figureEnd
