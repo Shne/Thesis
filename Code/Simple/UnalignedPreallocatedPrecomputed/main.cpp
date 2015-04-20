@@ -87,6 +87,9 @@ int main(int argc, char** argv) {
     if(test == "build") {
         testBuildTime(amount, alphabetSize, pathname, blockSize, eventset, events, values, num_events, input);
     }
+    else if(test == "buildmemory") {
+        testBuildMemory(amount, alphabetSize, blockSize, input);
+    }
     else if(test == "rank"){
         Tree tree = Tree(input, amount, alphabetSize, blockSize);
         testRankQuery(amount, alphabetSize, pathname, blockSize, eventset, events, values, num_events, tree);

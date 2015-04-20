@@ -13,6 +13,7 @@
 #include <cmath>
 #include <papi.h>
 #include "IO.h"
+#include <valgrind/valgrind.h>
 
 #ifndef TESTS_H
 #define	TESTS_H
@@ -145,6 +146,13 @@ inline void testBuildTime(uint amount, uint alphabetSize, float skew, string pat
     testSetup(eventset, events, num_events);
     Tree tree = Tree(input, amount, alphabetSize, skew);
     testTearDown(amount, alphabetSize, skew, "build", pathname, eventset, events, values, num_events);
+    
+    cout << tree.rank(0, amount, skew) << endl; //just to make sure nothing is optimized away
+}
+
+inline void testBuildMemory(uint amount, uint alphabetSize, float skew, vector<uint>* input) {
+    Tree tree = Tree(input, amount, alphabetSize, skew);
+    if(RUNNING_ON_VALGRIND) VALGRIND_MONITOR_COMMAND("snapshot ../../../massifBuildMemorySnapshot");
     
     cout << tree.rank(0, amount, skew) << endl; //just to make sure nothing is optimized away
 }
