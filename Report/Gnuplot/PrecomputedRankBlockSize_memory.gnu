@@ -54,7 +54,7 @@ set xlabel "Block Size (number of pages)"
 set ylabel "Memory Usage (MB)"
 # set yrange [0:*]
 set output 'PrecomputedRankBlockSize_Build_Memory.tex'
-plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Build.data' every ::2 using ($1/32768):($2/4096) with linespoints title "NaivePrecomputed, $mr\\hat{\\sigma}=$ ".naiveprecomputed_max_stddev_build." $avg\\hat{\\sigma}=$ ".naiveprecomputed_avg_stddev_build,\
-	'../Data/PrecomputedRankBlockSize_PreallocatedPrecomputed_Build.data' every ::2 using ($1/32768):($2/4096) with linespoints title "PreallocatedPrecomputed, $mr\\hat{\\sigma}=$ ".preallocatedprecomputed_max_stddev_build." $avg\\hat{\\sigma}=$ ".preallocatedprecomputed_avg_stddev_build,\
-	'../Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Build.data' every ::2 using ($1/32768):($2/4096) with linespoints title "UnalignedNaivePrecomputed, $mr\\hat{\\sigma}=$ ".unalignednaiveprecomputed_max_stddev_build." $avg\\hat{\\sigma}=$ ".unalignednaiveprecomputed_avg_stddev_build,\
-	'../Data/PrecomputedRankBlockSize_NaiveInteger_Build.data' every ::2 using ($1/32768):($2/4096) with linespoints title "NaiveInteger, $mr\\hat{\\sigma}=$ ".naiveinteger_max_stddev_build." $avg\\hat{\\sigma}=$ ".naiveinteger_avg_stddev_build
+plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Build.data' every ::2 using ($1/32768):($3/1024) with linespoints title "NaivePrecomputed, $mr\\hat{\\sigma}=$ ".naiveprecomputed_max_stddev_build." $avg\\hat{\\sigma}=$ ".naiveprecomputed_avg_stddev_build,\
+	'../Data/PrecomputedRankBlockSize_PreallocatedPrecomputed_Build.data' every ::2 using ($1/32768):($3/1024) with linespoints title "PreallocatedPrecomputed, $mr\\hat{\\sigma}=$ ".preallocatedprecomputed_max_stddev_build." $avg\\hat{\\sigma}=$ ".preallocatedprecomputed_avg_stddev_build,\
+	'../Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Build.data' every ::2 using ($1/32768):($3/1024) with linespoints title "UnalignedNaivePrecomputed, $mr\\hat{\\sigma}=$ ".unalignednaiveprecomputed_max_stddev_build." $avg\\hat{\\sigma}=$ ".unalignednaiveprecomputed_avg_stddev_build,\
+	'../Data/PrecomputedRankBlockSize_NaiveInteger_Build.data' every ::2 using ($1/32768):($3/1024) with linespoints title "NaiveInteger, $mr\\hat{\\sigma}=$ ".naiveinteger_max_stddev_build." $avg\\hat{\\sigma}=$ ".naiveinteger_avg_stddev_build

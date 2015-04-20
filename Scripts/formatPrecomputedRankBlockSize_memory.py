@@ -13,15 +13,15 @@ blockSizeRange = range(quartPage, pageSize*2 +1, quartPage)
 
 def PadNaiveInteger(ReadOutput):
 	MemSize = ReadOutput.memSizeList[:]
-	# MemResident = ReadOutput.memResidentList[:]
-	# MemHighWatermark = ReadOutput.memHighWatermarkList[:]
+	MemResident = ReadOutput.memResidentList[:]
+	MemHighWatermark = ReadOutput.memHighWatermarkList[:]
 	ReadOutput.reset()
 	for blockSize in blockSizeRange:
 		for i in range(testsPerSize):
 			ReadOutput.blockSizeList.append(blockSize*8)
 			ReadOutput.memSizeList.append(MemSize[i])
-			# ReadOutput.memResidentList.append(MemResident[i])
-			# ReadOutput.memHighWatermarkList.append(MemHighWatermark[i])
+			ReadOutput.memResidentList.append(MemResident[i])
+			ReadOutput.memHighWatermarkList.append(MemHighWatermark[i])
 
 # NAIVEINTEGER
 gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_NaiveInteger_Build.data", "w")
