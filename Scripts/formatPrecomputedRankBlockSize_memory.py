@@ -4,7 +4,7 @@ import ReadOutput
 import subprocess
 import Utils
 
-testDataFile = 'Output/PrecomputedRankBlockSize_n8as16_build_memory.output'
+testDataFile = 'Output/PrecomputedRankBlockSize_n8as16_build.output'
 testsPerSize = 1
 
 pageSize = 4096
