@@ -2,6 +2,7 @@
 
 import random #also seeds it with system time
 import array
+import numpy.random
 
 def generateData(powerAmount, alphabetSize):
 	fileName = "Data/n"+str(powerAmount)+"_as"+str(alphabetSize)+".data"
@@ -44,5 +45,25 @@ def generateIntegerData(powerAmount, powerAlphabetSize):
 		randomArray.append(random.randrange(0, alphabetSize))
 	randomArray.tofile(fd)
 
-for i in range(8,25):
-	generateIntegerData(2, i)
+
+def generateZipfData(powerAmount, powerAlphabetSize):
+	fileName = "Data/n"+str(powerAmount)+"_as"+str(powerAlphabetSize)+"_zipf.data"
+	fd = open(fileName, "wb")
+
+	print("Generating data: 10^"+str(powerAmount)+" entries of alphabetsize: 2^"+str(powerAlphabetSize))
+	amount = pow(10, powerAmount)
+	alphabetSize = pow(2, powerAlphabetSize)
+
+	s = 1.1
+	randomArray = array.array('I')
+	for _ in range(amount):
+		value = numpy.random.zipf(s)
+		while value > alphabetSize:
+			value = numpy.random.zipf(s)
+		randomArray.append(value)
+	randomArray.tofile(fd)
+
+generateZipfData(8, 16)
+
+# for i in range(8,25):
+# 	generateIntegerData(2, i)
