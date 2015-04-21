@@ -426,8 +426,63 @@ Figure~\ref{fig:BwtRleWaveletTree} depicts a RLE Wavelet tree on on \textit{bwt(
 
 \subsection{Information Retrieval}
 1. Wavelet tree as a Range Searching Data Structure.\\
-2. Using the wavelet tree to support efficient range quantile queries in a list \textit{S} of \textit{n} numbers.\\
 
+
+\subsubsection{Range Quantile Query}
+The wavelet tree can be used to support efficient range quantile queries on a sequence \textit{S} of \textit{n} numbers in $O(log(\sigma))$ time if $rank_b$ is supported in O(1) time \citep[Section 3]{RangeQuantileQueryWT}. 
+A range quantile query returns the k-th smallest number within a given range of \textit{S}, $S[l ... r]$.
+It works by computing two rank queries on the bitmap of the root.
+The two queries are $rank_b(l-1)$ and $rank_b(r)$ where $rank_b()$ refers to binary rank. 
+
+$rank_b(l-1)$ is used to find the number of 1s and 0s in $b[1..(l-1)]$ and $rank_b(r) - rank_b(l-1)$ gives the number 1s and 0s in $b[l..r]$. 
+We go to the left if there are more than \textit{k} copies of 0s $b[l..r]$ and set $l = ($number of 0s in $b[1..(l-1)])+1$ and $r=($number of 0s in $b[1..r])$. 
+We go to the right if there are less than \textit{k} copies of 0s $b[l..r]$ and subtract the number of 0s in $b[l..r]$ from \textit{k}, set $l = ($number of 1s in $b[1..(l-1)])+1$ and set $r=($number of 1s in $b[1..r])$. This procedure continues recursively until it hits a leaf and then returns the number stored in the leaf which corresponds to the k-th smallest number in the given range of \textit{S}.
+
+A range quantile query takes $O(log(\sigma))$ time if $rank_b$ is supported in O(1) time. 
+
+\figureBegin
+\caption{Range Quantile Query on a Wavelet Tree. $k=5, l=3, r=9$}				
+\Tree
+%root
+[.6,2,\textbf{0,7,9,3,1,8,5},4\\1001100110 !\qsetw{5cm} 
+	%left child
+	[.2,0,3,1,4\\00101  !\qsetw{5cm}
+		%left -> left
+		[.2,0,1\\100 !\qsetw{5cm} 
+			[.0,1\\01 
+				[.0 ]
+				[.1 ] 			
+			]
+			[.2 ]		
+		] 
+		%left -> right
+		[.3,4\\01 !\qsetw{5cm} 
+			[.3 ]
+			[.4 ]		
+		]
+	] 
+	%right child
+	[.6-\textbf{7,9,8,5}\\00110 !\qsetw{5cm} 
+		%right -> left
+		[.6,\textbf{7,5}\\010 !\qsetw{5.3cm}
+			%right -> left -> left
+			[.6,5\\10 
+				[.5 ]
+				[.6 ]			
+			] 
+			%right -> left -> right
+			[.\textbf{7} ] 
+		]
+		%right -> right	 
+		[.9,8\\10 !\qsetw{5.3cm} 
+			[.8 ]
+			[.9 ]		
+		]
+	]
+]
+\vspace{1 cm}
+\label{fig:RQQWaveletTree}
+\figureEnd
 
 
 
