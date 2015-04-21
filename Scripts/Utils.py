@@ -60,12 +60,14 @@ def getAvgRelativeStddevStr(ReadOutput, columnNames, stepsize):
 	return avgRelativeStddev
 
 def writeGnuplotHeader(gnuplotFile):
-	gnuplotFile.write("#[alphabetSize] [Walltime] [BlockSize] [BranchMissRate] [BranchMis] [TLB] [L1CM] [L2CM] [L2CH] [L3CM] [Cycles]\n")
+	gnuplotFile.write("#[alphabetSize] [Walltime] [BlockSize] [BranchMissRate] [BranchMis] [TLB] [L1CM] [L2CM] [L2CH] [L3CM] [Cycles]")
+	gnuplotFile.write(" [WalltimeErr] [BranchMissRateErr] [BranchMisErr] [TLBErr] [L1CMErr] [L2CMErr] [L2CHErr] [L3CMErr] [CyclesErr]\n")
 
 def formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize):
 	dataListKeys = ["alphabetSizeList", "wallTimeList", "blockSizeList", "branchMissRateList", "branchMispredictionsList", "TLBList", "l1DataCacheMissesList", "l2DataCacheMissesList", "l2DataCacheHitsList", "l3TotalCacheMissesList", "totalCyclesList"]
 	gnuplotFile.write(getMaxRelativeStddevStr(ReadOutput, dataListKeys, testsPerSize) + "\n")
 	gnuplotFile.write(getAvgRelativeStddevStr(ReadOutput, dataListKeys, testsPerSize) + "\n")
+
 	for i in range(int(len(ReadOutput.alphabetSizeList)/testsPerSize)):
 		startIndex = i*testsPerSize
 		endIndex = startIndex + testsPerSize
@@ -83,6 +85,17 @@ def formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize):
 		L2CH = avg(ReadOutput.l2DataCacheHitsList[startIndex:endIndex])
 		L3CM = avg(ReadOutput.l3TotalCacheMissesList[startIndex:endIndex])
 
+		CyclesErr = numpy.std(ReadOutput.totalCyclesList[startIndex:endIndex])
+		WalltimeErr = numpy.std(ReadOutput.wallTimeList[startIndex:endIndex])
+		BranchMisErr = numpy.std(ReadOutput.branchMispredictionsList[startIndex:endIndex])
+		BranchExeErr = numpy.std(ReadOutput.branchExecutedList[startIndex:endIndex])
+		BranchMissRateErr = numpy.std(ReadOutput.branchMissRateList[startIndex:endIndex])
+		TLBErr = numpy.std(ReadOutput.TLBList[startIndex:endIndex])
+		L1CMErr = numpy.std(ReadOutput.l1DataCacheMissesList[startIndex:endIndex])
+		L2CMErr = numpy.std(ReadOutput.l2DataCacheMissesList[startIndex:endIndex])
+		L2CHErr = numpy.std(ReadOutput.l2DataCacheHitsList[startIndex:endIndex])
+		L3CMErr = numpy.std(ReadOutput.l3TotalCacheMissesList[startIndex:endIndex])
+
 		gnuplotFile.write(str(alphabetSize)+" "+
 			str(Walltime)+" "+
 			str(blockSize)+" "+
@@ -93,7 +106,16 @@ def formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize):
 			str(L2CM)+" "+
 			str(L2CH)+" "+
 			str(L3CM)+" "+
-			str(Cycles)+"\n"
+			str(Cycles)+" "+
+			str(WalltimeErr)+" "+
+			str(BranchMissRateErr)+" "+
+			str(BranchMisErr)+" "+
+			str(TLBErr)+" "+
+			str(L1CMErr)+" "+
+			str(L2CMErr)+" "+
+			str(L2CHErr)+" "+
+			str(L3CMErr)+" "+
+			str(CyclesErr)+"\n"
 		)
 
 def writeMemGnuplotHeader(gnuplotFile):
