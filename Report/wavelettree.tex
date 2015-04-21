@@ -337,7 +337,7 @@ If we do not consider how a computer saves numbers but only consider the amount 
 From 18 numbers to only 3 numbers, which contain the same information.
 
 If we do consider how a computer saves numbers then the reduction is not that great because if we assume that each number is represented as an integer, then the run-length encoded bitmap uses more space than just storing the original bitmap. 
-This is because an integer uses 4 bytes of space which is 32 bits and we need to store three integers giving us a total of $32 bits \times 3 = 96 bits$ which is significantly larger than just the 18 bits we need to store for the original bitmap assuming we can store 1 an 0 using only 1 bit \footnote{This can be accomplished using c++ and vector$<$bool$>$}. 
+This is because an integer uses 4 bytes of space which is 32 bits and we need to store three integers giving us a total of $32 bits \times 3 = 96 bits$ which is significantly larger than just the 18 bits we need to store for the original bitmap assuming we can store 1 and 0 using only 1 bit \footnote{This can be accomplished using c++ and vector$<$bool$>$}. 
 This means that a symbol needs to repeat consecutively more than 32 times before RLE achieves better space usage than just storing the bitmaps.
 
 RLE is still very useful despite of this because you usually want to compress very large data and if that data uses an alphabet that is small enough then, as previously stated RLE can achieve compression close to the \textit{zero order entropy} when working with binary alphabets.
@@ -347,77 +347,92 @@ If the Burrows-Wheeler transformation is applied to the string before it is save
 \subsubsection{Burrows-Wheeler transformation}
 Having a string \textit{S} of \textit{n} characters the Burrows-Wheeler transformation \citep{BWToriginalArticle} transforms \textit{S} by forming \textit{n} cyclic shifts of \textit{S}. 
 These \textit{n} permutations of \textit{S} are then sorted in lexicographical order.
-The \textit{bwt} of \textit{S} is then the concatenation of the last characters in each permutation.
+The \# is added to keep track of the end of the original string.
+The \textit{bwt} of \textit{S} is then the concatenation of the last characters in each permutation excluding $\#$.
 
 \begin{center}
 $\begin{bmatrix}
-	abcbadbd\#\\
-	bcbadbd\#a\\
-	cbadbd\#ab\\
-	badbd\#abc\\
-	adbd\#abcb\\
-	dbd\#abcba\\
-	bd\#abcbad\\
-	d\#abcbadb
+	bananahat\#\\
+	ananahat\#b\\
+	nanahat\#ba\\
+	anahat\#ban\\
+	nahat\#bana\\
+	ahat\#banan\\
+	hat\#banana\\
+	at\#bananah\\
+	t\#bananaha\\
+	\#bananahat\\
 \end{bmatrix} \Rightarrow
 \begin{bmatrix}
-	\textbf{a}bcbadbd\#\\
-	\textbf{a}dbd\#abcb\\
-	\textbf{b}adbd\#abc\\
-	\textbf{b}cbadbd\#a\\
-	\textbf{b}d\#abcbad\\
-	\textbf{c}badbd\#ab\\
-	\textbf{d}\#abcbadb\\
-	\textbf{d}bd\#abcba
+	\#bananaha\textbf{t}\\
+	ahat\#bana\textbf{n}\\
+	anahat\#ba\textbf{n}\\
+	ananahat\#\textbf{b}\\
+	at\#banana\textbf{h}\\
+	bananahat\#\\
+	hat\#banan\textbf{a}\\
+	nahat\#ban\textbf{a}\\
+	nanahat\#b\textbf{a}\\
+	t\#bananah\textbf{a}
 \end{bmatrix}$
 \end{center}
 
 The list to the left is the permuted versions of \textit{S} and the list to the right is the lexicographically sorted permutations of \textit{S}.
-The \# is added to keep track of the end of the original string.
-Taking the character at the first index in each column, the Burrows-Wheeler transformation of S becomes $bwt(s) = aabbbcdd$. The index of the the original string in the right list is also returned. 
+Taking the character at the last index in each column the Burrows-Wheeler transformation of $S=bananahat$ becomes $bwt(S) = tnnbhaaaa$. The index of the the original string in the right list is also returned. 
 The original string is identified by having a \# at the end.
-It is possible that the original string might appear more than once like if $S = cabcab$.
-In that case it is the index of the first occurrence that is returned.
-\citep[Section~2]{BWToriginalArticle} also describes an algorithm for getting the original string from the Burrows-Wheeler transformed string.
 
-Looking at \textit{bwt(s)} we can see that equal characters are now grouped together.
+Looking at \textit{bwt(S)} we can see that equal characters are now grouped together.
 This effect enables better compression when using compression techniques like run-length encoding.
-Figure~\ref{fig:BwtRleWaveletTree} depicts a RLE Wavelet tree on on \textit{bwt(abcbadbd)}. We can see, as indicated by the numbers in bold that fewer Run-length encoded values needs to be stored than for the non-Burrows-Wheeler transformed case as shown in figure~\ref{fig:RleWaveletTree}.
+One could argue that simply sorting \textit{S} would enable better compression using run-length encoding, which is true. 
+But a sorted sequence is not reversible but BWT is, which is the main reason for using BWT. 
+It would not make very much sense to compress something without being able to decompress it again.
+\citep[Section~2]{BWToriginalArticle} describes an algorithm for getting the original string from the Burrows-Wheeler transformed string.
 
-
-
+Figure~\ref{fig:BwtRleWaveletTree} depicts a RLE Wavelet tree on \textit{bwt(abcbadbd)}. We can see, as indicated by the numbers in bold that fewer Run-length encoded values needs to be stored than for the non-Burrows-Wheeler transformed case as shown in figure~\ref{fig:RleWaveletTree}.
 \figureBegin
-\caption{RLE Wavelet Tree on string \textit{abcbadbd} with alphabet $\sigma = abcd$}				
-\Tree
-%root
-[.abcbadbd\\2,1,2,1,1,1 !\qsetw{5cm} 
-	%left child
-	[.abbab\\1,2,1,1  !\qsetw{5cm}
-		%left -> left,right child 
-		[.aa\\2 !\qsetw{5cm} ] [.bbb\\3 !\qsetw{5cm} ]] 
-	%right child
-	[.cdd\\1,2 !\qsetw{5cm} 
-		%right -> left,right child
-		[.c\\1 !\qsetw{5.3cm} ] [.dd\\2 !\qsetw{5.3cm} ]]] 
-\vspace{1 cm}
-\label{fig:RleWaveletTree}
-\figureEnd
-
-\figureBegin
-\caption{RLE Wavelet Tree on BWT of string \textit{abcbadbd} with alphabet $\sigma = abcd$}				
-\Tree
-%root
-[.aabbbcdd\\\textbf{5,3} !\qsetw{5cm} 
-	%left child
-	[.aabbb\\\textbf{2,3}  !\qsetw{5cm}
-		%left -> left,right child 
-		[.aa\\2 !\qsetw{5cm} ] [.bbb\\3 !\qsetw{5cm} ]] 
-	%right child
-	[.cdd\\1,2 !\qsetw{5cm} 
-		%right -> left,right child
-		[.c\\1 !\qsetw{5.3cm} ] [.dd\\2 !\qsetw{5.3cm} ]]] 
-\vspace{1 cm}
+      \begin{minipage}{0.45\textwidth}
+      \caption{RLE Wavelet Tree on string \textit{bananahat} with alphabet $\sigma = abhnt$}
+      \label{fig:RleWaveletTree}
+			\Tree
+			%root
+			[.bananahat\\2,1,1,1,3,1 !\qsetw{3cm} 
+				%left child
+				[.baaaha\\1,2,1,1 !\qsetw{3cm}
+					[.baaaa\\0,1,4 !\qsetw{3cm}
+						[.aaaa !\qsetw{3cm} ]
+						[.b !\qsetw{3cm} ]		
+					] 
+					[.h !\qsetw{3cm} ]
+				] 
+				%right child
+				[.nnt\\2,1 !\qsetw{3cm}	
+					[.nn !\qsetw{3cm} ] 
+					[.t !\qsetw{3cm} ]
+				]
+			]
+	\end{minipage}
+	\hfill
+	\begin{minipage}{0.45\textwidth}
+	\caption{RLE Wavelet Tree on $BWT(bananahat)=tnnbhaaaa$ with alphabet $\sigma = abhnt$}
 \label{fig:BwtRleWaveletTree}
+			\Tree
+			%root
+			[.tnnbhaaaa\\\textbf{0,3,6} !\qsetw{3cm} 
+				%left child
+				[.bhaaaa\\\textbf{1,1,4} !\qsetw{3cm} 
+					[.baaaa\\0,1,4 !\qsetw{3cm} 
+						[.aaaa !\qsetw{3cm} ]
+						[.b !\qsetw{3cm} ]		
+					] 
+					[.h !\qsetw{3cm} ]
+				] 
+				%right child
+				[.tnn\\0,1,2 !\qsetw{3cm}		
+					[.nn !\qsetw{3cm} ] 
+					[.t !\qsetw{3cm} ]
+				]
+			] 
+	\end{minipage}
 \figureEnd
 
 
@@ -434,14 +449,44 @@ A range quantile query returns the k-th smallest number within a given range of 
 It works by computing two rank queries on the bitmap of the root.
 The two queries are $rank_b(l-1)$ and $rank_b(r)$ where $rank_b()$ refers to binary rank. 
 
+\begin{algorithm}
+\caption{Range Quantile Query}
+\label{alg:RangeQuantileQuery}
+\begin{algorithmic}
+\Function {RangeQuantileQuery} {$k,l,r$}
+\If{current node is leaf}
+	\State \Return number in leaf
+\EndIf
+\State $S \lbrace l..r \rbrace$\textit{-length} $ \gets r-1$
+\State \textit{1}$sInRange \gets rank_b(S \lbrace l..r \rbrace) = rank_b(r) - rank_b(l-1)$
+\State $\textit{0}sInRange \gets S \lbrace l..r \rbrace$\textit{-length }$- \textit{1}sInRange$
+\If{$\textit{0}sInRange \leq k$}
+	\State $l = (S \lbrace l..r \rbrace$\textit{-length} $ - rank_b(l-1))+1$
+	\State $r = S \lbrace l..r \rbrace$\textit{-length} $ - rank_b(r)$
+	\State \Return $LeftNode.RangeQuantileQuery(k,l,r)$
+\Else
+	\State $k = k - \textit{0}sInRange)$
+	\State $l = rank_b(l-1)+1$
+	\State $r = rank_b(r)$
+	\State \Return $RightNode.RangeQuantileQuery(k,l,r)$
+\EndIf
+
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
 $rank_b(l-1)$ is used to find the number of 1s and 0s in $b[1..(l-1)]$ and $rank_b(r) - rank_b(l-1)$ gives the number 1s and 0s in $b[l..r]$. 
 We go to the left if there are more than \textit{k} copies of 0s $b[l..r]$ and set $l = ($number of 0s in $b[1..(l-1)])+1$ and $r=($number of 0s in $b[1..r])$. 
 We go to the right if there are less than \textit{k} copies of 0s $b[l..r]$ and subtract the number of 0s in $b[l..r]$ from \textit{k}, set $l = ($number of 1s in $b[1..(l-1)])+1$ and set $r=($number of 1s in $b[1..r])$. This procedure continues recursively until it hits a leaf and then returns the number stored in the leaf which corresponds to the k-th smallest number in the given range of \textit{S}.
 
-A range quantile query takes $O(log(\sigma))$ time if $rank_b$ is supported in O(1) time. 
+An example of a range quantile query can be seen in figure~\ref{fig:RQQWaveletTree}. 
+The numbers in bold indicates the range $S[l..r]$. 
+$k=5$ means that we are looking for the 5th smallest number within $S[l..r]$ which is \textit{7}.
 
 \figureBegin
-\caption{Range Quantile Query on a Wavelet Tree. $k=5, l=3, r=9$}				
+\caption{Range Quantile Query on a Wavelet Tree.\\ $S=\lbrace 6,2,0,7,9,3,1,8,5,4 \rbrace, k=5, l=3, r=9$.}
+\begin{minipage}{.45\linewidth}
+\begin{flushleft}                           
 \Tree
 %root
 [.6,2,\textbf{0,7,9,3,1,8,5},4\\1001100110 !\qsetw{5cm} 
@@ -479,8 +524,18 @@ A range quantile query takes $O(log(\sigma))$ time if $rank_b$ is supported in O
 			[.9 ]		
 		]
 	]
-]
-\vspace{1 cm}
+] 
+\end{flushleft} 
+\end{minipage}
+\hfill
+\begin{minipage}{.45\linewidth}
+\begin{flushright}
+Level 1:\\$k=5$\\$l=3$\\$r=9$\\ \vspace{0.5cm}
+Level 2:\\$k=2$\\$l=2$\\$r=5$\\ \vspace{0.5cm}
+level 3:\\$k=2$\\$l=2$\\$r=3$\\ \vspace{0.5cm}
+Level 4:\\$k=1$\\$l=1$\\$r=1$
+\end{flushright} 
+\end{minipage}
 \label{fig:RQQWaveletTree}
 \figureEnd
 
