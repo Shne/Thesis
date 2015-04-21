@@ -1,30 +1,33 @@
-
-algorithm=SimpleNaiveInteger	test=build	amount=100000000	alphabetSize=65536	skew=2	real_cycles=26977995899	wall_time=10399723	virt_cycles=27037699317	mem_size=835076	mem_resident=818720	mem_highwatermark=836452	PAPI_TOT_CYC=32057901234	PAPI_L1_DCM=396970944	PAPI_BR_MSP=824447155	
-
-algorithm=PreallocatedPrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=8192	real_cycles=46974578378	wall_time=18108187	virt_cycles=47080040346	mem_size=905204	mem_resident=885260	mem_highwatermark=983952	PAPI_TOT_CYC=56523227102	PAPI_L1_DCM=397350270	PAPI_BR_MSP=814065587	
-algorithm=PreallocatedPrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=16384	real_cycles=46938104598	wall_time=18094127	virt_cycles=47046412017	mem_size=905012	mem_resident=883632	mem_highwatermark=983764	PAPI_TOT_CYC=56556070463	PAPI_L1_DCM=397720208	PAPI_BR_MSP=814088638	
-algorithm=PreallocatedPrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=24576	real_cycles=46964193363	wall_time=18104184	virt_cycles=47073303756	mem_size=904948	mem_resident=884812	mem_highwatermark=984264	PAPI_TOT_CYC=56568669296	PAPI_L1_DCM=397397434	PAPI_BR_MSP=814004714	
-algorithm=PreallocatedPrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=32768	real_cycles=47000368376	wall_time=18118130	virt_cycles=47107616148	mem_size=904916	mem_resident=885160	mem_highwatermark=983396	PAPI_TOT_CYC=56566474141	PAPI_L1_DCM=397365505	PAPI_BR_MSP=814041340	
-algorithm=PreallocatedPrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=40960	real_cycles=46998691899	wall_time=18117483	virt_cycles=47104996941	mem_size=904896	mem_resident=883572	mem_highwatermark=982920	PAPI_TOT_CYC=56549904410	PAPI_L1_DCM=397375805	PAPI_BR_MSP=814097270	
-algorithm=PreallocatedPrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=49152	real_cycles=48677708773	wall_time=18764726	virt_cycles=48770867214	mem_size=904884	mem_resident=884588	mem_highwatermark=985952	PAPI_TOT_CYC=57295815737	PAPI_L1_DCM=398385910	PAPI_BR_MSP=814341192	
-algorithm=PreallocatedPrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=57344	real_cycles=51764323025	wall_time=19954582	virt_cycles=51662378106	mem_size=904876	mem_resident=885516	mem_highwatermark=985368	PAPI_TOT_CYC=60144571678	PAPI_L1_DCM=404845768	PAPI_BR_MSP=815410934	
-algorithm=PreallocatedPrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=65536	real_cycles=47090593585	wall_time=18152910	virt_cycles=47199730563	mem_size=904868	mem_resident=884244	mem_highwatermark=984244	PAPI_TOT_CYC=56613178820	PAPI_L1_DCM=397341701	PAPI_BR_MSP=814152838	
-
-algorithm=NaivePrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=8192	real_cycles=35873699125	wall_time=13828920	virt_cycles=35946985248	mem_size=832960	mem_resident=816292	mem_highwatermark=850876	PAPI_TOT_CYC=42995257983	PAPI_L1_DCM=397712289	PAPI_BR_MSP=817211769	
-algorithm=NaivePrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=16384	real_cycles=35926941417	wall_time=13849444	virt_cycles=36005294466	mem_size=835404	mem_resident=815712	mem_highwatermark=851588	PAPI_TOT_CYC=43044033116	PAPI_L1_DCM=397363697	PAPI_BR_MSP=817150635	
-algorithm=NaivePrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=24576	real_cycles=35970731483	wall_time=13866325	virt_cycles=36045815445	mem_size=838636	mem_resident=819848	mem_highwatermark=850080	PAPI_TOT_CYC=43052523863	PAPI_L1_DCM=397236792	PAPI_BR_MSP=817209583	
-algorithm=NaivePrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=32768	real_cycles=35856951277	wall_time=13822464	virt_cycles=35934053076	mem_size=833220	mem_resident=816808	mem_highwatermark=853592	PAPI_TOT_CYC=43026271592	PAPI_L1_DCM=397680092	PAPI_BR_MSP=817447846	
-algorithm=NaivePrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=40960	real_cycles=35981866663	wall_time=13870617	virt_cycles=36062753157	mem_size=831228	mem_resident=814416	mem_highwatermark=844008	PAPI_TOT_CYC=43069524933	PAPI_L1_DCM=397159874	PAPI_BR_MSP=817181475	
-algorithm=NaivePrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=49152	real_cycles=35912385318	wall_time=13843834	virt_cycles=35989795107	mem_size=830724	mem_resident=813924	mem_highwatermark=855552	PAPI_TOT_CYC=43030023021	PAPI_L1_DCM=397673533	PAPI_BR_MSP=817451403	
-algorithm=NaivePrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=57344	real_cycles=35894908691	wall_time=13837096	virt_cycles=35975187891	mem_size=836396	mem_resident=814560	mem_highwatermark=835772	PAPI_TOT_CYC=43021184484	PAPI_L1_DCM=397555413	PAPI_BR_MSP=817281172	
-algorithm=NaivePrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=65536	real_cycles=36103182518	wall_time=13917384	virt_cycles=36179946414	mem_size=836344	mem_resident=819384	mem_highwatermark=839812	PAPI_TOT_CYC=43132921777	PAPI_L1_DCM=397973227	PAPI_BR_MSP=817394891	
-
-algorithm=UnalignedNaivePrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=8192	real_cycles=40157992270	wall_time=15480468	virt_cycles=40250308536	mem_size=832960	mem_resident=814824	mem_highwatermark=854392	PAPI_TOT_CYC=47900980836	PAPI_L1_DCM=398570701	PAPI_BR_MSP=816983229	
-algorithm=UnalignedNaivePrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=16384	real_cycles=40368997982	wall_time=15561808	virt_cycles=40456479402	mem_size=835404	mem_resident=816084	mem_highwatermark=851164	PAPI_TOT_CYC=47924470696	PAPI_L1_DCM=398433773	PAPI_BR_MSP=817104519	
-algorithm=UnalignedNaivePrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=24576	real_cycles=39797665189	wall_time=15341565	virt_cycles=39885999471	mem_size=838636	mem_resident=819908	mem_highwatermark=850560	PAPI_TOT_CYC=47553673321	PAPI_L1_DCM=397564349	PAPI_BR_MSP=816505781	
-algorithm=UnalignedNaivePrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=32768	real_cycles=39587735329	wall_time=15260641	virt_cycles=39675477132	mem_size=833220	mem_resident=815492	mem_highwatermark=852752	PAPI_TOT_CYC=47374692353	PAPI_L1_DCM=397975002	PAPI_BR_MSP=816331776	
-algorithm=UnalignedNaivePrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=40960	real_cycles=39642866432	wall_time=15281892	virt_cycles=39732912414	mem_size=831228	mem_resident=814424	mem_highwatermark=840832	PAPI_TOT_CYC=47418899869	PAPI_L1_DCM=397071005	PAPI_BR_MSP=816716668	
-algorithm=UnalignedNaivePrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=49152	real_cycles=39621880982	wall_time=15273804	virt_cycles=39708241929	mem_size=830724	mem_resident=813820	mem_highwatermark=853844	PAPI_TOT_CYC=47419055026	PAPI_L1_DCM=397745350	PAPI_BR_MSP=816399186	
-algorithm=UnalignedNaivePrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=57344	real_cycles=39527531561	wall_time=15237433	virt_cycles=39616421427	mem_size=836396	mem_resident=815252	mem_highwatermark=834336	PAPI_TOT_CYC=47334571711	PAPI_L1_DCM=397022780	PAPI_BR_MSP=816816747	
-algorithm=UnalignedNaivePrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=65536	real_cycles=39695451152	wall_time=15302164	virt_cycles=39785031252	mem_size=836344	mem_resident=819716	mem_highwatermark=840400	PAPI_TOT_CYC=47434704223	PAPI_L1_DCM=397216979	PAPI_BR_MSP=816421479	
-
+algorithm=NaiveInteger blockSize=N/A heap=748139558 extra=4508538 stacks=0 
+algorithm=PreallocatedPrecomputed blockSize=1024 heap=744077536 extra=1580552 stacks=0 
+algorithm=PreallocatedPrecomputed blockSize=2048 heap=743882224 extra=1580552 stacks=0 
+algorithm=PreallocatedPrecomputed blockSize=3072 heap=743817120 extra=1580552 stacks=0 
+algorithm=PreallocatedPrecomputed blockSize=4096 heap=743784568 extra=1580544 stacks=0 
+algorithm=PreallocatedPrecomputed blockSize=5120 heap=743765036 extra=1580540 stacks=0 
+algorithm=PreallocatedPrecomputed blockSize=6144 heap=743752016 extra=1580552 stacks=0 
+algorithm=PreallocatedPrecomputed blockSize=7168 heap=743742714 extra=1580542 stacks=0 
+algorithm=PreallocatedPrecomputed blockSize=8192 heap=743735740 extra=1580540 stacks=0 
+algorithm=UnalignedPreallocatedPrecomputed blockSize=1024 heap=744077536 extra=1580552 stacks=0 
+algorithm=UnalignedPreallocatedPrecomputed blockSize=2048 heap=743882224 extra=1580552 stacks=0 
+algorithm=UnalignedPreallocatedPrecomputed blockSize=3072 heap=743817120 extra=1580552 stacks=0 
+algorithm=UnalignedPreallocatedPrecomputed blockSize=4096 heap=743784568 extra=1580544 stacks=0 
+algorithm=UnalignedPreallocatedPrecomputed blockSize=5120 heap=743765036 extra=1580540 stacks=0 
+algorithm=UnalignedPreallocatedPrecomputed blockSize=6144 heap=743752016 extra=1580552 stacks=0 
+algorithm=UnalignedPreallocatedPrecomputed blockSize=7168 heap=743742714 extra=1580542 stacks=0 
+algorithm=UnalignedPreallocatedPrecomputed blockSize=8192 heap=743735740 extra=1580540 stacks=0 
+algorithm=NaivePrecomputed blockSize=1024 heap=751867400 extra=4708976 stacks=0 
+algorithm=NaivePrecomputed blockSize=2048 heap=751694726 extra=4741170 stacks=0 
+algorithm=NaivePrecomputed blockSize=3072 heap=751638826 extra=4758734 stacks=0 
+algorithm=NaivePrecomputed blockSize=4096 heap=751614824 extra=4753136 stacks=0 
+algorithm=NaivePrecomputed blockSize=5120 heap=751603252 extra=4754276 stacks=0 
+algorithm=NaivePrecomputed blockSize=6144 heap=751588580 extra=4764612 stacks=0 
+algorithm=NaivePrecomputed blockSize=7168 heap=751583208 extra=4758544 stacks=0 
+algorithm=NaivePrecomputed blockSize=8192 heap=751578028 extra=4761324 stacks=0 
+algorithm=UnalignedNaivePrecomputed blockSize=1024 heap=751867400 extra=4708976 stacks=0 
+algorithm=UnalignedNaivePrecomputed blockSize=2048 heap=751694726 extra=4741170 stacks=0 
+algorithm=UnalignedNaivePrecomputed blockSize=3072 heap=751638826 extra=4758734 stacks=0 
+algorithm=UnalignedNaivePrecomputed blockSize=4096 heap=751614824 extra=4753136 stacks=0 
+algorithm=UnalignedNaivePrecomputed blockSize=5120 heap=751603252 extra=4754276 stacks=0 
+algorithm=UnalignedNaivePrecomputed blockSize=6144 heap=751588580 extra=4764612 stacks=0 
+algorithm=UnalignedNaivePrecomputed blockSize=7168 heap=751583208 extra=4758544 stacks=0 
+algorithm=UnalignedNaivePrecomputed blockSize=8192 heap=751578028 extra=4761324 stacks=0 
