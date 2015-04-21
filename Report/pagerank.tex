@@ -213,72 +213,129 @@ E.g. when the queried-for position is reached in a bitmap and the rank algorithm
 When the first cache level can handle more and more of the 'easy' memory operations, fewer of those are left to be handled by the second cache level, yet the same amount of 'hard' memory accesses are hitting the second cache level, and so the miss rate will increase for the second cache level, while the total amount of cache misses for level 2 could easily decrease, as the first level handles more accesses.
 This also matches what we can see in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L2CacheMiss}.
 
-\figureBegin
-\caption{Wall Time of Rank queries on wavelet trees with precomputed ranks of varying block sizes}
-\label{fig:PrecomputedRankBlockSize_Rank_WallTime}
-\input{PrecomputedRankBlockSize_Rank_WallTime}
-\figureEnd
+\newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
+\begin{figure}
+	\input{PrecomputedRankBlockSize_Rank_WallTime}
+	\caption{Wall Time of Rank queries on Wavelet Trees with Precomputed Rank Values for varying block sizes}
+	\label{fig:PrecomputedRankBlockSize_Rank_WallTime}
+\end{figure}
+
+\begin{figure}
+\input{PrecomputedRankBlockSize_Select_WallTime}
+\caption{Wall Time of Select queries on wavelet trees with precomputed ranks of varying block sizes}
+\label{fig:PrecomputedRankBlockSize_Select_WallTime}
+\end{figure}
 
 
-%\figureBegin
+\begin{figure}\tiny
+\begin{subfigure}{0.48\textwidth}
+	\input{PrecomputedRankBlockSize_Rank_BranchMiss}
+	\caption{Branch Mispredictions}
+	\label{fig:PrecomputedRankBlockSize_Rank_BranchMiss}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{PrecomputedRankBlockSize_Rank_BranchMissRate}
+	\caption{Branch Misprediction Rate}
+	\label{fig:PrecomputedRankBlockSize_Rank_BranchMissRate}
+\end{subfigure}
+\begin{subfigure}{0.48\textwidth}
+	\input{PrecomputedRankBlockSize_Rank_TLB}
+	\caption{TLB Misses}
+	\label{fig:PrecomputedRankBlockSize_Rank_TLB}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{PrecomputedRankBlockSize_Rank_L1CacheMiss}
+	\caption{Level 1 Data Cache Misses}
+	\label{fig:PrecomputedRankBlockSize_Rank_L1CacheMiss}
+\end{subfigure}
+\begin{subfigure}{0.48\textwidth}
+	\input{PrecomputedRankBlockSize_Rank_L2CacheMiss}
+	\caption{Level 2 Data Cache Misses}
+	\label{fig:PrecomputedRankBlockSize_Rank_L2CacheMiss}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{PrecomputedRankBlockSize_Rank_L2CacheMissRate}
+	\caption{Level 2 Data Cache Miss Rate}
+	\label{fig:PrecomputedRankBlockSize_Rank_L2CacheMissRate}
+\end{subfigure}
+\caption{Various measurements of Rank queries on Wavelet Trees with Precomputed Rank Values for varying block sizes}
+\label{fig:PrecomputedRankBlockSize_Rank}
+\end{figure}
+
+%\input{PrecomputedRankBlockSize_Rank_TotalCycles}
 %\caption{Total Cycles of Rank queries on wavelet trees with precomputed ranks of varying block sizes}
 %\label{fig:PrecomputedRankBlockSize_Rank_TotalCycles}
-%\input{PrecomputedRankBlockSize_Rank_TotalCycles}
-%\figureEnd
 
-\figureBegin
-\caption{Branch Mispredictions for Rank queries on wavelet trees with precomputed ranks of varying block sizes}
-\label{fig:PrecomputedRankBlockSize_Rank_BranchMiss}
-\input{PrecomputedRankBlockSize_Rank_BranchMiss}
-\figureEnd
-
-
-\figureBegin
-\caption{Branch Misprediction Rate for Rank queries on wavelet trees with precomputed ranks of varying block sizes}
-\label{fig:PrecomputedRankBlockSize_Rank_BranchMissRate}
-\input{PrecomputedRankBlockSize_Rank_BranchMissRate}
-\figureEnd
-
-
-\figureBegin
-\caption{TLB Misses for Rank queries on wavelet trees with precomputed ranks of varying block sizes}
-\label{fig:PrecomputedRankBlockSize_Rank_TLB}
-\input{PrecomputedRankBlockSize_Rank_TLB}
-\figureEnd
-
-
-\figureBegin
-\caption{Level 1 Data Cache Misses for Rank queries on wavelet trees with precomputed ranks of varying block sizes}
-\label{fig:PrecomputedRankBlockSize_Rank_L1CacheMiss}
-\input{PrecomputedRankBlockSize_Rank_L1CacheMiss}
-\figureEnd
-
-
-\figureBegin
-\caption{Level 2 Data Cache Misses for Rank queries on wavelet trees with precomputed ranks of varying block sizes}
-\label{fig:PrecomputedRankBlockSize_Rank_L2CacheMiss}
-\input{PrecomputedRankBlockSize_Rank_L2CacheMiss}
-\figureEnd
-
-
-\figureBegin
-\caption{Level 2 Data Cache Miss Rate for Rank queries on wavelet trees with precomputed ranks of varying block sizes}
-\label{fig:PrecomputedRankBlockSize_Rank_L2CacheMissRate}
-\input{PrecomputedRankBlockSize_Rank_L2CacheMissRate}
-\figureEnd
-
-
-%\figureBegin
 %\caption{Level 3 Total Cache Misses for Rank queries on wavelet trees with precomputed ranks of varying block sizes}
 %\label{fig:PrecomputedRankBlockSize_Rank_L3CacheMiss}
 %\input{PrecomputedRankBlockSize_Rank_L3CacheMiss}
+
+
+
+\begin{figure}\tiny
+\begin{subfigure}{0.48\textwidth}
+	\input{PrecomputedRankBlockSize_Select_BranchMiss}
+	\caption{Branch Mispredictions. Notice the y-axis not starting at 0.}
+	\label{fig:PrecomputedRankBlockSize_Select_BranchMiss}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{PrecomputedRankBlockSize_Select_BranchMissRate}
+	\caption{Branch Misprediction Rate}
+	\label{fig:PrecomputedRankBlockSize_Select_BranchMissRate}
+\end{subfigure}
+\begin{subfigure}{0.48\textwidth}
+	\input{PrecomputedRankBlockSize_Select_TLB}
+	\caption{TLB Misses}
+	\label{fig:PrecomputedRankBlockSize_Select_TLB}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{PrecomputedRankBlockSize_Select_L1CacheMiss}
+	\caption{Level 1 Data Cache Misses}
+	\label{fig:PrecomputedRankBlockSize_Select_L1CacheMiss}
+\end{subfigure}
+\begin{subfigure}{0.48\textwidth}
+	\input{PrecomputedRankBlockSize_Select_L2CacheMiss}
+	\caption{Level 2 Data Cache Misses}
+	\label{fig:PrecomputedRankBlockSize_Select_L2CacheMiss}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{PrecomputedRankBlockSize_Select_L2CacheMissRate}
+	\caption{Level 2 Data Cache Miss Rate for }
+	\label{fig:PrecomputedRankBlockSize_Select_L2CacheMissRate}
+\end{subfigure}
+\caption{Various measurements of Select queries on Wavelet Trees with Precomputed Rank Values of varying block sizes}
+\label{fig:PrecomputedRankBlockSize_Select}
+%\hfill
+%\begin{subfigure}{0.48\textwidth}
+%	\input{PrecomputedRankBlockSize_Select_L3CacheMiss}
+%	\caption{Level 3 Total Cache Misses for Select queries on wavelet trees with precomputed ranks of varying block sizes}
+%	\label{fig:PrecomputedRankBlockSize_Select_L3CacheMiss}
+%\end{subfigure}
+\end{figure}
+
+\restoregeometry
+
+\subsubsection{Memory Usage of Precomputed Rank Values}
+We have used Massif, the heap profiler included in the Valgrind Suite to record the heap memory usage of our programs.
+We have not simply used the snapshots produced automatically by Massif, but rather used the Client Request mechanism of valgrind to send a 'snapshot' command to the valgrind gdbserver, telling it to take a snapshot right after we've finished building the tree.
+
+%\figureBegin
+%\caption{Difference in Memory Usage of wavelet trees with precomputed ranks of varying block size. Notice the y-axis not starting at 0. Limited to 2 times page size because of use of \texttt{ushort}}
+%\label{fig:PrecomputedRankBlockSize_Build_Memory}
+%\input{PrecomputedRankBlockSize_Build_Memory}
 %\figureEnd
 
-
-
-
-\clearpage
-
+\begin{figure}
+	\input{PrecomputedRankBlockSize_MemoryUsage}
+	\caption{Difference in Memory Usage of wavelet trees with precomputed rank values of varying block size. Notice the y-axis not starting at 0.}
+	\label{fig:PrecomputedRankBlockSize_MemoryUsage}
+\end{figure}
 
 
 \paragraph{Select Queries}~\\
@@ -288,74 +345,3 @@ The main reason for this is likely to be found in the level 1 data cache perform
 
 Just as with rank queries, we see higher level 2 data cache miss rate at lower block sizes in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L2CacheMissRate}, and again the level 1 data cache misses are lower at smaller block sizes in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L1CacheMiss}, but unlike for rank queries, the amount of level 2 data cache misses are not lower for smaller block sizes, in fact they are higher.
 \textbf{[TODO: why?]}
-
-\figureBegin
-\caption{Wall Time of Select queries on wavelet trees with precomputed ranks of varying block sizes}
-\label{fig:PrecomputedRankBlockSize_Select_WallTime}
-\input{PrecomputedRankBlockSize_Select_WallTime}
-\figureEnd
-
-\figureBegin
-\caption{Branch Mispredictions for Select queries on wavelet trees with precomputed ranks of varying block sizes. Notice the y-axis not starting at 0.}
-\label{fig:PrecomputedRankBlockSize_Select_BranchMiss}
-\input{PrecomputedRankBlockSize_Select_BranchMiss}
-\figureEnd
-
-
-\figureBegin
-\caption{Branch Misprediction Rate for Select queries on wavelet trees with precomputed ranks of varying block sizes}
-\label{fig:PrecomputedRankBlockSize_Select_BranchMissRate}
-\input{PrecomputedRankBlockSize_Select_BranchMissRate}
-\figureEnd
-
-
-\figureBegin
-\caption{TLB Misses for Select queries on wavelet trees with precomputed ranks of varying block sizes}
-\label{fig:PrecomputedRankBlockSize_Select_TLB}
-\input{PrecomputedRankBlockSize_Select_TLB}
-\figureEnd
-
-
-\figureBegin
-\caption{Level 1 Data Cache Misses for Select queries on wavelet trees with precomputed ranks of varying block sizes}
-\label{fig:PrecomputedRankBlockSize_Select_L1CacheMiss}
-\input{PrecomputedRankBlockSize_Select_L1CacheMiss}
-\figureEnd
-
-
-\figureBegin
-\caption{Level 2 Data Cache Misses for Select queries on wavelet trees with precomputed ranks of varying block sizes}
-\label{fig:PrecomputedRankBlockSize_Select_L2CacheMiss}
-\input{PrecomputedRankBlockSize_Select_L2CacheMiss}
-\figureEnd
-
-
-\figureBegin
-\caption{Level 2 Data Cache Miss Rate for Select queries on wavelet trees with precomputed ranks of varying block sizes}
-\label{fig:PrecomputedRankBlockSize_Select_L2CacheMissRate}
-\input{PrecomputedRankBlockSize_Select_L2CacheMissRate}
-\figureEnd
-
-
-\figureBegin
-\caption{Level 3 Total Cache Misses for Select queries on wavelet trees with precomputed ranks of varying block sizes}
-\label{fig:PrecomputedRankBlockSize_Select_L3CacheMiss}
-\input{PrecomputedRankBlockSize_Select_L3CacheMiss}
-\figureEnd
-
-
-\subsubsection{Memory Usage of Precomputed Rank Values}
-We have used Massif, the heap profiler included in the Valgrind Suite to record the heap memory usage of our programs.
-We have not simply used the snapshots produced automatically by Massif, but rather used the Client Request mechanism of valgrind to send a 'snapshot' command to the valgrind gdbserver, telling it to take a snapshot right after we've finished building the tree.
-
-\figureBegin
-\caption{Difference in Memory Usage of wavelet trees with precomputed ranks of varying block size. Notice the y-axis not starting at 0. Limited to 2 times page size because of use of \texttt{ushort}}
-\label{fig:PrecomputedRankBlockSize_Build_Memory}
-\input{PrecomputedRankBlockSize_Build_Memory}
-\figureEnd
-
-\figureBegin
-\caption{Difference in Memory Usage of wavelet trees with precomputed ranks of varying block size. Notice the y-axis not starting at 0. Limited to 2 times page size because of use of \texttt{ushort}}
-\label{fig:PrecomputedRankBlockSize_MemoryUsage}
-\input{PrecomputedRankBlockSize_MemoryUsage}
-\figureEnd
