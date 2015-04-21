@@ -22,3 +22,8 @@ If we had e.g. let both parameter values depend on the index of a single for-loo
 
 Instead we let one parameter ascend from valid low values to valid high values with even spacing to reach the highest valid value in the lastly performed query. Meanwhile, the other parameter increases more rapidly with wider spacing, and then wraps around before passing highest valid value to then start again at low values, with an offset to not repeat parameter values, doing so many times before the end.
 This ensures we perform the queries for all combinations of high, medium and low parameter values in our experiments.
+
+\subsection{Graphs}
+We have used Gnuplot to produce all our graphs.
+We calculate and display the maximum and average standard deviation for each plot in each graph, called $mr\hat{\sigma}$ and $avg\hat{\sigma}$, respectively.
+We also display errorbars of the standard deviation in some of the graphs.
