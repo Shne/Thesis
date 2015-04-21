@@ -63,6 +63,16 @@ Utils.writeGnuplotHeader(gnuplotFile)
 ReadOutput.getData(testDataFile, "PreallocatedPrecomputed", "select")
 Utils.formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize)
 
+#UNALIGNED PREALLOCATED PRECOMPUTED
+gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_UnalignedPreallocatedPrecomputed_Rank.data", "w")
+Utils.writeGnuplotHeader(gnuplotFile)
+ReadOutput.getData(testDataFile, "UnalignedPreallocatedPrecomputed", "rank")
+Utils.formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize)
+gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_UnalignedPreallocatedPrecomputed_Select.data", "w")
+Utils.writeGnuplotHeader(gnuplotFile)
+ReadOutput.getData(testDataFile, "UnalignedPreallocatedPrecomputed", "select")
+Utils.formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize)
+
 
 #NAIVE PRECOMPUTED
 gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_NaivePrecomputed_Rank.data", "w")
