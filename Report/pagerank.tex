@@ -206,12 +206,26 @@ But when we look at the other figures, we don't see any significant improvement 
 The level 2 data cache miss rate plotted in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_L2CacheMissRate} is worst for block size = 0.5 page size, but looking at the raw cache misses in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_L2CacheMiss} we generally see more cache misses for higher block sizes, meaning that the level 2 data cache miss rate can't explain the better performance at block size = 1 page size for every tree other than UnalignedNaive.
 
 Looking at Level 2 data cache misses in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_L2CacheMiss} and the level 2 data cache miss rate in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_L2CacheMissRate}, we don't see much difference between the different tree implementations, except that the Naive tree has a noticeable drop in both the raw amount and the rate at block size = 1 page size, just like it had for TLB misses.
-It is interesting, though, that they all have a somewhat high, $0.35-0.4$, level 2 data cache miss rate around 0.5 page per block, where they all have good wall time performance.
+It is interesting, though, that they all have a somewhat high, $0.35-0.4$, level 2 data cache miss rate around 0.5-0.75 page per block, where they all have good wall time performance.
 This is likely because of the good level 1 data cache performance.
 To explain what we mean, let's assume there is a fixed amount of operations accessing memory that is hard for the cache to have prefetched or otherwise loaded beforehand, independent of the block size.
 E.g. when the queried-for position is reached in a bitmap and the rank algorithm jumps to a different node and a different bitmap.
 When the first cache level can handle more and more of the 'easy' memory operations, fewer of those are left to be handled by the second cache level, yet the same amount of 'hard' memory accesses are hitting the second cache level, and so the miss rate will increase for the second cache level, while the total amount of cache misses for level 2 could easily decrease, as the first level handles more accesses.
-This also matches what we can see in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L2CacheMiss}.
+
+
+\paragraph{Select Queries}~\\\\
+In Figure~\ref{fig:PrecomputedRankBlockSize_Select_WallTime} we see the wall time of 1000 Select queries for the different wavelet trees using precomputed rank values.
+We can see that all have the best running time at half a page per block, though some of them have about the same speed at 0.75 page per block.
+The main reason for this is likely to be found in the level 1 data cache performance data again, which can be found in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L1CacheMiss} as we can see that it displays better level 1 data cache performance at lower values, except for Naive, which has its best performance at 0.5 page per block below which the cache misses increase again.
+
+In much the same way as for rank queries, the branch mispredictions as ploted in Figure~\ref{fig:PrecomputedRankBlockSize_Select_BranchMiss} decrease as block size increases, but looking at Figure~\ref{fig:PrecomputedRankBlockSize_Select_BranchMissRate} we can see that the branch misprediction rate is highest at about 0.75 page per block and much smaller at smaller block sizes, meaning much more branching code, that is correctly predicted, must be executed at block sizes below 0.75 pages per block.
+
+The amount of TLB misses across block sizes seen in Figure~\ref{fig:PrecomputedRankBlockSize_Select_TLB} is very similar to the TLB misses for rank queries as we again see that the biggest reduction in TLB misses comes from using concatenated bitmaps and that page-aligning the blocks only makes little difference when using non-concatenated bitmaps and no difference when using concatenated bitmaps.
+
+Just as with rank queries, we see higher level 2 data cache miss rate at lower block sizes in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L2CacheMissRate}, and again the level 1 data cache misses likely the cause, but unlike for rank queries, the amount of level 2 data cache misses are not lower for smaller block sizes, in fact they are higher than at 1 page per block, where each type of wavelet tree has its minimum, with Naive having the largest drop there.
+\textbf{[TODO: speculate why]}
+
+
 
 \newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
 \begin{figure}
@@ -321,6 +335,9 @@ This also matches what we can see in Figure~\ref{fig:PrecomputedRankBlockSize_Se
 
 \restoregeometry
 
+
+
+
 \subsubsection{Memory Usage of Precomputed Rank Values}
 We have used Massif, the heap profiler included in the Valgrind Suite to record the heap memory usage of our programs.
 We have not simply used the snapshots produced automatically by Massif, but rather used the Client Request mechanism of valgrind to send a 'snapshot' command to the valgrind gdbserver, telling it to take a snapshot right after we've finished building the tree.
@@ -338,10 +355,4 @@ We have not simply used the snapshots produced automatically by Massif, but rath
 \end{figure}
 
 
-\paragraph{Select Queries}~\\
-In Figure~\ref{fig:PrecomputedRankBlockSize_Select_WallTime} we see the wall time of 1000 Select queries for the different wavelet trees using precomputed rank values.
-We can see that all have the best running time at half a page per block.
-The main reason for this is likely to be found in the level 1 data cache performance data, which can be found in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L1CacheMiss} as we can see that it displays better level 1 data cache performance at lower values, down to about $\frac{1}{3}$ page per block below which it has worse performance.
 
-Just as with rank queries, we see higher level 2 data cache miss rate at lower block sizes in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L2CacheMissRate}, and again the level 1 data cache misses are lower at smaller block sizes in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L1CacheMiss}, but unlike for rank queries, the amount of level 2 data cache misses are not lower for smaller block sizes, in fact they are higher.
-\textbf{[TODO: why?]}
