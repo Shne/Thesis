@@ -3,6 +3,7 @@
 import random #also seeds it with system time
 import array
 import numpy.random
+import numpy
 
 def generateData(powerAmount, alphabetSize):
 	fileName = "Data/n"+str(powerAmount)+"_as"+str(alphabetSize)+".data"
@@ -46,24 +47,37 @@ def generateIntegerData(powerAmount, powerAlphabetSize):
 	randomArray.tofile(fd)
 
 
-def generateZipfData(powerAmount, powerAlphabetSize):
-	fileName = "Data/n"+str(powerAmount)+"_as"+str(powerAlphabetSize)+"_zipf.data"
+def remapAlphabetSymbols(randomArray, alphabetSize):
+	alphabet = range(alphabetSize)
+	randomPermutedAlphabet = random.sample(alphabet, alphabetSize)
+	newRandomArray = randomArray
+	for j in alphabet:
+		for i in range(len(randomArray)):					
+			if randomArray[i] == j:
+				newRandomArray[i] = randomPermutedAlphabet[j]
+	return newRandomArray
+
+
+
+def generateZipfData(powerAmount, powerAlphabetSize, s):
+	fileName = "Data/n"+str(powerAmount)+"_as"+str(powerAlphabetSize)+"_zipf_s" + str(s) + ".data"
 	fd = open(fileName, "wb")
 
 	print("Generating data: 10^"+str(powerAmount)+" entries of alphabetsize: 2^"+str(powerAlphabetSize))
 	amount = pow(10, powerAmount)
 	alphabetSize = pow(2, powerAlphabetSize)
 
-	s = 1.1
 	randomArray = array.array('I')
 	for _ in range(amount):
 		value = numpy.random.zipf(s)
 		while value > alphabetSize:
 			value = numpy.random.zipf(s)
 		randomArray.append(value)
-	randomArray.tofile(fd)
+	remappedRandomArray = remapAlphabetSymbols(randomArray, alphabetSize)
+	remappedRandomArray.tofile(fd)
 
-generateZipfData(8, 16)
+# generateZipfData(2, 4)
 
-# for i in range(8,25):
-# 	generateIntegerData(2, i)
+for i in range(8,25):
+	generateZipfData(2, i, 1.2)
+	generateZipfData(8, i, 1.2)
