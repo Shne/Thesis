@@ -25,7 +25,7 @@ outputFilename = 'PrecomputedRankBlockSize_n8as16_build.output'
 memoryOutputFilename = 'PrecomputedRankBlockSize_n8as16_build_memory.output'
 tempOutFile = "PrecomputedRankBlockSize_n8as16_build.tmp"
 manualSnapshotFileName = "massifBuildMemorySnapshot"
-massif = ["valgrind", "--tool=massif", "--detailed-freq=1000000", "--max-snapshots=10", "--massif-out-file=../../../"+tempOutFile]
+massif = ["valgrind", "--tool=massif", "--stacks=yes", "--detailed-freq=1000000", "--max-snapshots=10", "--massif-out-file=../../../"+tempOutFile]
 
 
 def addNewline():
