@@ -333,26 +333,51 @@ Just as with rank queries, we see higher level 2 data cache miss rate at lower b
 %\end{subfigure}
 \end{figure}
 
+\begin{figure}\tiny
+	\begin{subfigure}{0.5\textwidth}
+		\input{PrecomputedRankBlockSize_Build_Memory}
+		\caption{Reported by PAPI}
+		\label{fig:PrecomputedRankBlockSize_PAPI}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.5\textwidth}
+		\input{PrecomputedRankBlockSize_MemoryUsage}
+		\caption{Reported by Massif.}
+		\label{fig:PrecomputedRankBlockSize_Massif}
+	\end{subfigure}
+	\caption{Difference in Memory Usage of wavelet trees with precomputed ranks of varying block size. Notice the y-axis not starting at 0 and at different values.}
+	\label{fig:PrecomputedRankBlockSize_Memory}
+\end{figure}
+
 \restoregeometry
 
 
 
 
 \subsubsection{Memory Usage of Precomputed Rank Values}
-We have used Massif, the heap profiler included in the Valgrind Suite to record the heap memory usage of our programs.
-We have not simply used the snapshots produced automatically by Massif, but rather used the Client Request mechanism of valgrind to send a 'snapshot' command to the valgrind gdbserver, telling it to take a snapshot right after we've finished building the tree.
+We have used both Massif, the heap profiler included in the Valgrind Suite and PAPI to record the memory usage of our programs.
+We focus on the output from Massif instead of PAPI, because the memory usage values we could extract using PAPI made little sense, with values indicating that the trees using precomputed values used less memory than the NaiveInteger tree with no extra precomputed values.
+We have plotted the values from PAPI in Figure~\ref{fig:PrecomputedRankBlockSize_PAPI}.
 
-%\figureBegin
-%\caption{Difference in Memory Usage of wavelet trees with precomputed ranks of varying block size. Notice the y-axis not starting at 0. Limited to 2 times page size because of use of \texttt{ushort}}
-%\label{fig:PrecomputedRankBlockSize_Build_Memory}
-%\input{PrecomputedRankBlockSize_Build_Memory}
-%\figureEnd
+We don't know why PAPI gives us these nonsensical results, but it might have something to do with Linux's aggressive caching and buffering.
+We're not entirely sure whether \texttt{delete}ed memory might still be counted as used memory by PAPI because of such caching.
+Massif, on the other hand, manually counts calls to such functions as \texttt{new} and \texttt{delete} and calculates the memory usage from these, making it unaffected by any caching scheme employed by the Linux kernel.
+Massif is also designed for the purpose of profiling program memory usage, whereas PAPI is simply an API to access performance metrics from the underlying OS.
 
-\begin{figure}
-	\input{PrecomputedRankBlockSize_MemoryUsage}
-	\caption{Difference in Memory Usage of wavelet trees with precomputed rank values of varying block size. Notice the y-axis not starting at 0.}
-	\label{fig:PrecomputedRankBlockSize_MemoryUsage}
-\end{figure}
+Massif only counts heap allocations and deallocations per default and not for stack, data, BSS or code segments.
+We manually tell Massif to count our stacks as well and include that in our calculations.
+The remaining uncounted data, BSS and code segments should not affect our results noticeably as those segments are usually very small.
+But it might be the case that it is in fact these segments causing the strange results from PAPI, and that using concatenated bitmaps uses more memory than not and storing more information in the tree somehow uses less memory, sometimes, though we find this unlikely and choose to trust Massif's output more.
 
+Massif outputs 'snapshots' of the memory usage taken at certain points in the code where it deems them useful to the user.
+We have not simply used the snapshots produced automatically by Massif, but rather used the Client Request mechanism~\footnote{\url{http://valgrind.org/docs/manual/manual-core-adv.html}}of valgrind to send a \texttt{snapshot} command to the valgrind gdbserver, telling it to take a snapshot right after we've finished building the tree.
+The values presented in Figure~\ref{fig:PrecomputedRankBlockSize_Massif} is thus calculated from such Massif snapshots taken right after the tree has completed building.
+
+Looking at Figure~\ref{fig:PrecomputedRankBlockSize_Massif} we see that the memory usage of the trees using precomputed values but not concatenated bitmaps, Naive and UnalignedNaive use more memory than the tree not using precomputed values, NaiveInteger, but only about 0.5\%.
+We also see that memory is indeed saved by using the concatenated bitmaps in Preallocated and UnalignedPreallocated, though only by about 1.5\% compared to the other trees using precomputed values.
+
+Our attempts to reduce the memory usage by concatenating the bitmaps seems to have succeeded, but looking back at the running times for the rank and select queries in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_WallTime} and \ref{fig:PrecomputedRankBlockSize_Select_WallTime}, we suspect the few percentage reduction in memory usage isn't worth the massive decrease in rank query performance and the slight decrease in select query performance.
+
+Looking ahead, we have another improvement in mind for the non-concatenated trees that might very well improve the select query performance massively.
 
 
