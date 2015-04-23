@@ -7,7 +7,7 @@ testDataFileName = 'Output/PrecomputedRankBlockSize_n8as16_build_memory.output'
 testsPerSize = 5
 
 gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_memory.data", "w")
-gnuplotFile.write("#[blockSize] [NaiveInteger] [PreallocatedPrecomputed] [NaivePrecomputed] [UnalignedNaivePrecomputed]\n")
+gnuplotFile.write("#[blockSize] [NaivePrecomputed] [UnalignedNaivePrecomputed] [PreallocatedPrecomputed] [UnalignedPreallocatedPrecomputed] [NaiveInteger]\n")
 
 
 def getTotalMemoryForSpecificTest(dataFile, algorithm, blockSize):
@@ -28,7 +28,8 @@ for blockSize in blockSizeRange:
 	PreallocatedPrecomputedMem = getTotalMemoryForSpecificTest(testDataFile, 'PreallocatedPrecomputed', blockSize)
 	NaivePrecomputedMem = getTotalMemoryForSpecificTest(testDataFile, 'NaivePrecomputed', blockSize)
 	UnalignedNaivePrecomputedMem = getTotalMemoryForSpecificTest(testDataFile, 'UnalignedNaivePrecomputed', blockSize)
-	gnuplotFile.write(str(blockSize)+" "+str(naiveIntegerMem)+" "+str(PreallocatedPrecomputedMem)+" "+str(NaivePrecomputedMem)+" "+str(UnalignedNaivePrecomputedMem)+"\n")
+	UnalignedPreallocatedPrecomputedMem = getTotalMemoryForSpecificTest(testDataFile, 'UnalignedPreallocatedPrecomputed', blockSize)
+	gnuplotFile.write(str(blockSize)+" "+str(NaivePrecomputedMem)+" "+str(UnalignedNaivePrecomputedMem)+" "+str(PreallocatedPrecomputedMem)+" "+str(UnalignedPreallocatedPrecomputedMem)+" "+str(naiveIntegerMem)+"\n")
 
 gnuplotFile.close()
 

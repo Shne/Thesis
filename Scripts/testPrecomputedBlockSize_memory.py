@@ -11,6 +11,8 @@ naiveIntegerProgram = "dist/Release/GNU-Linux-x86/naiveinteger"
 naiveIntegerCwd = 'Code/Simple/NaiveInteger'
 preallocatedPrecomputedProgram = "dist/Release/GNU-Linux-x86/preallocatedprecomputed"
 preallocatedPrecomputedCwd = 'Code/Simple/PreallocatedPrecomputed'
+unalignedPreallocatedPrecomputedProgram = "dist/Release/GNU-Linux-x86/unalignedpreallocatedprecomputed"
+unalignedPreallocatedPrecomputedCwd = 'Code/Simple/UnalignedPreallocatedPrecomputed'
 naivePrecomputedProgram = "dist/Release/GNU-Linux-x86/naiveprecomputed"
 naivePrecomputedCwd = 'Code/Simple/NaivePrecomputed'
 unalignedNaivePrecomputedProgram = "dist/Release/GNU-Linux-x86/unalignednaiveprecomputed"
@@ -45,15 +47,6 @@ for _ in range(repeats):
 
 addNewline()
 
-print("PrecomputedPages: Build \n")
-for blockSize in blockSizeRange:
-	test = 'build'
-	for _ in range(repeats):
-		args = [preallocatedPrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
-		subprocess.Popen(args, cwd=preallocatedPrecomputedCwd).wait()
-
-addNewline()
-
 print("NaivePrecomputed: Build \n")
 for blockSize in blockSizeRange:
 	test = 'build'
@@ -69,6 +62,24 @@ for blockSize in blockSizeRange:
 	for _ in range(repeats):
 		args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
 		subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
+
+addNewline()
+
+print("PreallocatedPrecomputed: Build \n")
+for blockSize in blockSizeRange:
+	test = 'build'
+	for _ in range(repeats):
+		args = [preallocatedPrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
+		subprocess.Popen(args, cwd=preallocatedPrecomputedCwd).wait()
+
+addNewline()
+
+print("UnalignedPreallocatedPrecomputed: Build \n")
+for blockSize in blockSizeRange:
+	test = 'build'
+	for _ in range(repeats):
+		args = [unalignedPreallocatedPrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
+		subprocess.Popen(args, cwd=unalignedPreallocatedPrecomputedCwd).wait()
 
 addNewline()
 addNewline()

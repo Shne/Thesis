@@ -23,11 +23,16 @@ def PadNaiveInteger(ReadOutput):
 			ReadOutput.memResidentList.append(MemResident[i])
 			ReadOutput.memHighWatermarkList.append(MemHighWatermark[i])
 
-# NAIVEINTEGER
-gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_NaiveInteger_Build.data", "w")
+#NAIVE PRECOMPUTED
+gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_NaivePrecomputed_Build.data", "w")
 Utils.writeMemGnuplotHeader(gnuplotFile)
-ReadOutput.getData(testDataFile, "SimpleNaiveInteger", "build")
-PadNaiveInteger(ReadOutput)
+ReadOutput.getData(testDataFile, "NaivePrecomputed", "build")
+Utils.formatAndWriteMemValues(ReadOutput, gnuplotFile, testsPerSize)
+
+#UNALIGNED NAIVE PRECOMPUTED
+gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Build.data", "w")
+Utils.writeMemGnuplotHeader(gnuplotFile)
+ReadOutput.getData(testDataFile, "UnalignedNaivePrecomputed", "build")
 Utils.formatAndWriteMemValues(ReadOutput, gnuplotFile, testsPerSize)
 
 #PREALLOCATED PRECOMPUTED
@@ -36,20 +41,18 @@ Utils.writeMemGnuplotHeader(gnuplotFile)
 ReadOutput.getData(testDataFile, "PreallocatedPrecomputed", "build")
 Utils.formatAndWriteMemValues(ReadOutput, gnuplotFile, testsPerSize)
 
-
-#NAIVE PRECOMPUTED
-gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_NaivePrecomputed_Build.data", "w")
+#UNALIGNED PREALLOCATED PRECOMPUTED
+gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_UnalignedPreallocatedPrecomputed_Build.data", "w")
 Utils.writeMemGnuplotHeader(gnuplotFile)
-ReadOutput.getData(testDataFile, "NaivePrecomputed", "build")
+ReadOutput.getData(testDataFile, "UnalignedPreallocatedPrecomputed", "build")
 Utils.formatAndWriteMemValues(ReadOutput, gnuplotFile, testsPerSize)
 
-
-#UNALIGNED NAIVE PRECOMPUTED
-gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Build.data", "w")
+# NAIVEINTEGER
+gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_NaiveInteger_Build.data", "w")
 Utils.writeMemGnuplotHeader(gnuplotFile)
-ReadOutput.getData(testDataFile, "UnalignedNaivePrecomputed", "build")
+ReadOutput.getData(testDataFile, "SimpleNaiveInteger", "build")
+PadNaiveInteger(ReadOutput)
 Utils.formatAndWriteMemValues(ReadOutput, gnuplotFile, testsPerSize)
-
 
 gnuplotFile.close()
 
