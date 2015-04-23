@@ -4,9 +4,26 @@ Here we discuss some things general for all our experiments, or all those where 
 \subsection{Choice of Input String}
 We have chosen to construct the input strings used in our experiments so that each character occurs with the same probability at each position.
 This means the string has a uniform distribution of characters from the alphabet.
-We have chosen to do so for several reasons, among them being that we believe it to be a realistic use case, as well as making the choice of character to query for in our experiments make less difference.
+We have chosen to do so for several reasons, among them being that we believe it to be a realistic use case (todo: why?), as well as making the choice of character to query for in our experiments make less difference.
 The even amount of occurrences of each character also means there will be little difference in size of bitmap among the nodes in a single layer of the tree.
 
+\subsubsection{Uniform vs. Non-Uniform data}
+If the data is non-uniform it means that some symbols from the alphabet will appear with a higher frequency than others.
+If one knows the frequencies of all symbols then one could build a Huffman shaped Wavelet Tree, which places symbols with higher frequencies closer to the root than those that have a smaller frequency, in such a way that the path from root to symbol leaf corresponds to the binary Huffman code of the symbol. 
+The Huffman code of a symbol is a small binary value for the symbol with the highest frequency and a high binary value for the symbol with the smallest frequency.
+This would make the tree skewed which increases the height of the tree but decreases query time for symbols with high frequency.
+If one then queries the Huffman shaped Wavelet Tree for a symbol that has a high frequency then one would find it faster than if one was looking for a symbol with a small frequency.
+
+We have not implemented a Huffman shaped Wavelet Tree but non-uniform data still introduces a bias in the normal balanced Wavelet tree.
+This is because the sizes of the bitmaps in each node in a given level of the tree would not be equal, as they would for uniform data.
+When we query the tree and take a path with many large bitmaps it will take longer than a path with many small bitmaps
+Therefore having nun-uniform data would introduce a bias in our query tests based on the symbol we are querying for. 
+If our data on the other hand is uniform that bias would not be present.
+
+\subsubsection{non-uniform distribution choice}
+There is also the problem of choosing data with a meaningful non-uniform distribution.
+The wavelet tree has applications within text retrieval and indexing which suggests that having a distribution based on how words are distributed with in a normal English text could be a good choice. 
+Zipf's Law describes such a distribution \citep[abstract]{ZipfsLawOnText}.
 
 \subsection{Choice of Query Parameters}
 It is important to ensure that we don't introduce a bias in our experiments on the rank and select query performances by our choice of query parameters.
