@@ -1,5 +1,6 @@
 #!/usr/bin/gnuplot
-set term epslatex color #font '\rmdefault,11'
+set key top horizontal
+set term epslatex size 3.2,2.5 color font "" 6
 
 set xtics ("CPU Cycles" 0, "Wall Time" 3, "BM" 6, "TLBM" 9, "L1 CM" 12, "L2 CM" 15, "L3 CM" 18) rotate by -30
 
