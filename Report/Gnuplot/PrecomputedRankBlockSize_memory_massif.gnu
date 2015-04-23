@@ -1,10 +1,10 @@
 #!/usr/bin/gnuplot
 
 set key top horizontal
-set term epslatex size 6.5,4 color
+set term epslatex size 3.2,2.5 color font "" 6
 set border
 
-stats '../Data/PrecomputedRankBlockSize_memory.data' using 2 nooutput
+stats '../Data/PrecomputedRankBlockSize_memory.data' using 6 nooutput
 naiveIntegerValue = STATS_min
 
 # MEMORY
@@ -17,8 +17,8 @@ set ytics nomirror
 set y2tics
 set y2range [710/(naiveIntegerValue/1048576):725/(naiveIntegerValue/1048576)]
 set output 'PrecomputedRankBlockSize_MemoryUsage.tex'
-plot '../Data/PrecomputedRankBlockSize_memory.data' using ($1/4096):($2/1048576) with linespoints title "NaiveInteger", \
-	'../Data/PrecomputedRankBlockSize_memory.data' using ($1/4096):($3/1048576) with linespoints title "Preallocated",\
-	'../Data/PrecomputedRankBlockSize_memory.data' using ($1/4096):($4/1048576) with linespoints title "Naive",\
-	'../Data/PrecomputedRankBlockSize_memory.data' using ($1/4096):($5/1048576) with linespoints title "UnalignedNaive"
-
+plot '../Data/PrecomputedRankBlockSize_memory.data' using ($1/4096):($2/1048576) with linespoints title "Naive",\
+	'../Data/PrecomputedRankBlockSize_memory.data' using ($1/4096):($3/1048576) with linespoints title "UnalignedNaive",\
+	'../Data/PrecomputedRankBlockSize_memory.data' using ($1/4096):($4/1048576) with linespoints title "Preallocated",\
+	'../Data/PrecomputedRankBlockSize_memory.data' using ($1/4096):($5/1048576) with linespoints title "UnalignedPreallocated",\
+	'../Data/PrecomputedRankBlockSize_memory.data' using ($1/4096):($6/1048576) with linespoints title "NaiveInteger"
