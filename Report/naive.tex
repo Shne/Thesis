@@ -45,33 +45,16 @@ Assuming our construction algorithm has this running time, a plot of the wall ti
 In Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime} we have plotted this, and find that it does not appear to be converging on any constant value, but rather increases as $\sigma$ increases, especially for alphabet sizes larger than about $2^{18}$
 This means our implementation of the construction of a Wavelet Tree is not keeping within its theoretical running time.
 
-\figureBegin	
-	\caption{Construction: Wall Time divided by theoretical running time over Alphabet Size}
-	\label{fig:naiveIntegerAlphabetSize_WallTime}
-	\input{naiveIntegerAlphabetSize_WallTime}
-\figureEnd
+
 
 To try and understand why our algorithm performs so, we turn to the many other measurements available to us through PAPI: Branch Mispredictions, Cache Misses, etc.
 
 Looking at the raw Wall Time and Branch Misprediction numbers in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_BM} it might seem natural to conclude that the Branch Mispredictions are to blame.
-\figureBegin
-	\caption{Construction: Wall Time and Branch Mispredictions over Alphabet Size}
-	\label{fig:naiveIntegerAlphabetSize_WallTime_BM}
-	\input{naiveIntegerAlphabetSize_WallTime_BM}
-\figureEnd
-\figureBegin
-\caption{Construction: Branch Misprediction Rate over Alphabet Size}
-\label{fig:naiveIntegerAlphabetSize_BMRate}
-\input{naiveIntegerAlphabetSize_BMRate}
-\figureEnd
+
 But if we instead plot the rate of Branch Mispredictions, as we have done in Figure~\ref{fig:naiveIntegerAlphabetSize_BMRate}, we can see that the rate of Branch Mispredictions stay constant for most of the tested alphabet sizes, and even decrease for large alphabet sizes.
 
 We next turn to look at Cache Misses, plotting all three levels in Figure~\ref{fig:naiveIntegerAlphabetSize_CM}.
-\figureBegin
-\caption{Construction: Level 1-3 Cache Misses over Alphabet Size}
-\label{fig:naiveIntegerAlphabetSize_CM}
-\input{naiveIntegerAlphabetSize_CM}
-\figureEnd
+
 We see that cache misses increase for larger alphabet sizes up to an alphabet size of around $2^{18}$ after which they seem to remain constant for even larger alphabet sizes.
 This is in contrast to the wall time over theoretical running time plot in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime} that seem to remain somewhat constant until about $2^{18}$ after which it increases.
 We conclude the Cache Misses are not the problem.
@@ -80,20 +63,12 @@ We then considered that the difference in theoretical and practical running time
 The actual running time should then be $a \cdot n \cdot log(\sigma) + b \cdot \sigma$.
 Since $n$ in our previous experiment is somewhat large ($10^8$), it might be the dominating factor in the running time.
 So to show whether the added $b \cdot \sigma$ term can explain the running time, we redid the experiment with a reduced length input string $n = 10^2$ and plotted it in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_plusSigma} divided by $log(\sigma) + \sigma$ to see whether it would converge on some constant as $\sigma \rightarrow \infty$.
-\figureBegin
-\caption{Construction: Wall Time divided by $log(\sigma) + \sigma$ over Alphabet Size}
-\label{fig:naiveIntegerAlphabetSize_WallTime_plusSigma}
-\input{naiveIntegerAlphabetSize_WallTime_plusSigma}
-\figureEnd
+
 We can see in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_plusSigma} that it does not converge on any constant value other than 0, meaning the constant factor from each node cannot explain our implementation's running time.
 
 Having not found an explanation we pull data for Translation Lookaside Buffer Misses from the experiment and plot it together with wall time, both divided by $log(\sigma)$, in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_TLB}
 
-\figureBegin
-	\caption{Construction: Wall Time and Translation Lookaside Buffer Misses divided by theoretical running time  over Alphabet Size}
-	\label{fig:naiveIntegerAlphabetSize_WallTime_TLB}
-	\input{naiveIntegerAlphabetSize_WallTime_TLB}
-\figureEnd
+
 
 
 We can see that the TLB Misses increase drastically from alphabet size about $2^{20}$ and up.
@@ -111,6 +86,50 @@ Whichever is the actual number, they all suggest an alphabet size of $2^{16}$ is
 Looking at the graphs from this experiment we can see that building the tree using an alphabet size of $2^{16}$ is still fairly quick, not running into much trouble with TLB misses, and not exceeding the expected asymptotically bound running time.
 
 We also attempted using an alphabet size of 32, but our machines didn't have enough memory.
+
+
+\newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
+\begin{figure}\tiny
+	\begin{subfigure}{0.48\textwidth}
+		\input{naiveIntegerAlphabetSize_WallTime}
+		\caption{Wall Time divided by theoretical running time}
+		\label{fig:naiveIntegerAlphabetSize_WallTime}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.48\textwidth}
+		\input{naiveIntegerAlphabetSize_WallTime_BM}
+		\caption{Wall Time and Branch Mispredictions}
+		\label{fig:naiveIntegerAlphabetSize_WallTime_BM}
+	\end{subfigure}	
+	
+	\begin{subfigure}{0.48\textwidth}
+		\input{naiveIntegerAlphabetSize_BMRate}
+		\caption{Branch Misprediction Rate}
+		\label{fig:naiveIntegerAlphabetSize_BMRate}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.48\textwidth}
+		\input{naiveIntegerAlphabetSize_CM}
+		\caption{Level 1-3 Cache Misses}
+		\label{fig:naiveIntegerAlphabetSize_CM}
+	\end{subfigure}
+	
+	\begin{subfigure}{0.48\textwidth}
+		\input{naiveIntegerAlphabetSize_WallTime_plusSigma}
+		\caption{Wall Time divided by $log(\sigma) + \sigma$}
+		\label{fig:naiveIntegerAlphabetSize_WallTime_plusSigma}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.48\textwidth}
+		\input{naiveIntegerAlphabetSize_WallTime_TLB}
+		\caption{Wall Time and Translation Lookaside Buffer Misses divided by theoretical running time}
+		\label{fig:naiveIntegerAlphabetSize_WallTime_TLB}
+	\end{subfigure}
+	\caption{Various Measurements for the construction of the NaiveInteger Wavelet Tree over various alphabet sizes.}
+	\label{fig:naiveIntegerAlphabetSize}
+\end{figure}
+\restoregeometry
+\clearpage
 
 \subsubsection{Rank and Select using Popcount}
 \label{sec:experimentPopcountRankSelect}
@@ -161,6 +180,11 @@ This means that the branch mispredictions do have an effect, but it is only a sm
 
 
 By similar calculations the saved cpu cycles from branch mispredictions for \textproc{select} is at least 48,84\% of the total saved. We expect this is because of the much higher number of branch mispredictions and the lower number of cycles for the original select algorithm, as well as the fact that we can't use \texttt{popcount} for every word of the bitmap but must go back to doing manual counting of the bits when we find the word the sought-after occurrence is in.
+
+
+
+
+
 
 
 \subsubsection{Further improvements}
