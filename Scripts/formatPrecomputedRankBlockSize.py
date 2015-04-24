@@ -40,17 +40,27 @@ def PadNaiveInteger(ReadOutput):
 			ReadOutput.l2DataCacheHitsList.append(l2DataCacheHits[i])
 			ReadOutput.l3TotalCacheMissesList.append(l3TotalCacheMisses[i])
 
+gnuplotFileVsNaive = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_vsNaiveInteger.data", "w")
+def outputForPrecomputedVsNot(i):
+	startIndex = i*testsPerSize
+	endIndex = startIndex + testsPerSize
+	wallTimeList = ReadOutput.wallTimeList[startIndex:endIndex]
+	gnuplotFileVsNaive.write(str(i)+" "+str(sum(wallTimeList)/len(wallTimeList))+"\n")
+
+
 # NAIVEINTEGER
 gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_NaiveInteger_Rank.data", "w")
 Utils.writeGnuplotHeader(gnuplotFile)
 ReadOutput.getData(testDataFile, "SimpleNaiveInteger", "rank")
 PadNaiveInteger(ReadOutput)
 Utils.formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize)
+outputForPrecomputedVsNot(0) #for precomputed vs non-precomputed
 gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_NaiveInteger_Select.data", "w")
 Utils.writeGnuplotHeader(gnuplotFile)
 ReadOutput.getData(testDataFile, "SimpleNaiveInteger", "select")
 PadNaiveInteger(ReadOutput)
 Utils.formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize)
+outputForPrecomputedVsNot(1) #for precomputed vs non-precomputed
 
 
 #PREALLOCATED PRECOMPUTED
@@ -90,11 +100,16 @@ gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_UnalignedNaiveP
 Utils.writeGnuplotHeader(gnuplotFile)
 ReadOutput.getData(testDataFile, "UnalignedNaivePrecomputed", "rank")
 Utils.formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize)
+outputForPrecomputedVsNot(2) #for precomputed vs non-precomputed
 gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Select.data", "w")
 Utils.writeGnuplotHeader(gnuplotFile)
 ReadOutput.getData(testDataFile, "UnalignedNaivePrecomputed", "select")
 Utils.formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize)
+#for precomputed vs non-precomputed
+outputForPrecomputedVsNot(3) #for precomputed vs non-precomputed
+
 gnuplotFile.close()
+gnuplotFileVsNaive.close()
 
 
 GnuScriptFileName = '../PrecomputedRankBlockSize.gnu'

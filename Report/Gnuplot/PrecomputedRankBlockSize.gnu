@@ -243,3 +243,22 @@ plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Select.data' every ::2 u
 	'../Data/PrecomputedRankBlockSize_UnalignedPreallocatedPrecomputed_Select.data' every ::2 using ($3/32768):10 with linespoints linetype 4 title "UnalignedPreallocated",\
 	'' every ::2 using ($3/32768):10:19 with yerrorbars linetype 4 notitle,\
 
+
+
+#COMPARING WITH NAIVEINTEGER
+# set xtics ("Rank" 0, "Select" 3)
+# set ytics auto
+
+set boxwidth 2.0
+set style fill solid
+unset xlabel
+set ylabel "Walltime (seconds)"
+unset xtics
+set key top right vertical
+set output 'PrecomputedRankBlockSize_vsNaiveInteger_Rank.tex'
+plot '../Data/PrecomputedRankBlockSize_vsNaiveInteger.data' every 4::0 using 1:($2/1000000) title "NaiveInteger" with boxes,\
+     '../Data/PrecomputedRankBlockSize_vsNaiveInteger.data' every 4::2 using 1:($2/1000000) title "UnalignedNaive" with boxes
+
+set output 'PrecomputedRankBlockSize_vsNaiveInteger_Select.tex'
+plot '../Data/PrecomputedRankBlockSize_vsNaiveInteger.data' every 4::1 using 1:($2/1000000) title "NaiveInteger" with boxes,\
+     '../Data/PrecomputedRankBlockSize_vsNaiveInteger.data' every 4::3 using 1:($2/1000000) title "UnalignedNaive" with boxes

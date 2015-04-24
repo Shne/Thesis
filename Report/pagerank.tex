@@ -178,7 +178,7 @@ Later, we will compare the memory usage and query times with the non-precomputed
 \subsubsection{Query Running Time for Bitmap with Precomputed Blocks for different Block Sizes}
 \label{sec:queryRunTimePrecomputedBlockSizes}
 
-\paragraph{Rank Queries}~\\
+\paragraph{Rank Queries}~\\\\
 In Figure~\ref{fig:PrecomputedRankBlockSize_Rank_WallTime} we have plotted the rank query wall time in $\mu s$ for the wavelet trees using precomputed rank values.
 
 We see that both concatenating the bitmaps and page-aligning the blocks is consistently slower, which was expected for concatenating the bitmaps, but not entirely so for page-aligning the blocks.
@@ -225,7 +225,15 @@ The amount of TLB misses across block sizes seen in Figure~\ref{fig:PrecomputedR
 Just as with rank queries, we see higher level 2 data cache miss rate at lower block sizes in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L2CacheMissRate}, and again the level 1 data cache misses likely the cause, but unlike for rank queries, the amount of level 2 data cache misses are not lower for smaller block sizes, in fact they are higher than at 1 page per block, where each type of wavelet tree has its minimum, with Naive having the largest drop there.
 \textbf{[TODO: speculate why]}
 
+\paragraph{Improvement of using precomputed values}~\\\\
+We have found that our UnalignedNaive precomputed tree using block size = 0.5 page size is the fastest for rank queries and about as fast as the Naive tree for select queries.
+We therefore consider UnalignedNaive at block size 0.5 page size to be our best wavelet tree implementation so far, even though it uses more memory than NaiveInteger or the Preallocated variants.
 
+We have compared the running time of 1000 rank and select queries for UnalignedNaive and NaiveInteger in Figure~\ref{fig:PrecomputedRankBlockSize_vsNaiveInteger}.
+The wall time for rank queries on the UnalignedNaive tree is only 0.27\% of the wall time of rank queries on the NaiveInteger tree as can be seen in Figure~\ref{fig:PrecomputedRankBlockSize_vsNaiveInteger_Rank}.
+The wall time for select queries on the UnalignedNaive tree is only 0.73\% of the wall time of select queries on the NaiveInteger tree as can be seen in Figure~\ref{fig:PrecomputedRankBlockSize_vsNaiveInteger_Select}.
+
+We can see that it is a great improvement to use precomputed rank values in both rank and select queries, with more gain for rank.
 
 \newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
 \begin{figure}
@@ -334,19 +342,35 @@ Just as with rank queries, we see higher level 2 data cache miss rate at lower b
 \end{figure}
 
 \begin{figure}\tiny
-	\begin{subfigure}{0.5\textwidth}
+	\begin{subfigure}{0.48\textwidth}
 		\input{PrecomputedRankBlockSize_Build_Memory}
 		\caption{Reported by PAPI}
 		\label{fig:PrecomputedRankBlockSize_PAPI}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}{0.5\textwidth}
+	\begin{subfigure}{0.48\textwidth}
 		\input{PrecomputedRankBlockSize_MemoryUsage}
 		\caption{Reported by Massif.}
 		\label{fig:PrecomputedRankBlockSize_Massif}
 	\end{subfigure}
 	\caption{Difference in Memory Usage of wavelet trees with precomputed ranks of varying block size. Notice the y-axis not starting at 0 and at different values.}
 	\label{fig:PrecomputedRankBlockSize_Memory}
+\end{figure}
+
+\begin{figure}\tiny
+	\begin{subfigure}{0.48\textwidth}
+		\input{PrecomputedRankBlockSize_vsNaiveInteger_Rank}
+		\caption{Rank}
+		\label{fig:PrecomputedRankBlockSize_vsNaiveInteger_Rank}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.48\textwidth}
+		\input{PrecomputedRankBlockSize_vsNaiveInteger_Select}
+		\caption{Select}
+		\label{fig:PrecomputedRankBlockSize_vsNaiveInteger_Select}
+	\end{subfigure}
+	\caption{Comparison of wall time of rank and select queries between NaiveInteger not using precomputed values and UnalignedNaive using precomputed values.}
+	\label{fig:PrecomputedRankBlockSize_vsNaiveInteger}
 \end{figure}
 
 \restoregeometry
