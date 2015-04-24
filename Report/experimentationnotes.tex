@@ -9,7 +9,7 @@ The even amount of occurrences of each character also means there will be little
 
 \subsubsection{Uniform vs. Non-Uniform data}
 If the data is non-uniform it means that some symbols from the alphabet will appear with a higher frequency than others.
-If one knows the frequencies of all symbols then one could build a Huffman shaped Wavelet Tree, which places symbols with higher frequencies closer to the root than those that have a smaller frequency, in such a way that the path from root to symbol leaf corresponds to the binary Huffman code of the symbol. 
+If one knows the frequencies of all symbols then one can build a Huffman shaped Wavelet Tree, which places symbols with higher frequencies closer to the root than those that have a smaller frequency, in such a way that the path from root to symbol leaf corresponds to the binary Huffman code of the symbol. 
 The Huffman code of a symbol is a small binary value for the symbol with the highest frequency and a high binary value for the symbol with the smallest frequency.
 This would make the tree skewed which increases the height of the tree but decreases query time for symbols with high frequency.
 If one then queries the Huffman shaped Wavelet Tree for a symbol that has a high frequency then one would find it faster than if one was looking for a symbol with a small frequency.
@@ -20,10 +20,25 @@ When we query the tree and take a path with many large bitmaps it will take long
 Therefore having nun-uniform data would introduce a bias in our query tests based on the symbol we are querying for. 
 If our data on the other hand is uniform that bias would not be present.
 
-\subsubsection{non-uniform distribution choice}
-There is also the problem of choosing data with a meaningful non-uniform distribution.
-The wavelet tree has applications within text retrieval and indexing which suggests that having a distribution based on how words are distributed with in a normal English text could be a good choice. 
-Zipf's Law describes such a distribution \citep[abstract]{ZipfsLawOnText}.
+There is also the problem of choosing how the data must be non-uniformly distributed as there are several non-uniform distribution methods to choose from.
+
+\subsubsection{Non-uniform distribution choice}
+The wavelet tree has applications within full text indexing which suggests that having a distribution based on how words are distributed with in a normal English text could be a good choice. 
+Zipf's Law describes such a distribution \citep[abstract]{ZipfsLawOnText} but it requires a distribution parameter \textit{s} that describes the frequency relation between each symbol and we have not been able to find a good parameter to use. 
+We have searched through various articles to find a good \textit{s} value but is does not seem like there is a good one because it depends a lot on the context; what type of text it is. 
+Which is also what \citep[abstract]{ZipfsLawOnText} arrives at.
+
+It is possible to estimate \textit{s} for a given text but doing that then creates the problem of choosing a good and representative text to estimate \textit{s} from.
+We tried to use the word frequencies in the NGSL \citep{NGSL} wordlist which contain the 31242 most used words in the English language and the frequency with which they appear, to estimate \textit{s} by taking the average frequency of the 1000 most frequent words.
+Estimating \textit{s} using NGSL gives us a value very close to 1. If \textit{s} is one then Zipf's Law generates uniform data and if we increased the number of words \textit{s} only got closer to one. 
+Using the 300 most frequent words \textit{s} gets close to 1.1 which would produce non-uniform data, but then the alphabet (unique words) is quite small and having only 300 unique words in a large text probably is not very realistic. 
+
+NGSL is based on data from the Cambridge English Corpus which is a multi-billion word collection of written, spoken and learner texts and is the largest of its kind.
+This fact combined with the fact that NGSL is fairly new (2013) makes us believe that the frequencies in the NGSL wordlist are accurate enough for our purpose.
+
+In stead we use the data from the NGSL \citep{NGSL} wordlist and generate our own non-uniform dataset from it based on the word frequencies.
+This way we end up with a more realistic non-uniform dataset than if we had used the Zipf's Law model since the data is based on real empirical data and we avoid the problem of choosing a good \textit{s} value.
+
 
 \subsection{Choice of Query Parameters}
 It is important to ensure that we don't introduce a bias in our experiments on the rank and select query performances by our choice of query parameters.

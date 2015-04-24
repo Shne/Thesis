@@ -118,7 +118,16 @@ Based on this we can conclude that controlling the memory ourselves has no advan
 
 Looking at the level 2 cache miss rates for rank and select, as plotted in Figure~\ref{fig:NaiveVsControlledNodeMemorySkewRankQuery_L2_DCMrate} and \ref{fig:NaiveVsControlledNodeMemorySkewSelectQuery_L2_DCMrate} we can see that the Data Cache Miss Rate for the level 2 cache increases for higher values of skew, meaning that it is not only a matter of an increased amount of cycles caused by the higher amount of cache misses, but that more cache accesses miss as skew increase meaning that the percentage of cache misses are increasing.
 
-This means that it is not an improvement to skew the tree because of the increasing cache miss rate.
+Figure~\ref{fig:NaiveVsControlledNodeMemorySkewRankQueryTLB} and \ref{fig:NaiveVsControlledNodeMemorySkewSelectQueryTLB} shows TLB misses for \textproc{Rank} and \textproc{Select}. 
+The TLB misses varies a lot for increasing skew and does not seem to follow any discernible pattern which makes it difficult to say anything conclusive about these graphs. 
+Figure~\ref{fig:NaiveVsControlledNodeMemorySkewSelectQueryTLB} does have two peaks at skew 2.8 and 4.2 that looks somewhat alike, but we have not been able to find any good explanation as to why they occur and they do not seem to have any visible effect on the query time when looking at figure~\ref{fig:NaiveRankSelectSkewRunningTime}.
+There are no peaks in query time when skew is 2.8 or 4.2.
+
+In the end we can conclude that skewing the tree is not an improvement. 
+Controlling the memory layout of the nodes does not improve query time because all the work is being done in the bitmaps of the nodes.
+It is when accessing these bitmaps that the cache misses occur.
+When the tree is skewed it's hight is increased and as a result more bitmaps needs to be accessed before a query is finished. 
+This produces more cache misses than when the tree is binary balanced.
 
 \figureBegin
 \caption{Rank Cache Misses on Wavelet Tree with increasing skew}
@@ -167,7 +176,6 @@ This means that it is not an improvement to skew the tree because of the increas
 \input{NaiveVsControlledNodeMemorySkewSelectQuery_L2_DCMrate}
 \figureEnd
 
-In Figure~\ref{fig:NaiveVsControlledNodeMemorySkewRankQueryTLB} and \ref{fig:NaiveVsControlledNodeMemorySkewSelectQueryTLB} \textbf{(Todo: Say something interesting about these graphs...)}
 
 \figureBegin
 \caption{Rank TLB}
