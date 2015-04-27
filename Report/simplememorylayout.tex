@@ -66,11 +66,7 @@ The second case is rare when the input string is bigger than the alphabet, and w
 
 \subsubsection{Queries when skewing the Wavelet Tree using uncontrolled and controlled memory layout}
 
-\figureBegin
-\caption{Rank and Select Running times on Wavelet Tree with increasing skew for naive construction and ControlledNodeMemory construction}
-\label{fig:NaiveRankSelectSkewRunningTime}
-\input{naiveRankSelectSkewRunningTime}
-\figureEnd
+
 
 
 In this experiment we want to test whether querying our controlled memory version of the Wavelet Tree is faster than querying the uncontrolled memory version for increasingly skewed trees. 
@@ -90,16 +86,7 @@ This means we can conclude that skewing the tree is not an improvement on perfor
 \paragraph{Measurements}~\\
 To understand why skewing the tree is no improvement we need to figure out what causes the increase in query time. 
 First we look at branch mispredictions to see if they actually decrease when we increase the skew factor.%
-\figureBegin
-\caption{Rank Branch Mispredictions rate}
-\label{fig:NaiveVsControlledNodeMemorySkewRankQueryBMrate}
-\input{NaiveVsControlledNodeMemorySkewRankQuery_BMrate}
-\figureEnd%
-\figureBegin
-\caption{Select Branch Mispredictions rate}
-\label{fig:NaiveVsControlledNodeMemorySkewSelectQueryBMrate}
-\input{NaiveVsControlledNodeMemorySkewSelectQuery_BMrate}
-\figureEnd
+
  
 Figure~\ref{fig:NaiveVsControlledNodeMemorySkewRankQueryBMrate} and \ref{fig:NaiveVsControlledNodeMemorySkewSelectQueryBMrate} shows the branch misprediction rate for rank and select queries on a wavelet tree with increasing skew factor for both the controlled and uncontrolled memory approach. 
 The branch misprediction rate is calculated by dividing the number of branch mispredictions with the total number of conditional branches.
@@ -108,8 +95,8 @@ We observe that the branch misprediction rate is decreasing as we expected.
 This means that it is not branch mispredictions that causes the increase in query time. 
 
 We now look at cache misses to see if they can explain the increase in query time. 
-The values are shown in Figure~\ref{fig:NaiveControlledNodeMemoryRankSkewCacheMisses} for Rank and in Figure~\ref{fig:NaiveControlledNodeMemorySelectSkewCacheMisses} for Select.
-The same tendency as in Figure~\ref{fig:NaiveRankSelectSkewRunningTime} is observed: 
+The values are shown in Figure~\ref{fig:L1NaiveControlledNodeMemoryRankSkewCacheMisses} and \ref{fig:L2L3NaiveControlledNodeMemoryRankSkewCacheMisses} for Rank and in Figure~\ref{fig:L1NaiveControlledNodeMemorySelectSkewCacheMisses} and \ref{fig:L2L3NaiveControlledNodeMemorySelectSkewCacheMisses} for Select.
+The same tendency as in Figure~\ref{fig:NaiveRankSkewRunningTime} and \ref{fig:NaiveSelectSkewRunningTime} is observed: 
 The cache misses increase linearly with the skew factor.
 
 The cache misses for level 1 for Naive and Controlled Memory are almost exactly equal which might be because even the smallest bitmaps fills out the cache line resulting in cache misses even when those bitmaps are accessed. 
@@ -129,65 +116,102 @@ It is when accessing these bitmaps that the cache misses occur.
 When the tree is skewed it's hight is increased and as a result more bitmaps needs to be accessed before a query is finished. 
 This produces more cache misses than when the tree is binary balanced.
 
-\figureBegin
-\caption{Rank Cache Misses on Wavelet Tree with increasing skew}
-\label{fig:NaiveControlledNodeMemoryRankSkewCacheMisses}
-\centering
-\begin{subfigure}{\textwidth}
-	\caption{Naive L1 vs. ControlledNodeMemory L1}
-	\label{fig:L1NaiveControlledNodeMemoryRankSkewCacheMisses}
+
+\newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
+
+\begin{figure}\tiny
+\begin{subfigure}{0.48\textwidth}
+	\input{naiveRankSkewRunningTime}
+	\caption{Wall Time}
+	\label{fig:NaiveRankSkewRunningTime}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{NaiveVsControlledNodeMemorySkewRankQuery_BMrate}
+	\caption{Branch Misprediction Rate}
+	\label{fig:NaiveVsControlledNodeMemorySkewRankQueryBMrate}
+\end{subfigure}
+
+
+\begin{subfigure}{0.48\textwidth}
 	\input{L1NaiveVsControlledNodeMemorySkewRankQueryCacheMisses}
-	\vspace*{5 mm}
+	\caption{Level 1 Data Cache Misses}
+	\label{fig:L1NaiveControlledNodeMemoryRankSkewCacheMisses}
 \end{subfigure}
-\begin{subfigure}{\textwidth}
-	\caption{Naive L2, L3 vs. ControlledNodeMemory L2, L3}
-	\label{fig:L2L3NaiveControlledNodeMemoryRankSkewCacheMisses}
+\hfill
+\begin{subfigure}{0.48\textwidth}
  	\input{L2L3NaiveVsControlledNodeMemorySkewRankQueryCacheMisses}
+	\caption{Level 2 Data and 3 Total Cache Misses}
+	\label{fig:L2L3NaiveControlledNodeMemoryRankSkewCacheMisses}
 \end{subfigure}
-\figureEnd
 
-\figureBegin
-\caption{Select Cache Misses on Wavelet Tree with increasing skew}
-\label{fig:NaiveControlledNodeMemorySelectSkewCacheMisses}
-\centering
-\begin{subfigure}{\textwidth}
-	\caption{Naive L1 vs. ControlledNodeMemory L1}
-	\label{fig:L1NaiveControlledNodeMemorySelectSkewCacheMisses}
+\begin{subfigure}{0.48\textwidth}
+	\input{NaiveVsControlledNodeMemorySkewRankQuery_L2_DCMrate}
+	\caption{Level 2 Data Cache Miss Rate}
+	\label{fig:NaiveVsControlledNodeMemorySkewRankQuery_L2_DCMrate}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{NaiveVsControlledNodeMemorySkewRankQueryTLB}
+	\caption{TLB Misses}
+	\label{fig:NaiveVsControlledNodeMemorySkewRankQueryTLB}
+\end{subfigure}
+
+\caption{Various measurements for Rank queries on NaiveInteger and ControlledNodeMemory wavelet trees with various skew.}
+\label{fig:NaiveVsControlledNodeMemorySkewRankQuery}
+
+\end{figure}
+
+
+
+
+
+
+\begin{figure}\tiny
+\begin{subfigure}{0.48\textwidth}
+	\input{naiveSelectSkewRunningTime}
+	\caption{Wall Time}
+	\label{fig:NaiveSelectSkewRunningTime}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{NaiveVsControlledNodeMemorySkewSelectQuery_BMrate}
+	\caption{Branch Misprediction Rate}
+	\label{fig:NaiveVsControlledNodeMemorySkewSelectQueryBMrate}
+\end{subfigure}
+
+\begin{subfigure}{0.48\textwidth}
 	\input{L1NaiveVsControlledNodeMemorySkewSelectQueryCacheMisses}
-	\vspace*{5 mm}
+	\caption{Level 1 Data Cache Misses}
+	\label{fig:L1NaiveControlledNodeMemorySelectSkewCacheMisses}
 \end{subfigure}
-\begin{subfigure}{\textwidth}
-	\caption{Naive L2, L3 vs. ControlledNodeMemory L2, L3}
-	\label{fig:L2L3NaiveControlledNodeMemorySelectSkewCacheMisses}
+\hfill
+\begin{subfigure}{0.48\textwidth}
  	\input{L2L3NaiveVsControlledNodeMemorySkewSelectQueryCacheMisses}
+	\caption{Level 2 Data and 3 Total Cache Misses}
+	\label{fig:L2L3NaiveControlledNodeMemorySelectSkewCacheMisses}
 \end{subfigure}
-\figureEnd
+
+\begin{subfigure}{0.48\textwidth}
+	\input{NaiveVsControlledNodeMemorySkewSelectQuery_L2_DCMrate}
+	\caption{Level 2 Data Cache Miss Rate}
+	\label{fig:NaiveVsControlledNodeMemorySkewSelectQuery_L2_DCMrate}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{NaiveVsControlledNodeMemorySkewSelectQueryTLB}
+	\caption{TLB Misses}
+	\label{fig:NaiveVsControlledNodeMemorySkewSelectQueryTLB}
+\end{subfigure}
+
+\caption{Various measurements for Select queries on NaiveInteger and ControlledNodeMemory wavelet trees with various skew.}
+\label{fig:NaiveVsControlledNodeMemorySkewSelectQuery}
+
+\end{figure}
 
 
-\figureBegin
-\caption{Rank L2 cache miss rate}
-\label{fig:NaiveVsControlledNodeMemorySkewRankQuery_L2_DCMrate}
-\input{NaiveVsControlledNodeMemorySkewRankQuery_L2_DCMrate}
-\figureEnd
+\restoregeometry
 
-\figureBegin
-\caption{Select L2 cache miss rate}
-\label{fig:NaiveVsControlledNodeMemorySkewSelectQuery_L2_DCMrate}
-\input{NaiveVsControlledNodeMemorySkewSelectQuery_L2_DCMrate}
-\figureEnd
-
-
-\figureBegin
-\caption{Rank TLB}
-\label{fig:NaiveVsControlledNodeMemorySkewRankQueryTLB}
-\input{NaiveVsControlledNodeMemorySkewRankQueryTLB}
-\figureEnd
-
-\figureBegin
-\caption{Select TLB}
-\label{fig:NaiveVsControlledNodeMemorySkewSelectQueryTLB}
-\input{NaiveVsControlledNodeMemorySkewSelectQueryTLB}
-\figureEnd
 
 
 \paragraph{Why skewing is not an improvement}~\\
