@@ -60,11 +60,12 @@ def getAvgRelativeStddevStr(ReadOutput, columnNames, stepsize):
 	return avgRelativeStddev
 
 def writeGnuplotHeader(gnuplotFile):
-	gnuplotFile.write("#[alphabetSize] [Walltime] [BlockSize] [BranchMissRate] [BranchMis] [TLB] [L1CM] [L2CM] [L2CH] [L3CM] [Cycles]")
-	gnuplotFile.write(" [WalltimeErr] [BranchMissRateErr] [BranchMisErr] [TLBErr] [L1CMErr] [L2CMErr] [L2CHErr] [L3CMErr] [CyclesErr]\n")
+	gnuplotFile.write("#[alphabetSize] [Walltime] [BlockSize] [BranchMissRate] [BranchMis] [BranchExe] [TLB] [L1CM] [L2CM] [L2CH] [L3CM]")
+	gnuplotFile.write(" [Cycles] [WalltimeErr] [BranchMissRateErr] [BranchMisErr] [BranchExeErr] [TLBErr] [L1CMErr] [L2CMErr] [L2CHErr]")
+	gnuplotFile.write(" [L3CMErr] [CyclesErr]\n")
 
 def formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize):
-	dataListKeys = ["alphabetSizeList", "wallTimeList", "blockSizeList", "branchMissRateList", "branchMispredictionsList", "TLBList", "l1DataCacheMissesList", "l2DataCacheMissesList", "l2DataCacheHitsList", "l3TotalCacheMissesList", "totalCyclesList"]
+	dataListKeys = ["alphabetSizeList", "wallTimeList", "blockSizeList", "branchMissRateList", "branchMispredictionsList", "branchExecutedList", "TLBList", "l1DataCacheMissesList", "l2DataCacheMissesList", "l2DataCacheHitsList", "l3TotalCacheMissesList", "totalCyclesList"]
 	gnuplotFile.write(getMaxRelativeStddevStr(ReadOutput, dataListKeys, testsPerSize) + "\n")
 	gnuplotFile.write(getAvgRelativeStddevStr(ReadOutput, dataListKeys, testsPerSize) + "\n")
 
@@ -101,6 +102,7 @@ def formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize):
 			str(blockSize)+" "+
 			str(BranchMissRate)+" "+
 			str(BranchMis)+" "+
+			str(BranchExe)+" "+
 			str(TLB)+" "+
 			str(L1CM)+" "+
 			str(L2CM)+" "+
@@ -110,6 +112,7 @@ def formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize):
 			str(WalltimeErr)+" "+
 			str(BranchMissRateErr)+" "+
 			str(BranchMisErr)+" "+
+			str(BranchExeErr)+" "+
 			str(TLBErr)+" "+
 			str(L1CMErr)+" "+
 			str(L2CMErr)+" "+

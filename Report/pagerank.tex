@@ -198,6 +198,7 @@ This is likely a result of UnalignedNaive not having to do any calculations to f
 Looking at Figure~\ref{fig:PrecomputedRankBlockSize_Rank_TLB} we can see that our expressed goal of reducing TLB misses when using page-aligned blocks is only barely achieved when not using concatenated bitmaps, and not really when they are.
 On the other hand, we see that TLB misses are reduced to about 29.80\% when using concatenated bitmaps in the page-aligned version and to about 26.39\% when not page-aligning the blocks.
 We also notice that the two trees using non-concatenated bitmaps, Naive and UnalignedNaive has a noticeable drop in TLB misses at a block size of 1 page size.
+It is also worth noting that 
 
 Looking at the level 1 data cache misses, it is clear that there are fewest cache misses at block size = 0.5 page size, which is also likely the main reason that UnalignedNaive exhibits the best running time at at that block size.
 The strange thing is that the others also seems to have the best level data cache performance for rank queries at half a page per block, while the wall time is best at a full page per block.
@@ -236,31 +237,41 @@ The wall time for select queries on the UnalignedNaive tree is only 0.73\% of th
 We can see that it is a great improvement to use precomputed rank values in both rank and select queries, with more gain for rank.
 
 \newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
-\begin{figure}
-	\input{PrecomputedRankBlockSize_Rank_WallTime}
-	\caption{Wall Time of Rank queries on Wavelet Trees with Precomputed Rank Values for varying block sizes}
-	\label{fig:PrecomputedRankBlockSize_Rank_WallTime}
-\end{figure}
 
-\begin{figure}
-\input{PrecomputedRankBlockSize_Select_WallTime}
-\caption{Wall Time of Select queries on wavelet trees with precomputed ranks of varying block sizes}
-\label{fig:PrecomputedRankBlockSize_Select_WallTime}
-\end{figure}
+
+
 
 
 \begin{figure}\tiny
+
+\begin{subfigure}{0.48\textwidth}
+	\input{PrecomputedRankBlockSize_Rank_WallTime}
+	\caption{Wall Time}
+	\label{fig:PrecomputedRankBlockSize_Rank_WallTime}
+\end{subfigure}
+\hfill
 \begin{subfigure}{0.48\textwidth}
 	\input{PrecomputedRankBlockSize_Rank_BranchMiss}
 	\caption{Branch Mispredictions}
 	\label{fig:PrecomputedRankBlockSize_Rank_BranchMiss}
 \end{subfigure}
-\hfill
+
+\begin{subfigure}{0.48\textwidth}
+	\input{PrecomputedRankBlockSize_Rank_BranchExe}
+	\caption{Branches Executed}
+	\label{fig:PrecomputedRankBlockSize_Rank_BranchExe}
+\end{subfigure}
+\hfill	
 \begin{subfigure}{0.48\textwidth}
 	\input{PrecomputedRankBlockSize_Rank_BranchMissRate}
 	\caption{Branch Misprediction Rate}
 	\label{fig:PrecomputedRankBlockSize_Rank_BranchMissRate}
 \end{subfigure}
+\caption{Various measurements of Rank queries on Wavelet Trees with Precomputed Rank Values for varying block sizes, part 1}
+\label{fig:PrecomputedRankBlockSize_Rank}
+\end{figure}
+
+\begin{figure}\tiny
 \begin{subfigure}{0.48\textwidth}
 	\input{PrecomputedRankBlockSize_Rank_TLB}
 	\caption{TLB Misses}
@@ -279,29 +290,48 @@ We can see that it is a great improvement to use precomputed rank values in both
 \end{subfigure}
 \hfill
 \begin{subfigure}{0.48\textwidth}
+	\input{PrecomputedRankBlockSize_Rank_L2CacheHits}
+	\caption{Level 2 Data Cache Hits}
+	\label{fig:PrecomputedRankBlockSize_Rank_L2CacheHits}
+\end{subfigure}
+\begin{subfigure}{0.48\textwidth}
 	\input{PrecomputedRankBlockSize_Rank_L2CacheMissRate}
 	\caption{Level 2 Data Cache Miss Rate}
 	\label{fig:PrecomputedRankBlockSize_Rank_L2CacheMissRate}
 \end{subfigure}
-\caption{Various measurements of Rank queries on Wavelet Trees with Precomputed Rank Values for varying block sizes}
-\label{fig:PrecomputedRankBlockSize_Rank}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{PrecomputedRankBlockSize_Rank_L3CacheMiss}
+	\caption{Level 3 Total Cache Misses}
+	\label{fig:PrecomputedRankBlockSize_Select_L3CacheMiss}
+\end{subfigure}
+
+\caption{Various measurements of Rank queries on Wavelet Trees with Precomputed Rank Values of varying block sizes, part 2}
+\label{fig:PrecomputedRankBlockSize_Rank2}
 \end{figure}
 
-%\input{PrecomputedRankBlockSize_Rank_TotalCycles}
-%\caption{Total Cycles of Rank queries on wavelet trees with precomputed ranks of varying block sizes}
-%\label{fig:PrecomputedRankBlockSize_Rank_TotalCycles}
 
-%\caption{Level 3 Total Cache Misses for Rank queries on wavelet trees with precomputed ranks of varying block sizes}
-%\label{fig:PrecomputedRankBlockSize_Rank_L3CacheMiss}
-%\input{PrecomputedRankBlockSize_Rank_L3CacheMiss}
+
 
 
 
 \begin{figure}\tiny
 \begin{subfigure}{0.48\textwidth}
+	\input{PrecomputedRankBlockSize_Select_WallTime}
+	\caption{Wall Time}
+	\label{fig:PrecomputedRankBlockSize_Select_WallTime}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
 	\input{PrecomputedRankBlockSize_Select_BranchMiss}
 	\caption{Branch Mispredictions. Notice the y-axis not starting at 0.}
 	\label{fig:PrecomputedRankBlockSize_Select_BranchMiss}
+\end{subfigure}
+
+\begin{subfigure}{0.48\textwidth}
+	\input{PrecomputedRankBlockSize_Select_BranchExe}
+	\caption{Branches Executed.}
+	\label{fig:PrecomputedRankBlockSize_Select_BranchExe}
 \end{subfigure}
 \hfill
 \begin{subfigure}{0.48\textwidth}
@@ -309,6 +339,11 @@ We can see that it is a great improvement to use precomputed rank values in both
 	\caption{Branch Misprediction Rate}
 	\label{fig:PrecomputedRankBlockSize_Select_BranchMissRate}
 \end{subfigure}
+\caption{Various measurements of Select queries on Wavelet Trees with Precomputed Rank Values of varying block sizes, part 1}
+\label{fig:PrecomputedRankBlockSize_Select}
+\end{figure}
+
+\begin{figure}\tiny
 \begin{subfigure}{0.48\textwidth}
 	\input{PrecomputedRankBlockSize_Select_TLB}
 	\caption{TLB Misses}
@@ -320,6 +355,7 @@ We can see that it is a great improvement to use precomputed rank values in both
 	\caption{Level 1 Data Cache Misses}
 	\label{fig:PrecomputedRankBlockSize_Select_L1CacheMiss}
 \end{subfigure}
+
 \begin{subfigure}{0.48\textwidth}
 	\input{PrecomputedRankBlockSize_Select_L2CacheMiss}
 	\caption{Level 2 Data Cache Misses}
@@ -327,18 +363,24 @@ We can see that it is a great improvement to use precomputed rank values in both
 \end{subfigure}
 \hfill
 \begin{subfigure}{0.48\textwidth}
+	\input{PrecomputedRankBlockSize_Select_L2CacheHits}
+	\caption{Level 2 Data Cache Hits}
+	\label{fig:PrecomputedRankBlockSize_Select_L2CacheHits}
+\end{subfigure}
+
+\begin{subfigure}{0.48\textwidth}
 	\input{PrecomputedRankBlockSize_Select_L2CacheMissRate}
 	\caption{Level 2 Data Cache Miss Rate}
 	\label{fig:PrecomputedRankBlockSize_Select_L2CacheMissRate}
 \end{subfigure}
-\caption{Various measurements of Select queries on Wavelet Trees with Precomputed Rank Values of varying block sizes}
-\label{fig:PrecomputedRankBlockSize_Select}
-%\hfill
-%\begin{subfigure}{0.48\textwidth}
-%	\input{PrecomputedRankBlockSize_Select_L3CacheMiss}
-%	\caption{Level 3 Total Cache Misses for Select queries on wavelet trees with precomputed ranks of varying block sizes}
-%	\label{fig:PrecomputedRankBlockSize_Select_L3CacheMiss}
-%\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{PrecomputedRankBlockSize_Select_L3CacheMiss}
+	\caption{Level 3 Total Cache Misses}
+	\label{fig:PrecomputedRankBlockSize_Select_L3CacheMiss}
+\end{subfigure}
+\caption{Various measurements of Select queries on Wavelet Trees with Precomputed Rank Values of varying block sizes, part 2}
+\label{fig:PrecomputedRankBlockSize_Select2}
 \end{figure}
 
 \begin{figure}\tiny
