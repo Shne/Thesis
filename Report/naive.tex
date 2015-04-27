@@ -135,11 +135,6 @@ We also attempted using an alphabet size of 32, but our machines didn't have eno
 \label{sec:experimentPopcountRankSelect}
 We wanted to see how much of an improvement using the native cpu instruction \texttt{popcount} was, and how it affected the cache misses, branch mispredictions and TLB misses.
 
-We wrote our program to build the tree, then run 100 rank or select queries for characters evenly distributed across the alphabet.
-For the rank queries we used the size of the input string as the positional argument so that the entire tree would be used in the query.
-We ran each test 5 times and used the average value for each measurement.
-For the select queries we queried for the 2000th occurrence because previously run rank queries showed us that each character we queried for occurred about 2400-2600 times in the input string we used, and we could then be reasonably sure that each character in the alphabet would occur at least 2000 times. \textbf{[TODO: redo these experiments with the new choice of parameters]}
-
 By querying for characters evenly distributed along the alphabet, we ensure that the queries together traverse most of the tree, and thus try to avoid having everything cached for every query. Another option would have been to use randomly selected characters, but that would have introduced some uncertainty as to whether it was the access pattern or the change in algorithm that caused a difference in running time.
 
 \newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}

@@ -133,9 +133,7 @@ That is, when considering the worst-case query time for both queries, if the occ
 
 Though, this is giving the select query a disadvantage in the analysis, as, even when the partial block is close to a block in size, it might terminate early if it found the sought-after occurrence of the character early in the partial block.
 
-It is not entirely clear whether it is an advantage to use the binary rank call, or it would be better to use popcount BinarySelect on the first partial block at all times.
-We will test this in section~\ref{sec:experimentPrecomputedBlocksRankInSelect}
-\textbf{[TODO]}
+We still believe it will be an improvement, and will use it going forward.
 
 
 

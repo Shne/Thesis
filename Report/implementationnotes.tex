@@ -48,7 +48,7 @@ To ensure that the compiler doesn't throw needed computations out the window in 
 
 \subsection{Reducing Construction Time Memory Usage}
 Since the Wavelet tree is a recursively defined data structure, we also implement it recursively. 
-Since it is also binary (or $d$-ary) we recurse into several sub-node constructors in the construction of a node, which means our compiler can't do tail-recursion optimisation (TODO: check that this is true!). 
+Since it is also binary (or $d$-ary) we recurse into several sub-node constructors in the construction of a node, which means our compiler can't do tail-recursion optimisation \textbf{[TODO: check that this is true!]}. 
 This further causes any stack-allocated variables to be held in memory until we leave the scope of the constructor function.
 We traverse and split the input string into its left and right parts in each node constructor and thus end up holding the input string twice in memory: once in the variable holding the input string, once in the two variables holding the left and right split strings.
 This is wasted memory because we don't actually need the input string any longer once we have split it into its left and right parts.

@@ -84,7 +84,7 @@ If this is the case then the node is a \textit{leaf}.
 The height of the Wavelet Tree is  $\lceil \log \sigma \rceil$ and it has $\sigma$ leaves and $\sigma - 1$ internal nodes. 
 At each level in the tree exactly \textit{n} bits are stored and in the last level at most \textit{n} bits are stored. $n \lceil \log \sigma \rceil$ is an upper bound to the total number of bits that the Wavelet Tree stores. 
 The Wavelet Tree can be constructed in $O(n \log \sigma)$ time. 
-(Todo: references to why or possibly explain it ourselves)
+\textbf{[TODO: references to why or possibly explain it ourselves]}\\
 
 
 \subsection{Constructing the Wavelet Tree}
@@ -288,7 +288,7 @@ where $p_i$ is the probability of the i-th symbol in the alphabet appearing in \
 \end{definition} 
 \end{mdframed}
 
-Entropy represents a lower bound to the average numbers of bits needed to represent each symbol in S according to the coding theorem of Shannon (todo reference) and so is the value that researchers of compression compare their results to.
+Entropy represents a lower bound to the average numbers of bits needed to represent each symbol in S according to the coding theorem of Shannon \textbf{[TODO: reference]} and so is the value that researchers of compression compare their results to.
 
 This theoretical definition of entropy is often replaced in scientific literature by a more practical definition: \textit{empirical entropy}.
 There are two versions: \textit{empirical zero-order entropy} $H_0$ and \textit{empirical k-th order entropy} $H_k$. $H_k$ takes the size \textit{k} context of the symbol appearances into account while $H_0$ does not and treats symbols independently instead. 
@@ -314,9 +314,9 @@ $H_k$ thus defines a lower bound for bit space usage that is smaller than the lo
 
 Using the Burrows-Wheeler transformation on the input the we can reduce the problem of achieving $H_k$ compression to achieving $H_0$ compression.
 In other words, if we have a good compression algorithm that achieves compression within the $H_0$ lower bound, then by using that algorithm on the Burrows-Wheeler transformation of the input we can achieve compression within the $H_k$ lower bound. (Todo: explain the theory behind this)
-The problem for a long time was that there existed no good way to achieve compression within the $H_0$ lower bound or at least it was a problem before the wavelet tree was invented. \textbf{(todo: describe why it was a problem)} 
+The problem for a long time was that there existed no good way to achieve compression within the $H_0$ lower bound or at least it was a problem before the wavelet tree was invented. \textbf{[TODO: describe why it was a problem]} 
 
-To achieve \textit{zero-order entropy} a Huffman shaped wavelet tree (todo: reference) can be used. But when the alphabet is very large that is not a good approach with regards to compression, because storing the huffman symbol assignments and wavelet tree pointers ends up using too much space . \citep[Section~3]{Claude08practicalrankselect} describes a way to also have \textit{zero-order entropy} space usage for large alphabets. 
+To achieve \textit{zero-order entropy} a Huffman shaped wavelet tree \textbf{[TODO: reference]} can be used. But when the alphabet is very large that is not a good approach with regards to compression, because storing the huffman symbol assignments and wavelet tree pointers ends up using too much space . \citep[Section~3]{Claude08practicalrankselect} describes a way to also have \textit{zero-order entropy} space usage for large alphabets. 
 It is therefore possible to get space usage within \textit{zero-order entropy} even for large alphabets using the wavelet tree. 
 \textit{Zero-order entropy} can also be achieved by run-length encoding the bitmaps in the wavelet tree, which is also the approach that is used when compressing the bwt of the input string using the wavelet tree \citep[Introduction (\textbf{B})]{waveletTreeEntropy}.
 This means that using a combination of run-length encoding of bitmaps and taking the Burrows-Wheeler transformation of the input string using the wavelet tree it is possible to achieve a lower bound within \textit{k-th order entropy}.
