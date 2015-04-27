@@ -74,12 +74,12 @@ In this experiment we want to test whether querying our controlled memory versio
 \paragraph{Test Setup}~\\
 We have run 1000 \texttt{rank} queries and 1000 \texttt{select} queries for each skew and registered the total running time for each set of 1000 queries. 
 We did 5 such sets for each skew and then used the average running time of these. 
-This was done to minimize the effect of outliers in the test. The 1000 queries was done for characters even spread across the alphabet for both rank and select. The results can be seen in Figure ~\ref{fig:NaiveRankSelectSkewRunningTime}.
+This was done to minimize the effect of outliers in the test. The 1000 queries was done for characters even spread across the alphabet for both rank and select. The results can be seen in Figure ~\ref{fig:NaiveRankSkewRunningTime} and \ref{fig:NaiveSelectSkewRunningTime}.
 
-We skew the Wavelet Tree (see section~\ref{sec:SkewingTheTree}) because we believe it has better performance than not skewing it since data can then be stored sequentially in memory and reduce cache-misses because of prefetching and should then be faster to access when querying. %%
+We skew the Wavelet Tree (see section~\ref{sec:SkewingTheTree}) because we believe it has better performance than not skewing it since data can then be stored sequentially in memory and reduce cache-misses because of prefetching and should then be faster to access when querying.
 Skewing should also reduce branch mispredictions since branching to the right become more probable than branching to the left. 
 
-If we look at figure ~\ref{fig:NaiveRankSelectSkewRunningTime} we can see that the query time increases linearly with increasing skew for both controlled and uncontrolled memory layout. We also observe that the two memory layout approaches are almost equal for both rank and select queries in terms of running time.
+If we look at figure ~\ref{fig:NaiveRankSkewRunningTime} and \ref{fig:NaiveSelectSkewRunningTime} we can see that the query time increases linearly with increasing skew for both controlled and uncontrolled memory layout. We also observe that the two memory layout approaches are almost equal for both rank and select queries in terms of running time.
 
 This means we can conclude that skewing the tree is not an improvement on performance.
 
