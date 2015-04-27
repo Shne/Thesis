@@ -135,7 +135,26 @@ We also attempted using an alphabet size of 32, but our machines didn't have eno
 \label{sec:experimentPopcountRankSelect}
 We wanted to see how much of an improvement using the native cpu instruction \texttt{popcount} was, and how it affected the cache misses, branch mispredictions and TLB misses.
 
-By querying for characters evenly distributed along the alphabet, we ensure that the queries together traverse most of the tree, and thus try to avoid having everything cached for every query. Another option would have been to use randomly selected characters, but that would have introduced some uncertainty as to whether it was the access pattern or the change in algorithm that caused a difference in running time.
+
+
+In Figure~\ref{fig:rankPopcountDiff}, \ref{fig:selectPopcountDiff}, and \ref{fig:valuesForPopcountDiff} we see the resulting relative cpu cycles, wall time, branch mispredictions, translation lookaside buffer misses, and cache misses for our rank and select queries, respectively.
+We have chosen the values for the queries not using popcount to be index 100 and calculated and plotted the relative values of the queries using popcount, to show which values increase, decrease and by what relative amount, all within the same graph.
+In Figure~\ref{fig:valuesForPopcountDiff} we list the actual raw values as well as the percentages graphed in Figure~\ref{fig:rankPopcountDiff} and \ref{fig:selectPopcountDiff}.
+
+In all three figures we see that the algorithm using \texttt{popcount} is much faster, using only a fraction of the time of the other algorithm, about $0.011\%$ for rank and $0.0051\%$ for select.
+We see a massive decrease in branch mispredictions both for both rank and select queries. For the select queries we see a great reduction in Translation Lookaside Buffer Misses as well as Cache Misses, especially Level 2 and 3.
+For the rank queries, we see little improvement in TLBM and L1 CM, as well as a slightly larger improvement in L3 CM, but we also see a great increase in L2 CM to more than double the amount.
+\textbf{[TODO: speculate as to why. Rerun test and get level 2 data cache miss \textit{rate}]}
+
+
+The massive reduction in branch mispredictions likely accounts for some of the saved cpu cycles.
+Given that the branch misprediction penalty on the Ivy Bridge architecture (on which this experiment was run) is about "15 cycles or more"~\cite{agner}, we can calculate an estimate of how many cpu cycles the branch misprediction reduction has saved us.
+The number of saved branch mispredictions for \textproc{rank} is then 1,396,757,616.4 - 22,682.2 = 1,396,734,934.2 mispredictions. Assuming a penalty of 15 cycles this becomes 1,396,734,934.2 $\cdot$ 15 = 20,951,024,013 cpu cycles saved, and given that the total number of cycles saved is 397,345,711,110.4 - 4,423,412,635.0 = 392,922,298,475, it is 20,951,024,013 / 392,922,298,475 = 0.05332103597 = 5.33\% of the total amount of cpu cycles saved.
+This means that the branch mispredictions do have an effect, but it is only a small part of this increase in speed. The main improvement, we expect, comes from using only a few cpu cycles per word of the bitmap to calculate the binary rank, as well as possibly the slight decrease in L1 and L3 cache misses.
+
+
+By similar calculations the saved cpu cycles from branch mispredictions for \textproc{select} is at least 48,84\% of the total saved. We expect this is because of the much higher number of branch mispredictions and the lower number of cycles for the original select algorithm, as well as the fact that we can't use \texttt{popcount} for every word of the bitmap but must go back to doing manual counting of the bits when we find the word the sought-after occurrence is in.
+
 
 \newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
 \begin{figure}\tiny
@@ -160,31 +179,6 @@ By querying for characters evenly distributed along the alphabet, we ensure that
 \end{figure}
 
 \restoregeometry
-
-
-
-
-
-In Figure~\ref{fig:rankPopcountDiff}, \ref{fig:selectPopcountDiff}, and \ref{fig:valuesForPopcountDiff} we see the resulting relative cpu cycles, wall time, branch mispredictions, translation lookaside buffer misses, and cache misses for our rank and select queries, respectively.
-We have chosen the values for the queries not using popcount to be index 100 and calculated and plotted the relative values of the queries using popcount, to show which values increase, decrease and by what relative amount, all within the same graph.
-In Figure~\ref{fig:valuesForPopcountDiff} we list the actual raw values as well as the percentages graphed in Figure~\ref{fig:rankPopcountDiff} and \ref{fig:selectPopcountDiff}.
-
-In all three figures we see that the algorithm using \texttt{popcount} is much faster, using only a fraction of the time of the other algorithm, about $0.011\%$ for rank and $0.0051\%$ for select.
-We see a massive decrease in branch mispredictions both for both rank and select queries. For the select queries we see a great reduction in Translation Lookaside Buffer Misses as well as Cache Misses, especially Level 2 and 3.
-For the rank queries, we see little improvement in TLBM and L1 CM, as well as a slightly larger improvement in L3 CM, but we also see a great increase in L2 CM to more than double the amount.
-\textbf{[TODO: speculate as to why. Rerun test and get level 2 data cache miss \textit{rate}]}
-
-
-The massive reduction in branch mispredictions likely accounts for some of the saved cpu cycles.
-Given that the branch misprediction penalty on the Ivy Bridge architecture (on which this experiment was run) is about "15 cycles or more"~\cite{agner}, we can calculate an estimate of how many cpu cycles the branch misprediction reduction has saved us.
-The number of saved branch mispredictions for \textproc{rank} is then 1,396,757,616.4 - 22,682.2 = 1,396,734,934.2 mispredictions. Assuming a penalty of 15 cycles this becomes 1,396,734,934.2 $\cdot$ 15 = 20,951,024,013 cpu cycles saved, and given that the total number of cycles saved is 397,345,711,110.4 - 4,423,412,635.0 = 392,922,298,475, it is 20,951,024,013 / 392,922,298,475 = 0.05332103597 = 5.33\% of the total amount of cpu cycles saved.
-This means that the branch mispredictions do have an effect, but it is only a small part of this increase in speed. The main improvement, we expect, comes from using only a few cpu cycles per word of the bitmap to calculate the binary rank, as well as possibly the slight decrease in L1 and L3 cache misses.
-
-
-By similar calculations the saved cpu cycles from branch mispredictions for \textproc{select} is at least 48,84\% of the total saved. We expect this is because of the much higher number of branch mispredictions and the lower number of cycles for the original select algorithm, as well as the fact that we can't use \texttt{popcount} for every word of the bitmap but must go back to doing manual counting of the bits when we find the word the sought-after occurrence is in.
-
-
-
 
 
 
