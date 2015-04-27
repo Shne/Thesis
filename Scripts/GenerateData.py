@@ -4,6 +4,7 @@ import random #also seeds it with system time
 import array
 import numpy.random
 import numpy
+import csv
 
 def generateData(powerAmount, alphabetSize):
 	fileName = "Data/n"+str(powerAmount)+"_as"+str(alphabetSize)+".data"
@@ -46,6 +47,18 @@ def generateIntegerData(powerAmount, powerAlphabetSize):
 		randomArray.append(random.randrange(0, alphabetSize))
 	randomArray.tofile(fd)
 
+def generateIntegerDataNotPower(powerAmount, alphabetSize):
+	fileName = "Data/n"+str(powerAmount)+"_as"+str(alphabetSize)+".data"
+	fd = open(fileName, "wb")
+
+	print("Generating data: 10^"+str(powerAmount)+" entries of alphabetsize: "+str(alphabetSize))
+	amount = pow(10, powerAmount)
+
+	randomArray = array.array('I')
+	for _ in range(amount):
+		randomArray.append(random.randrange(0, alphabetSize))
+	randomArray.tofile(fd)
+
 
 def remapAlphabetSymbols(randomArray, alphabetSize):
 	alphabet = range(alphabetSize)
@@ -76,8 +89,39 @@ def generateZipfData(powerAmount, powerAlphabetSize, s):
 	remappedRandomArray = remapAlphabetSymbols(randomArray, alphabetSize)
 	remappedRandomArray.tofile(fd)
 
-# generateZipfData(2, 4)
 
-for i in range(8,25):
-	generateZipfData(2, i, 1.2)
-	generateZipfData(8, i, 1.2)
+def binarySearch(wordlist, randomvalue):
+	for i in range(1,len(wordlist)):
+		if randomvalue >= wordlist[i-1] and randomvalue < wordlist[i]:
+			return i
+
+
+def generateNonUniformRealData(powerAmount):
+	cumulativeValueList = []
+	with open('NGSL-101-with-SFI.csv') as csvfile:
+		wordReader = csv.DictReader(csvfile, delimiter=';')
+		for row in wordReader:
+			cumulativeValueList.append(float(row['Cumulative']))
+	range_l = 0.0000000000000000
+	range_r = cumulativeValueList[-1]
+
+	amount = pow(10, powerAmount)
+	alphabetSize = len(cumulativeValueList)
+
+
+	randomArray = array.array('I')
+	cumulativeValueList1 = [0] + cumulativeValueList
+	for _ in range(amount):
+		randomValue = random.uniform(range_l, range_r)
+		randomArray.append(binarySearch(cumulativeValueList1, randomValue))
+
+	fileName = "Data/n"+str(powerAmount)+"_as"+str(alphabetSize)+"_NonUniform.data"
+	fd = open(fileName, "wb")
+	randomArray.tofile(fd)
+
+generateIntegerDataNotPower(8,31242)
+generateNonUniformRealData(8)
+
+# for i in range(8,25):
+# 	generateZipfData(2, i, 1.2)
+# 	generateZipfData(8, i, 1.2)
