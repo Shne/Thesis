@@ -46,7 +46,7 @@ for i in range(0,7):
 	RankGnuplotFile.write(str(number+2) + '\t' + '\n')
 
 value = "{:,.1f}"
-percent = "{:.2f}"
+percent = "{:.3f}"
 
 # Values file
 ValuesFile.write('\\begin{tabular}{|l|r|r|r|}\n')
