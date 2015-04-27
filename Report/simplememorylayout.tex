@@ -107,7 +107,7 @@ Looking at the level 2 cache miss rates for rank and select, as plotted in Figur
 
 Figure~\ref{fig:NaiveVsControlledNodeMemorySkewRankQueryTLB} and \ref{fig:NaiveVsControlledNodeMemorySkewSelectQueryTLB} shows TLB misses for \textproc{Rank} and \textproc{Select}. 
 The TLB misses varies a lot for increasing skew and does not seem to follow any discernible pattern which makes it difficult to say anything conclusive about these graphs. 
-Figure~\ref{fig:NaiveVsControlledNodeMemorySkewSelectQueryTLB} does have two peaks at skew 2.8 and 4.2 that looks somewhat alike, but we have not been able to find any good explanation as to why they occur and they do not seem to have any visible effect on the query time when looking at figure~\ref{fig:NaiveRankSelectSkewRunningTime}.
+Figure~\ref{fig:NaiveVsControlledNodeMemorySkewSelectQueryTLB} does have two peaks at skew 2.8 and 4.2 that looks somewhat alike, but we have not been able to find any good explanation as to why they occur and they do not seem to have any visible effect on the query time when looking at figure~\ref{fig:NaiveRankSkewRunningTime} and \ref{fig:NaiveSelectSkewRunningTime}.
 There are no peaks in query time when skew is 2.8 or 4.2.
 
 In the end we can conclude that skewing the tree is not an improvement. 
