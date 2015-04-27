@@ -52,7 +52,7 @@ set border
 
 set xlabel "Block Size (number of pages)"
 set ylabel "Memory Usage (MB)"
-# set yrange [0:*]
+set yrange [790:880]
 set output 'PrecomputedRankBlockSize_Build_Memory.tex'
 plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Build.data' every ::2 using ($1/32768):($3/1024) with linespoints title "Naive",\
 	'../Data/PrecomputedRankBlockSize_UnalignedNaivePrecomputed_Build.data' every ::2 using ($1/32768):($3/1024) with linespoints title "UnalignedNaive",\
