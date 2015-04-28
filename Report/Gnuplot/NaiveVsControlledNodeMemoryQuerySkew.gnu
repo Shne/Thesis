@@ -81,6 +81,8 @@ plot '../Data/naiveRankSkew.data' every ::2 using 1:($3/($3+$9)) with linespoint
 	'../Data/controlledNodeMemoryRankSkew.data' every ::2 using 1:($3/($3+$9)) with linespoints linetype 2 title "ControlledMemory",\
 	'' every ::2 using 1:($3/($3+$9)):($18/($3+$9)) with yerrorbars linetype 2 notitle,\
 
+set yrange [0:*]
+
 set key top left horizontal
 set output 'NaiveVsControlledNodeMemorySkewSelectQuery_L2_DCMrate.tex'
 plot '../Data/naiveSelectSkew.data' every ::2 using 1:($3/($3+$9)) with linespoints linetype 1 title "NaiveInteger",\
