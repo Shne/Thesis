@@ -1,31 +1,31 @@
-\section{Precomputed Accumulative Sum of Binary Ranks}
+\section{Precomputed Cumulative Sum of Binary Ranks}
 We have found that using precomputed rank values is a great improvement to the running time of both rank and select queries, though with a higher gain for rank queries.
 It works so well, because it allows the algorithms to skip most of the bitmaps, only directly using at them near the position that was queried for in case of rank queries and near the sought-after occurrence in the case of select queries, and relying on the precomputed values for the rest of the bitmap.
 
 It does still, however, need to iterate through the precomputed values.
 Most of the time the algorithms are interested in the rank value at some position inside a bitmap, it is the rank from the beginning of the bitmap to the position, rarely just the rank of that particular block.
-Therefore we might be able to save a number of instructions by not iterating through the precomputed values if the precomputed values were already this accumulative sum of rank values through the bitmap.
+Therefore we might be able to save a number of instructions by not iterating through the precomputed values if the precomputed values were already this cumulative sum of rank values through the bitmap.
 
 We will implement this based on UnalignedNaive and test the performance compared to the UnalignedNaive tree from Section~\ref{sec:queryRunTimePrecomputedBlockSizes} as we found that to be the fastest.
 
-\subsection{Advantages of Accumulative Sum}
-As previously mentioned, the rank and select query algorithms don't actually need the rank values of individual blocks, but rather the accumulative sum rank value from the beginning of the bitmap to some position.
-If we instead implemented the precomputed values as being the accumulative sum of rank values of each block from the beginning of the bitmap up to and including the block corresponding to the precomputed value, we could save a lot of precomputed value lookups in the rank and select queries.
+\subsection{Advantages of Cumulative Sum}
+As previously mentioned, the rank and select query algorithms don't actually need the rank values of individual blocks, but rather the cumulative sum rank value from the beginning of the bitmap to some position.
+If we instead implemented the precomputed values as being the cumulative sum of rank values of each block from the beginning of the bitmap up to and including the block corresponding to the precomputed value, we could save a lot of precomputed value lookups in the rank and select queries.
 
-Calculating the accumulative rank sums during the construction will not require much more computation.
+Calculating the cumulative rank sums during the construction will not require much more computation.
 It could e.g. be done by a single sweep through the precomputed values vector after having computed the entire bitmap, adding each precomputed value to the next in the vector.
 
-Rank queries will benefit from the precomputed values being accumulative sums because they can do a single lookup of the precomputed value corresponding to the block covering the queried-for position.
+Rank queries will benefit from the precomputed values being cumulative sums because they can do a single lookup of the precomputed value corresponding to the block covering the queried-for position.
 The need to calculate a rank using \texttt{popcount}ing within a single block and manual counting of bits within a single word remains unchanged.
 
 Select queries will also likely be quicker.
 Previously, the select query would iterate through the precomputed values and sum them up, looking for when it surpasses the sought-after occurrence, and then calculate the position within a single block using \texttt{popcount} and manual counting of bits within a single word.
-Using accumulative precomputed rank values, the select query will be able to use binary search on the precomputed value vector to find the word wherein the occurrence is.
+Using cumulative precomputed rank values, the select query will be able to use binary search on the precomputed value vector to find the word wherein the occurrence is.
 Using \texttt{popcount} within a block and manual counting within a word still remains unchanged.
 
-\subsection{Disadvantages of Accumulative Sum}
+\subsection{Disadvantages of Cumulative Sum}
 The precomputed values are no longer limited in value size by the block size but rather the bitmap size, as the last value in the precomputed rank value vector could potentially become as large as the bitmap is long.
-Storing the accumulative sums will then require more bytes per value and thus use more space in the end.
+Storing the cumulative sums will then require more bytes per value and thus use more space in the end.
 The bitmap size is limited by the input string length and so for our choice of input string with length $10^8$ each precomputed value must be able to store a value up to $10^8$.
 It takes at least 28 bits to store $10^8$, because $2^{27} < 10^8 < 2^{28}$.
 Because the value types supported by x86 and C++ must be byte (8-bit) aligned and use a number of bytes that is a power of 2, the smallest type we can use is the 4-byte type \texttt{unsigned int} capable of storing values up to $2^{32}$.
