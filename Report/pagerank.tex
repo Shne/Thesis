@@ -117,7 +117,7 @@ However, in this case, the edge case at the end is easily handled as the test of
 This is assuming the input occurrence parameter is valid, that is, at least that many occurrences of that character is in the original input string.
 
 For the other case, at the beginning of the bitmap, we do almost exactly the same as in the case for the rank query.
-In fact, we use a rank query to calculate the rank of the first part of the bitmap, using the trick of subtracting from the precomputed value if larger than half a block size, to figure out whether the occurrence is in the first part of the bitmap, and therefore whether we should skip it or not.
+In fact, we use a rank query to calculate the rank of the first part of the bitmap, using the trick of subtracting from the precomputed value if larger than half a block size, to figure out whether the occurrence is in the first part of the bitmap, and therefore whether we should do a select query on it or not.
 
 \paragraph{Using Rank Queries in Select Queries}~\\
 We would like to analyse whether it is worth using a rank query to find out whether we should do a select query on the first part of the bitmap, as the rank query is purely extra work in the cases where the occurrence is in that part of the bitmap.
@@ -133,7 +133,8 @@ That is, when considering the worst-case query time for both queries, if the occ
 
 Though, this is giving the select query a disadvantage in the analysis, as, even when the partial block is close to a block in size, it might terminate early if it found the sought-after occurrence of the character early in the partial block.
 
-We still believe it will be an improvement, and will use it going forward.
+We believe it is an improvement, and will use it going forward, though it is not 100\% certain.
+We have considered doing tests to determine whether it is an improvement for the running time or not, but as we are under time constraints and we feel we have other, far more interesting, things to implement and test we will not be testing this.
 
 
 
