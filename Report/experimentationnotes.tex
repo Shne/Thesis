@@ -1,6 +1,15 @@
 \section{Notes on The Experiments}
 Here we discuss some things general for all our experiments, or all those where applicable.
 
+\subsection{General Setup}
+\label{sec:ExpNotesGeneralSetup}
+We run 1000 queries 5 times for each variable parameter and register the total running time for each set of 1000 queries and then use the average of those 5 as the result.
+Examples of variable parameters used in our tests are the alphabet size, the skew of the tree or the block size.
+
+We calculate the standard deviation of the 5 runs and include that in the graphs as errorbars.
+All our graphs with lines (as opposed to bar-graphs) include the standard deviation as errorbars.
+If one appears not to have any errorbars that means the standard deviation is just very small.
+
 \subsection{Choice of Input String}
 We have chosen to construct the input strings used in our experiments so that each character occurs with the same probability at each position.
 This means the string has a uniform distribution of characters from the alphabet.
@@ -42,8 +51,9 @@ This way we end up with a more realistic non-uniform dataset than if we had used
 
 
 \subsection{Choice of Query Parameters}
+\label{sec:choiceOfQueryParameters}
 It is important to ensure that we don't introduce a bias in our experiments on the rank and select query performances by our choice of query parameters.
-As we have chosen to use a randomly generated input string with uniform distribution of characters, there should be little difference in the frequency of characters and little difference in query performance based on the exact choice of character.
+As we have chosen to use a randomly generated input string with uniform distribution of characters for most of our tests, there should be little difference in the frequency of characters and little difference in query performance based on the exact choice of character.
 There is, however a difference of where in the tree the node each character corresponds to, and we should make sure to use characters from various positions in the alphabet, to have the queries together traverse as much of the tree as possible.
 
 For the rank queries there is also the position parameter, determining how far into the string the query should look and therefore how far into each bitmap the query should look.
@@ -55,7 +65,3 @@ If we had e.g. let both parameter values depend on the index of a single for-loo
 
 Instead we let one parameter ascend from valid low values to valid high values with even spacing to reach the highest valid value in the lastly performed query. Meanwhile, the other parameter increases more rapidly with wider spacing, and then wraps around before passing highest valid value to then start again at low values, with an offset to not repeat parameter values, doing so many times before the end.
 This ensures we perform the queries for all combinations of high, medium and low parameter values in our experiments.
-
-\subsection{Graphs}
-We have used Gnuplot to produce all our graphs.
-We display y-errorbars of the standard deviation in some of the graphs.

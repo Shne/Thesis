@@ -65,16 +65,12 @@ The second case is rare when the input string is bigger than the alphabet, and w
 \subsection{Experiments}
 
 \subsubsection{Queries when skewing the Wavelet Tree using uncontrolled and controlled memory layout}
-
-
-
-
 In this experiment we want to test whether querying our controlled memory version of the Wavelet Tree is faster than querying the uncontrolled memory version for increasingly skewed trees. 
 
 \paragraph{Test Setup}~\\
-We have run 1000 \texttt{rank} queries and 1000 \texttt{select} queries for each skew and registered the total running time for each set of 1000 queries. 
-We did 5 such sets for each skew and then used the average running time of these. 
-This was done to minimize the effect of outliers in the test. The 1000 queries was done for characters even spread across the alphabet for both rank and select. The results can be seen in Figure ~\ref{fig:NaiveRankSkewRunningTime} and \ref{fig:NaiveSelectSkewRunningTime}.
+The general setup is as described in Section~\ref{sec:ExpNotesGeneralSetup}.
+The query parameters were chosen as described in Section~\ref{sec:choiceOfQueryParameters}.
+The results can be seen in Figure ~\ref{fig:NaiveRankSkewRunningTime} and \ref{fig:NaiveSelectSkewRunningTime}.
 
 We skew the Wavelet Tree (see section~\ref{sec:SkewingTheTree}) because we believe it has better performance than not skewing it since data can then be stored sequentially in memory and reduce cache-misses because of prefetching and should then be faster to access when querying.
 Skewing should also reduce branch mispredictions since branching to the right become more probable than branching to the left. 

@@ -34,6 +34,9 @@ Again, when popcount for 0s instead of 1s is needed, we simply subtract the resu
 \subsection{Experiments}
 We would like to find out whether our implementation of the construction of the tree conforms to the theoretical running time of $O(n \log \sigma)$ and how much of an improvement using the \texttt{popcount} cpu instruction was for the queries.
 
+\paragraph{Test Setup}~\\
+The general setup is as described in Section~\ref{sec:ExpNotesGeneralSetup}.
+The query parameters were chosen as described in Section~\ref{sec:choiceOfQueryParameters}.
 
 \subsubsection{Running time of Tree Construction vs Alphabet Size}
 To test what Big-O notation running time our construction algorithm was running at, we implemented the following test setup.
