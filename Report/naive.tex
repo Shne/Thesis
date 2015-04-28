@@ -147,7 +147,7 @@ In Figure~\ref{fig:valuesForPopcountDiff} we list the actual raw values as well 
 In all three figures we see that the algorithm using \texttt{popcount} is much faster, using only a fraction of the time of the other algorithm, about $0.011\%$ for rank and $0.0051\%$ for select.
 We see a massive decrease in branch mispredictions both for both rank and select queries. For the select queries we see a great reduction in Translation Lookaside Buffer Misses as well as Cache Misses, especially Level 2 and 3.
 For the rank queries, we see little improvement in TLBM and L1 CM, as well as a slightly larger improvement in L3 CM, but we also see a great increase in L2 CM to more than double the amount.
-\textbf{[TODO: speculate as to why. Rerun test and get level 2 data cache miss \textit{rate}]}
+\textbf{[TODO: speculate as to why. get level 2 data cache miss \textit{rate}]}
 
 
 The massive reduction in branch mispredictions likely accounts for some of the saved cpu cycles.
