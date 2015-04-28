@@ -63,7 +63,7 @@ value = "{:,.2f}"
 percent = "{:.3f}"
 
 # Values file
-ValuesFile.write('\\begin{tabular}{|l|r|r|r|}\n')
+ValuesFile.write('\\begin{tabular}{|lrrr|}\n')
 ValuesFile.write('\\hline\n')
 ValuesFile.write('\\textbf{Rank} & no \\texttt{popcount} & \\texttt{popcount} & Percent \\\\ \hline\n')
 ValuesFile.write('\\textbf{CPU Cycles} & '+value.format(RankCyclesNoPop)+' & '+value.format(RankCyclesPop)+' & '+percent.format(printList[0])+'\\% \\\\ \hline\n')
@@ -122,7 +122,7 @@ for i in range(len(printList)):
 	SelectGnuplotFile.write(str(number+2) + '\t' + '\n')
 
 # Values file
-ValuesFile.write('\\begin{tabular}{|l|r|r|r|}\n')
+ValuesFile.write('\\begin{tabular}{|lrrr|}\n')
 ValuesFile.write('\\hline\n')
 ValuesFile.write('\\textbf{Select} & no \\texttt{popcount} & \\texttt{popcount} & Percent \\\\ \hline\n')
 ValuesFile.write('\\textbf{CPU Cycles} & '+value.format(SelectCyclesNoPop)+' & '+value.format(SelectCyclesPop)+' & '+percent.format(printList[0])+'\\% \\\\ \hline\n')
