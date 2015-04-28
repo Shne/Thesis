@@ -72,10 +72,14 @@ testsPerSize = 5
 
 ReadOutput.getData(testDataFile, "SimpleNaiveInteger", "build")
 
-dataListKeys = ["alphabetSizeList", "wallTimeList", "branchMissRateList", "branchMispredictionsList", "TLBList", "l1DataCacheMissesList", "l2DataCacheMissesList", "l3TotalCacheMissesList"]
+dataListKeys = ["alphabetSizeList", "wallTimeList", "branchMissRateList", "branchMispredictionsList", "TLBList", 
+	"l1DataCacheMissesList", "l2DataCacheMissesList", "l3TotalCacheMissesList",
+]
 
 #LARGE N
-GnuplotFile.write("#[alphabetSize]" +" "+ "[Walltime]" +" "+ "[BranchMissRate]" +" "+ "[BranchMis]" +" "+ "[TLB]" +" "+ "[L1CM]" +" "+ "[L2CM]" +" "+ "[L3CM]" +"\n")
+GnuplotFile.write("#[alphabetSize] [Walltime] [BranchMissRate] [BranchMis] [TLB] [L1CM] [L2CM] [L3CM] "+
+	"[WalltimeErr] [BranchMissRateErr] [BranchMissErr] [TLBErr] [L1CMErr] [L2CMErr] [L3CMErr]"+
+	"\n")
 GnuplotFile.write(getMaxRelativeStddevStr(dataListKeys) + "\n")
 GnuplotFile.write(getAvgRelativeStddevStr(dataListKeys) + "\n")
 for i in range(int(len(ReadOutput.alphabetSizeList)/testsPerSize)):
@@ -93,7 +97,18 @@ for i in range(int(len(ReadOutput.alphabetSizeList)/testsPerSize)):
 	L2CM = avg(ReadOutput.l2DataCacheMissesList[startIndex:endIndex])
 	L3CM = avg(ReadOutput.l3TotalCacheMissesList[startIndex:endIndex])
 
-	GnuplotFile.write(str(alphabetSize) +" "+ str(Walltime) +" "+ str(BranchMissRate) +" "+ str(BranchMis) +" "+ str(TLB) +" "+ str(L1CM) +" "+ str(L2CM) +" "+ str(L3CM) +"\n")
+	WalltimeErr = numpy.std(ReadOutput.wallTimeList[startIndex:endIndex])
+	BranchMisErr = numpy.std(ReadOutput.branchMispredictionsList[startIndex:endIndex])
+	BranchExeErr = numpy.std(ReadOutput.branchExecutedList[startIndex:endIndex])
+	BranchMissRateErr = numpy.std(ReadOutput.branchMissRateList[startIndex:endIndex])
+	TLBErr = numpy.std(ReadOutput.TLBList[startIndex:endIndex])
+	L1CMErr = numpy.std(ReadOutput.l1DataCacheMissesList[startIndex:endIndex])
+	L2CMErr = numpy.std(ReadOutput.l2DataCacheMissesList[startIndex:endIndex])
+	L3CMErr = numpy.std(ReadOutput.l3TotalCacheMissesList[startIndex:endIndex])
+
+	GnuplotFile.write(str(alphabetSize)+" "+str(Walltime)+" "+str(BranchMissRate)+" "+str(BranchMis)+" "+str(TLB)+" "+str(L1CM)+" "+str(L2CM)+" "+str(L3CM)+
+		" "+str(WalltimeErr)+" "+str(BranchMissRateErr)+" "+str(BranchMisErr)+" "+str(TLBErr)+" "+str(L1CMErr)+" "+str(L2CMErr)+" "+str(L3CMErr)+
+		"\n")
 
 GnuplotFile.close()
 
@@ -103,7 +118,9 @@ testDataFile = 'Output/naiveIntegerAlphabetSize_smallN.output'
 testsPerSize = 5
 
 ReadOutput.getData(testDataFile, "SimpleNaiveInteger", "build")
-GnuplotFile.write("#[alphabetSize]" +" "+ "[Walltime]" +" "+ "[BranchMissRate]" +" "+ "[BranchMis]" +" "+ "[TLB]" +" "+ "[L1CM]" +" "+ "[L2CM]" +" "+ "[L3CM]" +"\n")
+GnuplotFile.write("#[alphabetSize] [Walltime] [BranchMissRate] [BranchMis] [TLB] [L1CM] [L2CM] [L3CM] "+
+	"[WalltimeErr] [BranchMissRateErr] [BranchMissErr] [TLBErr] [L1CMErr] [L2CMErr] [L3CMErr]"+
+	"\n")
 GnuplotFile.write(getMaxRelativeStddevStr(dataListKeys) + "\n")
 GnuplotFile.write(getAvgRelativeStddevStr(dataListKeys) + "\n")
 for i in range(int(len(ReadOutput.alphabetSizeList)/testsPerSize)):
@@ -121,7 +138,18 @@ for i in range(int(len(ReadOutput.alphabetSizeList)/testsPerSize)):
 	L2CM = avg(ReadOutput.l2DataCacheMissesList[startIndex:endIndex])
 	L3CM = avg(ReadOutput.l3TotalCacheMissesList[startIndex:endIndex])
 	
-	GnuplotFile.write(str(alphabetSize) +" "+ str(Walltime) +" "+ str(BranchMissRate) +" "+ str(BranchMis) +" "+ str(TLB) +" "+ str(L1CM) +" "+ str(L2CM) +" "+ str(L3CM) +"\n")
+	WalltimeErr = numpy.std(ReadOutput.wallTimeList[startIndex:endIndex])
+	BranchMisErr = numpy.std(ReadOutput.branchMispredictionsList[startIndex:endIndex])
+	BranchExeErr = numpy.std(ReadOutput.branchExecutedList[startIndex:endIndex])
+	BranchMissRateErr = numpy.std(ReadOutput.branchMissRateList[startIndex:endIndex])
+	TLBErr = numpy.std(ReadOutput.TLBList[startIndex:endIndex])
+	L1CMErr = numpy.std(ReadOutput.l1DataCacheMissesList[startIndex:endIndex])
+	L2CMErr = numpy.std(ReadOutput.l2DataCacheMissesList[startIndex:endIndex])
+	L3CMErr = numpy.std(ReadOutput.l3TotalCacheMissesList[startIndex:endIndex])
+
+	GnuplotFile.write(str(alphabetSize)+" "+str(Walltime)+" "+str(BranchMissRate)+" "+str(BranchMis)+" "+str(TLB)+" "+str(L1CM)+" "+str(L2CM)+" "+str(L3CM)+
+		" "+str(WalltimeErr)+" "+str(BranchMissRateErr)+" "+str(BranchMisErr)+" "+str(TLBErr)+" "+str(L1CMErr)+" "+str(L2CMErr)+" "+str(L3CMErr)+
+		"\n")
 
 GnuplotFile.close()
 
