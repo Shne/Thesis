@@ -2,11 +2,11 @@
 The Wavelet Tree is a relatively new data structure first introduced in 2003 by Grossi, Gupta, and Vitter~\cite{Grossi:2003:HET:644108.644250} that is built on a sequence of characters from an alphabet and supports rank and select queries on the sequence.
 According to Gonzalo Navarro~\cite{Navjda13} and others \textbf{[TODO: cite others]} the wavelet tree has many and wide ranging useful applications, from string processing including full-text indexes and inverted indexes to geometry processing including point grids and rectangle sets as well as graphs.
 
-In this thesis we wish to implement various algorithms and data structures for storing, constructing and querying a wavelet tree, test and compare their running times and memory usage and analyse the practical reasons for their running times and memory usage such as Cache Misses (CM), Branch Mispredictions (BM), and Translation Lookaside Buffer Misses (TLBM). Directly inspired by this analysis we will attempt a number of optimizations aimed at reducing these measurements.
+In this thesis we wish to implement various algorithms and data structures for storing, constructing and querying a wavelet tree, test and compare their running times and memory usage and analyse the practical reasons for their running times such as Cache Misses (CM), Branch Mispredictions (BM), and Translation Lookaside Buffer Misses (TLBM). Directly inspired by this analysis we will attempt a number of optimizations aimed at reducing these measurements.
 
 We will first implement the basic construction algorithm based on the description found in~\citep{ Navjda13}.
 We will then implement and attempt to improve the rank and select query algorithms.
-We will also implement a more advanced algorithm constructing a \textit{wavelet suffix tree}, which is different, yet analogous, to a wavelet tree, but with a better theoretical running time, as described in~\citep{DBLP:journals/corr/BabenkoGKS14}. Finally, we will implement a parallelized version as described in~\citep{DBLP:journals/corr/Shun14}
+%We will also implement a more advanced algorithm constructing a \textit{wavelet suffix tree}, which is different, yet analogous, to a wavelet tree, but with a better theoretical running time, as described in~\citep{DBLP:journals/corr/BabenkoGKS14}. Finally, we will implement a parallelized version as described in~\citep{DBLP:journals/corr/Shun14}
 
 Our focus will be to implement something useful in real world scenarios and we will use inputs we believe to be realistic use cases.
 We will also avoid impractical optimizations such as ones that require recompilation to handle different sizes or alphabets.
