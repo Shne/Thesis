@@ -158,7 +158,17 @@ ulong Node::binaryRank(ulong pos) {
 
 uint Node::leafSelect(uint character, ulong occurance) {
     //a leaf has no bitmap
+    uint position = parent->bitmap.size();
+    ulong maxOccurance = parent->popcountBinaryRank(position);
+    
     bool charBit = this == parent->right;
+    if(!charBit){
+        maxOccurance = parent->bitmap.size() - maxOccurance;
+    }
+    
+    if(occurance > maxOccurance){
+        return parent->select(charBit, maxOccurance);
+    }
     return parent->select(charBit, occurance);
 }
 

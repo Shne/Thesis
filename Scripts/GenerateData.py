@@ -5,6 +5,7 @@ import array
 import numpy.random
 import numpy
 import csv
+import time
 
 def generateData(powerAmount, alphabetSize):
 	fileName = "Data/n"+str(powerAmount)+"_as"+str(alphabetSize)+".data"
@@ -63,11 +64,14 @@ def generateIntegerDataNotPower(powerAmount, alphabetSize):
 def remapAlphabetSymbols(randomArray, alphabetSize):
 	alphabet = range(alphabetSize)
 	randomPermutedAlphabet = random.sample(alphabet, alphabetSize)
-	newRandomArray = randomArray
-	for j in alphabet:
-		for i in range(len(randomArray)):					
-			if randomArray[i] == j:
-				newRandomArray[i] = randomPermutedAlphabet[j]
+	newRandomArray = array.array('I')
+	print("remapping started")
+	for char in randomArray:
+		try:
+			newRandomArray.append(randomPermutedAlphabet[char-1])
+		except IndexError:
+			print(char-1)
+	print("remapping ended")
 	return newRandomArray
 
 
@@ -90,10 +94,21 @@ def generateZipfData(powerAmount, powerAlphabetSize, s):
 	remappedRandomArray.tofile(fd)
 
 
-def binarySearch(wordlist, randomvalue):
+def linarSearch(wordlist, randomvalue, permutedSymbolMapping):
 	for i in range(1,len(wordlist)):
 		if randomvalue >= wordlist[i-1] and randomvalue < wordlist[i]:
-			return i
+			return permutedSymbolMapping[i-1]
+
+def remapDataFileSymbols(powerAmount, alphabetSize):
+	fileName = "Data/n"+str(powerAmount)+"_as"+str(alphabetSize)+"_NonUniform.data"
+	fd = open(fileName, "rb")
+	randomArray = array.array('I')
+	randomArray.fromfile(fd, pow(10, powerAmount))
+	remappedRandomArray = remapAlphabetSymbols(randomArray, alphabetSize)
+	fileName = "Data/n"+str(powerAmount)+"_as"+str(alphabetSize)+"_NonUniform_remapped.data"
+	fd = open(fileName, "wb")
+	remappedRandomArray.tofile(fd)
+
 
 
 def generateNonUniformRealData(powerAmount):
@@ -106,21 +121,27 @@ def generateNonUniformRealData(powerAmount):
 	range_r = cumulativeValueList[-1]
 
 	amount = pow(10, powerAmount)
-	alphabetSize = len(cumulativeValueList)
-
+	alphabetSize = len(cumulativeValueList) #31241
+	print("Generating non-uniform data: 10^"+str(powerAmount)+" entries of alphabetsize: "+str(alphabetSize))
 
 	randomArray = array.array('I')
-	cumulativeValueList1 = [0] + cumulativeValueList
+	cumulativeValueListPadded = [0] + cumulativeValueList
+	permutedSymbolMapping = random.sample(cumulativeValueList, len(cumulativeValueList))
 	for _ in range(amount):
 		randomValue = random.uniform(range_l, range_r)
-		randomArray.append(binarySearch(cumulativeValueList1, randomValue))
+		randomArray.append(linarSearch(cumulativeValueListPadded, randomValue, permutedSymbolMapping))
 
 	fileName = "Data/n"+str(powerAmount)+"_as"+str(alphabetSize)+"_NonUniform.data"
 	fd = open(fileName, "wb")
 	randomArray.tofile(fd)
 
-generateIntegerDataNotPower(8,31242)
-generateNonUniformRealData(8)
+
+start = time.time()
+# generateNonUniformRealData(8)
+generateIntegerDataNotPower(8,31241)
+# remapDataFileSymbols(8, 31241)
+elapsed = time.time()-start
+print("time = " + str(elapsed))
 
 # for i in range(8,25):
 # 	generateZipfData(2, i, 1.2)

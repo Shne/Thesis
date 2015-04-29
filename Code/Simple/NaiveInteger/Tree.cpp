@@ -39,6 +39,10 @@ int Tree::select(uint character, ulong occurance, float skew) {
     Node* leaf = root->getLeaf(character, alphabetMin, alphabetMax, skew);
 #else
     Node* leaf = root.getLeaf(character, alphabetMin, alphabetMax, skew);
+    if(leaf == nullptr){
+        return -1;
+    }
+    
 #endif
     return leaf->leafSelect(character, occurance);
 }

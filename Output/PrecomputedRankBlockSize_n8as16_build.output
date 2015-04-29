@@ -1,9 +1,3 @@
-
-
-
-
-
-
 algorithm=SimpleNaiveInteger	test=build	amount=100000000	alphabetSize=65536	skew=2	real_cycles=26810668278	wall_time=10335213	virt_cycles=26867469069	mem_size=835076	mem_resident=818172	mem_highwatermark=834456	PAPI_TOT_CYC=31863158200	PAPI_L1_DCM=396716493	PAPI_BR_MSP=824454367	
 
 algorithm=NaivePrecomputed	test=build	amount=100000000	alphabetSize=65536	blockSize=8192	real_cycles=35957336908	wall_time=13861157	virt_cycles=36040223295	mem_size=832960	mem_resident=816516	mem_highwatermark=851220	PAPI_TOT_CYC=43162267721	PAPI_L1_DCM=397631406	PAPI_BR_MSP=827188990	

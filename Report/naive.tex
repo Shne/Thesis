@@ -32,6 +32,32 @@ Defining the input occurrence parameter as $io$, the number of words iterated th
 Again, when popcount for 0s instead of 1s is needed, we simply subtract the result of \texttt{popcount} from 1 to obtain the count of 0s.
 
 \subsection{Experiments}
+
+\subsubsection{Uniform vs. Non-Uniform data}
+\newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
+\begin{figure}\tiny
+	\begin{subfigure}{0.48\textwidth}
+		\input{UniformVsNonUniform_Build_WallTime}
+		\caption{Build Wall Time for Non-Uniform and Uniform data}
+		\label{fig:UniformVsNonUniform_Build_WallTime}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.48\textwidth}
+		\input{UniformVsNonUniform_Rank_WallTime}
+		\caption{Rank Wall Time for Non-Uniform and Uniform data}
+		\label{fig:UniformVsNonUniform_Build_WallTime}
+	\end{subfigure}	
+	
+	\begin{subfigure}{0.48\textwidth}
+		\input{UniformVsNonUniform_Select_WallTime}
+		\caption{Select Wall Time for Non-Uniform and Uniform data}
+		\label{fig:naiveIntegerAlphabetSize_BMRate}
+	\end{subfigure}
+	\hfill
+\end{figure}
+\restoregeometry
+
+
 We would like to find out whether our implementation of the construction of the tree conforms to the theoretical running time of $O(n \log \sigma)$ and how much of an improvement using the \texttt{popcount} cpu instruction was for the queries.
 
 \paragraph{Test Setup}~\\

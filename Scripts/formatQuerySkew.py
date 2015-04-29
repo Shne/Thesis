@@ -143,12 +143,10 @@ def writeToGnuplot(outputFile, dataTableKeys, testDataFile, constructionAlg, tes
 	index = 0
 	for skew in uniqueSkewValues:
 		strToWrite = "{0:.1f}".format(skew)
-		for column in avgDataTable: #take the same index in all column lists and write as row
+		
+		#take the same index in all column lists and write as row
+		for column in avgDataTable: 
 			strToWrite += "   " + str(float(column[index]))
-			# if(row.index(column) == 8 or row.index(column) == 9):
-			# 	strToWrite += "   " + str(float(column[index]))
-			# else:
-			# 	strToWrite += "   " + str(int(column[index]))
 		outputFile.write(strToWrite +"\n")
 		index+=1
 
@@ -165,7 +163,8 @@ naiveSelectGnuplotFile = open("Report/Gnuplot/Data/naiveSelectSkew.data", "w")
 controlledNodeMemoryRankGnuplotFile = open("Report/Gnuplot/Data/controlledNodeMemoryRankSkew.data", "w")
 controlledNodeMemorySelectGnuplotFile = open("Report/Gnuplot/Data/controlledNodeMemorySelectSkew.data", "w")
 columns = ("#[skew]   [L1-DataCache-Misses]   [L2-DataCache-Misses]   [L3-TotalCache-Misses]   [Branch-Misses]   [TLB]   [Conditional Branches]   [Wall time (micro seconds)]   [L2-DataCache-Hits]   [BM Rate]" + 
-"   [L2 CM Rate]  [WalltimeErr]  [BranchMissRateErr]  [BranchMisErr]  [BranchExeErr]  [TLBErr]  [L1CMErr]  [L2CMErr]  [L2CHErr]   [L3CMErr]   [CyclesErr]")
+"   [L2 CM Rate]  [WalltimeErr]  [BranchMissRateErr]  [BranchMisErr]  [BranchExeErr]  [TLBErr]  [L1CMErr]"+
+"   [L2CMErr]  [L2CHErr]   [L3CMErr]   [CyclesErr]")
 
 testValueDataListKeys = ["skewList", 
 "l1DataCacheMissesList", 

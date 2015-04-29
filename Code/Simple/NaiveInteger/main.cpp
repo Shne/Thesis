@@ -19,8 +19,8 @@
 #define TEST_ARG_NUM 4
 #define EVENTSET_ARG_NUM 5
 #define FILENAME_ARG_NUM 6
+#define OUT_FILENAME_APPEND_ARG_NUM 7
 #define NUM_REQUIRED_ARGS 6
-#define NON_UNIFORM
 
 
 using namespace std;
@@ -28,11 +28,13 @@ using namespace std;
 int main(int argc, char** argv) {
     if(argc < NUM_REQUIRED_ARGS) { cout << "NOT ENOUGH ARGUMENTS" << endl; return 0; }
     
-    #ifdef NON_UNIFORM
-        string inputFilename = "../../../Data/n" + string(argv[N_ARG_NUM]) + "_as" + string(argv[AS_ARG_NUM]) + "_NonUniform.data";
-    #else
-        string inputFilename = "../../../Data/n" + string(argv[N_ARG_NUM]) + "_as" + string(argv[AS_ARG_NUM]) + ".data";
-    #endif
+    string inputFilename;
+    if(argc > OUT_FILENAME_APPEND_ARG_NUM){
+        inputFilename = "../../../Data/n" + string(argv[N_ARG_NUM]) + "_as" + string(argv[AS_ARG_NUM]) + "_" + string(argv[OUT_FILENAME_APPEND_ARG_NUM]) + ".data";
+    }else{
+        inputFilename = "../../../Data/n" + string(argv[N_ARG_NUM]) + "_as" + string(argv[AS_ARG_NUM]) + ".data";   
+    }
+    
     cout << inputFilename << endl;
     uint size_out = 0;
     uint* inputArr = read_file(size_out, inputFilename.c_str());
@@ -42,9 +44,9 @@ int main(int argc, char** argv) {
     
     uint amount = pow(10, atoi(argv[N_ARG_NUM]));
     uint alphabetSize = 0;
-    if(atoi(argv[AS_ARG_NUM]) < 100){
+    if(atoi(argv[AS_ARG_NUM]) < 100){        
         alphabetSize = pow(2, atoi(argv[AS_ARG_NUM]));
-    }else{
+    }else{        
         alphabetSize = atoi(argv[AS_ARG_NUM]);
     }
     float skew = atof(argv[SKEW_ARG_NUM]);
