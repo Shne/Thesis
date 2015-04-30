@@ -12,7 +12,7 @@ def writeGnuplotHeader(gnuplotFile):
 	gnuplotFile.write(" [Cycles] [WalltimeErr] [BranchMissRateErr] [BranchMisErr] [BranchExeErr] [TLBErr] [L1CMErr] [L2CMErr] [L2CHErr]")
 	gnuplotFile.write(" [L3CMErr] [CyclesErr] [WallTimePercent]\n")
 
-def formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize, xValue, walltimePercent):	
+def formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize, xValue):	
 	for i in range(int(len(ReadOutput.alphabetSizeList)/testsPerSize)):
 		startIndex = i*testsPerSize
 		endIndex = startIndex + testsPerSize
@@ -63,8 +63,7 @@ def formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize, xValue, walltime
 			str(L2CMErr)+" "+
 			str(L2CHErr)+" "+
 			str(L3CMErr)+" "+
-			str(CyclesErr)+ " " +
-			str(walltimePercent) + "\n"
+			str(CyclesErr)+"\n"
 		)
 
 testsPerSize = 5
@@ -74,14 +73,7 @@ testDataFile = 'Output/UniformBuildAndQuery.output'
 gnuplotFile = open("Report/Gnuplot/Data/NaiveInteger_Build_Uniform.data", "w")
 writeGnuplotHeader(gnuplotFile)
 ReadOutput.getData(testDataFile, "SimpleNaiveInteger", "build")
-
-UniformWalltime = 0
-for i in range(int(len(ReadOutput.alphabetSizeList)/testsPerSize)):
-		startIndex = i*testsPerSize
-		endIndex = startIndex + testsPerSize
-		UniformWalltime = Utils.avg(ReadOutput.wallTimeList[startIndex:endIndex])
-
-formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize, 2, 100)
+formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize, 2)
 ReadOutput.reset()
 
 #Non Uniform
@@ -89,15 +81,7 @@ testDataFile = 'Output/NonUniformBuildAndQuery.output'
 gnuplotFile = open("Report/Gnuplot/Data/NaiveInteger_Build_NonUniform.data", "w")
 writeGnuplotHeader(gnuplotFile)
 ReadOutput.getData(testDataFile, "SimpleNaiveInteger", "build")
-
-NonUniformWalltime = 0
-for i in range(int(len(ReadOutput.alphabetSizeList)/testsPerSize)):
-		startIndex = i*testsPerSize
-		endIndex = startIndex + testsPerSize
-		NonUniformWalltime = Utils.avg(ReadOutput.wallTimeList[startIndex:endIndex])
-
-percent = (NonUniformWalltime/UniformWalltime)*100
-formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize, 1, percent)
+formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize, 1)
 ReadOutput.reset()
 
 
@@ -106,14 +90,7 @@ testDataFile = 'Output/UniformBuildAndQuery.output'
 gnuplotFile = open("Report/Gnuplot/Data/NaiveInteger_Rank_Uniform.data", "w")
 writeGnuplotHeader(gnuplotFile)
 ReadOutput.getData(testDataFile, "SimpleNaiveInteger", "rank")
-
-UniformWalltime = 0
-for i in range(int(len(ReadOutput.alphabetSizeList)/testsPerSize)):
-		startIndex = i*testsPerSize
-		endIndex = startIndex + testsPerSize
-		UniformWalltime = Utils.avg(ReadOutput.wallTimeList[startIndex:endIndex])
-
-formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize, 2, 100)
+formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize, 2)
 ReadOutput.reset()
 
 #Non Uniform
@@ -121,15 +98,7 @@ testDataFile = 'Output/NonUniformBuildAndQuery.output'
 gnuplotFile = open("Report/Gnuplot/Data/NaiveInteger_Rank_NonUniform.data", "w")
 writeGnuplotHeader(gnuplotFile)
 ReadOutput.getData(testDataFile, "SimpleNaiveInteger", "rank")
-
-NonUniformWalltime = 0
-for i in range(int(len(ReadOutput.alphabetSizeList)/testsPerSize)):
-		startIndex = i*testsPerSize
-		endIndex = startIndex + testsPerSize
-		NonUniformWalltime = Utils.avg(ReadOutput.wallTimeList[startIndex:endIndex])
-
-percent = (NonUniformWalltime/UniformWalltime)*100
-formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize, 1, percent)
+formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize, 1)
 ReadOutput.reset()
 
 
@@ -138,14 +107,7 @@ testDataFile = 'Output/UniformBuildAndQuery.output'
 gnuplotFile = open("Report/Gnuplot/Data/NaiveInteger_Select_Uniform.data", "w")
 writeGnuplotHeader(gnuplotFile)
 ReadOutput.getData(testDataFile, "SimpleNaiveInteger", "select")
-
-UniformWalltime = 0
-for i in range(int(len(ReadOutput.alphabetSizeList)/testsPerSize)):
-		startIndex = i*testsPerSize
-		endIndex = startIndex + testsPerSize
-		UniformWalltime = Utils.avg(ReadOutput.wallTimeList[startIndex:endIndex])
-
-formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize, 2, 100)
+formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize, 2)
 ReadOutput.reset()
 
 #Non Uniform
@@ -153,15 +115,7 @@ testDataFile = 'Output/NonUniformBuildAndQuery.output'
 gnuplotFile = open("Report/Gnuplot/Data/NaiveInteger_Select_NonUniform.data", "w")
 writeGnuplotHeader(gnuplotFile)
 ReadOutput.getData(testDataFile, "SimpleNaiveInteger", "select")
-
-NonUniformWalltime = 0
-for i in range(int(len(ReadOutput.alphabetSizeList)/testsPerSize)):
-		startIndex = i*testsPerSize
-		endIndex = startIndex + testsPerSize
-		NonUniformWalltime = Utils.avg(ReadOutput.wallTimeList[startIndex:endIndex])
-
-percent = (NonUniformWalltime/UniformWalltime)*100
-formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize, 1, percent)
+formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize, 1)
 ReadOutput.reset()
 
 gnuplotFile.close()
