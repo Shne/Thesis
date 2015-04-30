@@ -5,7 +5,7 @@ import subprocess
 import Utils
 
 testDataFile = 'Output/PrecomputedRankBlockSize_n8as16_build.output'
-testsPerSize = 1
+testsPerSize = 5
 
 pageSize = 4096
 quartPage = int(pageSize/4)

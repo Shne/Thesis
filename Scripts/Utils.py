@@ -138,9 +138,18 @@ def formatAndWriteMemValues(ReadOutput, gnuplotFile, testsPerSize):
 		MemResident = avg(ReadOutput.memResidentList[startIndex:endIndex])
 		MemHighWatermark = avg(ReadOutput.memHighWatermarkList[startIndex:endIndex])
 
+		blockSizeErr = numpy.std(ReadOutput.blockSizeList[startIndex:endIndex])
+		MemSizeErr = numpy.std(ReadOutput.memSizeList[startIndex:endIndex])
+		MemResidentErr = numpy.std(ReadOutput.memResidentList[startIndex:endIndex])
+		MemHighWatermarkErr = numpy.std(ReadOutput.memHighWatermarkList[startIndex:endIndex])
+
 		gnuplotFile.write(
 			str(blockSize)+" "+
 			str(MemSize)+" "+
 			str(MemResident)+" "+
-			str(MemHighWatermark)+"\n"
+			str(MemHighWatermark)+" "+
+			str(MemSizeErr)+" "+
+			str(MemResidentErr)+" "+
+			str(MemHighWatermarkErr)+
+			"\n"
 		)
