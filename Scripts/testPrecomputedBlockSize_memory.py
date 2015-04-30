@@ -32,7 +32,7 @@ subprocess.Popen(['make','CONF=Release'], cwd=naivePrecomputedCwd).wait()
 subprocess.Popen(['make','CONF=Release', 'clean'], cwd=unalignedNaivePrecomputedCwd).wait()
 subprocess.Popen(['make','CONF=Release'], cwd=unalignedNaivePrecomputedCwd).wait()
 
-repeats = 1
+repeats = 5
 
 pageSize = 4096
 quartPage = int(pageSize/4)

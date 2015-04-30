@@ -5,7 +5,7 @@ import os.path
 from time import sleep
 
 amount = 8
-alphabetSize = 31242
+alphabetSize = 31241
 skew = 2
 program = "dist/Release/GNU-Linux-x86/naiveinteger"
 cwd = 'Code/Simple/NaiveInteger'
@@ -51,8 +51,7 @@ for i in range(0, 5):
 addNewline()
 addNewline()
 
-program = "dist/Release/GNU-Linux-x86/naiveinteger"
-cwd = 'Code/Simple/NaiveInteger'
+
 outputFilename = 'UniformBuildAndQuery.output'
 datatype = "Uniform"
 print("Uniform NaiveInteger: Build")

@@ -60,6 +60,8 @@ pageSize = 4096
 quartPage = int(pageSize/4)
 blockSizeRange = range(quartPage, pageSize*2 +1, quartPage)
 test = 'buildmemory'
+repeats = 5
+
 
 "(?P<alphabetSize>\d+)"
 regex = b"mem_heap_B=(?P<heap>\d+)\nmem_heap_extra_B=(?P<extra>\d+)\nmem_stacks_B=(?P<stacks>\d+)\nheap_tree=empty$"
@@ -68,41 +70,46 @@ compiledRegex = re.compile(regex)
 programName = "NaiveInteger"
 print(programName)
 skew = 2
-args = massif + [naiveIntegerProgram, str(amount), str(alphabetSize), str(skew), test, str(0), outputFilename]
-subprocess.Popen(args, cwd=naiveIntegerCwd).wait()
-writeMassifData(programName, 'N/A')
+for _ in range(repeats):
+	args = massif + [naiveIntegerProgram, str(amount), str(alphabetSize), str(skew), test, str(0), outputFilename]
+	subprocess.Popen(args, cwd=naiveIntegerCwd).wait()
+	writeMassifData(programName, 'N/A')
 addNewline()
 
 programName = "PreallocatedPrecomputed"
 print(programName)
 for blockSize in blockSizeRange:
-	args = massif + [preallocatedPrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
-	subprocess.Popen(args, cwd=preallocatedPrecomputedCwd).wait()
-	writeMassifData(programName, blockSize)
+	for _ in range(repeats):
+		args = massif + [preallocatedPrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
+		subprocess.Popen(args, cwd=preallocatedPrecomputedCwd).wait()
+		writeMassifData(programName, blockSize)
 addNewline()
 
 programName = "UnalignedPreallocatedPrecomputed"
 print(programName)
 for blockSize in blockSizeRange:
-	args = massif + [unalignedPreallocatedPrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
-	subprocess.Popen(args, cwd=unalignedPreallocatedPrecomputedCwd).wait()
-	writeMassifData(programName, blockSize)
+	for _ in range(repeats):
+		args = massif + [unalignedPreallocatedPrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
+		subprocess.Popen(args, cwd=unalignedPreallocatedPrecomputedCwd).wait()
+		writeMassifData(programName, blockSize)
 addNewline()
 
 programName = "NaivePrecomputed"
 print(programName)
 for blockSize in blockSizeRange:
-	args = massif + [naivePrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
-	subprocess.Popen(args, cwd=naivePrecomputedCwd).wait()
-	writeMassifData(programName, blockSize)
+	for _ in range(repeats):
+		args = massif + [naivePrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
+		subprocess.Popen(args, cwd=naivePrecomputedCwd).wait()
+		writeMassifData(programName, blockSize)
 addNewline()
 
 programName = "UnalignedNaivePrecomputed"
 print(programName)
 for blockSize in blockSizeRange:
-	args = massif + [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
-	subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
-	writeMassifData(programName, blockSize)
+	for _ in range(repeats):
+		args = massif + [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
+		subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
+		writeMassifData(programName, blockSize)
 addNewline()
 
 os.remove(tempOutFile)
