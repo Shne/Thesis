@@ -10,7 +10,6 @@ skew = 2
 program = "dist/Release/GNU-Linux-x86/naiveinteger"
 cwd = 'Code/Simple/NaiveInteger'
 outputFilename = 'NonUniformBuildAndQuery.output'
-datatype = "NonUniform"
 
 def addNewline():
 	open('Output/'+outputFilename, 'a').write('\n')
@@ -22,65 +21,64 @@ subprocess.Popen(['make','CONF=Release'], cwd=cwd).wait()
 
 print("NonUniform NaiveInteger: Build")
 for i in range(0, 5): 
-	args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(0), outputFilename, datatype]
+	args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(0), outputFilename, "NonUniform"]
 	subprocess.Popen(args, cwd=cwd).wait()
-	args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(1), outputFilename, datatype]
+	args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(1), outputFilename, "NonUniform"]
 	subprocess.Popen(args, cwd=cwd).wait()
-	args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(2), outputFilename, datatype]
+	args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(2), outputFilename, "NonUniform"]
 	subprocess.Popen(args, cwd=cwd).wait()
 addNewline()
 
 print("NonUniform NaiveInteger: Rank")
 for i in range(0, 5):
-	args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(0), outputFilename, datatype]
+	args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(0), outputFilename, "NonUniform"]
 	subprocess.Popen(args, cwd=cwd).wait()
-	args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(1), outputFilename, datatype]
+	args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(1), outputFilename, "NonUniform"]
 	subprocess.Popen(args, cwd=cwd).wait()
-	args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(2), outputFilename, datatype]
+	args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(2), outputFilename, "NonUniform"]
 	subprocess.Popen(args, cwd=cwd).wait()
 addNewline()
 
 print("NonUniform NaiveInteger: Select")
 for i in range(0, 5):
-	args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(0), outputFilename, datatype]
+	args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(0), outputFilename, "NonUniform"]
 	subprocess.Popen(args, cwd=cwd).wait()
-	args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(1), outputFilename, datatype]
+	args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(1), outputFilename, "NonUniform"]
 	subprocess.Popen(args, cwd=cwd).wait()
-	args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(2), outputFilename, datatype]
+	args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(2), outputFilename, "NonUniform"]
 	subprocess.Popen(args, cwd=cwd).wait()
 addNewline()
 addNewline()
 
 
 outputFilename = 'UniformBuildAndQuery.output'
-datatype = "Uniform"
 print("Uniform NaiveInteger: Build")
 for i in range(0, 5): 
-	args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(0), outputFilename, datatype]
+	args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(0), outputFilename]
 	subprocess.Popen(args, cwd=cwd).wait()
-	args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(1), outputFilename, datatype]
+	args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(1), outputFilename]
 	subprocess.Popen(args, cwd=cwd).wait()
-	args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(2), outputFilename, datatype]
+	args = [program, str(amount), str(alphabetSize), str(skew), 'build', str(2), outputFilename]
 	subprocess.Popen(args, cwd=cwd).wait()
 addNewline()
 
 print("Uniform NaiveInteger: Rank")
 for i in range(0, 5): 
-	args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(0), outputFilename, datatype]
+	args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(0), outputFilename]
 	subprocess.Popen(args, cwd=cwd).wait()
-	args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(1), outputFilename, datatype]
+	args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(1), outputFilename]
 	subprocess.Popen(args, cwd=cwd).wait()
-	args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(2), outputFilename, datatype]
+	args = [program, str(amount), str(alphabetSize), str(skew), 'rank', str(2), outputFilename]
 	subprocess.Popen(args, cwd=cwd).wait()
 addNewline()
 
 print("Uniform NaiveInteger: Select")
 for i in range(0, 5):
-	args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(0), outputFilename, datatype]
+	args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(0), outputFilename]
 	subprocess.Popen(args, cwd=cwd).wait()
-	args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(1), outputFilename, datatype]
+	args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(1), outputFilename]
 	subprocess.Popen(args, cwd=cwd).wait()
-	args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(2), outputFilename, datatype]
+	args = [program, str(amount), str(alphabetSize), str(skew), 'select', str(2), outputFilename]
 	subprocess.Popen(args, cwd=cwd).wait()
 addNewline()
 addNewline()
