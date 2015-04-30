@@ -435,8 +435,14 @@ Figure~\ref{fig:BwtRleWaveletTree} depicts a RLE Wavelet tree on \textit{bwt(abc
 	\end{minipage}
 \figureEnd
 
-
+\subsubsection{Huffman-shaped Wavelet Trees}
 \noindent\textbf{(Todo: describe what a Huffman shaped wavelet tree is and how it requires symbol frequencies and is best when the data is non-uniform so some symbol frequencies are higher than others.)}\\
+
+, which places symbols with higher frequencies closer to the root than those that have a lower frequency in such a way that the path from root to symbol leaf corresponds to the binary Huffman code of the symbol. 
+The Huffman code of a symbol is a small binary value for the symbol with the highest frequency and a high binary value for the symbol with the smallest frequency.
+This would make the tree skewed which increases the height of the tree but decreases query time for symbols with high frequency.
+If one then queries the Huffman shaped Wavelet Tree for a symbol that has a high frequency then one would find it faster than if one was looking for a symbol with a small frequency.
+
 \textbf{(Todo: Figure out how to do queries when the input is Burrows-Wheeler transformed and the bitmaps are run length encoded where the answers must be the same as when the tree is uncompressed - is it even possible.)}
 
 \subsection{Information Retrieval}

@@ -17,19 +17,26 @@ We have chosen to do so for several reasons, among them being that we believe it
 The even amount of occurrences of each character also means there will be little difference in size of bitmap among the nodes in a single layer of the tree.
 
 \subsubsection{Uniform vs. Non-Uniform data}
-If the data is non-uniform it means that some symbols from the alphabet will appear with a higher frequency than others.
-If one knows the frequencies of all symbols then one can build a Huffman shaped Wavelet Tree, which places symbols with higher frequencies closer to the root than those that have a smaller frequency, in such a way that the path from root to symbol leaf corresponds to the binary Huffman code of the symbol. 
-The Huffman code of a symbol is a small binary value for the symbol with the highest frequency and a high binary value for the symbol with the smallest frequency.
-This would make the tree skewed which increases the height of the tree but decreases query time for symbols with high frequency.
-If one then queries the Huffman shaped Wavelet Tree for a symbol that has a high frequency then one would find it faster than if one was looking for a symbol with a small frequency.
+Uniform data for a wavelet tree is a string with each character occurring with the same probability at each position and therefore with similar frequencies.
+If the data is non-uniform it means that some symbols from the alphabet will appear with a significantly higher frequency than others.
+If one knows the frequencies of all symbols in the alphabet, without needing it to be exact, then one can build a Huffman shaped Wavelet Tree and we believe it will beat out any balanced wavelet tree in terms of performance.
+The frequencies can be found by a simple linear scan of the input string before building the tree.
 
-We have not implemented a Huffman shaped Wavelet Tree but non-uniform data still introduces a bias in the normal balanced Wavelet tree.
+We are more interested in the general case of being able to perform well on any input string and so we don't want to implement optimizations that require a specific character distribution in the input string.
+Using non-uniform data for our testing with a general wavelet tree will also introduce bias into our results.
 This is because the sizes of the bitmaps in each node in a given level of the tree would not be equal, as they would for uniform data.
-When we query the tree and take a path with many large bitmaps it will take longer than a path with many small bitmaps
-Therefore having nun-uniform data would introduce a bias in our query tests based on the symbol we are querying for. 
-If our data on the other hand is uniform that bias would not be present.
+When we query the tree and take a path with many large bitmaps it will take longer than a path with many small bitmaps.
+Depending on which non-uniform distribution is used, some characters might not even appear at all in the input string, and querying for them would terminate early.
+This is especially true for Select queries that find the leaf node corresponding to the character that was queried for and then spends most of the its time traversing up the tree looking for the position in the complete input string.
+If the queried-for character didn't exist in the input string, a select query would terminate before even having gone down the full length of the tree, because the leaf node corresponding to the character doesn't exist.
+Rank queries on the other hand would still take much the same time on non-occurring characters as on occurring characters, because they spend most of their time in the single downward traversal of the tree they perform, and still will perform for non-occurring characters as it is only near the end of this traversal that the character will be found to not occur.
 
-There is also the problem of choosing how the data must be non-uniformly distributed as there are several non-uniform distribution methods to choose from.
+Therefore having nun-uniform data would introduce a bias in our query tests based on the symbol we are querying for, one that would be difficult to avoid without introducing more bias by choosing exactly which characters to query for.
+
+There is also the problem of choosing which occurrence to query for in the case of select, as the character should occur at least that many times.
+When using uniform data we know that it is extremely unlikely for any character to occur less than some minimum number of times, because of their equal occurrence probability.
+
+If we used non-uniform data we would also have the problem of choosing which non-uniform distribution we should use, and there are many to choose from.
 
 \subsubsection{Non-uniform distribution choice}
 The wavelet tree has applications within full text indexing which suggests that having a distribution based on how words are distributed with in a normal English text could be a good choice, because it would be a realistic use case. 
