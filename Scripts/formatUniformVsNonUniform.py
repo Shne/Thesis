@@ -10,7 +10,7 @@ import Utils
 def writeGnuplotHeader(gnuplotFile):
 	gnuplotFile.write("#[xValue] [alphabetSize] [Walltime] [BlockSize] [BranchMissRate] [BranchMis] [BranchExe] [TLB] [L1CM] [L2CM] [L2CH] [L3CM]")
 	gnuplotFile.write(" [Cycles] [WalltimeErr] [BranchMissRateErr] [BranchMisErr] [BranchExeErr] [TLBErr] [L1CMErr] [L2CMErr] [L2CHErr]")
-	gnuplotFile.write(" [L3CMErr] [CyclesErr] [WallTimePercent]\n")
+	gnuplotFile.write(" [L3CMErr] [CyclesErr]\n")
 
 def formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize, xValue):	
 	for i in range(int(len(ReadOutput.alphabetSizeList)/testsPerSize)):

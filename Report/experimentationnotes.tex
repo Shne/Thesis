@@ -17,6 +17,7 @@ We have chosen to do so for several reasons, among them being that we believe it
 The even amount of occurrences of each character also means there will be little difference in size of bitmap among the nodes in a single layer of the tree.
 
 \subsubsection{Uniform vs. Non-Uniform data}
+\label{sec:expnotesUniformVsNonuniform}
 Uniform data for a wavelet tree is a string with each character occurring with the same probability at each position and therefore with similar frequencies.
 If the data is non-uniform it means that some symbols from the alphabet will appear with a significantly higher frequency than others.
 If one knows the frequencies of all symbols in the alphabet, without needing it to be exact, then one can build a Huffman shaped Wavelet Tree and we believe it will beat out any balanced wavelet tree in terms of performance.
