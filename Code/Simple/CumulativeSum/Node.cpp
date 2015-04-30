@@ -232,26 +232,29 @@ uint Node::blockBinarySelect(bool charBit, uint occurrence, uint blockSize) {
 //    uint occCounter = 0;
     
     //BINARY SEARCH
-    uint searchBlockIndex = (bitmap.size()/blockSize +1)/2;
+    uint searchBlockIndex = (bitmap.size()/blockSize + 1)/2;
     uint blockJump = searchBlockIndex/2;
-    cout << bitmap.size() << " " << blockJump << " " << searchBlockIndex << endl;
+//    cout << bitmap.size() << " " << blockJump << " " << searchBlockIndex << endl;
     while(blockJump > 0) {
         uint rank = blockRanks[searchBlockIndex];
-        uint prevRank = blockRanks[searchBlockIndex -1];
-        if(prevRank < occurrence && occurrence <= rank) {
-            break;
-        }
+//        uint prevRank = blockRanks[searchBlockIndex -1];
+//        cout << prevRank << " " << rank << endl;
+//        if(prevRank < occurrence && occurrence <= rank) {
+//            break;
+//        }
         int positiveNegative = ((-0.5f) + (rank < occurrence)) * 2; //positiveNegative should be -1 when rank >= occurrence and otherwise 1
         assert(positiveNegative == -1 || positiveNegative == 1);
         searchBlockIndex += positiveNegative * blockJump;
         blockJump = blockJump/2;
-        cout << searchBlockIndex << endl;
+//        cout << searchBlockIndex << endl;
     }
     //one last jump
     uint rank = blockRanks[searchBlockIndex];
-    blockJump = (rank < occurrence); //jump will be 1 if rank < occurrence, 0 otherwise
+    blockJump = rank < occurrence; //jump will be 1 if rank < occurrence, 0 otherwise
     searchBlockIndex += blockJump;
-    assert(blockRanks[searchBlockIndex] >= occurrence);
+    uint nextRank = blockRanks[searchBlockIndex];
+    if(nextRank < occurrence) cout << nextRank << " " << occurrence << endl;
+    assert(nextRank >= occurrence);
     int previousBlockIndex = searchBlockIndex -1;
     short blockIndexPositive = (short)(previousBlockIndex>=0); //0 when blockIndex is negative, 1 otherwise
     uint occLeft = occurrence - blockRanks[previousBlockIndex*blockIndexPositive] * blockIndexPositive;
