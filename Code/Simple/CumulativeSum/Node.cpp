@@ -227,43 +227,56 @@ uint Node::blockBinarySelect(bool charBit, uint occurrence, uint blockSize) {
     if(bitmap.size() < blockSize) {
         return popcountBinarySelect(charBit, occurrence, 0);
     }
-    
-//    uint offset = 0;
-//    uint occCounter = 0;
-    
+
     //BINARY SEARCH
     uint searchBlockIndex = blockRanks.size()/2;
     uint blockJump = searchBlockIndex;
-    
     do {
         blockJump = blockJump/2 + blockJump%2;
         cout << blockRanks.size() << " " << searchBlockIndex << " " << blockJump << " while" << endl;
-        uint rank = blockRanks[searchBlockIndex];
-        cout << rank << " " << occurrence << endl;
+        uint bitsCovered = (searchBlockIndex+1)*blockSize;
+        uint rank = labs(charBit*bitsCovered - (bitsCovered - (long)blockRanks[searchBlockIndex]));
+//        uint rank = charBit ? blockRanks[searchBlockIndex] : bitsCovered - blockRanks[searchBlockIndex];
+//        cout << rank << " " << occurrence << endl;
         int positiveNegative = ((-0.5f) + (rank < occurrence)) * 2; //positiveNegative should be -1 when rank >= occurrence and otherwise 1
         assert(positiveNegative == -1 || positiveNegative == 1);
         searchBlockIndex += positiveNegative * blockJump;
     } while(blockJump > 1);
     
-    //last corrective jump
+    //last corrective jump ahead by either 0 or 1.
     cout << blockRanks.size() << " " << searchBlockIndex << " " << blockJump << " pre-corrective" <<  endl;
-    uint rank = blockRanks[searchBlockIndex];
+    uint bitsCovered = (searchBlockIndex+1)*blockSize;
+    uint rank = labs(charBit * bitsCovered - (bitsCovered - (long)blockRanks[searchBlockIndex]));
+//    uint rank = charBit ? blockRanks[searchBlockIndex] : bitsCovered - blockRanks[searchBlockIndex];
 //    cout << rank << " " << occurrence << endl;
     blockJump = rank < occurrence; //jump will be 1 if rank < occurrence, 0 otherwise
     searchBlockIndex += blockJump;
     cout << blockRanks.size() << " " << searchBlockIndex << " " << blockJump << " post-corrective" << endl;
-    uint nextRank = blockRanks[searchBlockIndex];
-    cout << nextRank << " " << occurrence << endl;
+    bitsCovered = (searchBlockIndex+1)*blockSize;
+    uint nextRank = labs(charBit * bitsCovered - (bitsCovered - (long)blockRanks[searchBlockIndex]));
+//    uint nextRank = charBit ? blockRanks[searchBlockIndex] : bitsCovered - blockRanks[searchBlockIndex];
+//    cout << nextRank << " " << occurrence << endl;
     assert(nextRank >= occurrence);
+    
+    //Calculate occurrences left by using rank up to this block
     int previousBlockIndex = searchBlockIndex -1;
     short blockIndexPositive = (short)(previousBlockIndex>=0); //0 when blockIndex is negative, 1 otherwise
-    uint occLeft = occurrence - blockRanks[previousBlockIndex*blockIndexPositive] * blockIndexPositive;
+    bitsCovered = (previousBlockIndex+1)*blockSize;
+//    uint prevRank = labs(charBit * bitsCovered - (bitsCovered - (long)blockRanks[previousBlockIndex*blockIndexPositive]));
+//    uint prevRank = charBit ? blockRanks[searchBlockIndex] : bitsCovered - blockRanks[previousBlockIndex*blockIndexPositive];
+    uint prevRank = labs(charBit*bitsCovered - (bitsCovered - (long)blockRanks[previousBlockIndex*blockIndexPositive]));
+    uint occLeft = occurrence - prevRank * blockIndexPositive;
+    assert(prevRank*blockIndexPositive < nextRank);
+    
+    //Calculate and return position
     uint offset = searchBlockIndex * blockSize;
-    
     return offset + popcountBinarySelect(charBit, occLeft, offset);
-    
-    
-    //FULL BLOCKS
+
+
+
+//    uint offset = 0;
+//    uint occCounter = 0;
+//    //FULL BLOCKS
 //    for(uint i = 0; i < blockRanks.size(); i++) {
 //        uint thisBlockRank = charBit ? blockRanks[i] : blockSize - blockRanks[i];
 //        if(occCounter + thisBlockRank < occurrence) {
@@ -302,21 +315,21 @@ uint Node::popcountBinarySelect(bool charBit, uint occurrence, uint offset) {
     unsigned long* firstFullWord = ref._M_p;
     
     //PART OF FIRST WORD if unaligned
-//    if(ref._M_mask > 1) { //mask = 1 means first part of first word is part of our bitmap, and we can just use the fullword iteration code below
-//        //create 111110000 type mask from 000010000 type mask
-//        ulong firstMask = ~(ref._M_mask - 1UL); //the bit of _M_mask and up
-//        ulong maskedFirstWord = (*ref._M_p) & firstMask;
-//        int occInWord = __builtin_popcountl(maskedFirstWord);
-//        int sizeOfMask = __builtin_popcountl(firstMask);
-//        int wordOcc = charBit ? occInWord : sizeOfMask - occInWord;
-//        if(wordOcc >= occurrence) {
-//            return popcountBinarySelectAux(maskedFirstWord, charBit, occurrence, ref._M_mask);
-//        } else {
-//            occCounter += wordOcc;
-//        }
-//        initialOffset = __builtin_popcountl(firstMask); //the amount we should skip for our calculation of fullWords
-//        firstFullWord++; ///pointer was to a word we only partially had bits in
-//    }
+    if(ref._M_mask > 1) { //mask = 1 means first part of first word is part of our bitmap, and we can just use the fullword iteration code below
+        //create 111110000 type mask from 000010000 type mask
+        ulong firstMask = ~(ref._M_mask - 1UL); //the bit of _M_mask and up
+        ulong maskedFirstWord = (*ref._M_p) & firstMask;
+        int occInWord = __builtin_popcountl(maskedFirstWord);
+        int sizeOfMask = __builtin_popcountl(firstMask);
+        int wordOcc = charBit ? occInWord : sizeOfMask - occInWord;
+        if(wordOcc >= occurrence) {
+            return popcountBinarySelectAux(maskedFirstWord, charBit, occurrence, ref._M_mask);
+        } else {
+            occCounter += wordOcc;
+        }
+        initialOffset = __builtin_popcountl(firstMask); //the amount we should skip for our calculation of fullWords
+        firstFullWord++; ///pointer was to a word we only partially had bits in
+    }
     
     //FULL WORDS
     uint alignedPos = bitmap.size() - initialOffset; //initialOffset is the amount of bits in the first unaligned word of our bitmap
