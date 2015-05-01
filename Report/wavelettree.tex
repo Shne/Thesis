@@ -22,7 +22,6 @@ Let $S[1,n] = S_1 S_2 ... S_n$ be a sequence of symbols where $s_i \in \Sigma$ a
 
 
 \figureBegin
-\caption{Wavelet Tree on string \textit{adsfadaadsfaads} with alphabet $\sigma = adfs$}				
 \Tree
 %root
 [.adsfadaadsfaads\\001100000110001 !\qsetw{5cm} 
@@ -34,7 +33,7 @@ Let $S[1,n] = S_1 S_2 ... S_n$ be a sequence of symbols where $s_i \in \Sigma$ a
 	[.sfsfs\\10101 !\qsetw{5cm} 
 		%right -> left,right child
 		[.ff !\qsetw{5.3cm} ] [.sss !\qsetw{5.3cm} ]]] 
-\vspace{1 cm}
+\caption{Wavelet Tree on string \textit{adsfadaadsfaads} with alphabet $\sigma = adfs$}	
 \label{fig:WaveletTreeExample}
 \figureEnd
 
@@ -390,9 +389,7 @@ It would not make very much sense to compress something without being able to de
 
 Figure~\ref{fig:BwtRleWaveletTree} depicts a RLE Wavelet tree on \textit{bwt(abcbadbd)}. We can see, as indicated by the numbers in bold that fewer Run-length encoded values needs to be stored than for the non-Burrows-Wheeler transformed case as shown in figure~\ref{fig:RleWaveletTree}.
 \figureBegin
-      \begin{minipage}{0.45\textwidth}
-      \caption{RLE Wavelet Tree on string \textit{bananahat} with alphabet $\sigma = abhnt$}
-      \label{fig:RleWaveletTree}
+      \begin{minipage}{0.45\textwidth}      
 			\Tree
 			%root
 			[.bananahat\\2,1,1,1,3,1 !\qsetw{3cm} 
@@ -410,11 +407,11 @@ Figure~\ref{fig:BwtRleWaveletTree} depicts a RLE Wavelet tree on \textit{bwt(abc
 					[.t !\qsetw{3cm} ]
 				]
 			]
+		\caption{RLE Wavelet Tree on string \textit{bananahat} with alphabet $\sigma = abhnt$}
+      \label{fig:RleWaveletTree}
 	\end{minipage}
 	\hfill
-	\begin{minipage}{0.45\textwidth}
-	\caption{RLE Wavelet Tree on $BWT(bananahat)=tnnbhaaaa$ with alphabet $\sigma = abhnt$}
-\label{fig:BwtRleWaveletTree}
+	\begin{minipage}{0.45\textwidth}	
 			\Tree
 			%root
 			[.tnnbhaaaa\\\textbf{0,3,6} !\qsetw{3cm} 
@@ -432,6 +429,8 @@ Figure~\ref{fig:BwtRleWaveletTree} depicts a RLE Wavelet tree on \textit{bwt(abc
 					[.t !\qsetw{3cm} ]
 				]
 			] 
+		\caption{RLE Wavelet Tree on $BWT(bananahat)=tnnbhaaaa$ with alphabet $\sigma = abhnt$}
+		\label{fig:BwtRleWaveletTree}
 	\end{minipage}
 \figureEnd
 
@@ -497,7 +496,6 @@ The argument to $rank_0$ and $rank_1$ is the position to find the number of occu
 This means that $rank_1(r)$ for instance returns the number of 1s in the bitmap until position $r$.
 
 \figureBegin
-\caption{Range Quantile Query on a Wavelet Tree.\\ $S=\lbrace 6,2,0,7,9,3,1,8,5,4 \rbrace, k=5, l=3, r=9$.}
 \begin{minipage}{.45\linewidth}
 \begin{flushleft}                           
 \Tree
@@ -549,6 +547,7 @@ level 3:\\$k=2$\\$l=2$\\$r=3$\\ \vspace{0.5cm}
 Level 4:\\$k=1$\\$l=1$\\$r=1$
 \end{flushright} 
 \end{minipage}
+\caption{Range Quantile Query on a Wavelet Tree. $S=\lbrace 6,2,0,7,9,3,1,8,5,4 \rbrace, k=5, l=3, r=9$.}
 \label{fig:RQQWaveletTree}
 \figureEnd
 

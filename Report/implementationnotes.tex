@@ -1,29 +1,3 @@
-\section{Cache misses, Branch mispredictions and Translation Lookaside Buffer misses}
-
-\subsection{Cache misses}
-A cache is a small fast memory storage that holds the most recently used memory words.
-Caches improves on the memory latency so memory access can be achieved within the demand of modern processors.
-Modern memory systems usually have three cache: Level 1 (L1), Level 2 (L2) and Level 3 (L3). 
-
-\begin{figure}
-\includegraphics[width=\textwidth]{CacheLevels.pdf}
-\end{figure}
-
-
-
-The L1 cache resides on the CPU chip itself and usually has a size in the range from 16 KB to 128 KB and because it is placed directly on the CPU chip it is able to provide very fast memory access.
-
-The L2 cache is placed next to the CPU chit and connected to it via a high speed path. It typically has a size between 512 KB and 1 MB which means that it can hold more data but is not able to provide as fast access as L1.
-
-The L3 cache is placed on the processor board and usually has a size around 3 MB. Since it is placed further away from the cpu it is not able to provide as fast access as L1 and L2 but still much faster than fetching data from RAM.
-
-
-
-
-\subsection{Branch Mispredictions}
-
-\subsection{Translation Lookaside Buffer misses}
-
 \section{Notes on Implementation}
 
 \subsection{Machines used}
