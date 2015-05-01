@@ -32,12 +32,11 @@ where $alphabetSize$ is the size of the alphabet at this node, $alphabetMin$ is 
 We then round the value down so it is an actual integer character instead of a decimal.
 
 
-
 \subsection{Controlled Memory Layout}
 We still want to support dynamic input and alphabet sizes without recompilation, so the nodes must be dynamically allocated on the heap.
 
 The size of a node is known at compile time as it contains simply pointers to parent node and left and right child nodes, as well as a boolean to flag it as a leaf node and its bitmap as a vector, which internally stores a pointer to its backing array.
-As such, we can and do allocate the memory for the nodes by allocating an array, then instantiating nodes into that array.
+As such, we can and do allocate the memory for the nodes by allocating an array, then instantiate nodes into that array.
 We pass a reference to a pointer into the array from parent to child nodes during construction, so they know where to allocate their child nodes.
 The pointer points to the position of the last node in the array, and so before each instantiation of a new node, we increment the pointer so it points to free space, then place the new node there.
 

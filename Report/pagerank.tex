@@ -24,7 +24,14 @@ We will test and compare the Rank and Select running times and memory usage of f
 
 
 \subsection{Concatenating the Bitmaps}
-We allocate the bitmaps as one giant bitmap the size of the maximum possible size required to store all the bitmaps for all the nodes. The sum of the size of all bitmaps on one layer of the tree can at most be $n$ and we can at most have $h$ layers, so the maximum size becomes
+We allocate the bitmaps as one giant bitmap the size of the maximum possible size required to store all the bitmaps for all the nodes.
+We store them in a Depth-First-right manner, that is, the bitmap of the right child of a node comes right after the bitmap of the node.
+
+There are many other alternative memory layouts that might provide better performance, one such, and the one we believe has the greatest potential to improve the wavelet tree performance, is the van Emde Boas memory layout~\textbf{[TODO: cite]}
+It would be a challenge to implement, because we don't now the size of a bitmap of a node before having calculated the bitmap of the parent, and so we cannot know the position of each bitmap in the giant bitmap before having calculated the parent of each, meaning we must construct the tree in vEB layout order.
+To support construction of the wavelet tree in vEB layout order our construction algorithm would have to be dramatically changed, possibly utilizing concurrency constructs such as a job queue and message passing, and so we skip this work for now and save it for future work in Section~\ref{sec:futurework_vebmemorylayout}.
+
+The sum of the size of all bitmaps on one layer of the tree can at most be $n$ and we can at most have $h$ layers, so the maximum size becomes
 \[n \cdot h\]
 where $n$ is the number of characters in the string and $h$ is the max height of the binary wavelet tree which is
 \[ h = log(\sigma) \]
