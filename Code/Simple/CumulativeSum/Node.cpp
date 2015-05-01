@@ -33,7 +33,7 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
     vector<uint>* leftString = new vector<uint>;
     vector<uint>* rightString = new vector<uint>;
     
-    uint blockRanksSize = (input->size()/blockSize)+2; //+2 to have space for first and last unaligned
+    uint blockRanksSize = (input->size()/blockSize)+1; //+1 to have space for last unaligned
     blockRanks = blockRanksVector(blockRanksSize, 0);
     bitmap = bitmap_t(input->size(), false);
     
@@ -168,12 +168,14 @@ uint Node::binaryRank(uint offset, uint length) {
 }
 
 uint Node::leafSelect(uint character, ulong occurrence, uint blockSize) {
+    cout << occurrence << endl;
     //a leaf has no bitmap
     bool charBit = this == parent->right;
     return parent->select(charBit, occurrence, blockSize);
 }
 
 uint Node::select(bool charBit, ulong occurrence, uint blockSize) {
+    cout << occurrence << endl;
     if(parent == nullptr) {
         //we are root
         return blockBinarySelect(charBit, occurrence, blockSize);
@@ -183,11 +185,11 @@ uint Node::select(bool charBit, ulong occurrence, uint blockSize) {
     return parent->select(parentCharBit, position+1, blockSize);
 }
 
-uint Node::binarySelect(bool charBit, ulong occurance) {
+uint Node::binarySelect(bool charBit, ulong occurrence) {
     ulong occ = 0;
     for(ulong i = 0; i < bitmap.size(); i++) {
         if(bitmap[i] == charBit) { 
-            if(++occ == occurance) {
+            if(++occ == occurrence) {
                 return i;
             }
         }
@@ -222,9 +224,11 @@ Node* Node::getLeaf(uint character, uint alphabetMin, uint alphabetMax) {
 
 
 
-uint Node::blockBinarySelect(bool charBit, uint occurrence, uint blockSize) {    
+uint Node::blockBinarySelect(bool charBit, uint occurrence, uint blockSize) {
+    cout << occurrence << endl;
     //SMALL BITMAPS
-    if(bitmap.size() < blockSize) {
+//    if(bitmap.size() < blockSize) {
+    if(blockRanks.size() < 2) {
         return popcountBinarySelect(charBit, occurrence, 0);
     }
 
@@ -233,37 +237,29 @@ uint Node::blockBinarySelect(bool charBit, uint occurrence, uint blockSize) {
     uint blockJump = searchBlockIndex;
     do {
         blockJump = blockJump/2 + blockJump%2;
-        cout << blockRanks.size() << " " << searchBlockIndex << " " << blockJump << " while" << endl;
         uint bitsCovered = (searchBlockIndex+1)*blockSize;
         uint rank = labs(charBit*bitsCovered - (bitsCovered - (long)blockRanks[searchBlockIndex]));
-//        uint rank = charBit ? blockRanks[searchBlockIndex] : bitsCovered - blockRanks[searchBlockIndex];
-//        cout << rank << " " << occurrence << endl;
+        cout << blockRanks.size() << " " << searchBlockIndex << " " << blockJump << "\t" << rank << " " << occurrence << " while" << endl;
         int positiveNegative = ((-0.5f) + (rank < occurrence)) * 2; //positiveNegative should be -1 when rank >= occurrence and otherwise 1
         assert(positiveNegative == -1 || positiveNegative == 1);
         searchBlockIndex += positiveNegative * blockJump;
     } while(blockJump > 1);
     
     //last corrective jump ahead by either 0 or 1.
-    cout << blockRanks.size() << " " << searchBlockIndex << " " << blockJump << " pre-corrective" <<  endl;
     uint bitsCovered = (searchBlockIndex+1)*blockSize;
     uint rank = labs(charBit * bitsCovered - (bitsCovered - (long)blockRanks[searchBlockIndex]));
-//    uint rank = charBit ? blockRanks[searchBlockIndex] : bitsCovered - blockRanks[searchBlockIndex];
-//    cout << rank << " " << occurrence << endl;
+    cout << blockRanks.size() << " " << searchBlockIndex << " " << blockJump << "\t" << rank << " " << occurrence << " pre-corrective" <<  endl;
     blockJump = rank < occurrence; //jump will be 1 if rank < occurrence, 0 otherwise
     searchBlockIndex += blockJump;
-    cout << blockRanks.size() << " " << searchBlockIndex << " " << blockJump << " post-corrective" << endl;
     bitsCovered = (searchBlockIndex+1)*blockSize;
     uint nextRank = labs(charBit * bitsCovered - (bitsCovered - (long)blockRanks[searchBlockIndex]));
-//    uint nextRank = charBit ? blockRanks[searchBlockIndex] : bitsCovered - blockRanks[searchBlockIndex];
-//    cout << nextRank << " " << occurrence << endl;
+    cout << blockRanks.size() << " " << searchBlockIndex << " " << blockJump << "\t" << nextRank << " " << occurrence << " post-corrective" << endl;
     assert(nextRank >= occurrence);
     
     //Calculate occurrences left by using rank up to this block
     int previousBlockIndex = searchBlockIndex -1;
     short blockIndexPositive = (short)(previousBlockIndex>=0); //0 when blockIndex is negative, 1 otherwise
     bitsCovered = (previousBlockIndex+1)*blockSize;
-//    uint prevRank = labs(charBit * bitsCovered - (bitsCovered - (long)blockRanks[previousBlockIndex*blockIndexPositive]));
-//    uint prevRank = charBit ? blockRanks[searchBlockIndex] : bitsCovered - blockRanks[previousBlockIndex*blockIndexPositive];
     uint prevRank = labs(charBit*bitsCovered - (bitsCovered - (long)blockRanks[previousBlockIndex*blockIndexPositive]));
     uint occLeft = occurrence - prevRank * blockIndexPositive;
     assert(prevRank*blockIndexPositive < nextRank);
@@ -292,17 +288,17 @@ uint Node::blockBinarySelect(bool charBit, uint occurrence, uint blockSize) {
 }
 
 
-inline uint popcountBinarySelectAux(ulong word, bool charBit, uint occurance, ulong mask) {
+inline uint popcountBinarySelectAux(ulong word, bool charBit, uint occurrence, ulong mask) {
     uint occ = 0;
     uint startAt = __builtin_ffsl(mask) - 1; //-1 because it returns 1 + index of bit
     for(uint i = startAt; i < sizeof(word) * CHAR_BIT; i++) {
         bool bit = (word & mask) > 0;
         if(bit == charBit) {
-            if(++occ == occurance) return i - startAt;
+            if(++occ == occurrence) return i - startAt;
         }
         mask <<= 1;
     }
-    cout << "Occurance " << occurance << " too high! saw " << occ << endl;
+    cout << "Occurance " << occurrence << " too high! saw " << occ << endl;
     assert(false);
 }
 

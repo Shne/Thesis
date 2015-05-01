@@ -21,7 +21,7 @@ int Tree::rank(uint character, ulong index) {
     return root.rank(character, index, alphabetMin, alphabetMax, blockSize);
 }
 
-int Tree::select(uint character, ulong occurance) {
+int Tree::select(uint character, ulong occurrence) {
     Node* leaf = root.getLeaf(character, alphabetMin, alphabetMax);
-    return leaf->leafSelect(character, occurance, blockSize);
+    return leaf->leafSelect(character, occurrence, blockSize);
 }

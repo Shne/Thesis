@@ -42,11 +42,11 @@ public:
     ulong popcountBinaryRank(uint offset, uint pos);
     uint binaryRank(uint offset, uint length);
     Node* getLeaf(uint character, uint alphabetMin, uint alphabetMax);
-    uint leafSelect(uint character, ulong occurance, uint blockSize);
-    uint select(bool charBit, ulong occurance, uint blockSize);
+    uint leafSelect(uint character, ulong occurrence, uint blockSize);
+    uint select(bool charBit, ulong occurrence, uint blockSize);
     uint blockBinarySelect(bool charBit, uint occurrence, uint blockSize);
     uint popcountBinarySelect(bool charBit, uint occurrence, uint offset);
-    uint binarySelect(bool charBit, ulong occurance);
+    uint binarySelect(bool charBit, ulong occurrence);
 };
 
 
