@@ -232,34 +232,34 @@ uint Node::blockBinarySelect(bool charBit, uint occurrence, uint blockSize) {
 //    uint occCounter = 0;
     
     //BINARY SEARCH
-    uint searchBlockIndex = (bitmap.size()/blockSize + 1)/2;
-    uint blockJump = searchBlockIndex/2;
-//    cout << bitmap.size() << " " << blockJump << " " << searchBlockIndex << endl;
-    while(blockJump > 0) {
+    uint searchBlockIndex = blockRanks.size()/2;
+    uint blockJump = searchBlockIndex;
+    
+    do {
+        blockJump = blockJump/2 + blockJump%2;
+        cout << blockRanks.size() << " " << searchBlockIndex << " " << blockJump << " while" << endl;
         uint rank = blockRanks[searchBlockIndex];
-//        uint prevRank = blockRanks[searchBlockIndex -1];
-//        cout << prevRank << " " << rank << endl;
-//        if(prevRank < occurrence && occurrence <= rank) {
-//            break;
-//        }
+        cout << rank << " " << occurrence << endl;
         int positiveNegative = ((-0.5f) + (rank < occurrence)) * 2; //positiveNegative should be -1 when rank >= occurrence and otherwise 1
         assert(positiveNegative == -1 || positiveNegative == 1);
         searchBlockIndex += positiveNegative * blockJump;
-        blockJump = blockJump/2;
-//        cout << searchBlockIndex << endl;
-    }
-    //one last jump
+    } while(blockJump > 1);
+    
+    //last corrective jump
+    cout << blockRanks.size() << " " << searchBlockIndex << " " << blockJump << " pre-corrective" <<  endl;
     uint rank = blockRanks[searchBlockIndex];
+//    cout << rank << " " << occurrence << endl;
     blockJump = rank < occurrence; //jump will be 1 if rank < occurrence, 0 otherwise
     searchBlockIndex += blockJump;
+    cout << blockRanks.size() << " " << searchBlockIndex << " " << blockJump << " post-corrective" << endl;
     uint nextRank = blockRanks[searchBlockIndex];
-    if(nextRank < occurrence) cout << nextRank << " " << occurrence << endl;
+    cout << nextRank << " " << occurrence << endl;
     assert(nextRank >= occurrence);
     int previousBlockIndex = searchBlockIndex -1;
     short blockIndexPositive = (short)(previousBlockIndex>=0); //0 when blockIndex is negative, 1 otherwise
     uint occLeft = occurrence - blockRanks[previousBlockIndex*blockIndexPositive] * blockIndexPositive;
-    uint offset = previousBlockIndex * blockSize;
-    if(occLeft == 0) return offset;
+    uint offset = searchBlockIndex * blockSize;
+    
     return offset + popcountBinarySelect(charBit, occLeft, offset);
     
     
