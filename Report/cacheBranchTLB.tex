@@ -64,8 +64,9 @@ In the end the \textit{n-way set-associative cache} is the most popular choice b
 Modern computers are highly pipelined and pipelining works best on linear code because the fetch unit is then able to read consecutive words from memory and also better make use of prefetching.
 
 Programs are not linear though but are full of branch instructions. There are unconditional branches and conditional branches. 
-An example of a conditional branch is an \textit{if-statement} and an example of an unconditional branch is an \textit{else-statement} that is not followed by an if-statement like in the example below.
+An example of a conditional branch is an \textit{if-statement} and an example of an unconditional branch is an \textit{else-statement} that is not followed by an if-statement as shown in figure~\ref{fig:branchexample}.
 
+\begin{figure}
 \begin{algorithmic}
 \If{$i == 0$}
 	\State $k = 1$
@@ -73,5 +74,31 @@ An example of a conditional branch is an \textit{if-statement} and an example of
 	\State $k = 2$
 \EndIf
 \end{algorithmic}
+\vspace{0.3cm}
+\noindent
+A possible translation to assembly looks like this:
+\vspace{0.3cm}
+\begin{enumerate}
+\item \itab{ } \tab{CMP $0,1$} \tab{: compare i to 0}
+\item \itab{ } \tab{BNE Else} \tab{: branch to Else if not equal}
+\item \itab{Then:} \tab{MOV $k,1$} \tab{: move 1 to k}
+\item \itab{ } \tab{BR Next} \tab{: unconditional branch to Next}
+\item \itab{Else:} \tab{MOV $k,2$} \tab{: move 2 to k}
+\item \itab{Next:}
+\end{enumerate}
+\caption{Program fragment with conditional and unconditional branches}
+\label{fig:branchexample}
+\end{figure}
+
+\noindent \textit{BNE Else} is a conditional branch and \textit{BE Next} is an unconditional branch. 
+
+Conditional branches poses a problem because the code splits in two possible directions and the fetcher needs to know which one to choose.
+Unconditional branches does not split the code in two directions and therefore it should be clear what to fetch but that is not the case.
+This is because fetching occurs before instruction decoding in the pipeline and as a consequence the fetcher has to decide what to fetch next before it knows what instruction it was just looking at.
+When the fetcher knows, 1 cycle later, that the instruction was an unconditional branch it has already started fetching the next instruction.
+Many pipelined machines therefore allow that next instruction to execute even though that is not the logical choice. This instruction is therefore usually used as a \textit{delay slot} meaning that it is an instruction with no effect like the NOP instruction.
+The compiler can try to optimize this by replacing NOP with some useful instruction but it is usually not able to according to \citep[Section 4.5.2]{Tanenbaum}.
+
+
 
 \subsection{Translation Lookaside Buffer misses}
