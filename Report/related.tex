@@ -8,21 +8,3 @@ They improve the algorithm by decreasing the space of the lookup table by calcul
 They do binary select using the same structure as rank uses: First binary search for the proper superblock using $R_s$ , then binary search that superblock for the proper block using $R_b$, and finally binary search for the position inside the block. 
 This takes $O(\log n)$ time and requires little space.
 
-\subsection{Representations of the Wavelet Tree}
-The Wavelet Tree has a lot of applications that regard it in various ways.
-These can be split into three main groups: A sequence of values, a reordering and a grid of points.
-
-Representing the Wavelet Tree as a sequence of values is the most basic way to regard it. 
-The Wavelet Tree simply represents the values of the sequence and supports access, rank and select queries.
-
-The Wavelet Tree can also describe a stable reordering of the symbols in string S. 
-If the leaves are traversed then all the occurrences of the smaller symbols are found first. 
-Tracking a position downwards in the Wavelet Tree returns where it goes after sorting and tracking a symbol upwards tells where it is in the original string. 
-
-A Wavelet Tree can also represent a $n \times n$ grid of \textit{n} points where no two points share the same row or column. 
-One can map a general set of n points to such a discrete grid and then store the real points somewhere else.
-
-If we have to points sorted by the x-coordinate then $S[1,n] = y_1,y_2,...,y_n$.
-We can then find the x-coordinate of the i-th point by accessing $S[i]$ and the point can be found in y-coordinate order by tracking upwards from the i-th point in the leaves because the wavelet tree is representing a reordering of the points with relation to the y-coordinate.
-
-\subsection{Applications}

@@ -1,24 +1,21 @@
 \section{The Wavelet Tree}
 The Wavelet Tree is a binary balanced tree structure, that was invented by Grossi, Grupta and Vitter \citep{Grossi:2003:HET:644108.644250} in 2003. 
-It has applications in many areas; from string processing to geometry, and can for instance be used to represent; a sequence of elements, a reordering of elements and a grid of points. 
+It has applications in many areas, from string processing to geometry, and can for instance be used to represent a sequence of elements, a reordering of elements or a grid of points. 
 When \citep{Grossi:2003:HET:644108.644250} invented the Wavelet Tree, it was a milestone in compressed full-text indexing even though it is mentioned very little in the paper.
-\textbf{[TODO: The Idea behind it, as well as for rank and select]}
 
 \subsection{Constructing the Wavelet Tree}
-A Wavelet Tree stores a string by creating a bitmap that describes the string using the alphabet of the string. The alphabet is split in the middle and the symbols to the left gets bit value 0 and the symbols to the right gets bit value 1 so that there is a bit for each symbol in the string in the bitmap. 
-The symbols of the string that has bit value 0 is concatenated in the order they have in the string and is added to the left sub-tree and the ones with bit value 1 is added to the right sub-tree. 
+\subsubsection{Informal Definition}
+A Wavelet Tree stores a string in a binary tree of bitmaps, each bitmap indicating for each character in the corresponding string in which half of the alphabet it resides.
 
-This process continues in each sub tree until we end up in the leaves where the string only consists of one unique symbol from the alphabet. 
-An example of a Wavelet Tree can be seen in Figure \ref{fig:WaveletTreeExample}. 
-We now go into more detail about how it all works as described by \citep{Navjda13}.
+At the root node is stored a bitmap the length of the input string, and each bit in this bitmap represents which half of the alphabet the character at the same position resides in.
+At each node, the alphabet is split in half and the symbols in the left half are assigned bit value 0 in the bitmap and the symbols to the right are assigned bit value 1 so that there is a bit for each symbol in the string in the bitmap. 
+The symbols of the string that has bit value 0 are concatenated in the order they appear in the string and are passed as input string to the left sub-tree and the ones with bit value 1 are passed as input string to the right sub-tree.
+Only the bitmaps are stored in each node.
+The input string alphabet can be stored in the tree.
+This process continues recursively in each sub tree until only one character is left in the alphabet of the input string of a sub tree.
+The sub tree is then considered a leaf node and needs not store a bitmap.
 
-\vspace{0.5 cm}
-\begin{mdframed}[nobreak, linecolor=lightgray, linewidth=2pt]
-\begin{definition}: String representation in a Wavelet Tree\\\\
-Let $S[1,n] = S_1 S_2 ... S_n$ be a sequence of symbols where $s_i \in \Sigma$ and $\Sigma = [1 .. \sigma]$ is the alphabet. $S$ can then be represented in plain form using $n \lceil \log \sigma \rceil = n \log \sigma = O(n)$ bits.
-\end{definition}
-\end{mdframed}
-\vspace{0.5 cm}
+An example of a Wavelet Tree can be seen in Figure \ref{fig:WaveletTreeExample}.
 
 
 \figureBegin
@@ -33,12 +30,12 @@ Let $S[1,n] = S_1 S_2 ... S_n$ be a sequence of symbols where $s_i \in \Sigma$ a
 	[.sfsfs\\10101 !\qsetw{5cm} 
 		%right -> left,right child
 		[.ff !\qsetw{5.3cm} ] [.sss !\qsetw{5.3cm} ]]] 
-\caption{Wavelet Tree on string \textit{adsfadaadsfaads} with alphabet $\sigma = adfs$}	
+\caption{Wavelet Tree on string \textit{adsfadaadsfaads} with alphabet $\sigma = adfs$. Note that only the bitmaps are actually stored in the tree. The characters are annotations for ease of understanding.}	
 \label{fig:WaveletTreeExample}
 \figureEnd
 
-		
-A Wavelet Tree can be described recursively over a sub-alphabet range $[a .. b] \subseteq [1 .. 0]$, for a sequence $S[1,n]$ over alphabet $[1 .. \sigma]$. 
+\subsubsection{Formal Definition}
+A Wavelet Tree for a sequence $S[1,n]$ over alphabet $[1 .. \sigma]$ can be described recursively over a sub-alphabet range $[a .. b] \subseteq [1 .. \sigma]$, . 
 A Wavelet Tree over alphabet $[a .. b]$ (also called $\sigma$) is a binary balanced tree with $b - a + 1$ leaves. If $a = b$ then the Wavelet Tree is simply a leaf labelled a. 
 Otherwise it has an internal root node $v_{root}$ that represents the string $S[1,n]$. 
 Algorithm~\ref{alg:BitmapConstruction}: \textproc{BitmapConstruction}  describes how a bitmap is constructed for every node of the tree.
@@ -264,6 +261,14 @@ This takes O(N) time making \textproc{BinarySelect} a large bottleneck for \text
 In section~\ref{sec:ImplBinarySelect} we describe how to improve the practical running time of \textproc{BinarySelect} using the \textit{popcount} instruction.
 
 \subsection{Compression}
+\vspace{0.5 cm}
+\begin{mdframed}[nobreak, linecolor=lightgray, linewidth=2pt]
+\begin{definition}: String representation in a Wavelet Tree\\\\
+Let $S[1,n] = S_1 S_2 ... S_n$ be a sequence of symbols where $s_i \in \Sigma$ and $\Sigma = [1 .. \sigma]$ is the alphabet. $S$ can then be represented in plain form using $n \lceil \log \sigma \rceil = n \log \sigma = O(n)$ bits.
+\end{definition}
+\textbf{[TODO: use and reference this]}
+\end{mdframed}
+\vspace{0.5 cm}
 The Wavelet Tree is used a lot for compression of data. Two of the main compression techniques that are used are specific encodings on bitmaps and changing the shape of the tree \citep[Section~3]{Navjda13}.
 The type of encoding on bitmaps that is used most often is entropy coding.
 

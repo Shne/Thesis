@@ -1,0 +1,25 @@
+\section{Applications}
+\subsection{What The Wavelet Tree Can Represent}
+\textbf{[TODO: redo this subsection]}
+The Wavelet Tree has multiple applications that each utilize the wavelet tree differently and use it for storage of, and queries on, different types of data.
+These can be split into three main types: A sequence of values, a reordering or permutation, and a grid of points.
+
+Using the Wavelet Tree to store a sequence of values is perhaps the most basic way to utilize the tree.
+The Wavelet Tree stores the values and their sequence and supports access, rank, and select queries.
+
+The Wavelet Tree can also be used to describe a stable reordering, e.g. of the symbols in a string S. 
+If the leaves are traversed then all the occurrences of the smaller symbols are found first. \textbf{[TODO: describe the use of traversing the leaves like so]}
+By tracking the position of a symbol downwards through the Wavelet Tree we will find the new position of the symbol after the permutation.
+Tracking the position of a symbol upwards through the wavelet tree will where it is in the original string. 
+
+A Wavelet Tree can also represent a $n \times n$ grid of \textit{n} points where no two points share the same row or column. 
+One can map a general set of n points to such a discrete grid and then store the real points somewhere else.
+
+If we have to points sorted by the x-coordinate then $S[1,n] = y_1,y_2,...,y_n$.
+We can then find the x-coordinate of the i-th point by accessing $S[i]$ and the point can be found in y-coordinate order by tracking upwards from the i-th point in the leaves because the wavelet tree is representing a reordering of the points with relation to the y-coordinate.
+
+\subsection{Information Retrievel}
+\textbf{[TODO: overview of Information Retrievel Applications of Wavelet Trees]}
+
+\subsection{Compression}
+\textbf{[TODO: overview of Compression Applications of Wavelet Trees]}
