@@ -233,20 +233,24 @@ uint Node::blockBinarySelect(bool charBit, uint occurrence, uint blockSize) {
         return popcountBinarySelect(charBit, occurrence, 0);
     }
 
+    uint rank, bitsCovered;
     //BINARY SEARCH
     uint searchBlockIndex = blockRanks.size()/2;
     uint blockJump = searchBlockIndex;
     do {
         blockJump = blockJump/2 + blockJump%2;
-        uint bitsCovered = (searchBlockIndex+1)*blockSize;
-        uint rank = labs(charBit*bitsCovered - (bitsCovered - (long)blockRanks[searchBlockIndex]));
+        bitsCovered = (searchBlockIndex+1)*blockSize;
+        rank = labs(charBit*bitsCovered - (bitsCovered - (long)blockRanks[searchBlockIndex]));
         int positiveNegative = ((-0.5f) + (rank < occurrence)) * 2; //positiveNegative should be -1 when rank >= occurrence and otherwise 1
         assert(positiveNegative == -1 || positiveNegative == 1);
-        searchBlockIndex += positiveNegative * blockJump;
+//        if(occurrence == 454) {
+//            cout << "searchBlockIndex blockJump " << searchBlockIndex << " " << blockJump << endl;
+//        }
+        uint searchBlockIndexPreview = searchBlockIndex+positiveNegative*blockJump;
+        short blockIndexValid = searchBlockIndexPreview >= 0 && searchBlockIndexPreview < blockRanks.size(); //0 if invalid index, 1 otherwise
+        searchBlockIndex += positiveNegative * blockJump * blockIndexValid;
         assert(searchBlockIndex < 4000000000);
     } while(blockJump > 1);
-    
-    uint rank, bitsCovered;
     
     //second-to-last correctuve jump by either -1, 0 or 1 that handles array bounderies
     bitsCovered = (searchBlockIndex+1)*blockSize;
