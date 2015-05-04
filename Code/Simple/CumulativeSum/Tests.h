@@ -76,7 +76,11 @@ inline void testTearDown(uint amount, uint alphabetSize, string test, string pat
         PAPI_get_dmem_info(&meminfo);
         queryOutput << endl
             << "algorithm=CumulativeSum" << "\t"
+#ifdef BRANCHLESSSELECT
+            << "test=" << test << "Branchless" << "\t"
+#else 
             << "test=" << test << "\t"
+#endif
             << "amount=" << amount << "\t"
             << "alphabetSize=" << alphabetSize << "\t"
             << "blockSize=" << blockSize << "\t"
