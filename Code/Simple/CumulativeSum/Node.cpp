@@ -168,20 +168,17 @@ uint Node::binaryRank(uint offset, uint length) {
 }
 
 uint Node::leafSelect(uint character, ulong occurrence, uint blockSize) {
-//    cout << occurrence << endl;
     //a leaf has no bitmap
     bool charBit = this == parent->right;
     return parent->select(charBit, occurrence, blockSize);
 }
 
 uint Node::select(bool charBit, ulong occurrence, uint blockSize) {
-//    cout << occurrence << endl;
     if(parent == nullptr) {
         //we are root
         return blockBinarySelect(charBit, occurrence, blockSize);
     }
     uint position = blockBinarySelect(charBit, occurrence, blockSize);
-    cout << position << endl;
     bool parentCharBit = this == parent->right;
     return parent->select(parentCharBit, position+1, blockSize);
 }
@@ -226,9 +223,7 @@ Node* Node::getLeaf(uint character, uint alphabetMin, uint alphabetMax) {
 
 
 uint Node::blockBinarySelect(bool charBit, uint occurrence, uint blockSize) {
-//    cout << occurrence << endl;
     //SMALL BITMAPS
-//    if(bitmap.size() < blockSize) {
     if(blockRanks.size() < 2) {
         return popcountBinarySelect(charBit, occurrence, 0);
     }
@@ -267,24 +262,6 @@ uint Node::blockBinarySelect(bool charBit, uint occurrence, uint blockSize) {
     //Calculate and return position
     uint offset = searchBlockIndex * blockSize;
     return offset + popcountBinarySelect(charBit, occLeft, offset);
-
-
-
-//    uint offset = 0;
-//    uint occCounter = 0;
-//    //FULL BLOCKS
-//    for(uint i = 0; i < blockRanks.size(); i++) {
-//        uint thisBlockRank = charBit ? blockRanks[i] : blockSize - blockRanks[i];
-//        if(occCounter + thisBlockRank < occurrence) {
-//            offset += blockSize;
-//            occCounter += thisBlockRank;
-//        } else {
-//            uint occLeft = occurrence - occCounter;
-//            return offset + popcountBinarySelect(charBit, occLeft, offset);
-//        }
-//    }
-
-//    cout << "Error: occurrence " << occurrence << " too high!" << endl;
 }
 
 
