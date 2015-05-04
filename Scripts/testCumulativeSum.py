@@ -26,7 +26,7 @@ subprocess.Popen(['make','CONF=Release'], cwd=cumulativeSumCwd).wait()
 subprocess.Popen(['make','CONF=ReleaseBranchlessSelect', 'clean'], cwd=cumulativeSumCwd).wait()
 subprocess.Popen(['make','CONF=ReleaseBranchlessSelect'], cwd=cumulativeSumCwd).wait()
 
-repeats = 1
+repeats = 5
 
 pageSize = 4096
 blockSize = pageSize/2
