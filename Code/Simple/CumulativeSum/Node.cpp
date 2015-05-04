@@ -228,35 +228,35 @@ uint Node::blockBinarySelect(bool charBit, uint occurrence, uint blockSize) {
         return popcountBinarySelect(charBit, occurrence, 0);
     }
 
-    uint rank, bitsCovered;
     //BINARY SEARCH
     uint searchBlockIndex = blockRanks.size()/2;
     uint blockJump = searchBlockIndex;
+    uint rank, bitsCovered;
     do {
-        blockJump = blockJump/2 + blockJump%2;
+        blockJump = blockJump/2 + blockJump%2; //round up or it will not be able to reach all positions
         bitsCovered = (searchBlockIndex+1)*blockSize;
-        rank = labs(charBit*bitsCovered - (bitsCovered - (long)blockRanks[searchBlockIndex]));
+        rank = labs(charBit*bitsCovered - (bitsCovered - (long)blockRanks[searchBlockIndex])); //branch-free rank1 or rank0 depending on charBit
         int positiveNegative = ((-0.5f) + (rank < occurrence)) * 2; //positiveNegative should be -1 when rank >= occurrence and otherwise 1
         assert(positiveNegative == -1 || positiveNegative == 1);
         uint searchBlockIndexPreview = searchBlockIndex+positiveNegative*blockJump;
         short searchBlockIndexPreviewValid = searchBlockIndexPreview >= 0 && searchBlockIndexPreview < blockRanks.size(); //1 if valid index, 0 if invalid
-        searchBlockIndex += positiveNegative * blockJump * searchBlockIndexPreviewValid;
+        searchBlockIndex += positiveNegative * blockJump * searchBlockIndexPreviewValid; //doesn't change searchBlockIndex if new index would be invalid, branch-free
         assert(searchBlockIndex < 4000000000); //underflow test
     } while(blockJump > 1);
     
     //last correctuve jump by either -1, 0 or 1 that handles array bounderies
     bitsCovered = (searchBlockIndex+1)*blockSize;
-    rank = labs(charBit * bitsCovered - (bitsCovered - (long)blockRanks[searchBlockIndex]));
+    rank = labs(charBit * bitsCovered - (bitsCovered - (long)blockRanks[searchBlockIndex])); //branch-free rank1 or rank0 depending on charBit
     int positiveNegative = ((-0.5f) + (rank < occurrence)) * 2; //positiveNegative should be -1 when rank >= occurrence and otherwise 1
     short blockIndexValid = (searchBlockIndex+positiveNegative) >= 0 && (searchBlockIndex+positiveNegative) < blockRanks.size(); //0 if invalid index, 1 otherwise
-    searchBlockIndex += positiveNegative * blockIndexValid;    
+    searchBlockIndex += positiveNegative * blockIndexValid; //doesn't change searchBlockIndex if new index would be invalid, branch-free   
     
     //Calculate occurrences left by using rank up to this block
-    int previousBlockIndex = searchBlockIndex -1;
-    short blockIndexPositive = (short)(previousBlockIndex>=0); //0 when blockIndex is negative, 1 otherwise
+    int previousBlockIndex = searchBlockIndex - 1;
+    short blockIndexPositive = previousBlockIndex >= 0; //0 when blockIndex is negative, 1 otherwise
     bitsCovered = (previousBlockIndex+1)*blockSize;
-    uint prevRank = labs(charBit*bitsCovered - (bitsCovered - (long)blockRanks[previousBlockIndex*blockIndexPositive]));
-    uint occLeft = occurrence - prevRank * blockIndexPositive;
+    uint prevRank = labs(charBit*bitsCovered - (bitsCovered - (long)blockRanks[previousBlockIndex*blockIndexPositive])); //branch-free rank1 or rank0 depending on charBit
+    uint occLeft = occurrence - prevRank * blockIndexPositive; //= occurrence if prev index would be below 0, branch-free
     assert(prevRank*blockIndexPositive < nextRank);
     
     //Calculate and return position
