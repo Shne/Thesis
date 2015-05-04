@@ -21,6 +21,8 @@
 #define NDEBUG
 #include <assert.h>
 
+//#define BRANCHLESSSELECT
+
 typedef std::vector<bool> bitmap_t;
 typedef std::vector<uint> blockRanksVector;
 

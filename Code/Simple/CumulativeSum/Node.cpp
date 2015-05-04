@@ -223,6 +223,7 @@ Node* Node::getLeaf(uint character, uint alphabetMin, uint alphabetMax) {
 
 
 uint Node::blockBinarySelect(bool charBit, uint occurrence, uint blockSize) {
+#ifdef BRANCHLESSSELECT
     //SMALL BITMAPS
     if(blockRanks.size() < 2) {
         return popcountBinarySelect(charBit, occurrence, 0);
@@ -262,6 +263,62 @@ uint Node::blockBinarySelect(bool charBit, uint occurrence, uint blockSize) {
     //Calculate and return position
     uint offset = searchBlockIndex * blockSize;
     return offset + popcountBinarySelect(charBit, occLeft, offset);
+#else
+    //SMALL BITMAPS
+    if(blockRanks.size() < 2) {
+        return popcountBinarySelect(charBit, occurrence, 0);
+    }
+
+    //BINARY SEARCH
+    uint searchBlockIndex = blockRanks.size()/2;
+    uint blockJump = searchBlockIndex;
+    uint rank, bitsCovered;
+    while(true) {
+        bitsCovered = (searchBlockIndex+1)*blockSize;
+        rank = charBit ? blockRanks[searchBlockIndex] : bitsCovered - blockRanks[searchBlockIndex];
+        bool prevRankBelow;
+        if(searchBlockIndex != 0) {
+            bitsCovered = searchBlockIndex*blockSize;
+            uint prevRank = charBit ? blockRanks[searchBlockIndex-1] : bitsCovered - blockRanks[searchBlockIndex-1];
+            prevRankBelow = prevRank < occurrence;
+        } else {
+            prevRankBelow = true;
+        }
+        if(rank >= occurrence && prevRankBelow) {
+            break;
+        }
+        blockJump = blockJump/2 + blockJump%2; //round up or it will not be able to reach all positions
+        
+        if(rank < occurrence) {
+            if(searchBlockIndex + blockJump <= blockRanks.size()-1) {
+                searchBlockIndex += blockJump;
+            } else {
+                searchBlockIndex = blockRanks.size() - 1;
+            }
+        } else {
+            if((long)searchBlockIndex - blockJump >= 0) {
+                searchBlockIndex -= blockJump;
+            } else {
+                searchBlockIndex = 0;
+            }
+        }
+        assert(searchBlockIndex < 4000000000); //underflow test
+    }
+
+    //Calculate occurrences left by using rank up to this block
+    int previousBlockIndex = searchBlockIndex - 1;
+    bitsCovered = (previousBlockIndex+1)*blockSize;
+    uint prevRank = searchBlockIndex == 0 ? 0 : charBit ? blockRanks[previousBlockIndex] : bitsCovered - blockRanks[previousBlockIndex];
+    uint occLeft = occurrence - prevRank;
+    bitsCovered = (searchBlockIndex+1) * blockSize;
+    rank = charBit ? blockRanks[searchBlockIndex] : bitsCovered - blockRanks[searchBlockIndex];
+    assert(prevRank <= rank);
+    
+    //Calculate and return position
+    uint offset = searchBlockIndex * blockSize;
+    return offset + popcountBinarySelect(charBit, occLeft, offset);
+    
+#endif
 }
 
 
