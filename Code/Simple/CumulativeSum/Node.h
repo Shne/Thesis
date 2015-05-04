@@ -18,7 +18,7 @@
 #include <iterator>
 #include <papi.h>
 #include <unistd.h>
-//#define NDEBUG
+#define NDEBUG
 #include <assert.h>
 
 typedef std::vector<bool> bitmap_t;
