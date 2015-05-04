@@ -4,7 +4,7 @@
 
 A cache is a small fast memory storage that holds the most recently used memory words.
 Caches improves on the memory latency so memory access can be achieved within the demand of modern processors.
-Modern memory systems usually have three caches: Level 1 (L1), Level 2 (L2) and Level 3 (L3). \citep[Section~4.5.1]{Tanenbaum}
+Modern memory systems usually have three caches: Level 1 (L1), Level 2 (L2) and Level 3 (L3). \citep[Section~4.5.1]{Tanenbaum}.
 
 \begin{figure}
 \includegraphics[width=\textwidth]{CacheLevels.pdf}
@@ -45,7 +45,7 @@ Given a memory address it is only necessary to look for it in one place in the c
 The problem with a \textit{direct mapped cache} is that since there are many more cache-lines in main memory than there are room for in the cache, many cache-lines ends up competing for the same slot. 
 These competing cache-lines might end up constantly evicting each other which results in a substantial performance loss.
 
-A way to fix this problem is to use a \textit{n-way set-associative cache} which is a cache that allows \textit{n} entries for each cache-line.
+This problem can be fixed by using a \textit{n-way set-associative cache} which is a cache that allows \textit{n} entries for each cache-line.
 This way if we have two cache-lines \textit{A} and \textit{B} and a slot is already occupied by \textit{A} while \textit{B} tries to use the same slot then \textit{A} does not have to be evicted because B has $n-1$ other slots to choose from.
 If all \textit{n} slots are occupied then a cache-line from one of them has to be evicted.
 The question then becomes: Which one?
@@ -55,12 +55,23 @@ It works by keeping a ordering of each set of slots that can be accessed from a 
 When a cache-line that is present in the cache is accessed the LRU algorithm updates the list by marking the entry corresponding to the accessed cache-line into the most recently accessed one.
 When an entry needs to be replaced it is the one at the end of the list that is evicted because it is the least recently used entry.
 
-A \textit{fully associative cache} allows any cache-line to be saved in any cache slot but it complicated and costly to implement in hardware.
+A \textit{fully associative cache} allows any cache-line to be saved in any cache slot but it is complicated and costly to implement in hardware because it for instance needs to keep an ordered LRU list which requires a lot of bookkeeping.
+
 In the end the \textit{n-way set-associative cache} is the most popular choice because it has a good trade-off between implementation complexity and cache-hit rate.
 
 
+\subsection{Branch Prediction and Misprediction}
+Modern computers are highly pipelined and pipelining works best on linear code because the fetch unit is then able to read consecutive words from memory and also better make use of prefetching.
 
+Programs are not linear though but are full of branch instructions. There are unconditional branches and conditional branches. 
+An example of a conditional branch is an \textit{if-statement} and an example of an unconditional branch is an \textit{else-statement} that is not followed by an if-statement like in the example below.
 
-\subsection{Branch Mispredictions}
+\begin{algorithmic}
+\If{$i == 0$}
+	\State $k = 1$
+\Else
+	\State $k = 2$
+\EndIf
+\end{algorithmic}
 
 \subsection{Translation Lookaside Buffer misses}
