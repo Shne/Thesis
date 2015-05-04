@@ -1,0 +1,19 @@
+We had both ideas and implemented both to compare.
+
+Non-preallocated keeps a pageRanks array in each node, as well as a bitmap.
+First element in pageRanks array is then for non-block aligned first part. This means each bitmap boundary requires an extra precomputed value. 
+
+By concanetating all the bitmaps into one, we can store fewer precomputed values and still have them cover all bitmaps. 
+It saves some space.
+It requires some more popcount operations in the queries, but only about double (because popcount at beginning as well as end), which is a O(1) factor, I believe, or is is O(log n)?
+
+Compare for varying block sizes of both
+2 graphs:
+	Wall time of both types for varying block size
+	Memory Usage for both types for varyins block sizes
+Possibly more graphs (perhaps in appendix) displaying Cache Misses, BMs, TLB Misses.
+
+
+We first had the complicated ideas, then figured maybe the extra computations weren't worth it.
+Then we implemented the non-preallocated case, found it was better.
+THen we figured maybe the page-aligning wasn't worth it, and then tried that.

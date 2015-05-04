@@ -1,0 +1,13 @@
+Wavelet Trees for All Notes
+- specifically about use cases and our focus.
+
+compressible because uneven frequencies of characters/words -> not our case
+Huffman shape only when sought frequency is known -> see section 'changing shape' on page 7
+Perhaps argue using the formula for emperical zero-order entropy on page 6. Show that we gain little in compression for our use case of uniform data.
+
+"Furthermore, plain bitmap representations are significantly faster than compressed ones" ~page 7
+
+We see many uses of access, rank and select and we will focus on performance of these queries.
+We recognize that while compression is a useful feature of the Wavelet Tree, it will produce decreased query performance.
+Compression also often requires non-uniform input data and information about how it will be accessed, to actually work well.
+We focus on a general-purpose, practical implementation of a wavelet tree with good query performance.
