@@ -249,21 +249,12 @@ uint Node::blockBinarySelect(bool charBit, uint occurrence, uint blockSize) {
         assert(searchBlockIndex < 4000000000); //underflow test
     } while(blockJump > 1);
     
-    //second-to-last correctuve jump by either -1, 0 or 1 that handles array bounderies
+    //last correctuve jump by either -1, 0 or 1 that handles array bounderies
     bitsCovered = (searchBlockIndex+1)*blockSize;
     rank = labs(charBit * bitsCovered - (bitsCovered - (long)blockRanks[searchBlockIndex]));
     int positiveNegative = ((-0.5f) + (rank < occurrence)) * 2; //positiveNegative should be -1 when rank >= occurrence and otherwise 1
     short blockIndexValid = (searchBlockIndex+positiveNegative) >= 0 && (searchBlockIndex+positiveNegative) < blockRanks.size(); //0 if invalid index, 1 otherwise
     searchBlockIndex += positiveNegative * blockIndexValid;    
-    
-    //last corrective jump ahead by either 0 or 1.
-    bitsCovered = (searchBlockIndex+1)*blockSize;
-    rank = labs(charBit * bitsCovered - (bitsCovered - (long)blockRanks[searchBlockIndex]));
-    blockJump = rank < occurrence; //jump will be 1 if rank < occurrence, 0 otherwise
-    searchBlockIndex += blockJump;
-    bitsCovered = (searchBlockIndex+1)*blockSize;
-    uint nextRank = labs(charBit * bitsCovered - (bitsCovered - (long)blockRanks[searchBlockIndex]));
-    assert(nextRank >= occurrence);
     
     //Calculate occurrences left by using rank up to this block
     int previousBlockIndex = searchBlockIndex -1;
