@@ -7,11 +7,11 @@ When \citep{Grossi:2003:HET:644108.644250} invented the Wavelet Tree, it was a m
 \subsubsection{Informal Definition}
 A Wavelet Tree stores a string in a binary tree of bitmaps, each bitmap indicating for each character in the corresponding string in which half of the alphabet it resides.
 
-At the root node is stored a bitmap the length of the input string, and each bit in this bitmap represents which half of the alphabet the character at the same position resides in.
+At the root node is stored a bitmap with the length of the input string, and each bit in this bitmap represents which half of the alphabet the character at the same position resides in.
 At each node, the alphabet is split in half and the symbols in the left half are assigned bit value 0 in the bitmap and the symbols to the right are assigned bit value 1 so that there is a bit for each symbol in the string in the bitmap. 
 The symbols of the string that has bit value 0 are concatenated in the order they appear in the string and are passed as input string to the left sub-tree and the ones with bit value 1 are passed as input string to the right sub-tree.
 Only the bitmaps are stored in each node.
-The input string alphabet can be stored in the tree.
+The alphabet of the input string can be stored in the tree.
 This process continues recursively in each sub tree until only one character is left in the alphabet of the input string of a sub tree.
 The sub tree is then considered a leaf node and needs not store a bitmap.
 
@@ -56,8 +56,8 @@ Then the left child of $v_{root}$ is a Wavelet Tree for $S_0[1,n_0]$ over alphab
 
 \subsubsection{Complexity}
 The height of a filled Wavelet Tree is  $\lceil \log \sigma \rceil$ and it has $\sigma$ leaves and $\sigma - 1$ internal nodes. 
-At each level in the tree at most \textit{n} bits are stored the bitmaps in total.
-If some characters of the alphabet don't occur in the input string, the sub trees of the Wavelet tree corresponding to those missing characters may be omitted depending on implementation.
+At each level in the tree at most \textit{n} bits are stored in the bitmaps in total.
+If some characters of the alphabet do not occur in the input string, the sub trees of the Wavelet tree corresponding to those missing characters may be omitted depending on implementation.
 $n \lceil \log \sigma \rceil$ is an upper bound to the total number of bits that the Wavelet Tree stores in its bitmaps.
 The Wavelet Tree can theoretically be constructed in $O(n \log \sigma)$ time. 
 \textbf{[TODO: references to why or possibly explain it ourselves]}\\
@@ -232,9 +232,9 @@ In \textproc{Rank} one needs to calculate the split character and then check whe
 \end{algorithm}
 
 \textproc{BinarySelect} returns the position of the i'th occurrence of 1 or 0 (\textproc{CharBit}) in a bitset. 
-The simple implementation is to loop through the bitset and when \textit{i} occurrences of either 1 or 0 (depending on whether we are in a left child or a right child) has been seen then return the position of the last one that was seen.
-This takes O(N) time making \textproc{BinarySelect} a large bottleneck for \textproc{Select} since it is called for each recursive call in the \textproc{SelectRec} algorithm.
-In section~\ref{sec:ImplBinarySelect} we describe how to improve the practical running time of \textproc{BinarySelect} using the \textit{popcount} instruction.
+It does so by looping through the bitset and when \textit{i} occurrences of either 1 or 0 (depending on whether we are in a left child or a right child) has been seen then the position of the last bit that was seen is returned.
+\textproc{BinarySelect} takes O(n) time.
+In section~\ref{sec:ImplBinarySelect} we describe how to improve the practical running time of \textproc{BinarySelect}.
 
 \subsection{Compression}
 \vspace{0.5 cm}
@@ -252,9 +252,11 @@ Entropy coding can be explained in two parts: Modelling and Coding.
 Modelling assigns probabilities to the symbols of the string, and coding produces a bit sequence from these probabilities.
 The probability of a symbol is based on how often it appears in a given data set. 
 Higher frequency gives a higher probability.
-Coding can then for instance be done with a coding scheme, that uses a discrete number of bits for each symbol, for example Huffman Coding \citep{HuffmanCoding} where symbols that appear with a higher frequency gets a code value with a small number of bits and those symbols that appear with less frequency gets a code value with a higher number of bits.
+Coding can then for instance be done with a coding scheme, that uses a discrete number of bits for each symbol, for example Huffman Coding \citep{HuffmanCoding}.
 
 The main advantage of the wavelet tree with regards to compression is that it supports entropy bounds in the attained space complexity of the various wavelet tree compression methods \citep[Section~2.1]{WTSurvey}.
+
+\subsubsection{Entropy}
 According to \citep[Section~1]{WTSurvey} entropy can be defined as:
 
 \begin{mdframed}[nobreak, linecolor=lightgray, linewidth=2pt]

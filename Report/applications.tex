@@ -15,10 +15,12 @@ Tracking the position of a symbol upwards through the wavelet tree will where it
 A Wavelet Tree can also represent a $n \times n$ grid of \textit{n} points where no two points share the same row or column. 
 One can map a general set of n points to such a discrete grid and then store the real points somewhere else.
 
-If we have to points sorted by the x-coordinate then $S[1,n] = y_1,y_2,...,y_n$.
-We can then find the x-coordinate of the i-th point by accessing $S[i]$ and the point can be found in y-coordinate order by tracking upwards from the i-th point in the leaves because the wavelet tree is representing a reordering of the points with relation to the y-coordinate.
+If we have points sorted by the x-coordinate and take only the y-coordinates $S_y[1,n] = y_1,y_2,...,y_n$ and save $S_y$ in a Wavelet Tree we can the find the \textit{i}th point in x-coordinate order by accessing the corresponding y-coordinate in the wavelet tree. 
+If we want the \textit{i}th point i y-coordinate order we can access the leaf of a given y-coordinate and find it's corresponding x-coordinate by querying up through the tree until we find the original position of y in S. 
+The corresponding x-coordinate will be at the same position.
+Querying from a leaf gives the points i y-coordinate order because the leaves are sorted by y-coordinate.
 
-\subsection{Information Retrievel}
+\subsection{Information Retrieval}
 \textbf{[TODO: overview of Information Retrievel Applications of Wavelet Trees]}
 
 \subsection{Compression}

@@ -61,12 +61,12 @@ In the end the \textit{n-way set-associative cache} is the most popular choice b
 
 
 \subsection{Branch Prediction and Misprediction}
-Modern computers are highly pipelined and pipelining works best on linear code because the fetch unit is then able to read consecutive words from memory and also better make use of prefetching.
+Modern computers are highly pipelined and pipelining works best on linear code because then the fetch unit is able to read consecutive words from memory and also better make use of prefetching.
 
-Programs are not linear though but are full of branch instructions. There are unconditional branches and conditional branches. 
-An example of a conditional branch is an \textit{if-statement} and an example of an unconditional branch is an \textit{else-statement} that is not followed by an if-statement as shown in figure~\ref{fig:branchexample}.
+Programs are not linear though, but are full of branch instructions. There are unconditional branches and conditional branches. 
+An example of a conditional branch is an \textit{if-statement} and an example of an unconditional branch is an \textit{else-statement} that is not followed by an if-statement as shown in figure~\ref{fig:branchexample} where \textit{BNE Else} is a conditional branch and \textit{BE Next} is an unconditional branch. 
 
-\begin{figure}
+\begin{figure}\begin{framed}
 \begin{algorithmic}
 \If{$i == 0$}
 	\State $k = 1$
@@ -88,9 +88,9 @@ A possible translation to assembly looks like this:
 \end{enumerate}
 \caption{Program fragment with conditional and unconditional branches}
 \label{fig:branchexample}
+\end{framed}
 \end{figure}
 
-\noindent \textit{BNE Else} is a conditional branch and \textit{BE Next} is an unconditional branch. 
 
 Conditional branches poses a problem because the code splits in two possible directions and the fetcher needs to know which one to choose.
 Unconditional branches does not split the code in two directions and therefore it should be clear what to fetch but that is not the case.
