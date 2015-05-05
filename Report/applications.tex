@@ -222,10 +222,10 @@ In section~\ref{sec:choiceOfInputString} we discuss why we mainly consider unifo
 
 
 \subsubsection{Range Quantile Query}
-\textbf{[TODO: the uses of Range QUantile Queries]}
+\textbf{[TODO: the uses of Range Quantile Queries and a short intuitive description of the algorithm]}
 The wavelet tree can be used to support efficient range quantile queries on a sequence \textit{S} of \textit{n} numbers in $O(\log(\sigma))$ time if $rank_b$ is supported in $O(1)$ time~\citep[Section~3]{RangeQuantileQueryWT}. 
 A range quantile query returns the $k$th smallest number within a given range $S[l ... r]$ of $S$.
-It works by computing two rank queries on the bitmap of the root. 
+It works by computing two rank queries on the bitmap of each node in a traversal from the root to a leaf node. 
 
 \begin{algorithm}
 \caption{Range Quantile Query}
