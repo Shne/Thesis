@@ -207,7 +207,7 @@ The queries does have uses when working with the \textit{FM-index} which is a se
 Such a procedure is described in \citep[Section 2]{FMcountOnBWT}.
 
 \subsubsection{Huffman-shaped Wavelet Trees}
-\citep[Section 2]{FMcountOnBWT} describes a Huffman Shaped Wavelet Tree which places symbols with higher frequencies closer to the root than those that have a lower frequency, in such a way that the path from root to symbol leaf corresponds to the binary Huffman code of the symbol. Using a Huffman Shaped Wavelet Tree is an alternative to run-length encoding.
+\citep[Section~4]{FMcountOnBWT} describes a Huffman Shaped Wavelet Tree which places symbols with higher frequencies closer to the root than those that have a lower frequency, in such a way that the path from root to symbol leaf corresponds to the binary Huffman code of the symbol. Using a Huffman Shaped Wavelet Tree is an alternative to run-length encoding.
 The Huffman code of a symbol is a small binary value for symbols with high frequency and a larger binary value for symbols with the small frequency.
 This approach would make the tree skewed and as a result increase the height of the tree but decrease query time for symbols with high frequency.
 If one then queries the Huffman shaped Wavelet Tree for a symbol that has a high frequency then one would find it faster than if one was looking for a symbol that was less frequent.
