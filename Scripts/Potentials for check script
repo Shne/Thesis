@@ -3,3 +3,5 @@ sought-after character
 	vs. input character
 
 symbol vs. character
+
+== vs = for equality check in pseudocode. \gets (<-) is used for assignment.
