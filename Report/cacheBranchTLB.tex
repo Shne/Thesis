@@ -94,12 +94,10 @@ A possible translation to assembly looks like this:
 \end{framed}
 \end{figure}
 
-An unconditional branch is a simple branch to a specified label and is not based on a condition.
+An unconditional branch is a simple branch to a specified label and is not based on a condition and does not pose any significant problems.
 
-A conditional branch can branch in two directions, either one or the other based on whether a given condition is true of false.
-Conditional branches poses a problem because of this 
-
-
+A conditional branch can branch in two directions based on whether a given condition is true of false.
+Conditional branches poses a problem because of this ambiguity because the fetcher does not know where to read from until much later in the pipeline 
 
 
 
