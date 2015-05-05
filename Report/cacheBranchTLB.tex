@@ -40,25 +40,25 @@ The general idea is to have the most heavily used cache-lines in the caches as o
 When designing a cache it is important to consider whether each cache-line can be stored in any cache slot or only in some of them.
 There are three approaches to solving this problem; \textit{direct mapped cache}, \textit{n-way set-associative cache} and \textit{fully associative cache}. 
 
-In a \textit{direct mapped cache} each cache-line can only be stored in a specific cache slot.
+In a \textit{direct mapped cache} each cache-line can only be stored in a specific cache slot, the address of which is found by using a mapping function on address of the original main memory address, e.g. $address \mod cacheslots$.
 This means that two cache-lines cannot be mapped to the same slot simultaneously.
-Given a memory address it is only necessary to look for it in one place in the cache and if it is not there then it is not in the cache. Using this approach consecutive memory lines are placed in consecutive cache slots. 
+Given a memory address it is only necessary to look for it in one place in the cache and if it is not there then it is not in the cache. Using this approach, and an appropriate mapping function, consecutive memory lines are placed in consecutive cache slots. 
 The problem with a \textit{direct mapped cache} is that since there are many more cache-lines in main memory than there are room for in the cache, many cache-lines ends up competing for the same slot. 
 These competing cache-lines might end up constantly evicting each other which results in a substantial performance loss.
 
-This problem can be fixed by using a \textit{n-way set-associative cache}, which is a cache that allows \textit{n} entries for each cache-line.
-This way if we have two cache-lines \textit{A} and \textit{B} and a slot that is already occupied by \textit{A} while \textit{B} tries to use the same slot then \textit{A} does not have to be evicted because B has $n-1$ other slots to choose from.
+This problem can be fixed by using a \textit{n-way set-associative cache}, which is a cache that allows \textit{n} slots for each cache address.
+This way if we have two cache-lines \textit{A} and \textit{B} whose addresses map to the same cache address and that address is already occupied by \textit{A} while \textit{B} tries to use the same address then \textit{A} does not have to be evicted because the cache has $n-1$ other slots to place \textit{B} in.
 If all \textit{n} slots are occupied then a cache-line from one of them has to be evicted.
 The question then becomes: Which one?
 
-A popular algorithm, that answers this question is called \textit{LRU (Least Recently Used)}.
-It works by keeping a ordering of each set of slots that can be accessed from a given cache-line. 
+A popular algorithm, that determines which cache-lines to evict is called \textit{LRU (Least Recently Used)}.
+It works by keeping an ordering of the slots at a cache address.
 When a cache-line that is present in the cache is accessed the LRU algorithm updates the list by moving the entry corresponding to the accessed cache-line to the top of the list.
 When an entry needs to be replaced it is the one at the end of the list that is evicted because it is the least recently used entry.
 
-A \textit{fully associative cache} allows any cache-line to be saved in any cache slot but it is complicated and costly to implement in hardware because it for instance needs to keep an ordered LRU list which requires a lot of bookkeeping.
+Alternatively, a \textit{fully associative cache} allows any cache-line to be saved in any cache slot but it is complicated and costly to implement in hardware because it for instance  might need to keep an ordered LRU list for the entire cache which would require a lot of bookkeeping.
 
-In the end the \textit{n-way set-associative cache} is the most popular choice because it has a good trade-off between implementation complexity and cache-hit rate.
+The \textit{n-way set-associative cache} is the most popular choice because it has a good trade-off between implementation complexity and cache-hit rate.
 
 
 \subsection{Branch Prediction and Misprediction}
