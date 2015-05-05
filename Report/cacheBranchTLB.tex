@@ -94,10 +94,16 @@ A possible translation to assembly looks like this:
 \end{framed}
 \end{figure}
 
-An unconditional branch is a simple branch to a specified label and is not based on a condition and does not pose any significant problems.
+An unconditional branch is a simple branch to a specified label, is not based on a condition and does not pose any significant problems.
 
 A conditional branch can branch in two directions based on whether a given condition is true of false.
-Conditional branches poses a problem because of this ambiguity because the fetcher does not know where to read from until much later in the pipeline 
+The ambiguity in a conditional branch is problematic because the fetcher does not know where to read from until much later in the pipeline. 
+Old pipelined machines would just stall until it was decided what branch to take. 
+Doing this has a heavy impact on performance if there is a lot of conditional branches in a program, which there usually are.
+Modern machines try to predict what branch is most likely to be taken and then continues in that direction until it is known whether the branch was predicted correctly or not. 
+If the branch was predicted correctly then the execution simply continues.
+If the branch was mispredicted then the executed instructions in the mispredicted branch needs to be rolled back and the correct branch must be taken. 
+Undoing the effects of the wrong execution path is an expensive operation which means that it is important to minimize the amount of branch mispredictions as much as possible to get good performance.
 
 
 

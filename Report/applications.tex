@@ -225,12 +225,14 @@ In section~\ref{sec:choiceOfInputString} we discuss why we mainly consider unifo
 A range quantile query is a query that returns the $k$th smallest number within a subrange of a given sequence of elements.
 So if we are e.g. given a list of price changes on a laptop during the last year then a range quantile query is able to answer what the smallest or third smallest (indicated by the k value) price of the laptop was within for instance a month of that year.
 It is therefore also quite easy to find quantiles like the 2-quantile (median) or the 3-quantile. 
-To e.g. find the median k can be defined as half the length of the range of the sequence.
-Quantiles are important values and used a lot in statistics.
+To e.g. find the median, $k$ can be defined as half the length of the range of the sequence.
+This would return the middle element of the subsequence.
+The 3-Quantile can be found by setting $k$ to $\frac{1}{3}$ of the length of the subsequence. 
+Quantiles are important values and are used a lot in statistics.
 
 The wavelet tree can be used to support efficient range quantile queries on a sequence \textit{S} of \textit{n} numbers in $O(\log(\sigma))$ time if $rank_b$ is supported in $O(1)$ time \citep[Section 3]{RangeQuantileQueryWT}. 
-A range quantile query returns the k-th smallest number within a given range of \textit{S}, $S[l ... r]$.
-It works by computing two rank queries on the bitmap of each node in a traversal from the root to a leaf node. 
+The range is denoted as $S[l ... r]$.
+A range quantile query based on a wavelet tree works by computing two rank queries on the bitmap of each node in a traversal from the root to a leaf node. 
 
 \begin{algorithm}
 \caption{Range Quantile Query}
