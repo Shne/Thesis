@@ -41,11 +41,11 @@ Coding can then for instance be done with a coding scheme, that uses a discrete 
 The main advantage of the wavelet tree with regards to compression is that it supports entropy bounds in the attained space complexity of the various wavelet tree compression methods \citep[Section~2.1]{WTSurvey}.
 
 \subsubsection{Entropy}
-According to \citep[Section~1]{WTSurvey} entropy can be defined as:
+According to \citep[Introduction]{WTSurvey} entropy can be defined as:
 
 \begin{mdframed}[nobreak, linecolor=lightgray, linewidth=2pt]
 \begin{definition}: Entropy \\\\
-Let \textit{S} be a sequence of \textit{n} symbols from an alphabet $\Sigma = \lbrace c_1 ... c_\sigma \rbrace$ with alphabet $\sigma$.
+Let \textit{S} be a sequence of \textit{n} symbols from an alphabet $\Sigma = \lbrace c_1 ... c_\sigma \rbrace$ with cardinality $\sigma$.
 Then \textit{entropy} H is defined as
 \begin{center}
 $H = \sum_{i=1}^{\sigma} p_i log_2(\frac{1}{p_i})$
@@ -54,38 +54,38 @@ where $p_i$ is the probability of the i-th symbol in the alphabet appearing in \
 \end{definition} 
 \end{mdframed}
 
-Entropy represents a lower bound to the average numbers of bits needed to represent each symbol in S according to the coding theorem of Shannon \textbf{[TODO: reference]} and so is the value that researchers of compression compare their results to.
+Entropy represents a lower bound to the average number of bits needed to represent each symbol in $S$ according to the coding theorem of Shannon~\citep[Introduction]{WTSurvey} and is the bound that compression researchers compare their results to.
 
 This theoretical definition of entropy is often replaced in scientific literature by a more practical definition: \textit{empirical entropy}.
-There are two versions: \textit{empirical zero-order entropy} $H_0$ and \textit{empirical k-th order entropy} $H_k$. $H_k$ takes the size \textit{k} context of the symbol appearances into account while $H_0$ does not and treats symbols independently instead. 
+There are two versions: \textit{empirical zero-order entropy} $H_0$ and \textit{empirical k-th order entropy} $H_k$. $H_k$ takes into account a context of size \textit{k} of the symbol appearances, ie. the suffixes of length $k$ of each symbol appearance in the string, while $H_0$ does not and treats symbols independently instead. 
 
 \begin{mdframed}[nobreak, linecolor=lightgray, linewidth=2pt]
 \begin{definition}: \textit{Empirical zero-order entropy}, $H_0$ \\
-Let \textit{S} be a sequence of \textit{n} symbols from an alphabet $\Sigma = \lbrace c_1 ... c_\sigma \rbrace$ of cardinality $\sigma$.
+Let \textit{S} be a sequence of \textit{n} symbols from an alphabet $\Sigma = \lbrace c_1 ... c_\sigma \rbrace$.
 Then \textit{entropy} $H_0$ is defined as
 \begin{center}
-$H_0 = \sum\limits_{c_i \in \Sigma} \frac{n_i}{n} log_2(\frac{n}{n_i})$
+$H_0 = H_0(S) = \sum\limits_{c_i \in \Sigma} \frac{n_i}{n} log_2(\frac{n}{n_i})$
 \end{center}
 where $n_i$ is the number of appearances of character $c_i$ in $S$.
 \end{definition}
 \begin{definition}: \textit{Empirical k-th order entropy}, $H_k$ \\
-For a string $w \in \Sigma^k$ let us define $w_S$ as the subsequence of characters that follow \textit{w} in \textit{S}. 
-Then the k-th order empirical entropy of \textit{S}, is defined as follows:
+For a string $w \in \Sigma^k$ let us define $w_S$ as the concatenation of characters that follow \textit{w} in \textit{S}. 
+Then the k-th order empirical entropy of \textit{S}, is defined as follows
 \begin{center}
-$H_k(S) = \frac{1}{n} \sum\limits_{w \in \Sigma^k} | w_S |H_0(w_S)$
+$H_k = H_k(S) = \frac{1}{n} \sum\limits_{w \in \Sigma^k} | w_S |H_0(w_S)$
 \end{center}
 \end{definition}
 \end{mdframed}
-$H_k$ thus defines a lower bound for bit space usage that is smaller than the lower bound for $H_0$.
+$H_k$ often defines a lower bound for bit space usage that is smaller than the lower bound of $H_0$\citep[Section~2]{waveletTreeEntropy}.
 
 Using the Burrows-Wheeler transformation on the input the we can reduce the problem of achieving $H_k$ compression to achieving $H_0$ compression.
-In other words, if we have a good compression algorithm that achieves compression within the $H_0$ lower bound, then by using that algorithm on the Burrows-Wheeler transformation of the input we can achieve compression within the $H_k$ lower bound. (Todo: explain the theory behind this)
-The problem for a long time was that there existed no good way to achieve compression within the $H_0$ lower bound or at least it was a problem before the wavelet tree was invented. \textbf{[TODO: describe why it was a problem]} 
+In other words, if we have a good compression algorithm that achieves compression within the $H_0$ lower bound, then by using that algorithm on the Burrows-Wheeler transformation of the input we can achieve compression within the $H_k$ lower bound~\citep[Introduction]{waveletTreeEntropy}.
+The problem for a long time was that there existed no good way to achieve compression within the $H_0$ lower bound or at least it was a problem before the wavelet tree was invented~\citep[Introduction]{waveletTreeEntropy}.
 
-To achieve \textit{zero-order entropy} a Huffman shaped wavelet tree \textbf{[TODO: reference]} can be used. But when the alphabet is very large that is not a good approach with regards to compression, because storing the huffman symbol assignments and wavelet tree pointers ends up using too much space . \citep[Section~3]{Claude08practicalrankselect} describes a way to also have \textit{zero-order entropy} space usage for large alphabets. 
+To achieve \textit{zero-order entropy} a Huffman shaped wavelet tree can be used~\citep[Section~4]{FMcountOnBWT}. Claude and Navarro~\citep[Section~3]{Claude08practicalrankselect} describes a way to also have \textit{zero-order entropy} space usage for large alphabets. 
 It is therefore possible to get space usage within \textit{zero-order entropy} even for large alphabets using the wavelet tree. 
-\textit{Zero-order entropy} can also be achieved by run-length encoding the bitmaps in the wavelet tree, which is also the approach that is used when compressing the bwt of the input string using the wavelet tree \citep[Introduction (\textbf{B})]{waveletTreeEntropy}.
-This means that using a combination of run-length encoding of bitmaps and taking the Burrows-Wheeler transformation of the input string using the wavelet tree it is possible to achieve a lower bound within \textit{k-th order entropy}.
+\textit{Zero-order entropy} can also be achieved by run-length encoding the bitmaps in the wavelet tree, which is also the approach that is used when compressing the \textit{bwt} transformation of the input string using the wavelet tree \citep[Introduction (\textbf{B})]{waveletTreeEntropy}.
+This means that using a combination of run-length encoding of bitmaps and taking the Burrows-Wheeler transformation of the input string using the wavelet tree it is possible to achieve compression near the lower bound of \textit{k-th order entropy}.
 
 \subsubsection{Run-Length encoding}
 Run-length encoding (RLE) is a simple process where the number of consecutive repeats of each symbol is stored in stead of storing the symbols them selves. 
@@ -93,8 +93,8 @@ If we have the string \textit{aaaaacccaaaaabbbaa} we can run-length encode this 
 It is necessary to store the symbol and it's number of consecutive repeating occurrences because we need to be able to identify which symbol occurs where and how many times in order to be able to reproduce the original string.
 The longer the sequence of a repeating symbol is the less space is used, since it can be stored as one number plus the related symbol.
 
-When representing the string using a wavelet tree problem gets reduced to run-length encoding a string of bits (the bitmap in each node).
-Since a binary number only has an alphabet with the cardinality of two we do not need to the symbol and it's occurrence but only the occurrence.
+When representing the string using a wavelet tree, the problem gets reduced to run-length encoding a string of bits (the bitmap in each node).
+Since a binary number only has an alphabet with the cardinality of two we do not need to store both the symbol and its occurrence but only the occurrence.
 If we define that the first number is always the amount of 0s and the second number is always the amount of 1s and so forth. 
 Then by looking at the bitmap of \textit{aaaaacccaaaaabbbaa} which is \textit{000001110000000000} when stored in a wavelet tree we can encode it into $(5,3,10)$.
 Figure~\ref{fig:RleWaveletTree} shows an example of a wavelet tree with run-length encoded bitmaps.
@@ -103,8 +103,8 @@ If we do not consider how a computer saves numbers but only consider the amount 
 From 18 numbers to only 3 numbers, which contain the same information.
 
 If we do consider how a computer saves numbers then the reduction is not that great because if we assume that each number is represented as an integer, then the run-length encoded bitmap uses more space than just storing the original bitmap. 
-This is because an integer uses 4 bytes of space which is 32 bits and we need to store three integers giving us a total of $32 bits \times 3 = 96 bits$ which is significantly larger than just the 18 bits we need to store for the original bitmap assuming we can store 1 and 0 using only 1 bit \footnote{This can be accomplished using c++ and vector$<$bool$>$}. 
-This means that a symbol needs to repeat consecutively more than 32 times before RLE achieves better space usage than just storing the bitmaps.
+This is because an integer uses 4 bytes of space which is 32 bits and we need to store three integers giving us a total of $32 bits \times 3 = 96 bits$ which is significantly larger than just the 18 bits we need to store for the original bitmap assuming we can store 1 and 0 using only 1 bit \footnote{This can be accomplished using C++ and Vector$<$bool$>$}. 
+This means that the symbols in the string need to, on average, repeat consecutively more than 32 times before RLE achieves better space usage than just storing the bitmaps.
 
 RLE is still very useful despite of this because you usually want to compress very large data and if that data uses an alphabet that is small enough then, as previously stated RLE can achieve compression close to the \textit{zero order entropy} when working with binary alphabets.
 
@@ -149,10 +149,9 @@ The original string is identified by having a \# at the end.
 
 Looking at \textit{bwt(S)} we can see that equal characters are now grouped together.
 This effect enables better compression when using compression techniques like run-length encoding.
-One could argue that simply sorting \textit{S} would enable better compression using run-length encoding, which is true. 
-But a sorted sequence is not reversible but BWT is, which is the main reason for using BWT. 
+One could argue that simply sorting \textit{S} would enable better compression using run-length encoding, which is true, but a sorted sequence is not reversible, which BWT is.
 It would not make very much sense to compress something without being able to decompress it again.
-\citep[Section~2]{BWToriginalArticle} describes an algorithm for getting the original string from the Burrows-Wheeler transformed string.
+Burrows et al.~\citep[Section~2]{BWToriginalArticle} describes an algorithm for getting the original string from the Burrows-Wheeler transformed string.
 
 Figure~\ref{fig:BwtRleWaveletTree} depicts a RLE Wavelet tree on \textit{bwt(abcbadbd)}. We can see, as indicated by the numbers in bold that fewer Run-length encoded values needs to be stored than for the non-Burrows-Wheeler transformed case as shown in figure~\ref{fig:RleWaveletTree}.
 \figureBegin
@@ -203,7 +202,7 @@ Figure~\ref{fig:BwtRleWaveletTree} depicts a RLE Wavelet tree on \textit{bwt(abc
 
 One might wonder how \textproc{Rank} and \textproc{Select} queries can be useful when the string is Burrows-Wheeler transformed and therefore permuted resulting in the queries values that is essentially unrelated to the original string \textit{S}. 
 
-The queries does have uses when working with the \textit{FM-index} which is a self-index based on the Burrows-Wheeler transformation $BWT(S)$ that is able to find occurrences and positions of patterns (sub-strings) in \textit{S} by looking at $BWT(S)$. 
+The queries does have uses when working with the \textit{FM-index}, named after its inventors Paolo Ferragina and Giovanni Manzini, which is a self-index based on the Burrows-Wheeler transformation $BWT(S)$ that is able to find occurrences and positions of patterns (sub-strings) in \textit{S} by looking at $BWT(S)$. 
 Such a procedure is described in \citep[Section 2]{FMcountOnBWT}.
 
 \subsubsection{Huffman-shaped Wavelet Trees}
@@ -215,7 +214,7 @@ If one then queries the Huffman shaped Wavelet Tree for a symbol that has a high
 Since the Huffman encoding is based on frequency of symbols it achieves the best performance and space complexity when symbols are non-uniformly distributed.
 If the data is uniformly distributed then the length of all Huffman codes would be similar resulting in a balanced tree having performance and space complexity similar to a normal Wavelet Tree.
 Since we have used uniformly distributed data in our experiments we have not done any experiments on the Huffman Shaped Wavelet Tree.
-In section~\ref{sec:choiseOfInputString} we discuss why we only consider uniform data.
+In section~\ref{sec:choiceOfInputString} we discuss why we only consider uniform data.
 
 
 \subsection{Information Retrieval}
