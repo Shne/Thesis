@@ -1,10 +1,11 @@
 \section{Cache, Branch prediction and Translation Lookaside Buffer}
 
 \subsection{Cache design and cache misses}
-
-A cache is a small fast memory storage that holds the most recently used memory words.
-Caches improves on the memory latency so memory access can be achieved within the demand of modern processors.
-Modern memory systems usually have three caches: Level 1 (L1), Level 2 (L2) and Level 3 (L3). \citep[Section~4.5.1]{Tanenbaum}.
+A cache is a small fast memory storage that holds the most recently used memory.
+Using caches can improve the memory access time many-fold, which is important since memory access is often a bottleneck in programs.
+Modern CPUs have a prefetcher that attempts to predict future memory accesses and fetches them into the cache ahead of time.
+Therefore, the pattern in which a program accesses the memory can have significant influence on the performance of the program.
+Modern memory systems usually have three levels of caches: Level 1 (L1), Level 2 (L2) and Level 3 (L3). \citep[Section~4.5.1]{Tanenbaum}.
 
 \begin{figure}
 \includegraphics[width=\textwidth]{CacheLevels.pdf}
@@ -23,24 +24,25 @@ This means that if data is evicted from L1 it will still reside in the L2 and L3
 This is an advantage because it allows fast access to data even if it is evicted from L1 or L2. 
 If the caches were not inclusive then it would result in a many more data requests to the main memory.
 
-There are two types of address locality that the L1, L2 and L3 caches depends on; Spatial locality and Temporal locality.
-Spatial locality occurs when memory locations that has addresses numerically similar to a recently accessed memory location are likely to be requested again very soon.
-Temporal locality happens when memory locations that has been accessed recently are accessed again.
-The cache exploits spatial locality by fetching more data than has been requested, assuming that it is possible to anticipate future requests.
+There are two types of address locality that the caches exploit to improve performance: Spatial Locality and Temporal Locality.
+Spatial Locality is that, when memory locations have addresses numerically close to a recently accessed memory location, they are more likely to be accessed soon.
+Temporal Locality is that, when memory locations have been accessed recently, they are more likely to be accessed again soon.
+The cache exploits spatial locality by fetching more data than has been requested, either by loading a larger chunk of memory than requested, such as a cache-line, or by speculatively fetching more cache-lines based on previously recognized access pattern.  This speculation is performed by the cache prefetcher and assumes that it is possible to anticipate future requests by looking at the previous access pattern.
 Temporal locality is exploited by choosing what to evict on a cache miss and normally it is the data entries that has been accessed least recently that are evicted.
 
 Data in the main memory is split into blocks of fixed size called \textit{cache-lines}. 
-There are usually 4 to 64 consecutive bytes in a \textit{cache-line}. 
+There are usually 4 to 64 consecutive bytes in a cache-line. 
 Some of these cache-lines are always present in the caches. 
-If a requested word is in the cache a trip to main memory can be avoided but if the word is not in the cache then a cache-line must be evicted from the cache (assuming that the cache is full) and the cache-line containing the word must be fetched from main memory or a lower level cache if one is present. 
+If a requested word is in the cache, a trip to main memory can be avoided, but if the word is not in the cache then a cache-line must be evicted from the cache (assuming that the cache is full, which it always is after the first few seconds of operation) and the cache-line containing the word must be fetched from main memory or a lower level cache if one is present. 
 This is called a \textbf{cache miss} and has a high penalty because fetching a new cache-line is expensive.
-The general idea is to have the most heavily used cache-lines in the caches as often as possible to reduce the amount of cache misses.
+The general idea is to have the most heavily used cache-lines in the caches as much of the time as possible to reduce the amount of cache misses.
 
 \subsubsection{Cache associativity}
 When designing a cache it is important to consider whether each cache-line can be stored in any cache slot or only in some of them.
 There are three approaches to solving this problem; \textit{direct mapped cache}, \textit{n-way set-associative cache} and \textit{fully associative cache}. 
 
-In a \textit{direct mapped cache} each cache-line can only be stored in a specific cache slot, the address of which is found by using a mapping function on address of the original main memory address, e.g. $address \mod cacheslots$.
+In a \textit{direct mapped cache} each cache-line can only be stored in a specific cache slot, the address of which is found by using a mapping function on address of the original main memory address, e.g.
+\[cacheAddress = memoryAddress\bmod cacheslots\]
 This means that two cache-lines cannot be mapped to the same slot simultaneously.
 Given a memory address it is only necessary to look for it in one place in the cache and if it is not there then it is not in the cache. Using this approach, and an appropriate mapping function, consecutive memory lines are placed in consecutive cache slots. 
 The problem with a \textit{direct mapped cache} is that since there are many more cache-lines in main memory than there are room for in the cache, many cache-lines ends up competing for the same slot. 
@@ -62,19 +64,19 @@ The \textit{n-way set-associative cache} is the most popular choice because it h
 
 
 \subsection{Branch Prediction and Misprediction}
-Modern computers are highly pipelined and pipelining works best on linear code because the fetch unit is then able to read consecutive words from memory and also better make use of prefetching.
+Modern computers are highly pipelined and pipelining works best on non-branching code because the fetch unit is then able to read consecutive words from memory and also better make use of prefetching.
+Typically, modern programs are full of branch instructions, however.
 
-Programs are not linear though, but are full of branch instructions. There are unconditional branches and conditional branches. 
-
-An example of an unconditional branch and a conditional branch is shown in figure~\ref{fig:branchexample} \footnote{Example borrowed from: \citep[Section~4.5.2]{Tanenbaum}} where \textit{BNE Else} is a conditional branch and \textit{BE Next} is an unconditional branch.
+There are conditional branches and unconditional branches. 
+An example of an unconditional branch and a conditional branch is shown in figure~\ref{fig:branchexample} \footnote{Example borrowed from: \citep[Section~4.5.2]{Tanenbaum}} where \textit{BNE Else} is a conditional branch and \textit{BR Next} is an unconditional branch.
  
 
-\begin{figure}\begin{framed}
+\begin{figure}
 \begin{algorithmic}
-\If{$i == 0$}
-	\State $k = 1$
+\If{$i = 0$}
+	\State $k \gets 1$
 \Else
-	\State $k = 2$
+	\State $k \gets 2$
 \EndIf
 \end{algorithmic}
 \vspace{0.3cm}
@@ -83,24 +85,25 @@ A possible translation to assembly looks like this:
 \vspace{0.3cm}
 \begin{compactenum}
 \item \itab{ } \tab{\texttt{CMP} $0,1$} \tab{: compare i to 0}
-\item \itab{ } \tab{\texttt{BNE Else}} \tab{: branch to Else if not equal}
+\item \itab{ } \tab{\texttt{BNE Else}} \tab{: branch to \texttt{Else} if not equal}
 \item \itab{\texttt{Then:}} \tab{\texttt{MOV} $k,1$} \tab{: move 1 to k}
-\item \itab{ } \tab{\texttt{BR Next}} \tab{: unconditional branch to Next}
+\item \itab{ } \tab{\texttt{BR Next}} \tab{: unconditional branch to \texttt{Next}}
 \item \itab{\texttt{Else:}} \tab{\texttt{MOV} $k,2$} \tab{: move 2 to k}
 \item \itab{\texttt{Next:}}
 \end{compactenum}
 \caption{Program fragment with conditional and unconditional branches}
 \label{fig:branchexample}
-\end{framed}
 \end{figure}
 
-An unconditional branch is a simple branch to a specified label, is not based on a condition and does not pose any significant problems.
+An unconditional branch is a simple jump to a specified label, it is not based on a condition and does not pose any significant problems.
+A conditional branch jumps to one of two places in the code based on whether a given condition is true of false.
+The ambiguity in a conditional branch is problematic because of the nature of modern pipelined CPU architectures where the stage of the pipeline that computes the result of a comparison is many stages later than the fetching unit.
+Before the result of the comparison is computed, the fetcher does not know where in the program code to fetch from.
 
-A conditional branch can branch in two directions based on whether a given condition is true of false.
-The ambiguity in a conditional branch is problematic because the fetcher does not know where to read from until much later in the pipeline. 
+
 Old pipelined machines would just stall until it was decided what branch to take. 
 Doing this has a heavy impact on performance if there is a lot of conditional branches in a program, which there usually are.
-Modern machines try to predict what branch is most likely to be taken and then continues in that direction until it is known whether the branch was predicted correctly or not. 
+Modern machines try to predict what branch is most likely to be taken, using a branch prediction unit, and then executes that code until it is known whether the branch was predicted correctly or not. 
 If the branch was predicted correctly then the execution simply continues.
 If the branch was mispredicted then the executed instructions in the mispredicted branch needs to be rolled back and the correct branch must be taken. 
 Undoing the effects of the wrong execution path is an expensive operation which means that it is important to minimize the amount of branch mispredictions as much as possible to get good performance.
