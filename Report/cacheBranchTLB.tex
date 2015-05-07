@@ -106,6 +106,46 @@ Modern machines try to predict what branch is most likely to be taken, using a b
 If the branch was predicted correctly then the execution simply continues.
 If the branch was mispredicted then the executed instructions in the mispredicted branch needs to be rolled back and the correct branch must be taken. 
 Undoing the effects of the wrong execution path is an expensive operation which means that it is important to minimize the amount of branch mispredictions as much as possible to get good performance.
+<<<<<<< Updated upstream
+
+\subsubsection{Branch Prediction techniques}
+There are generally two ways to do branch prediction; Static branch prediction and Dynamic branch prediction.
+
+In \textbf{Static branch prediction} the branch taken is always fixed.
+There are in general four ways to choose what branch to take and it is the compiler that chooses which to use of the first three based on where it makes sense. 
+The profile-driven prediction scheme is not something that the compiler can suddenly decide to do:
+\begin{description}
+\item[\textbf{1. Branch always not taken:}] It is assumed that the branch is not taken which means that the instruction flow can continue as if the branch condition is false.
+
+\item[\textbf{2. Branch always taken:}] This works in the opposite way of the above. Here it is assumed that the condition is always true and the branch is taken. This approach makes sense with a pipeline where the branch target address is known before the branch outcome.
+
+\item[\textbf{3. Backward taken forward not taken:}] Here backward branches are always taken which for instance is the branch at the end of a loop that go back to the beginning of the next loop iteration.
+The forward branches are not taken. 
+
+\item[\textbf{4. Profile-driven prediction:}]
+Here the branches of the program is profiled by running the program and the the information is given to the compiler to use for branch prediction. This of course requires the program to be compiled then run in order to be profiled and the compiled again to incorporate the branch info.
+\end{description}
+
+In \textbf{Dynamic branch prediction} the branch prediction is carried out at runtime and tries to the adapt to the program's current behaviour.
+This is better than just having some static schemes to choose from because it allows more complex and usually more correct decisions.
+The basic idea in dynamic branch prediction is to use the past branch behaviour to predict the future branch and is based of two mechanisms: A branch direction predictor (taken, or not taken) and a branch target address predictor (what address to branch to in case of a taken branch). 
+
+One way to do branch direction prediction is to have a history table that logs conditional branches as they occur, to be able to look up what direction they took when they appear again.
+The simplest way to implement the history table is to have it contain one bit for each conditional branch instruction that indicates whether the conditional branch was taken or not that last time it was executed.
+With this approach the branch will be predicted to go in that same direction as it did the last time. 
+If the prediction is wrong the bit in the history table is flipped.
+
+Using only one bit in the history table to indicate that a branch was take or not poses some problems.
+When a loop is finished the branch at the end will always be mispredicted and change the bit in the history table.
+When the loop is run again the branch at the end of the first iteration will be mispredicted.
+In the case of nested loops of a a loop being in a frequently called function then the amount of mispredictions increases and the performance suffers.
+
+To eliminate the loop mispredictions we can use two bite in stead of one in such a way that a branch must be predicted wrong twice in a row for the prediction scheme to change.
+This means that the different possible bit values becomes
+00, 01, 10 and 11.
+The 00 indicates that "no branch" i predicted. If this prediction is wrong the binary value gets incremented by 1 and becomes 01. Here the predicter predicts "no branch" one more time and if this is wrong the binary value is incremented again becoming 11.
+If the prediction is correct then the binary value is decremented back to 00 and the prediction just continues predicting 
+When the value is 11 the prediction scheme changes to "branch taken".
 
 
 \subsection{Translation Lookaside Buffer misses}
