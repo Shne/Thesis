@@ -100,15 +100,12 @@ A conditional branch jumps to one of two places in the code based on whether a g
 The ambiguity in a conditional branch is problematic because of the nature of modern pipelined CPU architectures where the stage of the pipeline that computes the result of a comparison is many stages later than the fetching unit.
 Before the result of the comparison is computed, the fetcher does not know where in the program code to fetch from.
 
-
 Old pipelined machines would just stall until it was decided what branch to take. 
 Doing this has a heavy impact on performance if there is a lot of conditional branches in a program, which there usually are.
 Modern machines try to predict what branch is most likely to be taken, using a branch prediction unit, and then executes that code until it is known whether the branch was predicted correctly or not. 
 If the branch was predicted correctly then the execution simply continues.
 If the branch was mispredicted then the executed instructions in the mispredicted branch needs to be rolled back and the correct branch must be taken. 
 Undoing the effects of the wrong execution path is an expensive operation which means that it is important to minimize the amount of branch mispredictions as much as possible to get good performance.
-
-
 
 
 \subsection{Translation Lookaside Buffer misses}

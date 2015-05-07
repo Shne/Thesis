@@ -90,13 +90,12 @@ This means that using a combination of run-length encoding of bitmaps and taking
 \subsubsection{Run-Length encoding}
 Run-length encoding (RLE) is a simple process where the number of consecutive repeats of each symbol is stored in stead of storing the symbols them selves. 
 If we have the string \textit{aaaaacccaaaaabbbaa} we can run-length encode this to \textit{a5c3a5b3a2} which is a smaller string containing the same information.
-It is necessary to store the symbol and it's number of consecutive repeating occurrences because we need to be able to identify which symbol occurs where and how many times in order to be able to reproduce the original string.
+It is necessary to store the symbol and its number of consecutive repeating occurrences because we need to be able to identify which symbol occurs where and how many times in order to be able to reproduce the original string.
 The longer the sequence of a repeating symbol is the less space is used, since it can be stored as one number plus the related symbol.
 
 When representing the string using a wavelet tree, the problem gets reduced to run-length encoding a string of bits (the bitmap in each node).
-Since a binary number only has an alphabet with the cardinality of two we do not need to store both the symbol and its occurrence but only the occurrence.
-If we define that the first number is always the amount of 0s and the second number is always the amount of 1s and so forth. 
-Then by looking at the bitmap of \textit{aaaaacccaaaaabbbaa} which is \textit{000001110000000000} when stored in a wavelet tree we can encode it into $(5,3,10)$.
+Since a binary number only has an alphabet of size two we do not need to store both the symbol and its occurrence but only the occurrence, if we adopt the convention that the first number is always the amount of 0s and the second number is always the amount of 1s, continuing this trend for the entire string so that even-index numbers correspond to 0 and odd-index to 1. 
+As an example, if we look at the bitmap of an input string \textit{aaaaacccaaaaabbbaa} which is \textit{000001110000000000} when stored in a wavelet tree, then it can be encoded and stored as the numbers $5~3~10$.
 Figure~\ref{fig:RleWaveletTree} shows an example of a wavelet tree with run-length encoded bitmaps.
 
 If we do not consider how a computer saves numbers but only consider the amount of numbers that needs to be stored then $RLE(000001110000000000)$ achieves a great reduction in space.
@@ -105,17 +104,27 @@ From 18 numbers to only 3 numbers, which contain the same information.
 If we do consider how a computer saves numbers then the reduction is not that great because if we assume that each number is represented as an integer, then the run-length encoded bitmap uses more space than just storing the original bitmap. 
 This is because an integer uses 4 bytes of space which is 32 bits and we need to store three integers giving us a total of $32 bits \times 3 = 96 bits$ which is significantly larger than just the 18 bits we need to store for the original bitmap assuming we can store 1 and 0 using only 1 bit \footnote{This can be accomplished using C++ and Vector$<$bool$>$}. 
 This means that the symbols in the string need to, on average, repeat consecutively more than 32 times before RLE achieves better space usage than just storing the bitmaps.
+This is assuming 4-byte integers are used to store the RLE values. 
+To be able to support storing the RLE of any bitmap, even one containing only 0s or only 1s, the RLE values should be able to store as high a value as the bitmap is long, which might require more bytes per value.
+A 32-bit unsigned integer supports storing a value up to $2^{32} = \num{4294967296}$. 
+The limit on bitmap length is also the maximum supported length of input string for a wavelet tree.
 
-RLE is still very useful despite of this because you usually want to compress very large data and if that data uses an alphabet that is small enough then, as previously stated RLE can achieve compression close to the \textit{zero order entropy} when working with binary alphabets.
+RLE is still very useful despite of this limitation because you usually want to compress very large data and if that data uses an alphabet that is small enough then, as previously stated RLE can achieve compression close to the zero order entropy when working with binary alphabets.
 
 If the Burrows-Wheeler transformation is applied to the string before it is saved in the wavelet tree and run-length encoded then the number of consecutive repeats of a symbol is increased which enables even greater compression.
 
 \subsubsection{Burrows-Wheeler transformation}
-Having a string \textit{S} of \textit{n} characters the Burrows-Wheeler transformation \citep{BWToriginalArticle} transforms \textit{S} by forming \textit{n} cyclic shifts of \textit{S}. 
-These \textit{n} permutations of \textit{S} are then sorted in lexicographical order.
-The \# is added to keep track of the end of the original string.
-The \textit{bwt} of \textit{S} is then the concatenation of the last characters in each permutation excluding $\#$.
+The Burrows-Wheeler transformation transforms a string $S$ into a string of the same length with the same characters with the characteristic that characters are grouped into runs of similar characters.
+This characteristic enables higher compression ratios when using techniques such as run-length encoding.
+The transformation is reversible, meaning it is possible to produce the original string from the Burrows-Wheeler transformed string, without any other information.
+Sorting $S$ would enable similar, or possibly better, compression ratios using run-length encoding, but it will not be reversible.
 
+A string $S$ of $n$ characters is transformed by the Burrows-Wheeler transformation \citep{BWToriginalArticle} by forming $n$ cyclic shifts of $S$. 
+These $n$ permutations of $S$ are then sorted in lexicographical order.
+An extra character (\#), not in the alphabet of $S$, is added to keep track of the end of the original string.
+The BWT of $S$ is then the concatenation of the last character of each permutation in sorted order, excluding $\#$.
+
+\begin{figure}
 \begin{center}
 $\begin{bmatrix}
 	bananahat\#\\
@@ -142,18 +151,22 @@ $\begin{bmatrix}
 	t\#bananah\textbf{a}
 \end{bmatrix}$
 \end{center}
-
-The list to the left is the permuted versions of \textit{S} and the list to the right is the lexicographically sorted permutations of \textit{S}.
-Taking the character at the last index in each column the Burrows-Wheeler transformation of $S=bananahat$ becomes $bwt(S) = tnnbhaaaa$. The index of the the original string in the right list is also returned. 
+\caption{Example of a Burrows-Wheeler transformation of the string \textit{bananahat}}
+\label{fig:BWTExample}
+\end{figure}
+In Figure~\ref{fig:BWTExample} we present an example transformation of the string \textit{bananahat}.
+The list to the left in Figure~\ref{fig:BWTExample} is the cyclically shifted permutations of \textit{S} and the list to the right contains the same permutations, but in lexicographically sorted order.
+The result of the Burrows-Wheeler transformation is then the characters at the last index in each column, highlighted in bold in Figure~\ref{fig:BWTExample}.
+The Burrows-Wheeler transformation of $S=bananahat$ becomes BWT($S$)$ = tnnbhaaaa$.
 The original string is identified by having a \# at the end.
 
-Looking at \textit{bwt(S)} we can see that equal characters are now grouped together.
-This effect enables better compression when using compression techniques like run-length encoding.
-One could argue that simply sorting \textit{S} would enable better compression using run-length encoding, which is true, but a sorted sequence is not reversible, which BWT is.
+Looking at BWT($S$) we can see that equal characters are now grouped together.
 It would not make very much sense to compress something without being able to decompress it again.
 Burrows et al.~\citep[Section~2]{BWToriginalArticle} describes an algorithm for getting the original string from the Burrows-Wheeler transformed string.
 
-Figure~\ref{fig:BwtRleWaveletTree} depicts a RLE Wavelet tree on \textit{bwt(abcbadbd)}. We can see, as indicated by the numbers in bold that fewer Run-length encoded values needs to be stored than for the non-Burrows-Wheeler transformed case as shown in figure~\ref{fig:RleWaveletTree}.
+\textbf{[TODO: Describe, possibly with example, how to reverse the BWT]}
+
+Figure~\ref{fig:BwtRleWaveletTree} depicts a RLE Wavelet tree on BWT($abcbadbd$). We can see, as indicated by the numbers in bold that fewer Run-length encoded values needs to be stored than for the non-Burrows-Wheeler transformed case as shown in figure~\ref{fig:RleWaveletTree}.
 \figureBegin
       \begin{minipage}{0.45\textwidth}      
 			\Tree
@@ -200,7 +213,7 @@ Figure~\ref{fig:BwtRleWaveletTree} depicts a RLE Wavelet tree on \textit{bwt(abc
 	\end{minipage}
 \figureEnd
 
-One might wonder how \textproc{Rank} and \textproc{Select} queries can be useful when the string is Burrows-Wheeler transformed and therefore permuted resulting in the queries values that is essentially unrelated to the original string \textit{S}. 
+One might wonder how \textproc{Rank} and \textproc{Select} queries can be useful when the string is Burrows-Wheeler transformed and therefore permuted resulting in the queries values that is essentially unrelated to the original string $S$. 
 
 The queries does have uses when working with the \textit{FM-index}, named after its inventors Paolo Ferragina and Giovanni Manzini, which is a self-index based on the Burrows-Wheeler transformation $BWT(S)$ that is able to find occurrences and positions of patterns (sub-strings) in \textit{S} by looking at $BWT(S)$. 
 Such a procedure is described in \citep[Section 2]{FMcountOnBWT}.
