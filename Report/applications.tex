@@ -166,9 +166,10 @@ Burrows et al.~\citep[Section~2]{BWToriginalArticle} describes an algorithm for 
 
 \textbf{[TODO: Describe, possibly with example, how to reverse the BWT]}
 
-Figure~\ref{fig:BwtRleWaveletTree} depicts a RLE Wavelet tree on BWT($abcbadbd$). We can see, as indicated by the numbers in bold that fewer Run-length encoded values needs to be stored than for the non-Burrows-Wheeler transformed case as shown in figure~\ref{fig:RleWaveletTree}.
-\figureBegin
-      \begin{minipage}{0.45\textwidth}      
+Figure~\ref{fig:RleBwtComparison} shows two small examples of wavelet trees using run-length encoding, one constructed on the string \textit{bananahat} (Figure~\ref{fig:RleWaveletTree}) and the other on the Burrows-Wheeler Transformation of \textit{bananahat} (Figure~\ref{fig:BwtRleWaveletTree}).
+We can see in Figure~\ref{fig:BwtRleWaveletTree}, highlighted by the numbers in bold, that fewer Run-length encoded values needs to be stored than for the non-Burrows-Wheeler transformed string in Figure~\ref{fig:RleWaveletTree}.
+\begin{figure}
+      \begin{subfigure}{0.45\textwidth}      
 			\Tree
 			%root
 			[.bananahat\\2,1,1,1,3,1 !\qsetw{3cm} 
@@ -188,9 +189,9 @@ Figure~\ref{fig:BwtRleWaveletTree} depicts a RLE Wavelet tree on BWT($abcbadbd$)
 			]
 		\caption{RLE Wavelet Tree on string \textit{bananahat} with alphabet $\sigma = abhnt$}
       \label{fig:RleWaveletTree}
-	\end{minipage}
+	\end{subfigure}
 	\hfill
-	\begin{minipage}{0.45\textwidth}	
+	\begin{subfigure}{0.45\textwidth}	
 			\Tree
 			%root
 			[.tnnbhaaaa\\\textbf{0,3,6} !\qsetw{3cm} 
@@ -210,24 +211,35 @@ Figure~\ref{fig:BwtRleWaveletTree} depicts a RLE Wavelet tree on BWT($abcbadbd$)
 			] 
 		\caption{RLE Wavelet Tree on $BWT(bananahat)=tnnbhaaaa$ with alphabet $\sigma = abhnt$}
 		\label{fig:BwtRleWaveletTree}
-	\end{minipage}
-\figureEnd
+	\end{subfigure}
+	\caption{Comparison of Wavelet Trees using Run-Length Encoding on a string and its Burrows-Wheeler Transformation}
+	\label{fig:RleBwtComparison}
+\end{figure}
 
-One might wonder how \textproc{Rank} and \textproc{Select} queries can be useful when the string is Burrows-Wheeler transformed and therefore permuted resulting in the queries values that is essentially unrelated to the original string $S$. 
+One might wonder how \textproc{Rank} and \textproc{Select} queries can be useful when the input string is Burrows-Wheeler transformed, as the results of the queries become essentially unrelated to the original string $S$, without an obvious way of transforming the query results back to what they would have been on a tree constructed on the original non-transformed string.
+We have not found any way to transform the results back, and the main use of constructing a Wavelet Tree on the BWT of a string seems to us, by far, to be compression.
 
-The queries does have uses when working with the \textit{FM-index}, named after its inventors Paolo Ferragina and Giovanni Manzini, which is a self-index based on the Burrows-Wheeler transformation $BWT(S)$ that is able to find occurrences and positions of patterns (sub-strings) in \textit{S} by looking at $BWT(S)$. 
+Rank and select queries on the BWT of a string does, however, have uses when working with the \textit{FM-index}, named after its inventors Paolo Ferragina and Giovanni Manzini, which is a self-index based on the Burrows-Wheeler transformation $BWT(S)$ that is able to find occurrences and positions of patterns (sub-strings) in \textit{S} by looking at $BWT(S)$. 
 Such a procedure is described in \citep[Section 2]{FMcountOnBWT}.
 
 \subsubsection{Huffman-shaped Wavelet Trees}
-\citep[Section~4]{FMcountOnBWT} describes a Huffman Shaped Wavelet Tree which places symbols with higher frequencies closer to the root than those that have a lower frequency, in such a way that the path from root to symbol leaf corresponds to the binary Huffman code of the symbol. Using a Huffman Shaped Wavelet Tree is an alternative to run-length encoding.
-The Huffman code of a symbol is a small binary value for symbols with high frequency and a larger binary value for symbols with the small frequency.
-This approach would make the tree skewed and as a result increase the height of the tree but decrease query time for symbols with high frequency.
-If one then queries the Huffman shaped Wavelet Tree for a symbol that has a high frequency then one would find it faster than if one was looking for a symbol that was less frequent.
+\citep[Section~4]{FMcountOnBWT} describes a Huffman Shaped Wavelet Tree skews the tree to one side and places symbols with higher frequencies towards the other side so that they are closer to the root than those that have a lower frequency.
+More precisely, they are placed in the tree in such a way that the path from the root to a leaf corresponds to the binary Huffman Code~\citep[Introduction]{HuffmanCoding} of the symbol of that leaf.
+Using a Huffman Shaped Wavelet Tree is an alternative to run-length encoding.
+
+This approach skews the tree and as a result increases the height of the tree, which ordinarily would result in higher average query time, but by placing the most frequent symbols highest and least frequent symbols lowest, it decreases query time massively for symbols with high frequency.
+Queries on a Huffman shaped Wavelet Tree for a symbol that has a high frequency then returns faster than queries for a symbol that was less frequent.
+Assuming symbols that occur with high frequency are also queried for more often, the average query time could see a reduction when using a Huffman-shaped wavelet tree.
+
+The Huffman Code~\citep[Introduction]{HuffmanCoding} of a symbol occurring with high frequency is a shorter binary string than the Huffman code of a symbol occurring with low frequency.
+The most frequent symbol could possibly be encoded in as little as one bit!
+This entails that the storage space required for the many occurrences of the most frequent symbols would be massively reduced, while the space required for the least frequent symbols would be increased.
+If the difference in frequency is sufficiently high, the reduction in space for the most frequent symbols would outweigh the increase in space for the least frequent and the overall storage requirement would be reduced.
 
 Since the Huffman encoding is based on frequency of symbols it achieves the best performance and space complexity when symbols are non-uniformly distributed.
 If the data is uniformly distributed then the length of all Huffman codes would be similar resulting in a balanced tree having performance and space complexity similar to a normal Wavelet Tree.
 Since we have primarily used uniformly distributed data in our experiments, and because of limited time, we have not implemented and done experiments on a Huffman Shaped Wavelet Tree.
-In section~\ref{sec:choiceOfInputString} we discuss why we mainly consider uniform data.
+In section~\ref{sec:choiceOfInputString} we discuss further why we mainly consider uniform data.
 
 
 \subsection{Information Retrieval}
@@ -235,13 +247,13 @@ In section~\ref{sec:choiceOfInputString} we discuss why we mainly consider unifo
 
 
 \subsubsection{Range Quantile Query}
-A range quantile query is a query that returns the $k$th smallest number within a subrange of a given sequence of elements.
-So if we are e.g. given a list of price changes on a laptop during the last year then a range quantile query is able to answer what the smallest or third smallest (indicated by the k value) price of the laptop was within for instance a month of that year.
-It is therefore also quite easy to find quantiles like the 2-quantile (median) or the 3-quantile. 
-To e.g. find the median, $k$ can be defined as half the length of the range of the sequence.
+A range quantile query is a query that returns the $k$th smallest number within a subsequence of a given sequence of elements.
+So if we are e.g. given a list of price changes on a laptop during the last year then a range quantile query is able to answer what the $k$-smallest price of the laptop was within for instance a month of that year.
+It is therefore also quite easy to find quantiles like the 2-quantile (median) or the 3-quantile.
+To e.g. find the median, $k$ can be defined as half the length of the subsequence.
 This would return the middle element of the subsequence.
 The 3-Quantile can be found by setting $k$ to $\frac{1}{3}$ of the length of the subsequence. 
-Quantiles are important values and are used a lot in statistics.
+Quantiles are important values within such fields as statistics and economics.
 
 The wavelet tree can be used to support efficient range quantile queries on a sequence \textit{S} of \textit{n} numbers in $O(\log(\sigma))$ time if $rank_b$ is supported in $O(1)$ time \citep[Section 3]{RangeQuantileQueryWT}. 
 The range is denoted as $S[l ... r]$.
