@@ -138,7 +138,7 @@ set key top right horizontal
 set output 'CumulativeSumSelectWalltime.tex'
 plot '../Data/CumulativeSum.data' every 9::2 using ($2/1000):($13/1000) title "UnalignedNaive" ls 1,\
      '../Data/CumulativeSum.data' every 9::5 using ($2/1000):($13/1000) title "CumulativeSum" ls 2,\
-     '../Data/CumulativeSum.data' every 9::6 using ($2/1000):($13/1000) title "Cum.SumBranchless" ls 3
+     '../Data/CumulativeSum.data' every 9::6 using ($2/1000):($13/1000) title "CumSumBranchless" ls 3
 
 # Select BranchMiss
 set yrange [0:410000]
@@ -146,7 +146,7 @@ set ylabel 'Branch Mispredictions'
 set output 'CumulativeSumSelectBranchMiss.tex'
 plot '../Data/CumulativeSum.data' every 9::2 using ($3):($14) title "UnalignedNaive" ls 1,\
      '../Data/CumulativeSum.data' every 9::5 using ($3):($14) title "CumulativeSum" ls 2,\
-     '../Data/CumulativeSum.data' every 9::6 using ($3):($14) title "Cum.SumBranchless" ls 3
+     '../Data/CumulativeSum.data' every 9::6 using ($3):($14) title "CumSumBranchless" ls 3
 
 
 # Select BranchExe
@@ -155,7 +155,7 @@ set ylabel 'Branches Executed'
 set output 'CumulativeSumSelectBranchExe.tex'
 plot '../Data/CumulativeSum.data' every 9::2 using ($4):($15) title "UnalignedNaive" ls 1,\
      '../Data/CumulativeSum.data' every 9::5 using ($4):($15) title "CumulativeSum" ls 2,\
-     '../Data/CumulativeSum.data' every 9::6 using ($4):($15) title "Cum.SumBranchless" ls 3
+     '../Data/CumulativeSum.data' every 9::6 using ($4):($15) title "CumSumBranchless" ls 3
 
 # Select BranchMissRate
 set yrange [0:0.08]
@@ -163,7 +163,7 @@ set ylabel 'Branch Misprediction Rate'
 set output 'CumulativeSumSelectBranchMissRate.tex'
 plot '../Data/CumulativeSum.data' every 9::2 using ($5):($16) title "UnalignedNaive" ls 1,\
      '../Data/CumulativeSum.data' every 9::5 using ($5):($16) title "CumulativeSum" ls 2,\
-     '../Data/CumulativeSum.data' every 9::6 using ($5):($16) title "Cum.SumBranchless" ls 3
+     '../Data/CumulativeSum.data' every 9::6 using ($5):($16) title "CumSumBranchless" ls 3
 
 
 # Select TLB Miss
@@ -172,7 +172,7 @@ set ylabel 'TLB Misses'
 set output 'CumulativeSumSelectTLBMiss.tex'
 plot '../Data/CumulativeSum.data' every 9::2 using ($6):($17) title "UnalignedNaive" ls 1,\
      '../Data/CumulativeSum.data' every 9::5 using ($6):($17) title "CumulativeSum" ls 2,\
-     '../Data/CumulativeSum.data' every 9::6 using ($6):($17) title "Cum.SumBranchless" ls 3
+     '../Data/CumulativeSum.data' every 9::6 using ($6):($17) title "CumSumBranchless" ls 3
 
 
 # Select Lvl 1 CM
@@ -181,7 +181,7 @@ set ylabel 'Cache Misses'
 set output 'CumulativeSumSelectL1CM.tex'
 plot '../Data/CumulativeSum.data' every 9::2 using ($7):($18) title "UnalignedNaive" ls 1,\
      '../Data/CumulativeSum.data' every 9::5 using ($7):($18) title "CumulativeSum" ls 2,\
-     '../Data/CumulativeSum.data' every 9::6 using ($7):($18) title "Cum.SumBranchless" ls 3
+     '../Data/CumulativeSum.data' every 9::6 using ($7):($18) title "CumSumBranchless" ls 3
 
 # Select Lvl 2 CM
 set yrange [0:260000]
@@ -189,16 +189,16 @@ set ylabel 'Cache Misses'
 set output 'CumulativeSumSelectL2CM.tex'
 plot '../Data/CumulativeSum.data' every 9::2 using ($8):($19) title "UnalignedNaive" ls 1,\
      '../Data/CumulativeSum.data' every 9::5 using ($8):($19) title "CumulativeSum" ls 2,\
-     '../Data/CumulativeSum.data' every 9::6 using ($8):($19) title "Cum.SumBranchless" ls 3
+     '../Data/CumulativeSum.data' every 9::6 using ($8):($19) title "CumSumBranchless" ls 3
 
 
 # Select Lvl 2 CHits
-set yrange [0:*]
+set yrange [0:400000]
 set ylabel 'Cache Hits'
 set output 'CumulativeSumSelectL2CHits.tex'
 plot '../Data/CumulativeSum.data' every 9::2 using ($9):($20) title "UnalignedNaive" ls 1,\
      '../Data/CumulativeSum.data' every 9::5 using ($9):($20) title "CumulativeSum" ls 2,\
-     '../Data/CumulativeSum.data' every 9::6 using ($9):($20) title "Cum.SumBranchless" ls 3
+     '../Data/CumulativeSum.data' every 9::6 using ($9):($20) title "CumSumBranchless" ls 3
 
 
 # Select Lvl 2 CM Rate
@@ -207,7 +207,7 @@ set ylabel 'Cache Miss Rate'
 set output 'CumulativeSumSelectL2CMRate.tex'
 plot '../Data/CumulativeSum.data' every 9::2 using ($10):($21) title "UnalignedNaive" ls 1,\
      '../Data/CumulativeSum.data' every 9::5 using ($10):($21) title "CumulativeSum" ls 2,\
-     '../Data/CumulativeSum.data' every 9::6 using ($10):($21) title "Cum.SumBranchless" ls 3
+     '../Data/CumulativeSum.data' every 9::6 using ($10):($21) title "CumSumBranchless" ls 3
 
 
 # Select Lvl 3 CM
@@ -216,4 +216,4 @@ set ylabel 'Cache Misses'
 set output 'CumulativeSumSelectL3CM.tex'
 plot '../Data/CumulativeSum.data' every 9::2 using ($11):($22) title "UnalignedNaive" ls 1,\
      '../Data/CumulativeSum.data' every 9::5 using ($11):($22) title "CumulativeSum" ls 2,\
-     '../Data/CumulativeSum.data' every 9::6 using ($11):($22) title "Cum.SumBranchless" ls 3
+     '../Data/CumulativeSum.data' every 9::6 using ($11):($22) title "CumSumBranchless" ls 3
