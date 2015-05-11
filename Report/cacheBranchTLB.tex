@@ -145,15 +145,53 @@ The 00 indicates that "no branch" i predicted. If this prediction is wrong the b
 If the prediction is correct then the binary value is decremented back to 00 and the prediction just continues predicting 
 When the value is 11 the prediction scheme changes to "branch taken" and the prediction algorithm continues using the described approach with the only change being that the binary value is decremented in stead of incremented.
 
-When the the is correctly predicted there is still a problem.
-The address to go to for some conditional branches are computed values. Since computation takes place after fetching the address is unknown and the prediction becomes useless. 
+When the branch is correctly predicted there is still a problem.
+The address to go to for some conditional branches are computed values obtained from doing arithmetic on registers. 
+Since computation takes place after fetching, the address is unknown and the prediction becomes useless. 
 A way to fix this problem is to store the address branched to last time for the particular branch, in the history table.
-The previous address can then be used to branch to.
+The previous address can then be used to branch to when the corresponding conditional branch is predicted again.
 
 
-\subsection{Translation Lookaside Buffer misses}
-Modern computers uses virtual memory to to address the problems of sharing limited memory between processes and/or users.
-Virtual memory hides the presence of physical memory and instead presents an abstract view of main memory.
-In particular, it conceals the fact that physical memory is not allocated to a program as a single continuous region while also concealing the actual size of the main memory.
-Virtual memory creates the illusion that the available memory for a given process is larger than what is physically available.
-This illusion is accomplished by subdividing
+\subsection{Virtual Memory and Translation Lookaside Buffer misses}
+Modern computers uses virtual memory to address the problems of sharing limited memory between processes and/or users.
+Virtual memory hides the presence of physical memory and instead presents an abstract view of main memory by concealing the fact that physical memory is not allocated to a program as a single continuous region while also concealing the actual size of the main memory creating the illusion that the available memory for a given process is larger than what is physically available.
+This illusion is accomplished by dividing the virtual memory into smaller subsections called \textbf{pages}, which can be loaded into physical memory when needed.
+Translating a virtual address into a physical address is an expensive operation and the Translation Lookaside Buffer (TLB) helps to speed up this process.
+
+\subsubsection{Virtual memory: Pages}
+A virtual memory address \textit{va} is interpreted as a pair  containing the page number and a word number (offset within the page).
+A physical memory address \textit{pa} is interpreted a pair  consisting of the page frame number and the word number within the frame, \citep[Section~8.2.1]{OperatingSystemPrinciples}.
+
+When loading a virtual memory page into the physical memory it is  necessary to be able to translate \textit{va} to \textit{pa}.
+Since the word number is the same in both \textit{va} and \textit{pa} the translation only needs to find the physical page frame that contains the virtual page.
+Therefore it is necessary to keep track of the page and its current page frame which can be done using a page table.
+
+\subsubsection{Virtual memory: Segmentation}
+
+\begin{figure}
+\center\includegraphics[width=0.70\textwidth]{virtualAddressTranslation}
+\caption{Virtual Address Translation. This figure is borrowed from \citep[Figure~8-7]{OperatingSystemPrinciples}}
+\label{fig:virtualAddressTranslation}
+\end{figure}
+
+Sometimes a process contains multiple dynamically changing elements. 
+Placing such elements in a single address space is a difficult problem.
+The problem is solved by segmentation \citep[Section~8.2.2]{OperatingSystemPrinciples}.
+
+A segment is a collection of address spaces that can have different sizes.
+This allows the virtual memory to be organized in the same way as a given application by using a segment for each logical element in the application e.g. a function, an array or table.
+Segmentation and paging is combined to allow a multisegment address space while also having a simple address translation algorithm. 
+The concept is shown in figure~\ref{fig:virtualAddressTranslation}.
+
+\subsubsection{Translation Lookaside Buffer}
+The translation from \textit{va} to \textit{pa} gets an extra parameter when adding segmentation; the segmentation number.
+The physical address is then found by first finding the page in the segmentation table and then finding the corresponding frame in the page table and then finding the frame in the physical memory. 
+This means that the translation from \textit{va} to \textit{pa} requires three physical reads.
+
+To reduce the number of reads needed when a virtual address is translated, a translation lookaside buffer (\textbf{TLB}) is used \citep[Section~8.2.5]{OperatingSystemPrinciples}.
+The TLB saves the most recent translations of \textit{va} to \textit{pa} i.e. translated pagenumbers, to make them quickly available for future use.
+This means that subsequent accesses of a virtual address within a short period of time is able to bypass segmentation- and page table lookups and simply just access the needed page frame from the TLB and find it in the physical memory.
+When the page is available in the TLB it is called a \textbf{TLB hit}.
+The TLB is not a very large buffer though meaning that it can only hold a few virtual page translations at a time. 
+A \textbf{TLB miss} occurs when given virtual page translation is not available in the TLB and as a consequence the virtual page needs to be translated using table lookups. 
+A TLB miss is therefore quite expensive and it is a good idea to minimize them as much as possible to improve performance.
