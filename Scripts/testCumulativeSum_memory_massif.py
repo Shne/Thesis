@@ -47,7 +47,7 @@ subprocess.Popen(['make','CONF=Release'], cwd=cumulativeSumCwd).wait()
 pageSize = 4096
 blockSize = int(pageSize/2)
 test = 'buildmemory'
-repeats = 5
+repeats = 1
 
 
 "(?P<alphabetSize>\d+)"

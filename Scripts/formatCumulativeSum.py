@@ -3,15 +3,30 @@
 import numpy
 import ReadOutput
 import subprocess
+import re
 
 GnuplotFile = open("Report/Gnuplot/Data/CumulativeSum.data", "w")
+memGnuplotFile = open("Report/Gnuplot/Data/CumulativeSum_memory_massif.data", "w")
 testDataFile = 'Output/CumulativeSum_n8as16.output'
+memTestDataFile = 'Output/CumulativeSum_n8as16_build_memory.output'
 
 def avg(list):
 	return sum(list) / len(list)
 
 def printHeader():
-	GnuplotFile.write('#[Cycles]'+
+	GnuplotFile.write(
+		    '#[MemSize]'+
+		'\t'+'[MemResident]'+
+		'\t'+'[MemHighWatermark]'+
+		'\t'+'[MemSizeErr]'+
+		'\t'+'[MemResidentErr]'+
+		'\t'+'[MemHighWatermarkErr]'+
+		'\n'
+	)
+
+def printMemHeader():
+	GnuplotFile.write(
+		    '#[Cycles]'+
 		'\t'+'[Walltime]'+
 		'\t'+'[BranchMis]'+
 		'\t'+'[BranchExe]'+
@@ -92,6 +107,31 @@ def formatAndPrintValues(ReadOutput):
 		'\n'
 	)
 
+def getTotalMemoryForSpecificTest(testDataFileName, algorithm, blockSize):
+	values = []
+	dataFile = open(testDataFileName, 'r')
+	for line in dataFile:
+		m = re.search('algorithm='+algorithm+' blockSize='+str(blockSize)+' heap=(?P<heap>\d+) extra=(?P<extra>\d+) stacks=(?P<stacks>\d+)', line)
+		if m is not None:
+			values.append(int(m.group('heap')) + int(m.group('extra')) + int(m.group('stacks')))
+	dataFile.seek(0)
+	avgValue = avg(values)
+	err = numpy.std(values)
+	return (avgValue, err)
+
+
+def formatAndPrintMemValues():
+	memGnuplotFile.write('#[UnalignedNaiveMem] [CumulativeSumMem] [UnalignedNaiveErr] [CumulativeSumErr]\n')
+	blockSize = 2048
+	UnalignedNaiveMem, UnalignedNaiveErr = getTotalMemoryForSpecificTest(memTestDataFile, 'UnalignedNaive', blockSize)
+	CumulativeSumMem, CumulativeSumErr = getTotalMemoryForSpecificTest(memTestDataFile, 'CumulativeSum', blockSize)
+	memGnuplotFile.write(
+		str(UnalignedNaiveMem)+" "+
+		str(UnalignedNaiveErr)+"\n"+
+		str(CumulativeSumMem)+" "+
+		str(CumulativeSumErr)+" "+
+		"\n"
+	)
 
 
 printHeader()
@@ -100,6 +140,9 @@ printHeader()
 # BUILD
 ReadOutput.getData(testDataFile, "UnalignedNaivePrecomputed", "build")
 formatAndPrintValues(ReadOutput)
+
+# Build Memory
+formatAndPrintMemValues()
 
 # RANK
 ReadOutput.getData(testDataFile, "UnalignedNaivePrecomputed", "rank")
@@ -128,6 +171,7 @@ formatAndPrintValues(ReadOutput)
 
 
 GnuplotFile.close()
+memGnuplotFile.close()
 
 
 GnuScriptFileName = '../CumulativeSum.gnu'
