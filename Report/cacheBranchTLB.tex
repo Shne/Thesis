@@ -65,11 +65,10 @@ The \textit{n-way set-associative cache} is the most popular choice because it h
 
 \subsection{Branch Prediction and Misprediction}
 Modern computers are highly pipelined and pipelining works best on non-branching code because the fetch unit is then able to read consecutive words from memory and also better make use of prefetching.
-Typically, modern programs are full of branch instructions, however.
+Modern programs are however typically full of branch instructions.
 
 There are conditional branches and unconditional branches. 
 An example of an unconditional branch and a conditional branch is shown in figure~\ref{fig:branchexample} \footnote{Example borrowed from: \citep[Section~4.5.2]{Tanenbaum}} where \textit{BNE Else} is a conditional branch and \textit{BR Next} is an unconditional branch.
- 
 
 \begin{figure}
 \begin{algorithmic}
@@ -106,7 +105,6 @@ Modern machines try to predict what branch is most likely to be taken, using a b
 If the branch was predicted correctly then the execution simply continues.
 If the branch was mispredicted then the executed instructions in the mispredicted branch needs to be rolled back and the correct branch must be taken. 
 Undoing the effects of the wrong execution path is an expensive operation which means that it is important to minimize the amount of branch mispredictions as much as possible to get good performance.
-<<<<<<< Updated upstream
 
 \subsubsection{Branch Prediction techniques}
 There are generally two ways to do branch prediction; Static branch prediction and Dynamic branch prediction.
@@ -128,9 +126,9 @@ Here the branches of the program is profiled by running the program and the the 
 
 In \textbf{Dynamic branch prediction} the branch prediction is carried out at runtime and tries to the adapt to the program's current behaviour.
 This is better than just having some static schemes to choose from because it allows more complex and usually more correct decisions.
-The basic idea in dynamic branch prediction is to use the past branch behaviour to predict the future branch and is based of two mechanisms: A branch direction predictor (taken, or not taken) and a branch target address predictor (what address to branch to in case of a taken branch). 
+The basic idea in dynamic branch prediction is to use the past branch behaviour to predict the future branch.
 
-One way to do branch direction prediction is to have a history table that logs conditional branches as they occur, to be able to look up what direction they took when they appear again.
+One way to do dynamic branch prediction is to have a history table that logs conditional branches as they occur, to be able to look up what direction they took when they appear again.
 The simplest way to implement the history table is to have it contain one bit for each conditional branch instruction that indicates whether the conditional branch was taken or not that last time it was executed.
 With this approach the branch will be predicted to go in that same direction as it did the last time. 
 If the prediction is wrong the bit in the history table is flipped.
@@ -138,14 +136,24 @@ If the prediction is wrong the bit in the history table is flipped.
 Using only one bit in the history table to indicate that a branch was take or not poses some problems.
 When a loop is finished the branch at the end will always be mispredicted and change the bit in the history table.
 When the loop is run again the branch at the end of the first iteration will be mispredicted.
-In the case of nested loops of a a loop being in a frequently called function then the amount of mispredictions increases and the performance suffers.
+In the case of nested loops occurring in a frequently called function, the amount of mispredictions increases and the performance suffers.
 
-To eliminate the loop mispredictions we can use two bite in stead of one in such a way that a branch must be predicted wrong twice in a row for the prediction scheme to change.
+To eliminate the loop mispredictions two bits can be used in stead of one in such a way that a branch must be predicted wrong twice in a row for the prediction scheme to change.
 This means that the different possible bit values becomes
 00, 01, 10 and 11.
 The 00 indicates that "no branch" i predicted. If this prediction is wrong the binary value gets incremented by 1 and becomes 01. Here the predicter predicts "no branch" one more time and if this is wrong the binary value is incremented again becoming 11.
 If the prediction is correct then the binary value is decremented back to 00 and the prediction just continues predicting 
-When the value is 11 the prediction scheme changes to "branch taken".
+When the value is 11 the prediction scheme changes to "branch taken" and the prediction algorithm continues using the described approach with the only change being that the binary value is decremented in stead of incremented.
+
+When the the is correctly predicted there is still a problem.
+The address to go to for some conditional branches are computed values. Since computation takes place after fetching the address is unknown and the prediction becomes useless. 
+A way to fix this problem is to store the address branched to last time for the particular branch, in the history table.
+The previous address can then be used to branch to.
 
 
 \subsection{Translation Lookaside Buffer misses}
+Modern computers uses virtual memory to to address the problems of sharing limited memory between processes and/or users.
+Virtual memory hides the presence of physical memory and instead presents an abstract view of main memory.
+In particular, it conceals the fact that physical memory is not allocated to a program as a single continuous region while also concealing the actual size of the main memory.
+Virtual memory creates the illusion that the available memory for a given process is larger than what is physically available.
+This illusion is accomplished by subdividing
