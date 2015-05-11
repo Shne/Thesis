@@ -193,5 +193,5 @@ The TLB saves the most recent translations of \textit{va} to \textit{pa} i.e. tr
 This means that subsequent accesses of a virtual address within a short period of time is able to bypass segmentation- and page table lookups and simply just access the needed page frame from the TLB and find it in the physical memory.
 When the page is available in the TLB it is called a \textbf{TLB hit}.
 The TLB is not a very large buffer though meaning that it can only hold a few virtual page translations at a time. 
-A \textbf{TLB miss} occurs when given virtual page translation is not available in the TLB and as a consequence the virtual page needs to be translated using table lookups. 
+A \textbf{TLB miss} occurs when a given virtual page translation is not available in the TLB and as a consequence the virtual page needs to be translated using table lookups. 
 A TLB miss is therefore quite expensive and it is a good idea to minimize them as much as possible to improve performance.
