@@ -35,8 +35,199 @@ We will see in our experiments whether the difference in running time can make u
 
 \subsection{Experiments}
 
+\subsection{Build Time}
+
 \subsubsection{Rank Queries}
 
 \subsubsection{Select Queries}
 
-\subsubsection{Memory Usage}
+
+\newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
+
+\begin{figure}\tiny
+\begin{subfigure}{0.48\textwidth}
+\input{CumulativeSumBuildWalltime}
+\caption{Wall Time of Building the Wavelet tree}
+\label{fig:CumulativeSumBuildWalltime}
+\end{subfigure}
+\caption{Measurements on Building the UnalignedNaive and CumulativeSum wavelet trees}
+\label{fig:CumulativeSumBuild}
+\end{figure}
+
+
+\begin{figure}\tiny
+
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumRankWalltime}
+	\caption{Wall Time of Rank queries}
+	\label{fig:CumulativeSumRankWalltime}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumRankBranchMiss}
+	\caption{Branch Misses of Rank queries}
+	\label{fig:CumulativeSumRankBranchMiss}
+\end{subfigure}
+
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumRankBranchExe}
+	\caption{Branches Executed in Rank queries}
+	\label{fig:CumulativeSumRankBranchExe}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumRankBranchMissRate}
+	\caption{Branch Misprediction Rate of Rank queries}
+	\label{fig:CumulativeSumRankBranchMissRate}
+\end{subfigure}
+
+\caption{Measurements on Rank Queries on the UnalignedNaive and CumulativeSum Wavelet Trees. Part 1.}
+\label{fig:CumulativeSumRank}
+\end{figure}
+
+
+
+
+\begin{figure}\tiny
+
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumRankTLBMiss}
+	\caption{TLB Misses of Rank queries}
+	\label{fig:CumulativeSumRankTLBMiss}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumRankL1CM}
+	\caption{Level 1 Cache Misses of Rank queries}
+	\label{fig:CumulativeSumRankL1CM}
+\end{subfigure}
+
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumRankL2CM}
+	\caption{Level 2 Cache Misses in Rank queries}
+	\label{fig:CumulativeSumRankL2CM}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumRankL2CHits}
+	\caption{Level 2 Cache Hits of Rank queries}
+	\label{fig:CumulativeSumRankL2CHits}
+\end{subfigure}
+
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumRankL2CMRate}
+	\caption{Level 2 Cache Miss Rate in Rank queries}
+	\label{fig:CumulativeSumRankL2CMRate}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumRankL3CM}
+	\caption{Level 3 Cache Misses Rate of Rank queries}
+	\label{fig:CumulativeSumRankL3CM}
+\end{subfigure}
+
+\caption{Measurements on Rank Queries on the UnalignedNaive and CumulativeSum Wavelet Trees. Part 2.}
+\label{fig:CumulativeSumRank}
+\end{figure}
+
+
+
+
+\clearpage
+
+
+
+
+\begin{figure}\tiny
+
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumSelectWalltime}
+	\caption{Wall Time of Select queries}
+	\label{fig:CumulativeSumSelectWalltime}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumSelectBranchMiss}
+	\caption{Branch Misses of Select queries}
+	\label{fig:CumulativeSumSelectBranchMiss}
+\end{subfigure}
+
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumSelectBranchExe}
+	\caption{Branches Executed in Select queries}
+	\label{fig:CumulativeSumSelectBranchExe}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumSelectBranchMissRate}
+	\caption{Branch Misprediction Rate of Select queries}
+	\label{fig:CumulativeSumSelectBranchMissRate}
+\end{subfigure}
+
+\caption{Measurements on Select Queries on the UnalignedNaive and CumulativeSum and CumulativeSumBranchless Wavelet Trees. Part 1.}
+\label{fig:CumulativeSumSelect}
+\end{figure}
+
+
+
+\begin{figure}\tiny
+
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumSelectTLBMiss}
+	\caption{TLB Misses of Select queries}
+	\label{fig:CumulativeSumSelectTLBMiss}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumSelectL1CM}
+	\caption{Level 1 Cache Misses of Select queries}
+	\label{fig:CumulativeSumSelectL1CM}
+\end{subfigure}
+
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumSelectL2CM}
+	\caption{Level 2 Cache Misses in Select queries}
+	\label{fig:CumulativeSumSelectL2CM}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumSelectL2CHits}
+	\caption{Level 2 Cache Hits of Select queries}
+	\label{fig:CumulativeSumSelectL2CHits}
+\end{subfigure}
+
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumSelectL2CMRate}
+	\caption{Level 2 Cache Miss Rate in Select queries}
+	\label{fig:CumulativeSumSelectL2CMRate}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumSelectL3CM}
+	\caption{Level 3 Cache Misses Rate of Select queries}
+	\label{fig:CumulativeSumSelectL3CM}
+\end{subfigure}
+
+\caption{Measurements on Select Queries on the UnalignedNaive and CumulativeSum and CumulativeSumBranchless Wavelet Trees. Part 2.}
+\label{fig:CumulativeSumSelect}
+\end{figure}
+
+
+
+
+
+
+\restoregeometry
+
+
+
+
+
+
+
+
+
+
+
+
+
