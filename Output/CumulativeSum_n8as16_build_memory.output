@@ -1,0 +1,10 @@
+algorithm=UnalignedNaive blockSize=2048 heap=751694715 extra=4739053 stacks=2032 
+algorithm=UnalignedNaive blockSize=2048 heap=751694715 extra=4739053 stacks=2032 
+algorithm=UnalignedNaive blockSize=2048 heap=751694715 extra=4739053 stacks=2032 
+algorithm=UnalignedNaive blockSize=2048 heap=751694715 extra=4739053 stacks=2032 
+algorithm=UnalignedNaive blockSize=2048 heap=751694715 extra=4739053 stacks=2032 
+algorithm=CumulativeSum blockSize=2048 heap=751842063 extra=4718649 stacks=2032 
+algorithm=CumulativeSum blockSize=2048 heap=751842063 extra=4718649 stacks=2032 
+algorithm=CumulativeSum blockSize=2048 heap=751842063 extra=4718649 stacks=2032 
+algorithm=CumulativeSum blockSize=2048 heap=751842063 extra=4718649 stacks=2032 
+algorithm=CumulativeSum blockSize=2048 heap=751842063 extra=4718649 stacks=2032 
