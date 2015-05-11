@@ -1,9 +1,9 @@
-\section{Tools Used}
+\subsection{Tools Used}
 We have looked at and tested out the capabilities of several profilers and tools for determining the number of cache-misses, branch mispredictions and translation lookaside buffer misses.
 Below we will explain why we did or did not use each of them.
 
 
-\subsection{Counters}
+\subsubsection{Counters}
 We use these for reporting and analysing cache-misses, etc.
 \begin{description}
 \item[Perf]~\citep{perftool} is a performance analysing tools chiefly implemented in the Linux kernel, available from version 2.6.31.
@@ -13,10 +13,7 @@ It can profile the entire system or a specific process, but not subsections of a
 It requires the analysed program itself to setup and initialize PAPI, but therefore also supports starting and stopping the counter data collection at specific points in the program, enabling profiling of subsections of the program.
 \item[Massif]~\citep{massif} is a heap profiler. It can count how much heap memory a program is using during its run by recording calls to malloc, calloc, realloc, memalign, new and new[] and other similar functions.
 It then gathers them in a number of snapshots and detailed snapshots, which can be very useful for finding which parts of a program uses most memory.
-
 \end{description}
-
-\subsubsection{Counters used}
 We calculate the CPU clock cycles using the \texttt{PAPI\_TOT\_CYC} papi event which return the total number of unhalted CPU clock cycles, including when the CPU clock changes to a higher frequency in what Intel calls "Turbo Boost" or more generally "dynamic overclocking".
 We believe this value to be more accurate than calculating cycles using \texttt{PAPI\_get\_real\_cyc()} which estimates the cycles based on wall time \citep{PAPI-get-real-cyc}. 
 
