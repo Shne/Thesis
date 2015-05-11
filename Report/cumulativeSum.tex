@@ -47,22 +47,47 @@ In Figure~\ref{fig:CumulativeSumBuildMemoryUsage} we can see that there is, as e
 If we look closer at the raw data, there is only a slight (124 KB) increase in memory usage when storing the cumulative sum, which constitutes an increase of about 0.0168\%, and is even less than what we expected.
 
 \subsubsection{Rank Queries}
+In Figure~\ref{fig:CumulativeSumRank} we have plotted various measurements for Rank queries on the UnalignedNaive and CumulativeSum trees.
+In Figure~\ref{fig:CumulativeSumRankWalltime} we can see that storing and using the cumulative sum of rank values instead of the rank values for each block improves the running time of rank queries.
+UnalignedNaive spends 3.6 milliseconds on 1000 queries, where CumulativeSum spends 3.0 milliseconds, an improvement of 15.87\%.
+
+Looking at Figures~\ref{fig:CumulativeSumRankBranchMiss}, Figure~\ref{fig:CumulativeSumRankBranchMissRate}, and Figure~\ref{fig:CumulativeSumRankBranchExe} we can see that the tree using cumulative sums has much fewer branch mispredictions and a lower misprediction rate, as well as executing fewer conditional branches overall during rank queries.
+This can be explained by the removal of a for-loop in CumulativeSum that iterated over the precomputed values, summing them up to calculate the rank, instead replacing it with a single lookup of a precomputed value.
+
+In Figure~\ref{fig:CumulativeSumRankTLBMiss} we see that the CumulativeSum tree has fewer Translation Lookaside Buffer Misses, although we can see from the errorbars that they their standard deviations overlap, so perhaps there is less of an improvement here than it might look at first glance.
+
+In Figure~\ref{fig:CumulativeSumRankL1CM}, \ref{fig:CumulativeSumRankL2CM}, and \ref{fig:CumulativeSumRankL3CM} we can see that rank queries on the CumulativeSum wavelet tree has a much better level cache performance, and only slightly worse level 2 and 3 cache performance.
+For level 2 cache, the amount of cache misses of CumulativeSum is even within the standard deviation of the cache misses for UnalignedNaive.
+We also see a slightly worse level 3 cache performance in Figure~\ref{fig:CumulativeSumRankL3CM}.
+\textbf{[TODO: speculate as to why]}
+
+In Figure~\ref{fig:CumulativeSumRankL2CHits} we can see that the amount of level 2 cache hits decrease significantly when using cumulative sums of the precomputed values.
+We believe the explanation for the decrease in level 2 cache hits lies in the reduction of level 1 cache misses, like results from previous experiments.
+The reduction in level 2 cache hits is simply the amount of cache lookups that the level 1 cache instead was able to handle.
+The reduction of level 1 cache misses is on average $\num{134783.8}$ and the reduction in level 2 cache hits is on average $\num{136605.6}$ making them very close.
+The level 2 cache miss rate (not shown) is therefore somewhat misleading as it would suggest a worse cache performance where the truth is that CumulativeSum has a much better cache performance, having much fewer level 1 cache misses.
+
 
 
 \subsubsection{Select Queries}
 
 
 
+
+
+
+
+
 \begin{figure}\tiny
 \begin{subfigure}{0.48\textwidth}
 	\input{CumulativeSumBuildWalltime}
-	\caption{Wall Time of Building the Wavelet tree}
+	\caption{Wall Time}
 	\label{fig:CumulativeSumBuildWalltime}
 \end{subfigure}
 \hfill
 \begin{subfigure}{0.48\textwidth}
 	\input{CumulativeSumBuildMemory}
-	\caption{Memory Usage of Building the Wavelet Tree.}
+	\caption{Memory Usage}
 	\label{fig:CumulativeSumBuildMemoryUsage}
 \end{subfigure}
 \caption{Measurements on Building the UnalignedNaive and CumulativeSum wavelet trees}
@@ -81,7 +106,7 @@ If we look closer at the raw data, there is only a slight (124 KB) increase in m
 \hfill
 \begin{subfigure}{0.30\textwidth}
 	\input{CumulativeSumRankBranchMiss}
-	\caption{Branch Misses}
+	\caption{Branch Mispredictions}
 	\label{fig:CumulativeSumRankBranchMiss}
 \end{subfigure}
 \hfill
@@ -115,19 +140,19 @@ If we look closer at the raw data, there is only a slight (124 KB) increase in m
 	\caption{Level 2 Cache Misses}
 	\label{fig:CumulativeSumRankL2CM}
 \end{subfigure}
-%\hfill
-%\begin{subfigure}{0.30\textwidth}
-%	\input{CumulativeSumRankL2CHits}
-%	\caption{Level 2 Cache Hits}
-%	\label{fig:CumulativeSumRankL2CHits}
-%\end{subfigure}
 \hfill
 \begin{subfigure}{0.30\textwidth}
-	\input{CumulativeSumRankL2CMRate}
-	\caption{Level 2 Cache Miss Rate}
-	\label{fig:CumulativeSumRankL2CMRate}
+	\input{CumulativeSumRankL2CHits}
+\caption{Level 2 Cache Hits}
+\label{fig:CumulativeSumRankL2CHits}
 \end{subfigure}
 \hfill
+%\begin{subfigure}{0.30\textwidth}
+%	\input{CumulativeSumRankL2CMRate}
+%	\caption{Level 2 Cache Miss Rate}
+%	\label{fig:CumulativeSumRankL2CMRate}
+%\end{subfigure}
+%\hfill
 \begin{subfigure}{0.30\textwidth}
 	\input{CumulativeSumRankL3CM}
 	\caption{Level 3 Cache Misses}
@@ -157,7 +182,7 @@ If we look closer at the raw data, there is only a slight (124 KB) increase in m
 \hfill
 \begin{subfigure}{0.30\textwidth}
 	\input{CumulativeSumSelectBranchMiss}
-	\caption{Branch Misses}
+	\caption{Branch Mispredictions}
 	\label{fig:CumulativeSumSelectBranchMiss}
 \end{subfigure}
 \hfill

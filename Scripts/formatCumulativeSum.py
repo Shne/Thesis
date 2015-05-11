@@ -15,17 +15,6 @@ def avg(list):
 
 def printHeader():
 	GnuplotFile.write(
-		    '#[MemSize]'+
-		'\t'+'[MemResident]'+
-		'\t'+'[MemHighWatermark]'+
-		'\t'+'[MemSizeErr]'+
-		'\t'+'[MemResidentErr]'+
-		'\t'+'[MemHighWatermarkErr]'+
-		'\n'
-	)
-
-def printMemHeader():
-	GnuplotFile.write(
 		    '#[Cycles]'+
 		'\t'+'[Walltime]'+
 		'\t'+'[BranchMis]'+
