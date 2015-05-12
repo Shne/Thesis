@@ -107,7 +107,7 @@ The ambiguity in a conditional branch is problematic because of the nature of mo
 Before the result of the comparison is computed, the fetcher does not know where in the program code to fetch from.
 
 Old pipelined machines would just stall until it was decided what branch to take. 
-Doing this has a heavy impact on performance if there is a lot of conditional branches in a program, which there usually are.
+Doing this has a heavy impact on performance, especially if there is a lot of conditional branches in a program.
 Modern machines try to predict what branch is most likely to be taken, using a branch prediction unit, and then executes that code until it is known whether the branch was predicted correctly or not. 
 If the branch was predicted correctly then the execution simply continues.
 If the branch was mispredicted then the executed instructions in the mispredicted branch needs to be rolled back and the correct branch must be taken. 
@@ -148,9 +148,10 @@ In the case of nested loops occurring in a frequently called function, the amoun
 To eliminate the loop mispredictions two bits can be used in stead of one in such a way that a branch must be predicted wrong twice in a row for the prediction scheme to change.
 This means that the different possible bit values becomes
 00, 01, 10 and 11.
-The 00 indicates that "no branch" i predicted. If this prediction is wrong the binary value gets incremented by 1 and becomes 01. Here the predicter predicts "no branch" one more time and if this is wrong the binary value is incremented again becoming 11.
-If the prediction is correct then the binary value is decremented back to 00 and the prediction just continues predicting 
-When the value is 11 the prediction scheme changes to "branch taken" and the prediction algorithm continues using the described approach with the only change being that the binary value is decremented in stead of incremented.
+00 indicates that the last to branching instructions resulted in not jumping and "no jump" is predicted. If a conditional branching instruction is reached where this prediction is wrong the last bit is set to 1 and the bit value become 01. The predicter still predicts "no jump".
+If this prediction is correct for the next conditional branching instruction the binary value is set back to 00 and the prediction continues predicting "no jump" as before.
+If the previous "no jump" prediction instead was wrong at a 01 value, it will be changed to 11 and the future prediction changed to "jump".
+Two mispredictions are then required to change back to bit value 00 and "no jump" prediction, in a similar way it went from 00 to 11, except using 10 as the in-between value.
 
 When the branch is correctly predicted there is still a problem.
 The address to go to for some conditional branches are computed values obtained from doing arithmetic on registers. 
