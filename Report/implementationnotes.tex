@@ -41,9 +41,8 @@ This means that the compiler could potentially remove the entirety or parts of t
 To ensure that the compiler doesn't throw needed computations out the window in our tests, we collect the results of each query in an array and print it to stdout. We only print it after the collection of measurements is done to effect the running time minimally.
 
 \subsection{Reducing Construction Time Memory Usage}
-Since the Wavelet tree is a recursively defined data structure, we also implement it recursively. 
-Since it is also binary (or $d$-ary) we recurse into several sub-node constructors in the construction of a node, which means our compiler can't do tail-recursion optimisation \textbf{[TODO: check that this is true!]}. 
-This further causes any stack-allocated variables to be held in memory until we leave the scope of the constructor function.
+Since the Wavelet tree is a recursively defined data structure, we also implement it recursively.
+This causes any stack-allocated variables to be held in memory until we leave the scope of the constructor function.
 We traverse and split the input string into its left and right parts in each node constructor and thus end up holding the input string twice in memory: once in the variable holding the input string, once in the two variables holding the left and right split strings.
 This is wasted memory because we don't actually need the input string any longer once we have split it into its left and right parts.
 Because we simply call one sub-node constructor, then the other, once the first has completed, and finally return once both subnodes has completed constructing themselves, we end up completing the construction of the nodes in post-order.
