@@ -20,7 +20,7 @@ badPatterns = [(r'\s()\\(ref|cite)', 'Space not \'~\' before ref/cite', []),
 				(r'\$.*[^\\]()log\b.*\$', 'Non-roman log in mathmode', []),
 				(r'\\()mod[^{]', 'Wrong usage of \\mod', []),
 				(r'((?!(Figure|Section|Table|Appendix).*)\ref)', 'Unnamed Reference', []),
-				(r'\b([Aa]ppropriate|[Qq]uite|[Vv]ery [^h]|[Nn]ice|[Ll]ikely)()', 'Non-sciency word', []),
+				(r'\b([Qq]uite|[Vv]ery [^h]|[Nn]ice|[Ll]ikely)()', 'Non-sciency word', []),
 				(r'SSE4\.2()', 'Wrong SSE version', []),
 				(r'for ()loop', 'Missing for loop hyphen', []),
 				(r'()\\todo', 'Unfixed todo', ['thesis.tex']),
@@ -29,7 +29,12 @@ badPatterns = [(r'\s()\\(ref|cite)', 'Space not \'~\' before ref/cite', []),
 				(r'this ()paper', 'Paper mentioned', []),
 				(r'\\Require()', 'Require obsolete', []),
 				(r'ceil\{1\.7()', '1.7 misuse',[]),
-				(r'Simd|simd()', 'SIMD',['thesis.tex'])
+				(r'Simd|simd()', 'SIMD',['thesis.tex']),
+				(r'==()', 'double-equality instead of $\gets $',[]),
+				(r"it's()", "it's vs. its",[]),
+				(r'-th()', 'use $i$th instead of i-th',[]),
+				(r'bwt', 'use BWT instead of bwt or \textit{bwt}',[]),
+				# (r'\s[ikbcS]\s', 'surround variables in $',[])
 				]
 sublime = r'subl'
 

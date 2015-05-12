@@ -108,7 +108,7 @@ There are no peaks in query time when skew is 2.8 or 4.2.
 In the end we can conclude that skewing the tree is not an improvement. 
 Controlling the memory layout of the nodes does not improve query time because all the work is being done in the bitmaps of the nodes.
 It is when accessing these bitmaps that the cache misses occur.
-When the tree is skewed it's hight is increased and as a result more bitmaps needs to be accessed before a query is finished. 
+When the tree is skewed its height is increased and as a result more bitmaps needs to be accessed before a query is finished. 
 This produces more cache misses than when the tree is binary balanced.
 
 

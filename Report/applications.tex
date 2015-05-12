@@ -50,14 +50,14 @@ Then \textit{entropy} H is defined as
 \begin{center}
 $H = \sum_{i=1}^{\sigma} p_i log_2(\frac{1}{p_i})$
 \end{center}
-where $p_i$ is the probability of the i-th symbol in the alphabet appearing in \textit{S}.
+where $p_i$ is the probability of the $i$th symbol in the alphabet appearing in \textit{S}.
 \end{definition} 
 \end{mdframed}
 
 Entropy represents a lower bound to the average number of bits needed to represent each symbol in $S$ according to the coding theorem of Shannon~\citep[Introduction]{WTSurvey} and is the bound that compression researchers compare their results to.
 
 This theoretical definition of entropy is often replaced in scientific literature by a more practical definition: \textit{empirical entropy}.
-There are two versions: \textit{empirical zero-order entropy} $H_0$ and \textit{empirical k-th order entropy} $H_k$. $H_k$ takes into account a context of size \textit{k} of the symbol appearances, ie. the suffixes of length $k$ of each symbol appearance in the string, while $H_0$ does not and treats symbols independently instead. 
+There are two versions: \textit{empirical zero-order entropy} $H_0$ and \textit{empirical $k$th order entropy} $H_k$. $H_k$ takes into account a context of size \textit{k} of the symbol appearances, ie. the suffixes of length $k$ of each symbol appearance in the string, while $H_0$ does not and treats symbols independently instead. 
 
 \begin{mdframed}[nobreak, linecolor=lightgray, linewidth=2pt]
 \begin{definition}: \textit{Empirical zero-order entropy}, $H_0$ \\
@@ -70,7 +70,7 @@ where $n_i$ is the number of appearances of character $c_i$ in $S$.
 \end{definition}
 \begin{definition}: \textit{Empirical k-th order entropy}, $H_k$ \\
 For a string $w \in \Sigma^k$ let us define $w_S$ as the concatenation of characters that follow \textit{w} in \textit{S}. 
-Then the k-th order empirical entropy of \textit{S}, is defined as follows
+Then the $k$th order empirical entropy of \textit{S}, is defined as follows
 \begin{center}
 $H_k = H_k(S) = \frac{1}{n} \sum\limits_{w \in \Sigma^k} | w_S |H_0(w_S)$
 \end{center}
@@ -84,8 +84,8 @@ The problem for a long time was that there existed no good way to achieve compre
 
 To achieve \textit{zero-order entropy} a Huffman shaped wavelet tree can be used~\citep[Section~4]{FMcountOnBWT}. Claude and Navarro~\citep[Section~3]{Claude08practicalrankselect} describes a way to also have \textit{zero-order entropy} space usage for large alphabets. 
 It is therefore possible to get space usage within \textit{zero-order entropy} even for large alphabets using the wavelet tree. 
-\textit{Zero-order entropy} can also be achieved by run-length encoding the bitmaps in the wavelet tree, which is also the approach that is used when compressing the \textit{bwt} transformation of the input string using the wavelet tree~\citep[Introduction (\textbf{B})]{waveletTreeEntropy}.
-This means that using a combination of run-length encoding of bitmaps and taking the Burrows-Wheeler transformation of the input string using the wavelet tree it is possible to achieve compression near the lower bound of \textit{k-th order entropy}.
+\textit{Zero-order entropy} can also be achieved by run-length encoding the bitmaps in the wavelet tree, which is also the approach that is used when compressing the BWT transformation of the input string using the wavelet tree~\citep[Introduction (\textbf{B})]{waveletTreeEntropy}.
+This means that using a combination of run-length encoding of bitmaps and taking the Burrows-Wheeler transformation of the input string using the wavelet tree it is possible to achieve compression near the lower bound of \textit{$k$th order entropy}.
 
 \subsubsection{Run-Length encoding}
 Run-length encoding (RLE) is a simple process where the number of consecutive repeats of each symbol is stored instead of storing the symbols themselves. 
@@ -351,7 +351,7 @@ Level 4:\\$k=1$\\$l=1$\\$r=1$
 \figureEnd
 
 An example of a range quantile query can be seen in Figure~\ref{fig:RQQWaveletTree}. 
-The numbers in bold indicates the range $S[l..r]$ where $S= \lbrace 6,2,0,7,9,3,1,8,5,4 \rbrace$ and $l=3$, $r=9$ and $k=5$.
-$k=5$ means that we are looking for the 5th smallest number within $S[l..r]$ which is \textit{7} indicated by the leaf that the query ends up in before terminating.
+The numbers in bold indicates the range $S[l...r]$ where $S= \lbrace 6,2,0,7,9,3,1,8,5,4 \rbrace$ and $l=3$, $r=9$ and $k=5$.
+$k=5$ means that we are looking for the 5th smallest number within $S[l...r]$ which is \textit{7} indicated by the leaf that the query ends up in before terminating.
 $l$ and $r$ indicates the range to look within.
 The right side of the figure shows how \textit{k, l} and \textit{r} develops in each recursive call of the Range Quantile Query.

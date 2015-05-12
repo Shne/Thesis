@@ -136,7 +136,7 @@ The rank query is a computation of worst-case cost $\frac{blockSize}{2}$ because
 The popcount select query into the first partial block is an operation of worst-case cost $blockSize$ because it can at most popcount the entire block.
 So, in the worst case, when the sought-after occurrence is in the first partial block of the bitmap, $\frac{blockSize}{2}$ work is wasted, yet when the occurrence is elsewhere, $blockSize$ work is saved.
 This means that the boundary between where using the rank query becomes a gain or a loss in performance is where the ratio between times the occurrence is to be found in and outside the first partial block of the bitmap is $\frac{2}{3}$.
-That is, when considering the worst-case query time for both queries, if the occurrence is to be found outside the first partial block of the bitmap more than one-third of the time, using the rank query first to see if that partial block should be select queried is a gain in performance.
+That is, when considering the worst-case query time for both queries, if the occurrence is to be found outside the first partial block of the bitmap more than one third of the time, using the rank query first to see if that partial block should be select queried is a gain in performance.
 
 Though, this is giving the select query a disadvantage in the analysis, as, even when the partial block is close to a block in size, it might terminate early if it found the sought-after occurrence of the character early in the partial block.
 

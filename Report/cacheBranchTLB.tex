@@ -88,7 +88,7 @@ An example of an unconditional branch and a conditional branch is shown in Figur
 A possible translation to assembly looks like this:
 \vspace{0.3cm}
 \begin{compactenum}
-\item \itab{ } \tab{\texttt{CMP} $0,1$} \tab{: compare i to 0}
+\item \itab{ } \tab{\texttt{CMP} $0,1$} \tab{: compare $i$ to 0}
 \item \itab{ } \tab{\texttt{BNE Else}} \tab{: branch to \texttt{Else} if not equal}
 \item \itab{\texttt{Then:}} \tab{\texttt{MOV} $k,1$} \tab{: move 1 to k}
 \item \itab{ } \tab{\texttt{BR Next}} \tab{: unconditional branch to \texttt{Next}}
