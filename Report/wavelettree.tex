@@ -104,11 +104,11 @@ The Wavelet Tree construction algorithm is recursively defined, calling itself t
 \State \Return $Position$
 \EndIf
 \State $CharBit \gets$ bit representing $Character$ in bitmap of current node
-\State $Occourance \gets$ \Call {BinaryRank} {$CharBit, Position, BitMap$}
+\State $Occurrence \gets$ \Call {BinaryRank} {$CharBit, Position, BitMap$}
 \If{$CharBit = 1$}
-	\State $Rank \gets$ RightChildNode.\Call {Rank} {$CharBit, Position$}
+	\State $Rank \gets$ RightChildNode.\Call {Rank} {$CharBit, Occurrence$}
 \Else
-	\State $Rank \gets$ LeftChildNode.\Call {Rank} {$CharBit, Occourance$}
+	\State $Rank \gets$ LeftChildNode.\Call {Rank} {$CharBit, Occurrence$}
 \EndIf
 \State \Return $Rank$ 
 \EndFunction
@@ -271,11 +271,4 @@ I each level the algorithm looks for either 0 or 1 based on how \textit{a} is re
 It does so by looping through the bitset and when \textit{i} occurrences of either 1 or 0 (depending on whether we are in a left child or a right child) has been seen then the position of the last bit that was seen is returned.
 \textproc{BinarySelect} takes O(n) time because the length of a bitmap is at most the length of the original input string.
 In Section~\ref{sec:ImplBinarySelect} we describe how to improve the practical running time of \textproc{BinarySelect}.
-
-
-
-
-
-
-
 

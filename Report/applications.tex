@@ -163,8 +163,23 @@ The original string is identified by having a \# at the end.
 Looking at BWT($S$) we can see that equal characters are now grouped together.
 It would not make much sense to compress something without being able to decompress it again.
 Burrows et al.~\citep[Section~2]{BWToriginalArticle} describes an algorithm for getting the original string from the Burrows-Wheeler transformed string.
+It works by taking the bwt, then sorting it and then adding the bwt in front of the sorted value and then sorting that. 
+This procedure continues until the number of characters in each row is equal to the length of the bwt. 
+The original string is then the value with the end of line character \# at the end. 
+An example of the process in shown in Figure~\ref{fig:reverseBwt}.
 
-\textbf{[TODO: Describe, possibly with example, how to reverse the BWT]}
+\begin{figure}[h]
+\caption{Example of how to do reverse bwt on string "acd\#". The returned value is "dca\#".}
+\label{fig:reverseBwt}
+\center
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 \\
+\hline
+\begin{tabular}[c]{@{}l@{}}a\\ c\\ d\\ \#\end{tabular} & \begin{tabular}[c]{@{}l@{}}\#\\ a\\ c\\ d\end{tabular} & \begin{tabular}[c]{@{}l@{}}a\#\\ ca\\ dc\\ \#d\end{tabular} & \begin{tabular}[c]{@{}l@{}}\#d\\ a\#\\ ca\\ dc\end{tabular} & \begin{tabular}[c]{@{}l@{}}a\#d\\ ca\#\\ dca\\ \#dc\end{tabular} & \begin{tabular}[c]{@{}l@{}}\#dc\\ a\#d\\ ca\#\\ dca\end{tabular} & \begin{tabular}[c]{@{}l@{}}a\#dc\\ ca\#d\\ \textbf{dca\#}\\ \#dca\end{tabular} \\ \hline
+\end{tabular}
+\end{figure}
+
 
 Figure~\ref{fig:RleBwtComparison} shows two small examples of wavelet trees using run-length encoding, one constructed on the string \textit{bananahat} (Figure~\ref{fig:RleWaveletTree}) and the other on the Burrows-Wheeler Transformation of \textit{bananahat} (Figure~\ref{fig:BwtRleWaveletTree}).
 We can see in Figure~\ref{fig:BwtRleWaveletTree}, highlighted by the numbers in bold, that fewer Run-length encoded values needs to be stored than for the non-Burrows-Wheeler transformed string in Figure~\ref{fig:RleWaveletTree}.
@@ -223,7 +238,7 @@ Rank and select queries on the BWT of a string does, however, have uses when wor
 Such a procedure is described in~\citep[Section 2]{FMcountOnBWT}.
 
 \subsubsection{Huffman-shaped Wavelet Trees}
-\citep[Section~4]{FMcountOnBWT} describes a Huffman Shaped Wavelet Tree skews the tree to one side and places symbols with higher frequencies towards the other side so that they are closer to the root than those that have a lower frequency.
+\citep[Section~4]{FMcountOnBWT} describes a Huffman Shaped Wavelet Tree which skews the tree to one side and places symbols with higher frequencies towards the other side so that they are closer to the root than those that have a lower frequency.
 More precisely, they are placed in the tree in such a way that the path from the root to a leaf corresponds to the binary Huffman Code~\citep[Introduction]{HuffmanCoding} of the symbol of that leaf.
 Using a Huffman Shaped Wavelet Tree is an alternative to run-length encoding.
 

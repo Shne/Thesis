@@ -37,6 +37,44 @@ def bwt(s):
 		bwt_string.append(char)
 
 	print("bwt = " + ''.join(bwt_string))
+	return ''.join(bwt_string)
 
 
-bwt("bananahatbana")
+def reverseBwt(s):
+	s_matrix = list(s)
+	s_list_length = len(s_matrix)
+
+	for j in range(s_list_length-1):
+		print("Add-----------")
+		for k in range(s_list_length):
+			print (s_matrix[k])
+		
+
+		s_matrix.sort()
+		print("Sort-----------")
+		for k in range(s_list_length):
+			print (s_matrix[k])
+
+		s_list = list(s)
+		temp_matrix = s_matrix
+		s_matrix = []		
+		for i in range(s_list_length):
+			s_matrix.append(str(s_list[i]) + str(temp_matrix[i]))
+		
+
+	print("Final-----------")
+	for k in range(s_list_length):
+		print (s_matrix[k])
+	print("-----------")
+
+	for i in range(len(s_matrix)):
+		row = list(s_matrix[i])
+		if(row[len(row)-1] == "#"):			
+			print("s = " + s_matrix[i])
+			return s_matrix[i]
+
+	
+
+
+theBwt = bwt("dca#")
+reverseBwt(theBwt)
