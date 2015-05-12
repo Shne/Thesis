@@ -64,8 +64,13 @@ The \textit{n-way set-associative cache} is the most popular choice because it h
 
 
 \subsection{Branch Prediction and Misprediction}
-Modern computers are highly pipelined and pipelining works best on non-branching code because the fetch unit is then able to read consecutive words from memory and also better make use of prefetching.
-Modern programs are however typically full of branch instructions.
+There are many steps in executing a single instruction in a modern computer.
+It has to be fetched, decoded, registers has to be loaded with the required data etc.
+Because of this, modern computers are highly pipelined, meaning that they execute different steps for consecutive instructions in parallel.
+That is, instruction 1 might be executed while instruction 2 is being decoded while instruction 3 is being fetched from the program code memory section.
+A pipelined architecture can bring great speed improvement, but because of how it works, it works best on non-branching code because the result of a branch determines which instructions should be fetched, decoded and executed next.
+When a branching instruction is encountered, the CPU can either choose to stall until the branching instruction has been executed, or it can try and predict the outcome of the branch before it is executed with the condition that it must be able to roll back any instructions executed between the prediction and the execution of the branching code.
+Modern programs are typically full of branch instructions.
 
 There are conditional branches and unconditional branches. 
 An example of an unconditional branch and a conditional branch is shown in figure~\ref{fig:branchexample} \footnote{Example borrowed from: \citep[Section~4.5.2]{Tanenbaum}} where \textit{BNE Else} is a conditional branch and \textit{BR Next} is an unconditional branch.
@@ -94,7 +99,9 @@ A possible translation to assembly looks like this:
 \label{fig:branchexample}
 \end{figure}
 
-An unconditional branch is a simple jump to a specified label, it is not based on a condition and does not pose any significant problems.
+An unconditional branch is a simple jump to a specified label, it is not based on a condition and is less of a problem than condition branches because while the target of the jump is known before the instruction is executed, it is not yet known when the fetch unit goes to fetch the next instruction.
+Having no branching instructions also means the fetch unit is able to read consecutive words from memory and make better use of prefetching.
+
 A conditional branch jumps to one of two places in the code based on whether a given condition is true of false.
 The ambiguity in a conditional branch is problematic because of the nature of modern pipelined CPU architectures where the stage of the pipeline that computes the result of a comparison is many stages later than the fetching unit.
 Before the result of the comparison is computed, the fetcher does not know where in the program code to fetch from.
