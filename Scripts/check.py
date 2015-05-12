@@ -8,7 +8,7 @@ import time
 
 
 tool = language_check.LanguageTool('en-UK')
-includedFiles = r'(?!Gnuplot).+\.tex$'
+includedFiles = r'.+\.tex$'
 content = []
 
 badPatterns = [(r'\s()\\(ref|cite)', 'Space not \'~\' before ref/cite', []),
@@ -67,11 +67,11 @@ def check(lines, patterns, fname, rname):
 
 counter = 0
 
-for root, dirs, files in os.walk('Report'):
-	for filename in files:
-		if re.match(includedFiles, filename):
-			with open(os.path.join(root, filename)) as f:
-				content = f.readlines()
-				counter += check(content, badPatterns, filename, os.path.join(root, filename))
-				langCheck(content, filename, os.path.join(root, filename))
+for filename in os.listdir('Report'):
+	if re.match(includedFiles, filename):
+		filepath = 'Report/'+filename
+		with open(filepath) as f:
+			content = f.readlines()
+			counter += check(content, badPatterns, filename, filepath)
+			langCheck(content, filename, filepath)
 print(counter, 'total errors')
