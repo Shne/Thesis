@@ -25,7 +25,7 @@ l2CacheMissRateList = []
 def getData(input_, algorithm, test):
 	inputFile = open(input_, "rt")
 
-	match = "algorithm="+algorithm+"\ttest="+test+".*";
+	match = "algorithm="+algorithm+"\ttest="+test+"\t.*";
 
 	alphabetSizeReg = re.compile(match+"alphabetSize=(?P<alphabetSize>\d+)")
 	blockSizeReg = re.compile(match+"blockSize=(?P<blockSize>\d+)")
