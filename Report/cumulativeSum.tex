@@ -37,40 +37,71 @@ bytes, or 317 KB.
 We have already seen that the UnalignedNaive wavelet tree for this input size and alphabet size of $2^{16}$ uses about 721 MB of memory, so another few hundred kilobytes is barely worth mentioning.
 We will see in our experiments how much actual memory is used and whether the difference in running time can make up for the increase in storage space required.
 
+\subsection{Select Queries with less branching code}
+When implementing the select query for the cumulativeSum wavelet tree, we realized it included a lot of \texttt{if/else} branches that seemed difficult to predict.
+We anticipated that we might improve upon the query by eliminating as much branching code as possible.
+That is, reduce the number of \texttt{if/else} statements, \texttt{while}-, and \texttt{for}-loops in the code and instead replace them with "clever" arithmetic operations achieving much of the same.
+
+One big disadvantage with this approach was that it resulted in a binary search that didn't terminate early if the correct block was reached, but would instead always jump and do a lookup $\log(\#blocksInNode)$ times for each node.
+We believed that the fewer branch mispredictions and the fact that many of the later jumps that would be skipped by terminating early will with high probability be in the same cacheline and thus fast to lookup.
+
+When we found that it was slower than the simple approach (see Section~\ref{sec:cumulativeSumExperimentSelectQueries}), we began attempting to combine the two approaches to get the best from both: early termination from the simple approach and less branching code meaning fewer branch mispredictions from the "branchless" approach.
+However, whatever we tried, it always seemed to be slower than the simple approach, and so we stopped trying to combine the two.
+
+It makes sense that our alternatives to branches is slower than branching with mispredictions.
+According to Agner Fogh~\citep{agner} the branch misprediction penalty in the Ivy Bridge Architecture is at least 15 clock cycles.
+If a branch is very hard to predict by going one way half the time and the other way the other half, it would be mispredicted about 50\% of the time, making it cost on average $1+\frac{15}{2}=8$ clock cycles.
+This means that our alternative method of computing something without using branches must cost less than 8 clock cycles to be an improvement.
+Looking at our code, the alternative methods we have attempted to reduce branches could very well cost much more than 8 clock cycles.
 
 \subsection{Experiments}
 
 \subsubsection{Build Time and Memory Usage}
 In Figure~\ref{fig:CumulativeSumBuild} we have plotted the wall time and memory usage of building the UnalignedNaive and CumulativeSum Wavelet Trees.
 In Figure~\ref{fig:CumulativeSumBuildWalltime} we can see that it takes slightly longer to build the tree when we have to calculate the cumulative sum across the precomputed values we store.
+It is only a difference of 151 milliseconds or an increase from UnalignedNaive to CumulativeSum of 1.00\%.
 In Figure~\ref{fig:CumulativeSumBuildMemoryUsage} we can see that there is, as expected, no significant difference in memory usage between the two trees.
-If we look closer at the raw data, there is only a slight (124 KB) increase in memory usage when storing the cumulative sum, which constitutes an increase of about 0.0168\%, and is even less than what we expected.
+If we look closer at the raw data, there is a slight (124 KB) increase in memory usage when storing the cumulative sum, which constitutes an increase of about 0.0168\%, and is even less than what we expected.
 
 \subsubsection{Rank Queries}
 In Figure~\ref{fig:CumulativeSumRank} we have plotted various measurements for Rank queries on the UnalignedNaive and CumulativeSum trees.
 In Figure~\ref{fig:CumulativeSumRankWalltime} we can see that storing and using the cumulative sum of rank values instead of the rank values for each block improves the running time of rank queries.
-UnalignedNaive spends 3.6 milliseconds on 1000 queries, where CumulativeSum spends 3.0 milliseconds, an improvement of 15.87\%.
+UnalignedNaive spends 3.57 milliseconds on 1000 queries, where CumulativeSum spends 3.04 milliseconds, an improvement of 14.77\%.
 
 Looking at Figures~\ref{fig:CumulativeSumRankBranchMiss}, Figure~\ref{fig:CumulativeSumRankBranchMissRate}, and Figure~\ref{fig:CumulativeSumRankBranchExe} we can see that the tree using cumulative sums has much fewer branch mispredictions and a lower misprediction rate, as well as executing fewer conditional branches overall during rank queries.
 This can be explained by the removal of a for-loop in CumulativeSum that iterated over the precomputed values, summing them up to calculate the rank, instead replacing it with a single lookup of a precomputed value.
 
-In Figure~\ref{fig:CumulativeSumRankTLBMiss} we see that the CumulativeSum tree has fewer Translation Lookaside Buffer Misses, although we can see from the errorbars that they their standard deviations overlap, so perhaps there is less of an improvement here than it might look at first glance.
+In Figure~\ref{fig:CumulativeSumRankTLBMiss} we see that the CumulativeSum tree has slightly fewer Translation Lookaside Buffer Misses, although we can see from the errorbars that they their standard deviations overlap, so perhaps there is less of an improvement here than it might look at first glance, if any at all.
 
 In Figure~\ref{fig:CumulativeSumRankL1CM}, \ref{fig:CumulativeSumRankL2CM}, and \ref{fig:CumulativeSumRankL3CM} we can see that rank queries on the CumulativeSum wavelet tree has a much better level cache performance, and only slightly worse level 2 and 3 cache performance.
-For level 2 cache, the amount of cache misses of CumulativeSum is even within the standard deviation of the cache misses for UnalignedNaive.
-We also see a slightly worse level 3 cache performance in Figure~\ref{fig:CumulativeSumRankL3CM}.
-\textbf{[TODO: speculate as to why]}
 
 In Figure~\ref{fig:CumulativeSumRankL2CHits} we can see that the amount of level 2 cache hits decrease significantly when using cumulative sums of the precomputed values.
-We believe the explanation for the decrease in level 2 cache hits lies in the reduction of level 1 cache misses, like results from previous experiments.
+We believe the explanation for the decrease in level 2 cache hits lies in the reduction of level 1 cache misses (Figure~\ref{fig:CumulativeSumRankL1CM}), like results from previous experiments.
 The reduction in level 2 cache hits is simply the amount of cache lookups that the level 1 cache instead was able to handle.
-The reduction of level 1 cache misses is on average $\num{134783.8}$ and the reduction in level 2 cache hits is on average $\num{136605.6}$ making them very close.
+The reduction of level 1 cache misses is on average $\num{135394.4}$ and the reduction in level 2 cache hits is on average $\num{133885.2}$ making them very close.
 The level 2 cache miss rate (not shown) is therefore somewhat misleading as it would suggest a worse cache performance where the truth is that CumulativeSum has a much better cache performance, having much fewer level 1 cache misses.
 
 
 
 \subsubsection{Select Queries}
+\label{sec:cumulativeSumExperimentSelectQueries}
+In Figure~\ref{fig:CumulativeSumSelect} we have plotted the same measurements as in Figure~\ref{fig:CumulativeSumRank}, but for Select queries, including our "branchless" variant of the cumulativeSum select query.
 
+In Figure~\ref{fig:CumulativeSumSelectWalltime} we can see that storing and using the cumulative sum of precomputed rank values is also an improvement for select queries, with a reduction in wall time of 22.07\%.
+Our "branchless" approach is also faster than not using the cumulative sum, but much slower than the simpler approach.
+
+Looking at Figure!\ref{fig:CumulativeSumSelectBranchExe} we can see that both approaches using the cumulative sum executes much fewer conditional branches, which we believe is caused by using the binary search instead of having to iterate through every precomputed value from the beginning of the bitmap to the position where the sought-after occurrence lies.
+Ironically, the "branchless" approach executes more conditional branches than the simple approach, which we believe is because it can not terminate the binary search early, leading to more branching code executed in the extra jumps in the binary search.
+
+In Figure~\ref{fig:CumulativeSumSelectBranchMiss} and Figure!\ref{fig:CumulativeSumSelectBranchMissRate} we can see that the simple approach using cumulative sum has, as expected, more branch mispredictions and a higher branch misprediction rate than both the others.
+The additional number of branch mispredictions contribute about $\num{508704}$ extra clock cycles, assuming 15 clock cycles per misprediction, which is only 1.87\% of the total number of clock cycles used in the simple approach using cumulative sum.
+
+In Figure~\ref{fig:CumulativeSumRankTLBMiss} we can see that the simple approach also has more TLB misses than the others, yet this still hasn't made it slower than the others.
+
+In Figure~\ref{fig:CumulativeSumSelectL1CM}, Figure~\ref{fig:CumulativeSumSelectL2CM}, and Figure~\ref{fig:CumulativeSumSelectL3CM} we can see that the fastest algorithm, the simple approach using cumulative sum, again has a better level 1 cache performance and worse level 2 and 3 cache performances.
+The "branchless" approach has the worst level 1 cache performance and level 2 and 3 cache performances similar to the algorithm not using cumulative sum.
+Again we see a reduction in level 2 cache hits in Figure~\ref{fig:CumulativeSumSelectL2CHits} from not using cumulative sum to using it, that can be, at least partially, be explained by the reduction in level 1 cache misses as seen in Figure~\ref{fig:CumulativeSumSelectL1CM}.
+The other part is then the increase in level 2 cache misses.
 
 
 
