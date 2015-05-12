@@ -3,16 +3,16 @@
 In this section, we describe our attempt to improve the query times for the wavelet tree by controlling the memory layout and skewing the tree.
 Brodal et al.~\cite{gerthSkewedBinarySearchTrees} showed that skewing a binary search tree could reduce the amount of cache misses and branch mispredictions considerately. Enough, in fact, to increase the speed of searching the tree manyfold, even though the skewing increased the depth of the tree structure.
 
-Skewing the tree can reduce branch mispredictions by making one branch, in the direction the tree is skewed, much more likely that the other, and so enabling the branch predicter unit to more often predict correctly. 
-Skewing the tree can reduce and cache misses by making it very likely that the next piece of memory the algorithm accesses is already loaded into a cacheline by the time it is accessed.
+Skewing the tree can reduce branch mispredictions by giving one branch, in the direction the tree is skewed, much higher probability of being the correct than the other, and so enabling the branch predicter unit to more often predict correctly. 
+Skewing the tree can reduce and cache misses by increasing the probability that the next piece of memory the algorithm accesses is already loaded into a cacheline by the time it is accessed.
 
-To reduce cache misses by skewing the tree we must control the memory layout, because by skewing the tree to the right, we make a DFSr-like traversal more likely and so we want to place the data in memory so that a DFSr traversal through the tree would be sequential address accesses.
+To reduce cache misses by skewing the tree we must control the memory layout, because by skewing the tree to the right, we increase the likelihood of a DFSr-like traversal and so we want to place the data in memory so that a DFSr traversal through the tree would be sequential address accesses.
 Allocating memory dynamically as we go might produce a similar layout and controlling the memory may not lead to increased performance, but it is the only way to ensure the memory layout is as we want it.
 
 Skewing the tree has the disadvantage of increasing the height, or depth, of the tree 
 and is defined for a skewed binary tree by J.~Nievergelt and E.~M. Reingold~\cite{Nievergelt:1972:BST:800152.804906} to be:
 \[ h = \frac{log(2\sigma+1)}{ log(\frac{1}{1-\alpha})}\]
-where $\alpha = \frac{1}{skew}$ and $skew$ is the number we divide by to skew our tree, see section~\ref{sec:SkewingTheTree}.
+where $\alpha = \frac{1}{skew}$ and $skew$ is the number we divide by to skew our tree, see Section~\ref{sec:SkewingTheTree}.
 
 The algorithms remain mostly the same algorithm as the Simple, Naïve approach, but with modifications to handle a controlled memory layout and a skew of the tree.
 We have also altered the Naïve approach to support skewing, so we can compare whether the controlled memory layout has the desired effect.
@@ -20,7 +20,7 @@ We have also altered the Naïve approach to support skewing, so we can compare w
 \subsection{Prefetching}
 Prefetching is a feature of the CPU whereby it can fetch other parts of the memory into cachelines even though it was not requested yet, if it believes it will be requested soon, to avoid having the program waiting for this fetching.
 In more advanced versions, it can even look at the access into memory of the running program and try to determine a pattern and prefetch memory according to this pattern.
-Looking at the Intel Optimization Manual~\cite{intel-optimization-manual} for our architecture\footnote{Our architecture is Ivy Bridge, but the optimization manual sections for Sandy Bridge holds true for Ivy Bridge as well, as stated in section 2.2.7 in \cite{intel-optimization-manual}.} we find that it has streaming prefetchers loading into L1, L2, and last level cache. The streaming prefetchers detect accesses to ascending or descending addresses and can prefetch up to 20 lines ahead or behind. It also has a prefetcher that can detect strides in memory access, as well as a "Next Page Prefetcher" that can load another memory page when detecting memory accesses near the page boundary~\footnote{See section 2.2.7 of ~\cite{intel-optimization-manual}}.
+Looking at the Intel Optimization Manual~\cite{intel-optimization-manual} for our architecture\footnote{Our architecture is Ivy Bridge, but the optimization manual sections for Sandy Bridge holds true for Ivy Bridge as well, as stated in section 2.2.7 in~\cite{intel-optimization-manual}.} we find that it has streaming prefetchers loading into L1, L2, and last level cache. The streaming prefetchers detect accesses to ascending or descending addresses and can prefetch up to 20 lines ahead or behind. It also has a prefetcher that can detect strides in memory access, as well as a "Next Page Prefetcher" that can load another memory page when detecting memory accesses near the page boundary~\footnote{See section 2.2.7 of~\cite{intel-optimization-manual}}.
 
 
 \subsection{Skewing The Tree}
@@ -69,12 +69,12 @@ In this experiment we want to test whether querying our controlled memory versio
 \paragraph{Test Setup}~\\
 The general setup is as described in Section~\ref{sec:ExpNotesGeneralSetup}.
 The query parameters were chosen as described in Section~\ref{sec:choiceOfQueryParameters}.
-The results can be seen in Figure ~\ref{fig:NaiveRankSkewRunningTime} and \ref{fig:NaiveSelectSkewRunningTime}.
+The results can be seen in Figure~\ref{fig:NaiveRankSkewRunningTime} and Figure~\ref{fig:NaiveSelectSkewRunningTime}.
 
-We skew the Wavelet Tree (see section~\ref{sec:SkewingTheTree}) because we believe it has better performance than not skewing it since data can then be stored sequentially in memory and reduce cache-misses because of prefetching and should then be faster to access when querying.
+We skew the Wavelet Tree (see Section~\ref{sec:SkewingTheTree}) because we believe it has better performance than not skewing it since data can then be stored sequentially in memory and reduce cache misses because of prefetching and should then be faster to access when querying.
 Skewing should also reduce branch mispredictions since branching to the right become more probable than branching to the left. 
 
-If we look at figure ~\ref{fig:NaiveRankSkewRunningTime} and \ref{fig:NaiveSelectSkewRunningTime} we can see that the query time increases linearly with increasing skew for both controlled and uncontrolled memory layout. We also observe that the two memory layout approaches are almost equal for both rank and select queries in terms of running time.
+If we look at Figure~\ref{fig:NaiveRankSkewRunningTime} and Figure~\ref{fig:NaiveSelectSkewRunningTime} we can see that the query time increases linearly with increasing skew for both controlled and uncontrolled memory layout. We also observe that the two memory layout approaches are almost equal for both rank and select queries in terms of running time.
 
 This means we can conclude that skewing the tree is not an improvement on performance.
 
@@ -83,26 +83,26 @@ To understand why skewing the tree is no improvement we need to figure out what 
 First we look at branch mispredictions to see if they actually decrease when we increase the skew factor.%
 
  
-Figure~\ref{fig:NaiveVsControlledNodeMemorySkewRankQueryBMrate} and \ref{fig:NaiveVsControlledNodeMemorySkewSelectQueryBMrate} shows the branch misprediction rate for rank and select queries on a wavelet tree with increasing skew factor for both the controlled and uncontrolled memory approach. 
+Figure~\ref{fig:NaiveVsControlledNodeMemorySkewRankQueryBMrate} and Figure~\ref{fig:NaiveVsControlledNodeMemorySkewSelectQueryBMrate} shows the branch misprediction rate for rank and select queries on a wavelet tree with increasing skew factor for both the controlled and uncontrolled memory approach. 
 The branch misprediction rate is calculated by dividing the number of branch mispredictions with the total number of conditional branches.
 
 We observe that the branch misprediction rate is decreasing as we expected. 
 This means that it is not branch mispredictions that causes the increase in query time. 
 
 We now look at cache misses to see if they can explain the increase in query time. 
-The values are shown in Figure~\ref{fig:L1NaiveControlledNodeMemoryRankSkewCacheMisses} and \ref{fig:L2L3NaiveControlledNodeMemoryRankSkewCacheMisses} for Rank and in Figure~\ref{fig:L1NaiveControlledNodeMemorySelectSkewCacheMisses} and \ref{fig:L2L3NaiveControlledNodeMemorySelectSkewCacheMisses} for Select.
-The same tendency as in Figure~\ref{fig:NaiveRankSkewRunningTime} and \ref{fig:NaiveSelectSkewRunningTime} is observed: 
+The values are shown in Figure~\ref{fig:L1NaiveControlledNodeMemoryRankSkewCacheMisses} and Figure~\ref{fig:L2L3NaiveControlledNodeMemoryRankSkewCacheMisses} for Rank and in Figure~\ref{fig:L1NaiveControlledNodeMemorySelectSkewCacheMisses} and Figure~\ref{fig:L2L3NaiveControlledNodeMemorySelectSkewCacheMisses} for Select.
+The same tendency as in Figure~\ref{fig:NaiveRankSkewRunningTime} and Figure~\ref{fig:NaiveSelectSkewRunningTime} is observed: 
 The cache misses increase linearly with the skew factor.
 
 The cache misses for level 1 for Naive and Controlled Memory are almost exactly equal which might be because even the smallest bitmaps fills out the cache line resulting in cache misses even when those bitmaps are accessed. 
 The cache misses of level 2 and 3 for Naive and Controlled Memory are also equal. 
 Based on this we can conclude that controlling the memory ourselves has no advantage over not doing so with regards to the performance of queries.
 
-Looking at the level 2 cache miss rates for rank and select, as plotted in Figure~\ref{fig:NaiveVsControlledNodeMemorySkewRankQuery_L2_DCMrate} and \ref{fig:NaiveVsControlledNodeMemorySkewSelectQuery_L2_DCMrate} we can see that the Data Cache Miss Rate for the level 2 cache increases for higher values of skew, meaning that it is not only a matter of an increased amount of cycles caused by the higher amount of cache misses, but that more cache accesses miss as skew increase meaning that the percentage of cache misses are increasing.
+Looking at the level 2 cache miss rates for rank and select, as plotted in Figure~\ref{fig:NaiveVsControlledNodeMemorySkewRankQuery_L2_DCMrate} and Figure~\ref{fig:NaiveVsControlledNodeMemorySkewSelectQuery_L2_DCMrate} we can see that the Data Cache Miss Rate for the level 2 cache increases for higher values of skew, meaning that it is not only a matter of an increased amount of cycles caused by the higher amount of cache misses, but that more cache accesses miss as skew increase meaning that the percentage of cache misses are increasing.
 
-Figure~\ref{fig:NaiveVsControlledNodeMemorySkewRankQueryTLB} and \ref{fig:NaiveVsControlledNodeMemorySkewSelectQueryTLB} shows TLB misses for \textproc{Rank} and \textproc{Select}. 
+Figure~\ref{fig:NaiveVsControlledNodeMemorySkewRankQueryTLB} and Figure~\ref{fig:NaiveVsControlledNodeMemorySkewSelectQueryTLB} shows TLB misses for \textproc{Rank} and \textproc{Select}. 
 The TLB misses varies a lot for increasing skew and does not seem to follow any discernible pattern which makes it difficult to say anything conclusive about these graphs. 
-Figure~\ref{fig:NaiveVsControlledNodeMemorySkewSelectQueryTLB} does have two peaks at skew 2.8 and 4.2 that looks somewhat alike, but we have not been able to find any good explanation as to why they occur and they do not seem to have any visible effect on the query time when looking at figure~\ref{fig:NaiveRankSkewRunningTime} and \ref{fig:NaiveSelectSkewRunningTime}.
+Figure~\ref{fig:NaiveVsControlledNodeMemorySkewSelectQueryTLB} does have two peaks at skew 2.8 and 4.2 that looks somewhat alike, but we have not been able to find any good explanation as to why they occur and they do not seem to have any visible effect on the query time when looking at Figure~\ref{fig:NaiveRankSkewRunningTime} and Figure~\ref{fig:NaiveSelectSkewRunningTime}.
 There are no peaks in query time when skew is 2.8 or 4.2.
 
 In the end we can conclude that skewing the tree is not an improvement. 

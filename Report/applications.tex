@@ -12,7 +12,7 @@ If the leaves are traversed then all the occurrences of the smaller symbols are 
 By tracking the position of a symbol downwards through the Wavelet Tree we will find the new position of the symbol after the permutation.
 Tracking the position of a symbol upwards through the wavelet tree will where it is in the original string. 
 
-A Wavelet Tree can also represent a $n \times n$ grid of $n$ points where no two points share the same row or column. 
+A Wavelet Tree can also represent an $n \times n$ grid of $n$ points where no two points share the same row or column. 
 One can map a general set of $n$ points to such a discrete grid and then store the real points somewhere else.
 
 If we have points sorted by the $x$-coordinate and take only the $y$-coordinates $S_y[1,n] = y_1,y_2,...,y_n$ and save $S_y$ in a Wavelet Tree we can the find the \textit{i}th point in $x$-coordinate order by accessing the corresponding $y$-coordinate in the wavelet tree. 
@@ -24,24 +24,24 @@ Querying from a leaf gives the points in $y$-coordinate order because the leaves
 \vspace{0.5 cm}
 \begin{mdframed}[nobreak, linecolor=lightgray, linewidth=2pt]
 \begin{definition}: String representation in a Wavelet Tree\\\\
-Let $S[1,n] = S_1 S_2 ... S_n$ be a sequence of symbols where $s_i \in \Sigma$ and $\Sigma = [1 .. \sigma]$ is the alphabet. $S$ can then be represented in plain form using $n \lceil \log \sigma \rceil = n \log \sigma = O(n)$ bits.
+Let $S[1,n] = S_1 S_2 ... S_n$ be a sequence of symbols where $s_i \in \Sigma$ and $\Sigma = [1 ... \sigma]$ is the alphabet. $S$ can then be represented in plain form using $n \lceil \log \sigma \rceil = n \log \sigma = O(n)$ bits.
 \end{definition}
 \textbf{[TODO: use and reference this]}
 \end{mdframed}
 \vspace{0.5 cm}
-The Wavelet Tree has many uses for compression of data~\citep{Navjda13}. Some of the main compression techniques are different ways of encoding the bitmaps and changing the shape of the tree \citep[Section~3]{Navjda13}.
+The Wavelet Tree has many uses for compression of data~\citep{Navjda13}. Some of the main compression techniques are different ways of encoding the bitmaps and changing the shape of the tree~\citep[Section~3]{Navjda13}.
 
 \textbf{[TODO: either move or remove this paragraph]}
 Entropy coding can be explained in two parts: Modelling and Coding.
 Modelling assigns probabilities to the symbols of the string, and coding produces a bit sequence from these probabilities.
 The probability of a symbol is based on how often it appears in a given data set. 
 Higher frequency gives a higher probability.
-Coding can then for instance be done with a coding scheme, that uses a discrete number of bits for each symbol, for example Huffman Coding \citep{HuffmanCoding}.
+Coding can then for instance be done with a coding scheme, that uses a discrete number of bits for each symbol, for example Huffman Coding~\citep{HuffmanCoding}.
 
-The main advantage of the wavelet tree with regards to compression is that it supports entropy bounds in the attained space complexity of the various wavelet tree compression methods \citep[Section~2.1]{WTSurvey}.
+The main advantage of the wavelet tree with regards to compression is that it supports entropy bounds in the attained space complexity of the various wavelet tree compression methods~\citep[Section~2.1]{WTSurvey}.
 
 \subsubsection{Entropy}
-According to \citep[Introduction]{WTSurvey} entropy can be defined as:
+According to~\citep[Introduction]{WTSurvey} entropy can be defined as:
 
 \begin{mdframed}[nobreak, linecolor=lightgray, linewidth=2pt]
 \begin{definition}: Entropy \\\\
@@ -84,11 +84,11 @@ The problem for a long time was that there existed no good way to achieve compre
 
 To achieve \textit{zero-order entropy} a Huffman shaped wavelet tree can be used~\citep[Section~4]{FMcountOnBWT}. Claude and Navarro~\citep[Section~3]{Claude08practicalrankselect} describes a way to also have \textit{zero-order entropy} space usage for large alphabets. 
 It is therefore possible to get space usage within \textit{zero-order entropy} even for large alphabets using the wavelet tree. 
-\textit{Zero-order entropy} can also be achieved by run-length encoding the bitmaps in the wavelet tree, which is also the approach that is used when compressing the \textit{bwt} transformation of the input string using the wavelet tree \citep[Introduction (\textbf{B})]{waveletTreeEntropy}.
+\textit{Zero-order entropy} can also be achieved by run-length encoding the bitmaps in the wavelet tree, which is also the approach that is used when compressing the \textit{bwt} transformation of the input string using the wavelet tree~\citep[Introduction (\textbf{B})]{waveletTreeEntropy}.
 This means that using a combination of run-length encoding of bitmaps and taking the Burrows-Wheeler transformation of the input string using the wavelet tree it is possible to achieve compression near the lower bound of \textit{k-th order entropy}.
 
 \subsubsection{Run-Length encoding}
-Run-length encoding (RLE) is a simple process where the number of consecutive repeats of each symbol is stored in stead of storing the symbols them selves. 
+Run-length encoding (RLE) is a simple process where the number of consecutive repeats of each symbol is stored instead of storing the symbols themselves. 
 If we have the string \textit{aaaaacccaaaaabbbaa} we can run-length encode this to \textit{a5c3a5b3a2} which is a smaller string containing the same information.
 It is necessary to store the symbol and its number of consecutive repeating occurrences because we need to be able to identify which symbol occurs where and how many times in order to be able to reproduce the original string.
 The longer the sequence of a repeating symbol is the less space is used, since it can be stored as one number plus the related symbol.
@@ -109,7 +109,7 @@ To be able to support storing the RLE of any bitmap, even one containing only 0s
 A 32-bit unsigned integer supports storing a value up to $2^{32} = \num{4294967296}$. 
 The limit on bitmap length is also the maximum supported length of input string for a wavelet tree.
 
-RLE is still very useful despite of this limitation because you usually want to compress very large data and if that data uses an alphabet that is small enough then, as previously stated RLE can achieve compression close to the zero order entropy when working with binary alphabets.
+RLE is still useful despite of this limitation because you usually want to compress massive amounts of data and if that data uses an alphabet that is small enough then, as previously stated RLE can achieve compression close to the zero order entropy when working with binary alphabets.
 
 If the Burrows-Wheeler transformation is applied to the string before it is saved in the wavelet tree and run-length encoded then the number of consecutive repeats of a symbol is increased which enables even greater compression.
 
@@ -119,7 +119,7 @@ This characteristic enables higher compression ratios when using techniques such
 The transformation is reversible, meaning it is possible to produce the original string from the Burrows-Wheeler transformed string, without any other information.
 Sorting $S$ would enable similar, or possibly better, compression ratios using run-length encoding, but it will not be reversible.
 
-A string $S$ of $n$ characters is transformed by the Burrows-Wheeler transformation \citep{BWToriginalArticle} by forming $n$ cyclic shifts of $S$. 
+A string $S$ of $n$ characters is transformed by the Burrows-Wheeler transformation~\citep{BWToriginalArticle} by forming $n$ cyclic shifts of $S$. 
 These $n$ permutations of $S$ are then sorted in lexicographical order.
 An extra character (\#), not in the alphabet of $S$, is added to keep track of the end of the original string.
 The BWT of $S$ is then the concatenation of the last character of each permutation in sorted order, excluding $\#$.
@@ -161,7 +161,7 @@ The Burrows-Wheeler transformation of $S=bananahat$ becomes BWT($S$)$ = tnnbhaaa
 The original string is identified by having a \# at the end.
 
 Looking at BWT($S$) we can see that equal characters are now grouped together.
-It would not make very much sense to compress something without being able to decompress it again.
+It would not make much sense to compress something without being able to decompress it again.
 Burrows et al.~\citep[Section~2]{BWToriginalArticle} describes an algorithm for getting the original string from the Burrows-Wheeler transformed string.
 
 \textbf{[TODO: Describe, possibly with example, how to reverse the BWT]}
@@ -220,7 +220,7 @@ One might wonder how \textproc{Rank} and \textproc{Select} queries can be useful
 We have not found any way to transform the results back, and the main use of constructing a Wavelet Tree on the BWT of a string seems to us, by far, to be compression.
 
 Rank and select queries on the BWT of a string does, however, have uses when working with the \textit{FM-index}, named after its inventors Paolo Ferragina and Giovanni Manzini, which is a self-index based on the Burrows-Wheeler transformation $BWT(S)$ that is able to find occurrences and positions of patterns (sub-strings) in \textit{S} by looking at $BWT(S)$. 
-Such a procedure is described in \citep[Section 2]{FMcountOnBWT}.
+Such a procedure is described in~\citep[Section 2]{FMcountOnBWT}.
 
 \subsubsection{Huffman-shaped Wavelet Trees}
 \citep[Section~4]{FMcountOnBWT} describes a Huffman Shaped Wavelet Tree skews the tree to one side and places symbols with higher frequencies towards the other side so that they are closer to the root than those that have a lower frequency.
@@ -232,14 +232,14 @@ Queries on a Huffman shaped Wavelet Tree for a symbol that has a high frequency 
 Assuming symbols that occur with high frequency are also queried for more often, the average query time could see a reduction when using a Huffman-shaped wavelet tree.
 
 The Huffman Code~\citep[Introduction]{HuffmanCoding} of a symbol occurring with high frequency is a shorter binary string than the Huffman code of a symbol occurring with low frequency.
-The most frequent symbol could possibly be encoded in as little as one bit!
+The most frequent symbol could be encoded in as little as one bit!
 This entails that the storage space required for the many occurrences of the most frequent symbols would be massively reduced, while the space required for the least frequent symbols would be increased.
 If the difference in frequency is sufficiently high, the reduction in space for the most frequent symbols would outweigh the increase in space for the least frequent and the overall storage requirement would be reduced.
 
 Since the Huffman encoding is based on frequency of symbols it achieves the best performance and space complexity when symbols are non-uniformly distributed.
 If the data is uniformly distributed then the length of all Huffman codes would be similar resulting in a balanced tree having performance and space complexity similar to a normal Wavelet Tree.
 Since we have primarily used uniformly distributed data in our experiments, and because of limited time, we have not implemented and done experiments on a Huffman Shaped Wavelet Tree.
-In section~\ref{sec:choiceOfInputString} we discuss further why we mainly consider uniform data.
+In Section~\ref{sec:choiceOfInputString} we discuss further why we mainly consider uniform data.
 
 
 \subsection{Information Retrieval}
@@ -249,13 +249,13 @@ In section~\ref{sec:choiceOfInputString} we discuss further why we mainly consid
 \subsubsection{Range Quantile Query}
 A range quantile query is a query that returns the $k$th smallest number within a subsequence of a given sequence of elements.
 So if we are e.g. given a list of price changes on a laptop during the last year then a range quantile query is able to answer what the $k$-smallest price of the laptop was within for instance a month of that year.
-It is therefore also quite easy to find quantiles like the 2-quantile (median) or the 3-quantile.
+It is therefore also easy to find quantiles like the 2-quantile (median) or the 3-quantile.
 To e.g. find the median, $k$ can be defined as half the length of the subsequence.
 This would return the middle element of the subsequence.
 The 3-Quantile can be found by setting $k$ to $\frac{1}{3}$ of the length of the subsequence. 
 Quantiles are important values within such fields as statistics and economics.
 
-The wavelet tree can be used to support efficient range quantile queries on a sequence \textit{S} of \textit{n} numbers in $O(\log(\sigma))$ time if $rank_b$ is supported in $O(1)$ time \citep[Section 3]{RangeQuantileQueryWT}. 
+The wavelet tree can be used to support efficient range quantile queries on a sequence \textit{S} of \textit{n} numbers in $O(\log(\sigma))$ time if $rank_b$ is supported in $O(1)$ time~\citep[Section 3]{RangeQuantileQueryWT}. 
 The range is denoted as $S[l ... r]$.
 A range quantile query based on a wavelet tree works by computing two rank queries on the bitmap of each node in a traversal from the root to a leaf node. 
 
@@ -267,7 +267,7 @@ A range quantile query based on a wavelet tree works by computing two rank queri
 \If{current node is leaf}
 	\State \Return number in leaf
 \EndIf
-\State $\textit{0}sInRange \gets rank_0(S \lbrace l..r \rbrace) = rank_0(r) - rank_0(l-1)$
+\State $\textit{0}sInRange \gets rank_0(S \lbrace l...r \rbrace) = rank_0(r) - rank_0(l-1)$
 \If{$\textit{0}sInRange \leq k$}
 	\State $l = rank_0(l-1))+1$
 	\State $r = rank_0(r)$
@@ -284,10 +284,10 @@ A range quantile query based on a wavelet tree works by computing two rank queri
 \end{algorithm}
 
 The two queries are $rank_b(l-1)$ and $rank_b(r)$ where $rank_b$ is the binary rank.
-$rank_b(l-1)$ is used to find the number of 1s and 0s in $b[1..(l-1)]$ and $rank_b(r) - rank_b(l-1)$ gives the number 1s and 0s in $b[l..r]$. 
-We go to the left if there are more than \textit{k} 0s in $b[l..r]$ and set $l = ($number of 0s in $b[1..(l-1)])+1$ and $r=($number of 0s in $b[1..r])$. 
-We go to the right if there are less than \textit{k} 0s in $b[l..r]$ and subtract the number of 0s in $b[l..r]$ from \textit{k} and set $l = ($number of 1s in $b[1..(l-1)])+1$ and set $r=($number of 1s in $b[1..r])$. 
-This procedure continues recursively until it hits a leaf and then returns the number stored in the leaf which corresponds to the $k$th smallest number in $S[l..r]$.
+$rank_b(l-1)$ is used to find the number of 1s and 0s in $b[1...(l-1)]$ and $rank_b(r) - rank_b(l-1)$ gives the number 1s and 0s in $b[l...r]$. 
+We go to the left if there are more than \textit{k} 0s in $b[l...r]$ and set $l = ($number of 0s in $b[1...(l-1)])+1$ and $r=($number of 0s in $b[1...r])$. 
+We go to the right if there are less than \textit{k} 0s in $b[l...r]$ and subtract the number of 0s in $b[l...r]$ from \textit{k} and set $l = ($number of 1s in $b[1...(l-1)])+1$ and set $r=($number of 1s in $b[1...r])$. 
+This procedure continues recursively until it hits a leaf and then returns the number stored in the leaf which corresponds to the $k$th smallest number in $S[l...r]$.
 
 Algorithm~\ref{alg:RangeQuantileQuery} describes the pseudo-code for a range quantile query where $rank_1$ is a binary rank query which returns the number of 1s in the bitmap of $S$ in each node generated by the wavelet tree. 
 $rank_0$ return the number of 0s.
@@ -350,7 +350,7 @@ Level 4:\\$k=1$\\$l=1$\\$r=1$
 \label{fig:RQQWaveletTree}
 \figureEnd
 
-An example of a range quantile query can be seen in figure~\ref{fig:RQQWaveletTree}. 
+An example of a range quantile query can be seen in Figure~\ref{fig:RQQWaveletTree}. 
 The numbers in bold indicates the range $S[l..r]$ where $S= \lbrace 6,2,0,7,9,3,1,8,5,4 \rbrace$ and $l=3$, $r=9$ and $k=5$.
 $k=5$ means that we are looking for the 5th smallest number within $S[l..r]$ which is \textit{7} indicated by the leaf that the query ends up in before terminating.
 $l$ and $r$ indicates the range to look within.

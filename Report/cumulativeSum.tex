@@ -18,7 +18,7 @@ It could e.g. be done by a single sweep through the precomputed values vector af
 Rank queries will benefit from the precomputed values being cumulative sums because they can do a single lookup of the precomputed value corresponding to the block covering the queried-for position.
 The need to calculate a rank using \texttt{popcount}ing within a single block and manual counting of bits within a single word remains unchanged.
 
-Select queries will also likely be quicker.
+Select queries should also see some benefit.
 Previously, the select query would iterate through the precomputed values and sum them up, looking for when it surpasses the sought-after occurrence, and then calculate the position within a single block using \texttt{popcount} and manual counting of bits within a single word.
 Using cumulative precomputed rank values, the select query will be able to use binary search on the precomputed value vector to find the word wherein the occurrence is.
 Using \texttt{popcount} within a block and manual counting within a word still remains unchanged.
@@ -30,7 +30,7 @@ The bitmap size is limited by the input string length and so for our choice of i
 It takes at least 28 bits to store $10^8$, because $2^{27} < 10^8 < 2^{28}$.
 Because the value types supported by x86 and C++ must be byte (8-bit) aligned and use a number of bytes that is a power of 2, the smallest type we can use is the 4-byte type \texttt{unsigned int} capable of storing values up to $2^{32}$.
 This means the vector, instead of holding 2-byte \texttt{unsigned short int}s, must hold 4-byte \texttt{unsigned int}s, doubling the space required to store the precomputed values.
-We expect this increase in memory usage to be very small, as it is another 2 bytes per block, of which there are $\frac{n}{blockSize}$ per layer of the tree, of which there are $\log(n)$.
+We expect this increase in memory usage to be tiny, as it is another 2 bytes per block, of which there are $\frac{n}{blockSize}$ per layer of the tree, of which there are $\log(n)$.
 So with our input string of length $n = 10^8$ and a blockSize of half a page, or 16384 bits, we expect an extra memory usage of about
 \[ 2 \times \frac{10^8}{16384} \times \log(10^8) \approx 324407\]
 bytes, or 317 KB.
@@ -52,7 +52,7 @@ It makes sense that our alternatives to branches is slower than branching with m
 According to Agner Fogh~\citep{agner} the branch misprediction penalty in the Ivy Bridge Architecture is at least 15 clock cycles.
 If a branch is very hard to predict by going one way half the time and the other way the other half, it would be mispredicted about 50\% of the time, making it cost on average $1+\frac{15}{2}=8$ clock cycles.
 This means that our alternative method of computing something without using branches must cost less than 8 clock cycles to be an improvement.
-Looking at our code, the alternative methods we have attempted to reduce branches could very well cost much more than 8 clock cycles.
+Looking at our code, the alternative methods we have attempted to reduce branches could easily cost much more than 8 clock cycles.
 
 \subsection{Experiments}
 
@@ -73,12 +73,12 @@ This can be explained by the removal of a for-loop in CumulativeSum that iterate
 
 In Figure~\ref{fig:CumulativeSumRankTLBMiss} we see that the CumulativeSum tree has slightly fewer Translation Lookaside Buffer Misses, although we can see from the errorbars that they their standard deviations overlap, so perhaps there is less of an improvement here than it might look at first glance, if any at all.
 
-In Figure~\ref{fig:CumulativeSumRankL1CM}, \ref{fig:CumulativeSumRankL2CM}, and \ref{fig:CumulativeSumRankL3CM} we can see that rank queries on the CumulativeSum wavelet tree has a much better level cache performance, and only slightly worse level 2 and 3 cache performance.
+In Figure~\ref{fig:CumulativeSumRankL1CM}, Figure~\ref{fig:CumulativeSumRankL2CM}, and Figure~\ref{fig:CumulativeSumRankL3CM} we can see that rank queries on the CumulativeSum wavelet tree has a much better level cache performance, and only slightly worse level 2 and 3 cache performance.
 
 In Figure~\ref{fig:CumulativeSumRankL2CHits} we can see that the amount of level 2 cache hits decrease significantly when using cumulative sums of the precomputed values.
 We believe the explanation for the decrease in level 2 cache hits lies in the reduction of level 1 cache misses (Figure~\ref{fig:CumulativeSumRankL1CM}), like results from previous experiments.
 The reduction in level 2 cache hits is simply the amount of cache lookups that the level 1 cache instead was able to handle.
-The reduction of level 1 cache misses is on average $\num{135394.4}$ and the reduction in level 2 cache hits is on average $\num{133885.2}$ making them very close.
+The reduction of level 1 cache misses is on average $\num{135394.4}$ and the reduction in level 2 cache hits is on average $\num{133885.2}$ making them near-identical.
 The level 2 cache miss rate (not shown) is therefore somewhat misleading as it would suggest a worse cache performance where the truth is that CumulativeSum has a much better cache performance, having much fewer level 1 cache misses.
 
 

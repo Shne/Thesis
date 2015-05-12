@@ -20,7 +20,7 @@ badPatterns = [(r'\s()\\(ref|cite)', 'Space not \'~\' before ref/cite', []),
 				(r'\$.*[^\\]()log\b.*\$', 'Non-roman log in mathmode', []),
 				(r'\\()mod[^{]', 'Wrong usage of \\mod', []),
 				(r'((?!(Figure|Section|Table|Appendix).*)\ref)', 'Unnamed Reference', []),
-				(r'\b([Aa]ppropriate|[Qq]uite|[Hh]ope|[Vv]ery [^h]|[Nn]ice|[Ll]ikely)()', 'Non-sciency word', []),
+				(r'\b([Aa]ppropriate|[Qq]uite|[Vv]ery [^h]|[Nn]ice|[Ll]ikely)()', 'Non-sciency word', []),
 				(r'SSE4\.2()', 'Wrong SSE version', []),
 				(r'for ()loop', 'Missing for loop hyphen', []),
 				(r'()\\todo', 'Unfixed todo', ['thesis.tex']),
@@ -29,14 +29,25 @@ badPatterns = [(r'\s()\\(ref|cite)', 'Space not \'~\' before ref/cite', []),
 				(r'this ()paper', 'Paper mentioned', []),
 				(r'\\Require()', 'Require obsolete', []),
 				(r'ceil\{1\.7()', '1.7 misuse',[]),
-				(r'Simd|simd()', 'SIMD',['thesis.tex']),
-				(r'O\(()', 'Big-O', [])
+				(r'Simd|simd()', 'SIMD',['thesis.tex'])
 				]
 sublime = r'subl'
 
+excludedRules = [
+	'MORFOLOGIK_RULE_EN_UK',
+	'WHITESPACE_RULE',
+	'CURRENCY',
+	'COMMA_PARENTHESIS_WHITESPACE',
+	'EN_UNPAIRED_BRACKETS',
+	'ENGLISH_WORD_REPEAT_BEGINNING_RULE',
+	'EN_QUOTES',
+	'HE_VERB_AGR'
+]
+
+
 def langCheck(lines, fname, rname):
 	for match in tool.check(''.join(lines)):
-		if match.ruleId not in ['MORFOLOGIK_RULE_EN_UK', 'WHITESPACE_RULE', 'CURRENCY', 'COMMA_PARENTHESIS_WHITESPACE',  'EN_UNPAIRED_BRACKETS']:
+		if match.ruleId not in excludedRules:
 			print(fname)
 			print(match)
 
@@ -48,7 +59,7 @@ def check(lines, patterns, fname, rname):
 		for c, line in enumerate(lines):
 			match =  re.search(pattern, line)
 			if match:
-				subprocess.call([sublime, '{}:{}:{}'.format(rname, c+1, match.start(1) + 1)])
+				# subprocess.call([sublime, '{}:{}:{}'.format(rname, c+1, match.start(1) + 1)])
 				print(fname, '::', c+1, ' # ', mes)
 				print(line)
 				counter += 1
