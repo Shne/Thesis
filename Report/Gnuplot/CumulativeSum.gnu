@@ -19,7 +19,7 @@ set xrange [-0.5:0.5]
 
 
 # Build Walltime
-set yrange [0:*]
+set yrange [0:18]
 set ylabel 'Walltime (seconds)'
 set key top left vertical
 set output 'CumulativeSumBuildWalltime.tex'
@@ -167,7 +167,7 @@ plot '../Data/CumulativeSum.data' every 9::2 using ($5):($16) title "UnalignedNa
 
 
 # Select TLB Miss
-set yrange [0:9000]
+set yrange [0:9500]
 set ylabel 'TLB Misses'
 set output 'CumulativeSumSelectTLBMiss.tex'
 plot '../Data/CumulativeSum.data' every 9::2 using ($6):($17) title "UnalignedNaive" ls 1,\
