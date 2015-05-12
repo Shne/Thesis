@@ -50,29 +50,29 @@ We expect this is because the non-uniform data just so happens to be distributed
 When looking at the numbers of branch mispredictions and cache misses and so forth, we find that the rank queries on the non-uniform data have about 4\% more level 3 cache misses, but little difference in the other measurements.
 
 
-\newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
+%\newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
 \begin{figure}\tiny
-	\begin{subfigure}{0.48\textwidth}
+	\begin{subfigure}{0.31\textwidth}
 		\input{UniformVsNonUniform_Build_WallTime}
-		\caption{Build Wall Time for Non-Uniform and Uniform data}
+		\caption{Build Wall Time}
 		\label{fig:UniformVsNonUniform_Build_WallTime}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}{0.48\textwidth}
+	\begin{subfigure}{0.31\textwidth}
 		\input{UniformVsNonUniform_Rank_WallTime}
-		\caption{Rank Wall Time for Non-Uniform and Uniform data}
+		\caption{Rank Wall Time}
 		\label{fig:UniformVsNonUniform_Rank_WallTime}
 	\end{subfigure}	
-	
-	\begin{subfigure}{0.48\textwidth}
+	\hfill
+	\begin{subfigure}{0.31\textwidth}
 		\input{UniformVsNonUniform_Select_WallTime}
-		\caption{Select Wall Time for Non-Uniform and Uniform data}
+		\caption{Select Wall Time}
 		\label{fig:UniformVsNonUniform_Select_WallTime}
 	\end{subfigure}
 \caption{Build time and Rank and Select query time for uniform and non-uniform data based on the NGSL word list.}
 \label{fig:UniformVsNonUniform}
 \end{figure}
-\restoregeometry
+%\restoregeometry
 
 
 We would like to find out whether our implementation of the construction of the tree conforms to the theoretical running time of $O(n \log \sigma)$ and how much of an improvement using the \texttt{popcount} cpu instruction was for the queries.
