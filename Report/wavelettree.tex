@@ -122,12 +122,21 @@ In each level of the tree \textproc{BinaryRank} is calculated for the character.
 The result of \textproc{BinaryRank} is used as the position parameter for the next recursive call to rank.
 When the leaf of the input symbol is reached, the position returned from the previous call to \textproc{BinaryRank} is already the rank of the input symbol up to the original input position.
 Intuitively this makes sense because leaf nodes correspond to only one character and the rank of a character up to a position in a string containing only that character is the same as the position.
+Figure~\ref{fig:RankDrawing} shows an example of how this concept works.
+
 Whether the query uses the left or right child in the recursive call is decided by what the symbol in represented as in the bitmap of the current node.
 The way we compute this is to compute which character corresponds to the middle of the alphabet for the current node, the "split character", and then check whether the queried-for symbol is lexicographically less than or equal to the split character. 
 If this is the case the input symbol is represented by 0 since it would be in the alphabet of the left child.
 If it is not the case then the input symbol is represented as 1.
 
 We are using C++ for our implementation and we are utilizing the object-oriented paradigm, therefore \textproc{Rank($Character, Position$)} is defined on each node, and so, in the pseudo-code, it is called on the root node and the right and left child nodes instead of specifying the node as a parameter to the \textproc{Rank} function, as one would have done it in plain C.
+
+\begin{figure}
+\center \includegraphics[width=0.66\textwidth]{RankDrawing}
+\caption{Rank: This figure shows why the rank algorithm works. The number of occurrences of 0s or 1s, depending on how the character is represented, are used as the position in the next level. 
+When the leaf is reached the position corresponds to the number of occurrences.}
+\label{fig:RankDrawing}
+\end{figure}
 
 \subsubsection{Binary Rank} 
 \label{sec:TheoryBinaryRank}
@@ -150,6 +159,12 @@ We are using C++ for our implementation and we are utilizing the object-oriented
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
+
+\textproc{BinaryRank} [Algorithm~\ref{alg:binaryrank}] returns the number of 1s until a given position.
+It does so by looping the bitmap until the specified position and counts the number of 1s along the way.
+When the position is reached the number of 1s is returned.
+This takes $O(n)$ time.
+In section~\ref{sec:popcountBinaryRank} we describe how to improve the practical running time.
 
 
 \subsection{Select query}
@@ -198,8 +213,19 @@ We are using C++ for our implementation and we are utilizing the object-oriented
 \end{algorithmic}
 \end{algorithm}
 
+\begin{figure}
+\center \includegraphics[width=0.66\textwidth]{SelectDrawing}
+\caption{Select: This figure shows why the select algorithm works. 
+In this example we want to find the position of the 3rd occurrence of \textit{a} which is represented as 0 in the leaf.
+Starting from the leaf, the position of the specified occurrence is used as the occurrence to find the position of in the parent. 
+In each level the algorithm looks for either 0 or 1 based on how \textit{a} is represented in the specific node.
+In the root the algorithm looks for the position of the 5th occurrence of 0 which is 9 and corresponds to the position of the 3rd \textit{a}.
+The process terminates when the root is reached.}
+\label{fig:SelectDrawing}
+\end{figure}
+
 \textproc{Select} queries searches the Wavelet Tree for the position of the $i$th occurrence of the specified character.
-It starts from the leaf of the character and walks up through parent nodes to the root of the tree, which means it is necessary to know the leaf of the character. \citep[Section~2.2]{Claude08practicalrankselect}. 
+It starts from the leaf of the character and walks up through parent nodes to the root of the tree, which means it is necessary to know the leaf of the character \citep[Section~2.2]{Claude08practicalrankselect}. 
 This is accomplished using the \textproc{GetLeaf} method, which works by recursing down the tree from the root and choosing the right or left path based on whether the queried-for character is represented as a 0 or a 1 in the bitmap of the current node.
 The recursion stops when the leaf of the character is found.
 After having found the leaf the \textproc{Select} function can then compute which bit represents all the characters in the leaf node, called \textit{CharBit}, by knowing whether it is a right- or a left-child of its parent node.
@@ -213,6 +239,14 @@ Select queries are performed in collaboration by the \textproc{Select} and \text
 
 Figuring out the \textit{CharBit} is a lot simpler for \textproc{Select} than for \textproc{Rank} since we query bottom-up and can just check whether the current node is a left child or a right child. 
 In \textproc{Rank} one needs to calculate the split character and then check whether the input character is before or after it in the alphabet in every recursive step.
+
+An example of how the intuition behind why \textproc{Select} works is shown in figure~\ref{fig:SelectDrawing}.
+In the example the algorithm looks for the position of the 3rd \textit{a}.
+It starts in the leaf of \textit{a} and finds that he position of the 3rd \textit{a} is 3. 
+This position is then used in the parent as the occurrence to find the position of. 
+The new position becomes 5.
+In the root the algorithm then looks for the position of the 5th occurrence which is 9 and corresponds to the position of the 3rd \textit{a}.
+I each level the algorithm looks for either 0 or 1 based on how \textit{a} is represented in that level.
 
 \subsubsection{Binary Select}
 \begin{algorithm}
