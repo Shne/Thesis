@@ -88,8 +88,8 @@ We tested for alphabet sizes $2^p$ with $p = [8...23]$ and a constant input stri
 
 A theoretical running time of $O(n \cdot \log(\sigma))$ is equivalent to $a \cdot n \cdot \log(\sigma)$ where $a$ is some constant factor.
 Assuming our construction algorithm has this running time, a plot of the wall time divided by $n \cdot \log(\sigma)$ should converge on the constant factor $a$ as $\sigma \rightarrow \infty$
-In Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime} we have plotted this, and find that it does not appear to be converging on any constant value, but rather increases as $\sigma$ increases, especially for alphabet sizes larger than about $2^{18}$
-This means our implementation of the construction of a Wavelet Tree is not keeping within its theoretical running time.
+In Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime} we have plotted this, and find that it could be said to be converging on a constant value until reaching an alphabet size of about $2^{16}$ whereafter it increases as $\sigma$ increases, with what looks like exponential growth.
+This means our implementation of the construction of a Wavelet Tree is not keeping within its theoretical running time for higher alphabet sizes.
 
 
 
