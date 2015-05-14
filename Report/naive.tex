@@ -8,6 +8,8 @@ This is the simple, straightforward, naïve implementation we did before any sma
 \label{sec:popcountBinaryRank}
 Binary Rank was first implemented using the algorithm described in~\ref{sec:TheoryBinaryRank}. 
 To improve on this, we found the intrinsic cpu instruction \texttt{popcount} which will count the number of 1s in the binary representation of the number we pass to it.
+Our use of \texttt{popcount} to improve binary rank and select queries was inspired by~ González et al.~\cite{Gonzalez05practicalimplementation} who used it to improving binary rank and binary select for bit arrays.
+Unlike González et al., we do not use a popcount function implemented in software, but rather the built in \texttt{popcount} instruction in the CPU instruction set.
 We can get an \texttt{unsigned long} pointer from the \texttt{vector<bool>} bitmap into the backing array. We will therefore be working on \texttt{unsigned long}s and call their size (64 bits on machine 1) our wordsize.
 When using \texttt{popcount}, \textproc{BinaryRank} remains in theory an $O(N/wordsize) = O(N)$ operation, as \textit{wordsize} is a constant factor, but it has a large practical effect on performance as can be seen in Section~\ref{sec:experimentPopcountRankSelect}.
 
