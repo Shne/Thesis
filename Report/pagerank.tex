@@ -35,8 +35,11 @@ The sum of the size of all bitmaps on one layer of the tree can at most be $n$ a
 \[n \cdot h\]
 where $n$ is the number of characters in the string and $h$ is the max height of the binary wavelet tree which is
 \[ h = log(\sigma) \]
-Luckily for us, memory allocation in Linux doesn't actually take up space, only when it is accessed will the actual physical memory be used.
-So over-allocating the bitmap should not take up any more space than will actually be needed.
+Luckily for us, memory allocation in Linux does not actually take up space because Linux uses optimistic memory allocation which means that only when the memory is accessed will the actual physical memory be used \footnote{\url{http://man7.org/linux/man-pages/man3/malloc.3.html}}.
+This fact enables overcomitting which allows allocation of more memory than what is available which can be a problem for long running processes.
+As a result we can conclude that allocated memory is not present in physical memory before it is actually initialized.
+The effect of an optimistic memory allocation scheme and overcomitting is tested by Andries Brouwer \footnote{\url{http://www.win.tue.nl/~aeb/linux/lk/lk-9.html}} who confirms that it is possible to allocated more memory using \textit{malloc()} than what is physically available.
+So over-allocating the bitmap should not take up any more space than what will actually be needed.
 
 We then store an offset and a size for the bitmap in each node, so we can index into the giant bitmap and access the bits corresponding to the node.
 This should also cause a decrease in memory usage as the offset and size are stored in an unsigned long and unsigned int respectively, taking a total of $64+32=96$ bits per node, where each individual bitmap requires storage of at least a pointer to it, a point to where its internal array starts and a pointer to where it ends, taking up $3 \times 64=192$ bits per node.
