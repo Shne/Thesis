@@ -117,7 +117,7 @@ The Wavelet Tree construction algorithm is recursively defined, calling itself t
 \end{algorithm}
 
 Rank counts the number of occurrences of the specified character up to and including the specified position. 
-It starts from the root of the Wavelet Tree and moves down through the tree until it hits the leaf of the input character,!\citep[Section 2.2]{Claude08practicalrankselect}. 
+It starts from the root of the Wavelet Tree and moves down through the tree until it hits the leaf of the input character.
 In each level of the tree \textproc{BinaryRank} is calculated for the character. 
 The result of \textproc{BinaryRank} is used as the position parameter for the next recursive call to rank.
 When the leaf of the input symbol is reached, the position returned from the previous call to \textproc{BinaryRank} is already the rank of the input symbol up to the original input position.
@@ -225,7 +225,7 @@ The process terminates when the root is reached.}
 \end{figure}
 
 \textproc{Select} queries searches the Wavelet Tree for the position of the $i$th occurrence of the specified character.
-It starts from the leaf of the character and walks up through parent nodes to the root of the tree, which means it is necessary to know the leaf of the character.~\citep[Section~2.2]{Claude08practicalrankselect}. 
+It starts from the leaf of the character and walks up through parent nodes to the root of the tree, which means it is necessary to know the leaf of the character. 
 This is accomplished using the \textproc{GetLeaf} method, which works by recursing down the tree from the root and choosing the right or left path based on whether the queried-for character is represented as a 0 or a 1 in the bitmap of the current node.
 The recursion stops when the leaf of the character is found.
 After having found the leaf the \textproc{Select} function can then compute which bit represents all the characters in the leaf node, called \textit{CharBit}, by knowing whether it is a right- or a left-child of its parent node.
