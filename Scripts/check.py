@@ -34,7 +34,7 @@ badPatterns = [(r'\s()\\(ref|cite)', 'Space not \'~\' before ref/cite', []),
 				(r"it's()", "it's vs. its",[]),
 				(r'-th()', 'use $i$th instead of i-th',[]),
 				(r'bwt', 'use BWT instead of bwt or \textit{bwt}',[]),
-				# (r'\s[ikbcS]\s', 'surround variables in $',[])
+				(r"don't|won't", "use do not or will not instead of don't or won't", [])
 				]
 sublime = r'subl'
 
