@@ -1,14 +1,23 @@
 \section{Introduction}
-The Wavelet Tree is a relatively new data structure first introduced in 2003 by Grossi, Gupta, and Vitter~\cite{Grossi:2003:HET:644108.644250} that is built on a sequence of characters from an alphabet and supports rank and select queries on the sequence.
+The Wavelet Tree is a relatively new data structure, storing a sequence of characters from a fixed alphabet while enabling higher-order entropy compression and supporting fast access, rank, and select queries. It was first introduced in 2003 by Grossi, Gupta, and Vitter~\cite[Section 4.2]{Grossi:2003:HET:644108.644250} only as a way to obtain faster rank and select query times while maintaining empirical entropy compression.
+
 According to Gonzalo Navarro~\cite{Navjda13} and others \textbf{[TODO: cite others]} the wavelet tree has many and wide ranging useful applications, from string processing including full-text indexes and inverted indexes to geometry processing including point grids and rectangle sets as well as graphs.
 
-In this thesis we wish to implement various algorithms and data structures for storing, constructing and querying a wavelet tree, test and compare their running times and memory usage and analyse the practical reasons for their running times such as Cache Misses (CM), Branch Mispredictions (BM), and Translation Lookaside Buffer Misses (TLBM). Directly inspired by this analysis we will attempt a number of optimizations aimed at reducing these measurements.
+In this thesis we have implemented various algorithms and versions of the wavelet tree data structure capable of constructing, storing, and performing rank and select queries on string of characters from an alphabet. We have tested and compared their running times and memory usage, measured the machine-based reasons for their running times such as Cache Misses (CM), Branch Mispredictions (BM), and Translation Lookaside Buffer Misses (TLBM). We have analysed these measurements and attempted a number of optimizations aimed at reducing these measurements to reduce the running time.
 
-We will first implement the basic construction algorithm based on the description found in~\citep{ Navjda13}.
-We will then implement and attempt to improve the rank and select query algorithms.
-%We will also implement a more advanced algorithm constructing a \textit{wavelet suffix tree}, which is different, yet analogous, to a wavelet tree, but with a better theoretical running time, as described in~\citep{DBLP:journals/corr/BabenkoGKS14}. Finally, we will implement a parallelized version as described in~\citep{DBLP:journals/corr/Shun14}
+We have first implemented the basic construction algorithm based on the description found in~\citep[Section 2]{Navjda13}.
+We have then expanded the implementation in various ways to attempt to improve the rank and select query algorithms.
+\begin{description*}
+\item[Skewing the tree] with a controlled memory layout to reduce branch mispredictions. Worse running time.
+\item[Using \texttt{popcount} CPU instruction] to improve binary rank and select query running times within each node of the tree. High improvement in running time.
+\item[Precompute and store binary rank values] in blocks for each bitmap in each node. Use the precomputed values for the most part. High improvement in running time.
+\item[Concatenate bitmaps and precomputed values] to reduce memory usage and possibly improve cache performance. Little improvement in memory usage, worse running time.
+\item[Align bitmaps with memory pages] to reduce TLB misses. Slightly worse running time.
+\item[Store cumulative sum of precomputed values] instead of raw binary rank values. Improvement in running time.
+\item[Replace branching code with clever arithmetic] in select queries to reduce branch mispredictions. Worse running time.
+\end{description*}
 
-Our focus will be to implement something useful in real world scenarios and we will use inputs we believe to be realistic use cases.
-We will also avoid impractical optimizations such as ones that require recompilation to handle different sizes or alphabets.
+Our focus has been to implement something that could be useful in real world scenarios and we have used inputs we believe corresponds to realistic use cases.
+We have also avoided impractical optimizations such as ones that require recompilation to handle different sizes or alphabets.
 
-We will use the terms 'symbol' and 'character' synonymously.
+We have used the terms 'symbol' and 'character' synonymously.
