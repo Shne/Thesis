@@ -235,10 +235,10 @@ One might wonder how \textproc{Rank} and \textproc{Select} queries can be useful
 We have not found any way to transform the results back, and the main use of constructing a Wavelet Tree on the BWT of a string seems to us, by far, to be compression.
 
 Rank and select queries on the BWT of a string does, however, have uses when working with the \textit{FM-index}, named after its inventors Paolo Ferragina and Giovanni Manzini, which is a self-index based on the Burrows-Wheeler transformation $BWT(S)$ that is able to find occurrences and positions of patterns (sub-strings) in \textit{S} by looking at $BWT(S)$. 
-Such a procedure is described in~\citep[Section 2]{FMcountOnBWT}.
+Such a procedure is described by Mäkinen and Navarro~\citep[Section 2]{FMcountOnBWT}.
 
 \subsubsection{Huffman-shaped Wavelet Trees}
-\citep[Section~4]{FMcountOnBWT} describes a Huffman Shaped Wavelet Tree which skews the tree to one side and places symbols with higher frequencies towards the other side so that they are closer to the root than those that have a lower frequency.
+Mäkinen and Navarro~\citep[Section~4]{FMcountOnBWT} describes a Huffman Shaped Wavelet Tree which skews the tree to one side and places symbols with higher frequencies towards the other side so that they are closer to the root than those that have a lower frequency.
 More precisely, they are placed in the tree in such a way that the path from the root to a leaf corresponds to the binary Huffman Code~\citep[Introduction]{HuffmanCoding} of the symbol of that leaf.
 Using a Huffman Shaped Wavelet Tree is an alternative to run-length encoding.
 
