@@ -1,7 +1,5 @@
 \section{Introduction}
-The Wavelet Tree is a relatively new data structure, storing a sequence of characters from a fixed alphabet while enabling higher-order entropy compression and supporting fast access, rank, and select queries. It was first introduced in 2003 by Grossi, Gupta, and Vitter~\cite[Section 4.2]{Grossi:2003:HET:644108.644250} only as a way to obtain faster rank and select query times while maintaining empirical entropy compression.
-
-According to Gonzalo Navarro~\cite{Navjda13} and others \textbf{[TODO: cite others]} the wavelet tree has many and wide ranging useful applications, from string processing including full-text indexes and inverted indexes to geometry processing including point grids and rectangle sets as well as graphs.
+The Wavelet Tree is a relatively new data structure, storing a sequence of characters from a fixed alphabet while enabling higher-order entropy compression and supporting fast access, rank, and select queries.
 
 In this thesis we have implemented various algorithms and versions of the wavelet tree data structure capable of constructing, storing, and performing rank and select queries on string of characters from an alphabet. We have tested and compared their running times and memory usage, measured the machine-based reasons for their running times such as Cache Misses (CM), Branch Mispredictions (BM), and Translation Lookaside Buffer Misses (TLBM). We have analysed these measurements and attempted a number of optimizations aimed at reducing these measurements to reduce the running time.
 

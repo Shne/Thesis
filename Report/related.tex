@@ -1,10 +1,12 @@
 \section{Related Work}
-In our implementation of rank and select we have improved binary rank and binary select using \texttt{popcount}.
-\cite{Gonzalez05practicalimplementation} has also looked at improving binary rank and binary select using \texttt{popcount}. 
-In section 1.1 they describe a constant time binary rank algorithm that requires a pre-computed look-up table to compute the rank. 
-This table uses a lot of memory space. 
-They improve the algorithm by decreasing the space of the lookup table by calculating it using \texttt{popcount} which they describe in section 1.2 of their article. 
+The wavelet tree was first introduced in 2003 by Grossi, Gupta, and Vitter~\cite[Section 4.2]{Grossi:2003:HET:644108.644250} as a way to obtain faster rank and select query times on compressed suffix arrays while maintaining empirical entropy compression.
 
-They do binary select using the same structure as rank uses: First binary search for the proper superblock using $R_s$ , then binary search that superblock for the proper block using $R_b$, and finally binary search for the position inside the block. 
-This takes $O(\log n)$ time and requires little space.
+Later, and Gonzalo Navarro~\cite{Navjda13} explains how the wavelet tree has many and wide ranging useful applications, from string processing including full-text indexes and inverted indexes to geometry processing including various queries and computations on point grids and rectangle sets as well as graphs.
+
+Cristos Makris~\citep{WTSurvey} also describes several uses for a wavelet tree, including effective storage compression using various ways of encoding the bitmaps, such as using Run-length encoding (RLE) on the bitmaps and storing the Burrows-Wheeler transformation (BWT) of the input string, or using Huffman Coding to shape the tree.
+The Burrows-Wheeler transformation was introduced by Burrows and Wheeler~\citep{BWToriginalArticle} in 1994.
+Ferragina et al.~\citep{waveletTreeEntropy} describes in more detail how BWT can be used to reduce the problem of compressing higher-order entropy to a problem of compressing 0-order entropy, which the wavelet tree then can do using RLE.
+Mäkinen and Navarro~\citep[Section~4]{FMcountOnBWT} invented the Huffman-shaped wavelet tree and describes in short the general principle of it without going in to much detail.
+
+Another use of a wavelet tree is answering Range Quantile queries as is described by Gagie et al.~\citep[Section 3]{RangeQuantileQueryWT}.
 
