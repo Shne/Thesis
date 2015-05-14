@@ -103,7 +103,7 @@ Using concatenated bitmaps and the precomputed vector of ranks, we only need to 
 If the blocks are not aligned with the memory pages, then, even if the block size is less than a page, it might span more than one page and thus more than one page of memory must be loaded into the TLB.
 More precisely, we might at most load $2 \cdot \left( \lceil\frac{blockSize}{pageSize}\rceil +1 \right)$ pages to do the popcount binary rank computation at the beginning and end of each node.
 
-If we page-align the blocks, and use block sizes divisible by the page size or that the page is divisible by, the extra $+1$ will disappear, because a block can no longer span more pages than its size is a multiple of the page size.
+If we page-align the blocks, and use block sizes divisible by the page size or that the page is divisible by, the extra $+1$ will disappear, because a block can no longer span more pages than the number of pages its size is a multiple of.
 This means we can ensure that at most $2 \cdot \lceil\frac{blockSize}{pageSize}\rceil$ memory pages of the bitmap are loaded for each node by page-aligning the blocks.
 With an alphabet size of $2^{16}$ this amounts to saving up to 16 page loads per query.
 
