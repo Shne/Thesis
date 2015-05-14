@@ -21,12 +21,12 @@ This means that \texttt{PAPI\_get\_real\_cyc()} depends on the Time Stamp Counte
 Because of this the TSC frequency is not based on CPU frequency in any way and because work gets done at CPU frequency and not TSC frequency, \texttt{PAPI\_TOT\_CYC} seems like the best choice. 
 This is also recommended by Intel~\citep{IntelMeasuringTheAverageUnhaltedFrequency}.
 
-In Figure~\ref{papievents} we have listed the various counters and values we have read using PAPI and their description. Not every test uses every one of these.
+In Table~\ref{papievents} we have listed the various counters and values we have read using PAPI and their description. Not every test uses every one of these.
 
 Because PAPI does not support gathering all combinations of hardware at the same time, we had to gather Translation lookaside buffer misses, level 2 cache misses, and level 3 cache misses in a separate run of the program with the same parameters.
 We do not believe this will have any significant influence on the results of our experiments.
 
-\begin{figure}
+\begin{table}
 \caption{PAPI counters and data sources and their description}
 \label{papievents}
 \center
@@ -50,10 +50,8 @@ Event \texttt{PAPI\_TLB\_DM}		& Data translation lookaside buffer misses \\ \hli
 \texttt{meminfo.resident}		& Size of Resident memory used \\ \hline
 \texttt{meminfo.high\_water\_mark}	& Size of Peak memory usage \\ \hline
 
-
-
 \end{tabular}
-\end{figure}
+\end{table}
 
 \subsection{Profiler}
 We use these for finding hotspots in our code; which parts our program is spending most of its time in and therefore which parts we should try to optimize.
