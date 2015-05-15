@@ -59,8 +59,7 @@ The height of a filled Wavelet Tree is  $\lceil \log \sigma \rceil$ and it has $
 At each level in the tree at most \textit{n} bits are stored in the bitmaps in total.
 If some characters of the alphabet do not occur in the input string, the sub trees of the Wavelet tree corresponding to those missing characters may be omitted depending on implementation.
 $n \lceil \log \sigma \rceil$ is an upper bound to the total number of bits that the Wavelet Tree stores in its bitmaps.
-The Wavelet Tree can theoretically be constructed in $O(n \log \sigma)$ time. 
-\textbf{[TODO: references to why or possibly explain it ourselves]}\\
+The Wavelet Tree can theoretically be constructed in $O(n \log \sigma)$ time as the entire inputs string must be processed once fully for each layer of nodes, the string and the work split out among the nodes of that layer.
 
 
 \subsubsection{Pseudocode}
@@ -95,6 +94,8 @@ The Wavelet Tree construction algorithm is recursively defined, calling itself t
 \end{algorithm}
 
 \subsection{Rank Query}
+\label{sec:rankDescription}
+
 \begin{algorithm}
 \caption{Rank}
 \label{alg:rank}
@@ -168,6 +169,7 @@ In Section~\ref{sec:popcountBinaryRank} we describe how to improve the practical
 
 
 \subsection{Select query}
+\label{sec:selectDescription}
 \begin{algorithm}
 \caption{Select}
 \label{alg:select}
@@ -249,6 +251,7 @@ In the root the algorithm then looks for the position of the 5th occurrence whic
 I each level the algorithm looks for either 0 or 1 based on how \textit{a} is represented in that level.
 
 \subsubsection{Binary Select}
+\label{sec:binarySelectDescription}
 \begin{algorithm}
 \caption{BinarySelect}
 \label{alg:binaryselect}
