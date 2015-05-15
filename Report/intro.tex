@@ -1,7 +1,13 @@
 \section{Introduction}
 The Wavelet Tree is a relatively new data structure, storing a sequence of characters from a fixed alphabet while enabling higher-order entropy compression and supporting fast access, rank, and select queries.
 
-In this thesis we have implemented various algorithms and versions of the wavelet tree data structure capable of constructing, storing, and performing rank and select queries on string of characters from an alphabet. We have tested and compared their running times and memory usage, measured the machine-based reasons for their running times such as Cache Misses (CM), Branch Mispredictions (BM), and Translation Lookaside Buffer Misses (TLBM). We have analysed these measurements and attempted a number of optimizations aimed at reducing these measurements to reduce the running time.
+
+In this thesis we have made a short survey of some of the various applications of a wavelet tree including uses in compression and in information retrieval.
+We have also described how construction of a wavelet tree and how rank and select queries work in practice.
+We have then described various imperfections of modern computer architectures and how they can degrade the practical performance of programs.
+These imperfections include Cache Misses (CM), Branch Mispredictions (BM) and Translation Lookaside Buffer Misses (TLB Misses).
+
+We have then implemented various algorithms and versions of the wavelet tree data structure capable of constructing, storing, and performing rank and select queries on string of characters from an alphabet. We have tested and compared their running times and memory usage, measured the machine-based reasons for their running times such as CM, BM, and TLB Misses. We have analysed these measurements and attempted a number of optimizations aimed at reducing these measurements to reduce the running time.
 
 We have first implemented the basic construction algorithm based on the description found in~\citep[Section 2]{Navjda13}.
 We have then expanded the implementation in various ways to attempt to improve the rank and select query algorithms.
@@ -14,7 +20,6 @@ We have then expanded the implementation in various ways to attempt to improve t
 \item[Store cumulative sum of precomputed values] instead of raw binary rank values. Improvement in running time.
 \item[Replace branching code with clever arithmetic] in select queries to reduce branch mispredictions. Worse running time.
 \end{description*}
-
 Our focus has been to implement something that could be useful in real world scenarios and we have used inputs we believe corresponds to realistic use cases.
 We have also avoided impractical optimizations such as ones that require recompilation to handle different sizes or alphabets.
 
