@@ -151,9 +151,10 @@ In Figure~\ref{fig:valuesForPopcountDiff} we list the actual raw values as well 
 
 In all three figures we see that the algorithm using \texttt{popcount} is much faster, using only a fraction of the time of the other algorithm, about $0.011\%$ for rank and $0.0051\%$ for select.
 We see a massive decrease in branch mispredictions both for both rank and select queries. For the select queries we see a great reduction in Translation Lookaside Buffer Misses as well as Cache Misses, especially Level 2 and 3.
-For the rank queries, we see little improvement in TLBM and L1 CM, as well as a slightly larger improvement in L3 CM, but we also see a great increase in L2 CM to more than double the amount.
-\textbf{[TODO: speculate as to why. get level 2 data cache miss \textit{rate}]}
-
+For the rank queries, we see little improvement in TLBM and L1 CM, as well as a slightly larger improvement in L3 CM, but we also see a high increase in L2 CM Rate to more than double.
+The higher L2 Cache Miss Rate comes from both having fewer L2 Cache Hits and many more L2 Cache Misses.
+We have no good explanation to offer as to the L2 Cache Miss Rate increases so much, other than the algorithm being different and having a different access pattern.
+It is not a problem at any rate, as we can see in the massive decrease in running time.
 
 We believe the massive reduction in branch mispredictions accounts for some of the saved cpu cycles.
 Given that the branch misprediction penalty on the Ivy Bridge architecture (on which this experiment was run) is about "15 cycles or more"~\cite{agner}, we can calculate an estimate of how many cpu cycles the branch misprediction reduction has saved us.
