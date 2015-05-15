@@ -103,7 +103,7 @@ plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Rank.data' every ::2 usi
 	'' every ::2 using ($3/32768):6:16 with yerrorbars linetype 4 notitle,\
 	# '../Data/PrecomputedRankBlockSize_NaiveInteger_Rank.data' every ::2 using ($3/32768):6 with linespoints title "NaiveInteger, $mr\\hat{\\sigma}=$ ".naiveinteger_max_stddev_rank." $avg\\hat{\\sigma}=$ ".naiveinteger_avg_stddev_rank
 
-set yrange [*:*]
+set yrange [0:*]
 set output 'PrecomputedRankBlockSize_Select_BranchExe.tex'
 plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Select.data' every ::2 using ($3/32768):6 with linespoints linetype 1 title "Naive",\
 	'' every ::2 using ($3/32768):6:16 with yerrorbars linetype 1 notitle,\
