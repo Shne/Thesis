@@ -1,0 +1,249 @@
+
+========================================================cpu3=================================================================
+INTEL
+(R) Core(TM) i5-3230M CPU
+1200.000 MHz
+ Integrated GPU: Intel HD 4000
+Temp: 54 °C
+Family: 6
+Model: 58
+Stepping: 9
+Cores: 4
+Phy id: 0
+Address sizes: 36 bits physical, 48 bits virtual
+Bogomips: 5188.23
+Flags: MMX, SSE, SSE2, XD-Bit, SSE3, SSSE3, SSE4.1, SSE4.2, 
+x86 64-Bit Ext:  True
+HW Virt:  True
+Hyper-Threading:  True
+Power mangament: 
+ TDP: 35 W
+ PPS: 22 nm
+ Die size: 118 mm?
+ Package: FC-BGA12F
+ Turboclock: up to 3200 MHz
+ Voltage: unknown
+ Part: SR0WX
+ Socket: Intel BGA1023
+ TCaseMax: unknown
+ Multiplier: 26.0x
+ Codename: Ivy Bridge
+ Memory support: DDR3
+
+========================================================cpu1=================================================================
+INTEL
+(R) Core(TM) i5-3230M CPU
+1200.000 MHz
+ Integrated GPU: Intel HD 4000
+Temp: 54 °C
+Family: 6
+Model: 58
+Stepping: 9
+Cores: 4
+Phy id: 0
+Address sizes: 36 bits physical, 48 bits virtual
+Bogomips: 5188.23
+Flags: MMX, SSE, SSE2, XD-Bit, SSE3, SSSE3, SSE4.1, SSE4.2, 
+x86 64-Bit Ext:  True
+HW Virt:  True
+Hyper-Threading:  True
+Power mangament: 
+ TDP: 35 W
+ PPS: 22 nm
+ Die size: 118 mm?
+ Package: FC-BGA12F
+ Turboclock: up to 3200 MHz
+ Voltage: unknown
+ Part: SR0WX
+ Socket: Intel BGA1023
+ TCaseMax: unknown
+ Multiplier: 26.0x
+ Codename: Ivy Bridge
+ Memory support: DDR3
+
+========================================================cpu2=================================================================
+INTEL
+(R) Core(TM) i5-3230M CPU
+2601.000 MHz
+ Integrated GPU: Intel HD 4000
+Temp: 54 °C
+Family: 6
+Model: 58
+Stepping: 9
+Cores: 4
+Phy id: 0
+Address sizes: 36 bits physical, 48 bits virtual
+Bogomips: 5188.23
+Flags: MMX, SSE, SSE2, XD-Bit, SSE3, SSSE3, SSE4.1, SSE4.2, 
+x86 64-Bit Ext:  True
+HW Virt:  True
+Hyper-Threading:  True
+Power mangament: 
+ TDP: 35 W
+ PPS: 22 nm
+ Die size: 118 mm?
+ Package: FC-BGA12F
+ Turboclock: up to 3200 MHz
+ Voltage: unknown
+ Part: SR0WX
+ Socket: Intel BGA1023
+ TCaseMax: unknown
+ Multiplier: 26.0x
+ Codename: Ivy Bridge
+ Memory support: DDR3
+
+========================================================cpu3=================================================================
+INTEL
+(R) Core(TM) i5-3230M CPU
+1200.000 MHz
+ Integrated GPU: Intel HD 4000
+Temp: 54 °C
+Family: 6
+Model: 58
+Stepping: 9
+Cores: 4
+Phy id: 0
+Address sizes: 36 bits physical, 48 bits virtual
+Bogomips: 5188.23
+Flags: MMX, SSE, SSE2, XD-Bit, SSE3, SSSE3, SSE4.1, SSE4.2, 
+x86 64-Bit Ext:  True
+HW Virt:  True
+Hyper-Threading:  True
+Power mangament: 
+ TDP: 35 W
+ PPS: 22 nm
+ Die size: 118 mm?
+ Package: FC-BGA12F
+ Turboclock: up to 3200 MHz
+ Voltage: unknown
+ Part: SR0WX
+ Socket: Intel BGA1023
+ TCaseMax: unknown
+ Multiplier: 26.0x
+ Codename: Ivy Bridge
+ Memory support: DDR3
+
+==========================================================CPUID===================================================================
+GenuineIntel
+Ivy Bridge (Core i5)
+Intel(R) Core(TM) i5-3230M CPU @ 2.60GHz
+Cores:  2
+Logical CPUS:  4
+Total Logical CPUS:  4
+Family:  6
+Model:  10
+Stepping:  9
+Ext Family:  6
+Ext Model:  58
+CPU Clock:  1200
+CPU Clock BY OS:  1200
+CPU Clock BY IC:  -2
+CPU Clock Measure:  2594
+Mark TSC:  1348
+Mark SYS Clock:  0
+L1 Data:  32
+L1 Instr:  32
+L2 Cache:  256
+L3 Cache:  3072
+L1 Assoc:  8
+L2 Assoc:  8
+L3 Assoc:  12
+L1 Cacheline:  64
+L2 Cacheline:  64
+L3 Cacheline:  64
+SSE Size:  128
+==========================================================FLAGS===================================================================
+AMD MMX-extended instructions supported | mmxext | Not Supported
+Streaming-SIMD Extensions (SSE) supported | sse | Is Supported
+SSE2 instructions supported | sse2 | Is Supported
+AMD 3DNow! instructions supported | 3dnow | Not Supported
+Virtual mode extension | vme | Is Supported
+CLFLUSH instruction supported | clflush | Is Supported
+SSSE3 instructionss supported (this is different from SSE3!) | ssse3 | Is Supported
+Long mode (x86_64/EM64T) supported | lm | Is Supported
+LAHF/SAHF supported in 64-bit mode | lahf_lm | Is Supported
+Memory type range registers | mtrr | Is Supported
+ACPI support (power states) | acpi | Is Supported
+Virtualization technology supported | vmx | Is Supported
+SYSCALL / SYSRET instructions supported | syscall | Is Supported
+64-bit Debug store supported | dts64 | Is Supported
+Floating point unit | fpu | Is Supported
+Debugging extension | de | Is Supported
+Virtual mode extension | vme | Is Supported
+Page size extension | pse | Is Supported
+Time-stamp counter | tsc | Is Supported
+Model-specific regsisters, RDMSR/WRMSR supported | msr | Is Supported
+Physical address extension | pae | Is Supported
+Machine check exception | mce | Is Supported
+CMPXCHG8/CMPXCHG8B instruction supported | cx8 | Is Supported
+Advanced Programmable Interrupt Controller support | apic | Is Supported
+Intel 64 Architecture x2APIC Specification | x2apic | Is Supported
+SYSENTER / SYSEXIT instructions supported | sep | Is Supported
+Page global enable | pge | Is Supported
+Machine check architecture | mca | Is Supported
+CMOVxx instructions supported | cmov | Is Supported
+Page attribute table | pat | Is Supported
+36-bit page address extension | pse36 | Is Supported
+Processor serial # implemented (Intel P3 only) | pt | Not Supported
+Debug store supported | dts | Is Supported
+Self-snoop | ss | Is Supported
+Thermal monitor | tm | Is Supported
+IA64 supported (Itanium only) | ia64 | Not Supported
+Pending-break enable | pbe | Is Supported
+PNI (SSE3) instructions supported | pni | Is Supported
+PCLMULQDQ instruction supported | pclmul | Is Supported
+MONITOR / MWAIT supported | monitor | Is Supported
+CPL Qualified Debug Store | ds_cpl | Is Supported
+Safer mode exceptions | smx | Not Supported
+Enhanced SpeedStep | est | Is Supported
+Thermal monitor 2 | tm2 | Is Supported
+Context ID supported | cid | Not Supported
+CMPXCHG16B instruction supported | cx16 | Is Supported
+Send Task Priority Messages disable | xtpr | Is Supported
+Performance capabilities MSR supported | pdcm | Is Supported
+Direct cache access supported | dca | Not Supported
+SSE 4.1 instructions supported | sse4_1 | Is Supported
+SSE 4.2 instructions supported | sse4_2 | Is Supported
+SYSCALL / SYSRET instructions supported | syscall | Is Supported
+Execute disable bit supported | xd | Is Supported
+MOVBE instruction supported | movbe | Not Supported
+POPCNT instruction supported | popcnt | Is Supported
+AES* instructions supported | aes | Is Supported
+XSAVE/XRSTOR/etc instructions supported | xsave | Is Supported
+non-privileged copy of OSXSAVE supported | osxsave | Is Supported
+Advanced vector extensions supported | avx | Is Supported
+AMD 3DNow! extended instructions supported | 3dnowext | Not Supported
+No-execute bit supported | nx | Not Supported
+FFXSR: FXSAVE and FXRSTOR optimizations | opt | Not Supported
+RDTSCP instruction supported (AMD-only) | rdtscp | Not Supported
+Long mode (x86_64/EM64T) supported | lm | Is Supported
+LAHF/SAHF supported in 64-bit mode | lahf_lm | Is Supported
+Core multi-processing legacy mode | cmp_legacy | Not Supported
+AMD Secure virtual machine | svm | Not Supported
+SSE 4a from AMD | sse4a | Not Supported
+Misaligned SSE supported | misalignsse | Not Supported
+LZCNT instruction support | abm | Not Supported
+PREFETCH/PREFETCHW support | 3dnowprefetch | Not Supported
+OS Visible Workaround (AMD) | osvw | Not Supported
+Instruction-based sampling | ibs | Not Supported
+SSE 5 instructions supported (deprecated, will never be 1) | sse5 | Not Supported
+SKINIT / STGI supported | skinit | Not Supported
+Watchdog timer support | wdt | Not Supported
+Temperature sensor | ts | Not Supported
+Frequency ID control | fid | Not Supported
+Voltage ID control | vid | Not Supported
+THERMTRIP | ttp | Not Supported
+AMD-specified hardware thermal control | tm_amd | Not Supported
+Software thermal control | stc | Not Supported
+100 MHz multiplier control | 100mhzsteps | Not Supported
+Hardware P-state control | hwpstate | Not Supported
+TSC ticks at constant rate | constant_tsc | Is Supported
+The XOP instruction set (same as the old CPU_FEATURE_SSE5) | xop | Not Supported
+The FMA3 instruction set | fma3 | Not Supported
+The FMA4 instruction set | fma4 | Not Supported
+Trailing bit manipulation instruction support | tbm | Not Supported
+16-bit FP convert instruction support | f16c | Is Supported
+RdRand instruction | rdrand | Is Supported
+Hyper-threading supported (but might be disabled) | ht | Is Supported
+MMX instruction set supported | mmx | Is Supported
+Memory type range registers | mtrr | Is Supported
