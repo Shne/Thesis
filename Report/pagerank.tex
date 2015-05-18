@@ -1,11 +1,11 @@
 \section{Precomputing Binary Rank in Blocks}
 During our experiment of skewing the tree, we concluded that most of the work during queries is performed inside each node, calculating the binary rank of each bitmap.
 Rank queries are simply summing up results of popcounting each word, and we considered whether precomputing these sums for blocks spanning several words, covering the bitmaps could improve the query times.
-When a block doesn't line up with the position a rank query is for, the algorithm can simply fall back to doing popcounting of either the remaining uncovered words or the excess covered words, whichever has fewer words.
+When a block does not line up with the position a rank query is for, the algorithm can simply fall back to doing popcounting of either the remaining uncovered words or the excess covered words, whichever has fewer words.
 See Section~\ref{sec:rankQueriesWithPrecomputedRanksEdgeCases} for more explanation of this.
 
-We can precompute the rank values easily and cheaply by doing so as we build the tree where we already need to compute and store each individual bit of the bitmap.
-We simply increment a counter for the corresponding block each time we set a bit to 1 in the bitmap.
+The rank values can be precomputed easily and cheaply by doing so as the tree is built where each individual bit of the bitmap already needs to be computed and stored.
+The algorithm increments a counter for the corresponding block each time it sets a bit to 1 in the bitmap.
 
 The size of the precomputed blocks is a new variable that could have influence on the running time and memory usage.
 Some advantages of larger blocks is less memory usage and fewer precomputed value lookups for the same part of the bitmap.
@@ -13,7 +13,7 @@ Some advantages of smaller blocks are that they can cover more precisely the par
 We will experiment to find an optimal value for our system.
 
 To further reduce the space used by the precomputed values, we considered concatenating all the bitmaps into one big bitmap and keeping a single vector of precomputed rank values for blocks for the entire bitmap. 
-That would eliminate the many cases where the length of a bitmap doesn't align with the block size and the last precomputed value for that bitmap will therefore not cover an entire block, leading to more precomputed values than minimally needed to cover all the bitmaps.
+That would eliminate the many cases where the length of a bitmap does not align with the block size and the last precomputed value for that bitmap will therefore not cover an entire block, leading to more precomputed values than minimally needed to cover all the bitmaps.
 
 We also considered the cost of TLB misses and how ensuring that entire pages are skipped as often as possible might increase the query performance. We try to achieve this by page-aligning the blocks.
 
@@ -28,7 +28,7 @@ We allocate the bitmaps as one giant bitmap the size of the maximum possible siz
 We store them in a Depth-First-right manner, that is, the bitmap of the right child of a node comes right after the bitmap of the node.
 
 There are many other alternative memory layouts that might provide better performance, one such, and the one we believe has the greatest potential to improve the wavelet tree performance, is the van Emde Boas memory layout~\citep[Abstract]{Brodal02cacheoblivious} because of its cache-oblivious nature.
-It would be a challenge to implement, because we don't now the size of a bitmap of a node before having calculated the bitmap of the parent, and so we cannot know the position of each bitmap in the giant bitmap before having calculated the parent of each, meaning we must construct the tree in vEB layout order.
+It would be a challenge to implement, because we do not now the size of a bitmap of a node before having calculated the bitmap of the parent, and so we cannot know the position of each bitmap in the giant bitmap before having calculated the parent of each, meaning we must construct the tree in vEB layout order.
 To support construction of the wavelet tree in vEB layout order our construction algorithm would have to be dramatically changed, possibly utilizing concurrency constructs such as a job queue and message passing, and so we skip this work for now and save it for future work in Section~\ref{sec:futurework_vebmemorylayout}.
 
 The sum of the size of all bitmaps on one layer of the tree can at most be $n$ and we can at most have $h$ layers, so the maximum size becomes
@@ -54,14 +54,14 @@ We use integer division of the bitmap offset and the block size to index into sa
 
 \subsubsection{Edge Cases}
 \label{sec:rankQueriesWithPrecomputedRanksEdgeCases}
-The rank of a string can be expressed as the sum of the rank of any number and various sizes of subparts as long as they together perfectly cover the string and don't overlap.
+The rank of a string can be expressed as the sum of the rank of any number and various sizes of subparts as long as they together perfectly cover the string and do not overlap.
 Because the blocks must perfectly cover the string and not overlap, and the bitmaps of each node are not of same size, nor multiples of some single value, we have a problem if we want to use uniformly sized and distributed blocks.
 The problem exists at the boundary between bitmaps, where the precomputed rank value will be the sum of the rank of the end of the first bitmaps and the rank of the beginning of the second bitmap.
 
-Looking at a single bitmap for a node, there is an edge case for the first and last part of the bitmap, because they don't fill an entire block, so we can't simply use the corresponding precomputed value as-is.
-Instead, we can compute the rank of the part of the block that our part doesn't fill and subtract that from the precomputed rank value.
+Looking at a single bitmap for a node, there is an edge case for the first and last part of the bitmap, because they do not fill an entire block, so we cannot simply use the corresponding precomputed value as-is.
+Instead, we can compute the rank of the part of the block that our part does not fill and subtract that from the precomputed rank value.
 This is only worth doing when our part fills more than half a block, because then the other part is smaller than half a block and therefore quicker to compute.
-Figure ~\ref{fig:PrecomputePopcountBlock} illustrates this.
+Figure~\ref{fig:PrecomputePopcountBlock} illustrates this.
 
 
 
@@ -110,13 +110,13 @@ With an alphabet size of $2^{16}$ this amounts to saving up to 16 page loads per
 While we expect that this will save some expensive TLB misses it also has some drawbacks, especially when not using concatenated bitmaps.
 For a wavelet tree not using concatenated bitmaps, using page-aligned blocks will cause the first precomputed value of each non-page-aligned bitmap to not cover an entire block, increasing the number of precomputed values needed to cover the bitmap as well as additional computations to calculate exactly which part of the bitmap it covers.
 For the wavelet trees using concatenated bitmaps, these computations are needed regardless of block alignment, as the blocks are already not aligned with the individual bitmaps, and so we believe it can only be an improvement to page-align the blocks in this case.
-We test this by implementing a variation of the wavelet tree using concatenated bitmaps that doesn't page-align the blocks.
+We test this by implementing a variation of the wavelet tree using concatenated bitmaps that does not page-align the blocks.
 
 We will test whether it increases the performance of rank and select queries when not using concatenated bitmaps in Section~\ref{sec:queryRunTimePrecomputedBlockSizes}.
 
 
 \subsection{Select Queries with Precomputed Ranks}
-Select queries, although they don't return a rank value, can still utilize the precomputed rank values to skip much computation directly on the bitmap by iterating though them.
+Select queries, although they do not return a rank value, can still utilize the precomputed rank values to skip much computation directly on the bitmap by iterating though them.
 Partway in a select query, if the sum of the occurrences found so far and the rank value of the current block of the bitmap is more than the queried-for occurrence, we can add that rank value to our occurrences seen so far and skip ahead to the next block and perform the same test.
 If the sum is less than the queried-for occurrence, we know we will find the occurrence in the current block and use our previously implemented method of calculating select using popcount, starting at this block.
 
@@ -149,7 +149,7 @@ We have considered doing tests to determine whether it is an improvement for the
 
 
 \subsection{Extra Space Used by Precomputed Values}
-Since each precomputed value cannot exceed the block size in bits, assuming we don't use block sizes exceeding $2^{16} = 65536$ bits, or $\frac{2^{16}}{8} = 8192$ bytes, we can store them in 16-bit unsigned integers, called \texttt{unsigned short int} in C++ on our machines.
+Since each precomputed value cannot exceed the block size in bits, assuming we do not use block sizes exceeding $2^{16} = 65536$ bits, or $\frac{2^{16}}{8} = 8192$ bytes, we can store them in 16-bit unsigned integers, called \texttt{unsigned short int} in C++ on our machines.
 Since the page size on our machines are 4096 bytes we should not use a block size larger than $\frac{8192}{4096} = 2$ pages if we want to use 16-bit unsigned integers.
 
 In Section~\ref{sec:queryRunTimePrecomputedBlockSizes} we find that the optimal block size is 16384 bits = 2048 bytes = $\frac{1}{2}$ page.
@@ -160,7 +160,7 @@ This means, assuming a block size of 2048 bytes, a relative extra space consumpt
 of the bitmaps.
 Which is even less when considering the total space used including the nodes.
 
-When we don't concatenate the bitmaps there is a higher space consumption by the precomputed values, as each precomputed value don't cover an entire block and more precomputed values is therefore needed to cover all the bitmaps.
+When we do not concatenate the bitmaps there is a higher space consumption by the precomputed values, as each precomputed value do not cover an entire block and more precomputed values is therefore needed to cover all the bitmaps.
 When the blocks are not page-aligned, each node has potentially one precomputed value not covering an entire block at the end of its bitmap.
 When blocks are page-aligned, there is another precomputed value potentially not covering an entire block at the beginning of each bitmap.
 The extra space consumption by the precomputed values when not concatenating the bitmaps is therefore limited proportionally to the number of nodes, which is at most $2 \sigma - 1$, making it limited proportionally by the alphabet size.
@@ -227,8 +227,8 @@ We believe this is the main reason that UnalignedNaive exhibits the best running
 The others also seems to have the best level 1 data cache performance for rank queries at half a page per block, while their wall times are best at a full page per block.
 This might be explained by total branch execution, as we saw in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_BranchExe}, they execute many more branches at lower block sizes, which we believe is because of the extra bookkeeping code needed.
 
-The level 2 data cache miss rate plotted in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_L2CacheMissRate} is generally worst for block size = 0.5 page size, but looking at the raw cache misses in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_L2CacheMiss} we generally see more cache misses for higher block sizes, meaning that the level 2 data cache miss rate can't explain the better performance at block size = 1 page size for every tree other than UnalignedNaive.
-Looking at Level 2 data cache misses in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_L2CacheMiss} and the level 2 data cache miss rate in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_L2CacheMissRate}, we don't see much difference between the different tree implementations, except that the Naive tree has a noticeable drop in both the raw amount and the rate at block size = 1 page size, just like it had for TLB misses.
+The level 2 data cache miss rate plotted in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_L2CacheMissRate} is generally worst for block size = 0.5 page size, but looking at the raw cache misses in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_L2CacheMiss} we generally see more cache misses for higher block sizes, meaning that the level 2 data cache miss rate cannot explain the better performance at block size = 1 page size for every tree other than UnalignedNaive.
+Looking at Level 2 data cache misses in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_L2CacheMiss} and the level 2 data cache miss rate in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_L2CacheMissRate}, we do not see much difference between the different tree implementations, except that the Naive tree has a noticeable drop in both the raw amount and the rate at block size = 1 page size, just like it had for TLB misses.
 It is interesting, though, that they all have a somewhat high, $0.35-0.4$, level 2 data cache miss rate around 0.5-0.75 page per block, where they all have good wall time performance.
 We believe this is because of the good level 1 data cache performance at those block sizes.
 To explain what we mean, let's assume there is a fixed amount of operations accessing memory that is hard for the cache to have prefetched or otherwise loaded beforehand, independent of the block size.
@@ -256,6 +256,14 @@ Just as with rank queries, we see higher level 2 data cache miss rate at lower b
 
 However, unlike for the rank queries, the amount of level 2 data cache misses are not lower for smaller block sizes, in fact they are higher than at 1 page per block, where each type of wavelet tree has its minimum, with Naive having the largest drop there.
 We see this drop again in level 3 total cache misses in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L3CacheMiss}.
+For both level 2 and level 3 cache misses, we also see a dip at 2 pages per block and lesser dips at 0.5 pages and 1.5 pages per block. 
+These sizes correspond to where blocks most often align with full pages as a block of size 2 pages will align with two pages and two blocks of size half a page will align with one page and two blocks of size 1.5 page will align with three pages.
+
+\textbf{[CONTINUE HERE]}
+The fact that the level 2 and level 3 performances are so near-identical can be explained by the fact that they are inclusive, that is, everything contained in level 2 is also in level 3 and
+if all the cache misses in level 2 are from the prefetcher not being able to figure out what data is needed next, and it loads directly into level 2 then the level 3 cache will never have the correct data while 2 does not...
+
+Why this results in fewer level 2 and level 3 cache misses, we do not know.
 \textbf{[TODO: speculated as to why]}
 
 \newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
@@ -449,8 +457,8 @@ We have used both Massif, the heap profiler included in the Valgrind Suite and P
 We focus on the output from Massif instead of PAPI, because the memory usage values we could extract using PAPI made little sense, with values indicating that the trees using precomputed values used less memory than the NaiveInteger tree with no extra precomputed values.
 We have plotted the values from PAPI in Figure~\ref{fig:PrecomputedRankBlockSize_PAPI}.
 
-We don't know why PAPI gives us these nonsensical results, but it might have something to do with Linux's aggressive caching and buffering.
-We're not entirely sure whether \texttt{delete}ed memory might still be counted as used memory by PAPI because of such caching.
+We do not know why PAPI gives us these nonsensical results, but it might have something to do with Linux's aggressive caching and buffering.
+We are not entirely sure whether \texttt{delete}ed memory might still be counted as used memory by PAPI because of such caching.
 Massif, on the other hand, manually counts calls to such functions as \texttt{new} and \texttt{delete} and calculates the memory usage from these, making it unaffected by any caching scheme employed by the Linux kernel.
 Massif is also designed for the purpose of profiling program memory usage, whereas PAPI is simply an API to access performance metrics from the underlying OS.
 
@@ -466,7 +474,7 @@ The values presented in Figure~\ref{fig:PrecomputedRankBlockSize_Massif} is thus
 Looking at Figure~\ref{fig:PrecomputedRankBlockSize_Massif} we see that the memory usage of the trees using precomputed values but not concatenated bitmaps, Naive and UnalignedNaive use more memory than the tree not using precomputed values, NaiveInteger, but only about 0.5\%.
 We also see that memory is indeed saved by using the concatenated bitmaps in Preallocated and UnalignedPreallocated, though only by about 1.5\% compared to the other trees using precomputed values.
 
-Our attempts to reduce the memory usage by concatenating the bitmaps seems to have succeeded, but looking back at the running times for the rank and select queries in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_WallTime} and Figure~\ref{fig:PrecomputedRankBlockSize_Select_WallTime}, we suspect the few percentage reduction in memory usage isn't worth the massive decrease in rank query performance and the slight decrease in select query performance.
+Our attempts to reduce the memory usage by concatenating the bitmaps seems to have succeeded, but looking back at the running times for the rank and select queries in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_WallTime} and Figure~\ref{fig:PrecomputedRankBlockSize_Select_WallTime}, we suspect the few percentage reduction in memory usage is not worth the massive decrease in rank query performance and the slight decrease in select query performance.
 
 
 \subsubsection{Improvement of using precomputed values}

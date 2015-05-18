@@ -26,7 +26,7 @@ The binary rank can then be found by summing the result of calling \texttt{popco
 When the position argument of the rank query is not a multiple of the word size, we need to constrain what part of the last word is counted using \texttt{popcount}. This can be done by constructing a bitmask by bitshifting the number 1 \textit{position} times towards the most significant bit and then subtracting one, as that will create a word where the \textit{position} least significant bits are set to 1 and the rest to 0.
 Then we do a bitwise \texttt{AND} operation of this bitmask and the word containing the bit corresponding to \textit{position}, and call \texttt{popcount} on the result. 
 
-As also noted in~\citep{Navjda13}, we don't need to count the number of 0s, although required by the algorithm, as we can simply take the number of bits in the string and subtract the number of 1s to calculate the number of 0s.
+As also noted in~\citep{Navjda13}, we do not need to count the number of 0s, although required by the algorithm, as we can simply take the number of bits in the string and subtract the number of 1s to calculate the number of 0s.
 
 \subsubsection{Binary Select using Popcount}
 \label{sec:ImplBinarySelect}
@@ -48,7 +48,7 @@ The permutation was done to avoid the bias of having all the most frequent chara
 
 In Section~\ref{sec:expnotesUniformVsNonuniform} we theorized that building the tree on non-uniform data would be slightly faster as some of the characters would not occur in the string and therefore some of the nodes in the tree would not have to be created.
 We also theorized that much the same would happen for Select queries as it could terminate much faster when a character could not be found in the tree.
-We didn't expect it would make as much difference for rank queries as they can't terminate as early as select queries for non-occurring characters.
+We did not expect it would make as much difference for rank queries as they cannot terminate as early as select queries for non-occurring characters.
 
 Looking at Figure~\ref{fig:UniformVsNonUniform} we see that our theories have been confirmed. 
 The build time in Figure~\ref{fig:UniformVsNonUniform_Build_WallTime} is noticeably lower for the non-uniform data.
@@ -139,7 +139,7 @@ Whichever is the actual number, they all suggest an alphabet size of $2^{16}$ is
 
 Looking at the graphs from this experiment we can see that building the tree using an alphabet size of $2^{16}$ is still fairly quick, not running into much trouble with TLB misses, and not exceeding the expected asymptotically bound running time.
 
-We also attempted using an alphabet size of 32, but our machines didn't have enough memory.
+We also attempted using an alphabet size of 32, but our machines did not have enough memory.
 
 \subsubsection{Rank and Select using Popcount}
 \label{sec:experimentPopcountRankSelect}
@@ -164,7 +164,7 @@ The number of saved branch mispredictions for \textproc{rank} is then 1,396,757,
 This means that the branch mispredictions do have an effect, but it is only a small part of this increase in speed. The main improvement, we expect, comes from using only a few cpu cycles per word of the bitmap to calculate the binary rank, as well as possibly the slight decrease in L1 and L3 cache misses.
 
 
-By similar calculations the saved cpu cycles from branch mispredictions for \textproc{select} is at least 48,84\% of the total saved. We expect this is because of the much higher number of branch mispredictions and the lower number of cycles for the original select algorithm, as well as the fact that we can't use \texttt{popcount} for every word of the bitmap but must go back to doing manual counting of the bits when we find the word the sought-after occurrence is in.
+By similar calculations the saved cpu cycles from branch mispredictions for \textproc{select} is at least 48,84\% of the total saved. We expect this is because of the much higher number of branch mispredictions and the lower number of cycles for the original select algorithm, as well as the fact that we cannot use \texttt{popcount} for every word of the bitmap but must go back to doing manual counting of the bits when we find the word the sought-after occurrence is in.
 
 
 \subsubsection{Further improvements}

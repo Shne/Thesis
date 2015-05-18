@@ -6,7 +6,7 @@ The Wavelet Tree is a data structure for strings.
 Using the C++ \texttt{char array} or C++11 \texttt{string} types would seem natural in this case, but they each have problems.
 The C and C++ \texttt{char} type is only of size 1 byte allowing us only to use an alphabet size of up to 256, making testing the running times dependency on alphabet size difficult as we believe inaccuracies in the running time would exceed the difference in running time between the available sizes of the alphabet.
 
-The C++11 \texttt{string} and arrays of type \texttt{char32\_t} doesn't have this problem and supports character types up to 32-bit unsigned. 
+The C++11 \texttt{string} and arrays of type \texttt{char32\_t} does not have this problem and supports character types up to 32-bit unsigned. 
 The problem then lies in output and readability as characters corresponding to byte values below 32 are special non-printable control characters such as carriage-return and backspace. 
 At higher byte values other non-printable control characters and otherwise unreadable characters appear again, meaning we would have to be selective with the allowed byte values in our alphabets if we want it to be readable for output and debugging, and end up with an alphabet that is non-continuous on the set of byte values as a result.
 Because of this, we have for convenience chosen to simply use arrays of integers as our strings in our implementations.
@@ -15,7 +15,7 @@ This will have no impact on performance as both characters and integers are simp
 We assume in our implementation that the alphabet is always continuous on the set of byte values and store the alphabet as a minimum and maximum value, instead of storing each value in some data structure to pass around or point into.
 This is for convenience as any other non-continuous alphabet could simply be mapped to a continuous run of byte values and used in the same way. 
 This mapping could e.g. be done by storing an array of the alphabet in sorted order and using pointers into this array to signify the characters. 
-Lookup into the array is not necessary unless printing for human reading, since comparison of the pointer addresses returns same result as comparing the bytes.
+Lookup into the array is not necessary unless printing for human reading, since comparison of the pointer addresses returns the same result as comparing the bytes.
 
 We will still use the terms "character/symbol" and "string" in our descriptions of the algorithms even though we have implemented them as integers and integer arrays, as we feel the terms "character/symbol" and "string" are more intuitive and give clarity.
 
@@ -37,14 +37,14 @@ When they agree on several randomly selected sets of query parameters, we feel c
 
 \subsection{Combating Over-Optimization}
 The GNU Compiler Collection (GCC) is an optimizing compiler and can sometimes using static analysis recognize that the results and possible side-effects of a computation will not be used in the code and will in those cases completely remove that computation from the compiled code as an optimization.
-This means that the compiler could potentially remove the parts of or the entire computation for our queries when we test them, if we don't use the results for anything.
-To ensure that the compiler doesn't throw needed computations out the window in our tests, we collect the results of each query in an array and print it to stdout. We only print it after the collection of measurements is done to effect the running time minimally.
+This means that the compiler could potentially remove the parts of or the entire computation for our queries when we test them, if we do not use the results for anything.
+To ensure that the compiler does not throw needed computations out the window in our tests, we collect the results of each query in an array and print it to stdout. We only print it after the collection of measurements is done to effect the running time minimally.
 
 \subsection{Reducing Construction Time Memory Usage}
 Since the Wavelet tree is a recursively defined data structure, we also implement it recursively.
 This causes any stack-allocated variables to be held in memory until we leave the scope of the constructor function.
 We traverse and split the input string into its left and right parts in each node constructor and thus end up holding the input string twice in memory: once in the variable holding the input string and once in the two variables holding the left and right split strings.
-This is wasted memory because we don't actually need the input string any longer once we have split it into its left and right parts.
+This is wasted memory because we do not actually need the input string any longer once we have split it into its left and right parts.
 Because we simply call one sub-node constructor and then the other when the first has completed and finally return once both subnodes has completed constructing themselves, we end up completing the construction of the nodes in post-order.
 This means we will keep the scopes of the root node, and those near the root, alive for most of the running time of the construction algorithm, and much memory is wasted.
 The solution is to allocate these strings on the heap instead, passing pointers to the subnode constructors and having them delete them (as their input strings) once they have split them.
@@ -60,7 +60,7 @@ Another reason why we cannot use \texttt{std::bitset} is because it does not sup
 We also feel that an actual usable practical implementation should be able to handle different sizes of input at runtime instead of compile-time. 
 
 \item[\texttt{boost::dynamic\_bitset}] is the Boost library's take on a dynamic bitset. 
-It doesn't try to mimic a container and lacks some features such as an iterator because of that. 
+It does not try to mimic a container and lacks some features such as an iterator because of that. 
 It also does not guarantee that the bits will be allocated consecutively in memory and has no raw pointer access to the data in memory. 
 This is a problem when we want to call popcount on all machine words from beginning up to some index.
 

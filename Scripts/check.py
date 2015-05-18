@@ -32,9 +32,11 @@ badPatterns = [(r'\s()\\(ref|cite)', 'Space not \'~\' before ref/cite', []),
 				(r'Simd|simd()', 'SIMD',['thesis.tex']),
 				(r'==()', 'double-equality instead of $\gets $',[]),
 				(r"it's()", "it's vs. its",[]),
-				(r'-th()', 'use $i$th instead of i-th',[]),
+				(r'-th|\$.\$th', 'use $i^{th}$ instead of i-th or ith',[]),
 				(r'bwt', 'use BWT instead of bwt or \textit{bwt}',[]),
-				(r"don't|won't|doesn't", "use do not/will not/does not instead of don't/won't/doesn't", [])
+				(r"n't", "use do not/will not/does not instead of don't/won't/doesn't", []),
+				(r'(?<!igure|ction|ition|rithm|Table)~\\ref{', '~\\ref{} should follow either Figure, Section, Definition, Algorithm or Table', []),
+				(r'(?<!-)order entropy', 'use kth-order entropy instead of kth order entropy', [])
 				]
 sublime = r'subl'
 

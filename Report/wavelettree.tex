@@ -226,7 +226,7 @@ The process terminates when the root is reached.}
 \label{fig:SelectDrawing}
 \end{figure}
 
-\textproc{Select} queries searches the Wavelet Tree for the position of the $i$th occurrence of the specified character.
+\textproc{Select} queries searches the Wavelet Tree for the position of the $i^{th}$ occurrence of the specified character.
 It starts from the leaf of the character and walks up through parent nodes to the root of the tree, which means it is necessary to know the leaf of the character. 
 This is accomplished using the \textproc{GetLeaf} method, which works by recursing down the tree from the root and choosing the right or left path based on whether the queried-for character is represented as a 0 or a 1 in the bitmap of the current node.
 The recursion stops when the leaf of the character is found.
