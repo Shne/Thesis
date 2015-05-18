@@ -36,7 +36,8 @@ badPatterns = [(r'\s()\\(ref|cite)', 'Space not \'~\' before ref/cite', []),
 				(r'bwt', 'use BWT instead of bwt or \textit{bwt}',[]),
 				(r"n't", "use do not/will not/does not instead of don't/won't/doesn't", []),
 				(r'(?<!igure|ction|ition|rithm|Table)~\\ref{', '~\\ref{} should follow either Figure, Section, Definition, Algorithm or Table', []),
-				(r'(?<!-)order entropy', 'use kth-order entropy instead of kth order entropy', [])
+				(r'(?<!-)order entropy', 'use kth-order entropy instead of kth order entropy', []),
+				(r'\\texttt{popcountl}', 'use popcount instead of popcountl when discussing the use of it.', [])
 				]
 sublime = r'subl'
 
