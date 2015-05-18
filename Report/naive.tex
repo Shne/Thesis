@@ -1,7 +1,11 @@
 \section{Simple, Naïve Algorithm}
 This is the simple, straightforward, naïve implementation based on ~the description by Navarro~\citep[Section 2]{Navjda13}, before any smart ideas and optimizations.
+We will call this version of the wavelet tree SimpleNaive.
 
-The construction of the wavelet tree is implemented similarly to the pseudo-code in Section~\ref{sec:nodeconstruction}. In our implementation $Alphabet$, $LeftAlphabet$, and $RightAlphabet$ are stored as two integer values each: a minimum and a maximum. It is explained in Section~\ref{sec:UsingIntAsChar} how this is equivalent to storing the full alphabet and passing pointers into it around. $Bitmap$ is stored as a \texttt{vector<bool>} which is a tightly packed data structure, only using 1 bit per bool\footnote{\url{http://www.cplusplus.com/reference/vector/vector-bool/}}, plus a little bookkeeping data and at most 8 bytes minus 1 bit of superfluous stored data when the amount of bits stored does not align with 8 bytes.
+The construction of the wavelet tree is implemented similarly to the pseudo-code in Section~\ref{sec:nodeconstruction}.
+In our implementation $Alphabet$, $LeftAlphabet$, and $RightAlphabet$ are stored as two integer values each: a minimum and a maximum.
+It is explained in Section~\ref{sec:UsingIntAsChar} how this is equivalent to storing the full alphabet and passing pointers into it around.
+$Bitmap$ is stored as a \texttt{vector<bool>} which is a tightly packed data structure, only using 1 bit per bool\footnote{\url{http://www.cplusplus.com/reference/vector/vector-bool/}}, plus a little bookkeeping data and at most 8 bytes minus 1 bit of superfluous stored data when the amount of bits stored does not align with 8 bytes.
 
 Rank queries were implemented as described in Section~\ref{sec:rankDescription} and
 binary rank was implemented as described in Section~\ref{sec:TheoryBinaryRank}.
@@ -212,7 +216,7 @@ Inspired by Brodal et al.~\cite{gerthSkewedBinarySearchTrees} we will in Section
 		\caption{Wall Time and Translation Lookaside Buffer Misses divided by theoretical running time}
 		\label{fig:naiveIntegerAlphabetSize_WallTime_TLB}
 	\end{subfigure}
-	\caption{Various Measurements for the construction of the NaiveInteger Wavelet Tree over various alphabet sizes.}
+	\caption{Various Measurements for the construction of the SimpleNaive Wavelet Tree over various alphabet sizes.}
 	\label{fig:naiveIntegerAlphabetSize}
 \end{figure}
 \restoregeometry

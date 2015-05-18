@@ -17,5 +17,5 @@ plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Build.data' every ::2 us
 	'' every ::2 using ($1/32768):($3/1024):($6/1024) with yerrorbars linetype 2 notitle,\
 	'../Data/PrecomputedRankBlockSize_UnalignedPreallocatedPrecomputed_Build.data' every ::2 using ($1/32768):($3/1024) with linespoints linetype 4 title "UnalignedPreallocated",\
 	'' every ::2 using ($1/32768):($3/1024):($6/1024) with yerrorbars linetype 4 notitle,\
-	'../Data/PrecomputedRankBlockSize_NaiveInteger_Build.data' every ::2 using ($1/32768):($3/1024) with linespoints linetype 5 title "NaiveInteger",\
+	'../Data/PrecomputedRankBlockSize_NaiveInteger_Build.data' every ::2 using ($1/32768):($3/1024) with linespoints linetype 5 title "SimpleNaive",\
 	'' every ::2 using ($1/32768):($3/1024):($6/1024) with yerrorbars linetype 5 notitle,\

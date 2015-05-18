@@ -25,5 +25,5 @@ plot '../Data/PrecomputedRankBlockSize_memory.data' using ($1/4096):($2/1048576)
 	'' every ::2 using ($1/4096):($3/1048576):($8/1048576) with yerrorbars linetype 3 notitle,\
 	'../Data/PrecomputedRankBlockSize_memory.data' using ($1/4096):($5/1048576) with linespoints linetype 4 title "UnalignedPreallocated",\
 	'' every ::2 using ($1/4096):($5/1048576):($10/1048576) with yerrorbars linetype 4 notitle,\
-	'../Data/PrecomputedRankBlockSize_memory.data' using ($1/4096):($6/1048576) with linespoints linetype 5 title "NaiveInteger",\
+	'../Data/PrecomputedRankBlockSize_memory.data' using ($1/4096):($6/1048576) with linespoints linetype 5 title "SimpleNaive",\
 	'' every ::2 using ($1/4096):($6/1048576):($11/1048576) with yerrorbars linetype 5 notitle,\
