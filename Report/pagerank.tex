@@ -50,7 +50,7 @@ We also allocate a vector for holding the precomputed block values of size:
 \[Vector size = \frac{BitmapSize}{BlockSize} \]
 Instead of storing a pointer to the bitmap and precomputed values vector in each node, we store them once for the whole tree and then pass them down through the query methods when the tree is queried.
 
-We use integer division of the bitmap offset and the block size to index into said vector. It is an efficient and simple way to precompute the rank values of blocks of fixed size of the bitmap.
+We use integer division of the bitmap offset and the block size to index into said vector. It is an efficient and simple way to precompute the rank values of blocks of fixed size of the bitmap, as we do not have to traverse the tree again.
 
 
 \subsubsection{Edge Cases}

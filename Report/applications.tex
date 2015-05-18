@@ -21,22 +21,8 @@ The corresponding $x$-coordinate will be at the same position.
 Querying from a leaf gives the points in $y$-coordinate order because the leaves are sorted by $y$-coordinate.
 
 \subsection{Compression}
-\vspace{0.5 cm}
-\begin{mdframed}[nobreak, linecolor=lightgray, linewidth=2pt]
-\begin{definition}: String representation in a Wavelet Tree\\\\
-Let $S[1,n] = S_1 S_2 ... S_n$ be a sequence of symbols where $s_i \in \Sigma$ and $\Sigma = [1 ... \sigma]$ is the alphabet. $S$ can then be represented in plain form using $n \lceil \log \sigma \rceil = n \log \sigma = O(n)$ bits.
-\end{definition}
-\textbf{[TODO: use and reference this]}
-\end{mdframed}
-\vspace{0.5 cm}
-The Wavelet Tree has many uses for compression of data~\citep{Navjda13}. Some of the main compression techniques are different ways of encoding the bitmaps and changing the shape of the tree~\citep[Section~3]{Navjda13}.
-
-\textbf{[TODO: either move or remove this paragraph]}
-Entropy coding can be explained in two parts: Modelling and Coding.
-Modelling assigns probabilities to the symbols of the string, and coding produces a bit sequence from these probabilities.
-The probability of a symbol is based on how often it appears in a given data set. 
-Higher frequency gives a higher probability.
-Coding can then for instance be done with a coding scheme, that uses a discrete number of bits for each symbol, for example Huffman Coding~\citep{HuffmanCoding}.
+The Wavelet Tree has many uses for compression of data~\citep{Navjda13}.
+Some of the main compression techniques are different ways of encoding the bitmaps and changing the shape of the tree~\citep[Section~3]{Navjda13}.
 
 The main advantage of the wavelet tree with regards to compression is that it supports entropy bounds in the attained space complexity of the various wavelet tree compression methods~\citep[Section~2.1]{WTSurvey}.
 
@@ -259,7 +245,16 @@ In Section~\ref{sec:choiceOfInputString} we discuss further why we mainly consid
 
 
 \subsection{Information Retrieval}
-\textbf{[Perhaps TODO: Wavelet tree as a Range Searching Data Structure]}
+A wavelet tree can be used to efficiently answer numerous queries in different problem domains.
+In this section we describe in some detail a select number of information retrieval scenarios.
+
+\subsubsection{Access, Rank, and Select Queries}
+The wavelet tree supports access in $O(\log \sigma)$ time, but unless compression is also used, access query is not the main reason to use a wavelet tree.
+Instead, the more interesting queries are rank and select queries, that are useful in and of themselves e.g. when used as a dictionary, but are also the building blocks of many other queries and algorithms.
+
+The rank query for a symbol $s$ and a position $p$ will return how many of symbol $s$ occurs in the input string up to position $p$.
+The select query for symbol $s$ and occurrence parameter $o$ will return the position of the $o^{th}$ occurrence of $s$ in the input string.
+
 
 
 \subsubsection{Range Quantile Query}
