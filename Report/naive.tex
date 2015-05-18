@@ -1,5 +1,4 @@
 \section{Simple, Naïve Algorithm}
-<<<<<<< Updated upstream
 This section deals with the simple, straightforward, naïve implementation based on ~the description by Navarro~\citeA[Section 2]{Navjda13}, before any smart ideas and optimizations were introduced.
 We will call this version of the wavelet tree SimpleNaive.
 
@@ -169,11 +168,7 @@ By similar calculations the saved cpu cycles from branch mispredictions for \tex
 
 
 \subsubsection{Further improvements}
-<<<<<<< Updated upstream
-Looking at the values in Figure~\ref{fig:valuesForPopcountDiff}, we find that, of the measurements we collect, cache misses are among the highest and were not reduced significantly by using the \texttt{popcount} instruction.
-=======
-Looking at the values in Figure~\ref{fig:valuesForPopcountDiff} we find that, of the measurements we collect, cache misses are among the highest and were not reduced significantly by using the \texttt{popcountl} instruction.
->>>>>>> Stashed changes
+Looking at the values in Figure~\ref{fig:valuesForPopcountDiff} we find that, of the measurements we collect, cache misses are among the highest and were not reduced significantly by using the \texttt{popcount} instruction.
 Cache misses are expensive and reducing them could greatly increase the speed of queries on the wavelet tree.
 
 Inspired by Brodal et al.~\citeA{gerthSkewedBinarySearchTrees} we will in Section~\ref{sec:memorylayout} look at skewing the tree as a means to reduce cache misses and branch mispredictions.
