@@ -4,14 +4,13 @@ Here we discuss some things general for all our experiments, or all those where 
 \subsection{Testing Machine}
 \begin{tabular}{|lr|}
 \hline
-CPU				&	Intel ... \\ \hline
+CPU				&	Intel Core i5-3230M \\ \hline
 OS				&	Ubuntu 14.04 64-bit \\ \hline
 Kernel			&	Linux 3.13.0 \\ \hline
-RAM				&	...	\\ \hline
-HDD				&	... \\ \hline
-Level 1 Cache	&	... \\ \hline
-Level 2 Cache	&	... \\ \hline
-Level 3 Cache	&	... \\ \hline
+RAM				&	8 GB 	\\ \hline
+Level 1 Data Cache	&	32 kB \\ \hline
+Level 2 Data Cache	&	256 kB \\ \hline
+Level 3 Data Cache	&	3072 kB \\ \hline
 \end{tabular}
 
 \subsection{General Setup}
@@ -34,7 +33,7 @@ The even amount of occurrences of each character also means there will be little
 \label{sec:expnotesUniformVsNonuniform}
 Uniform data for a wavelet tree is a string with each character occurring with the same probability at each position and therefore with similar frequencies.
 If the data is non-uniform it means that some symbols from the alphabet will appear with a significantly higher frequency than others.
-If one knows the frequencies of all symbols in the alphabet, without needing it to be exact, then one can build a Huffman shaped Wavelet Tree and we believe it will beat out any balanced wavelet tree in terms of performance.
+If one knows the frequencies of all symbols in the alphabet, without needing it to be exact, then one can build a Huffman shaped Wavelet Tree (described in Section~\ref{sec:huffmanShapedWaveletTree}) and we believe it will beat out any balanced wavelet tree in terms of performance.
 The frequencies can be found by a simple linear scan of the input string before building the tree.
 
 We are more interested in the general case of being able to perform well on any input string and so we don't want to implement optimizations that require a specific character distribution in the input string.
@@ -46,12 +45,15 @@ This is especially true for Select queries that find the leaf node corresponding
 If the queried-for character didn't exist in the input string, a select query would terminate before even having gone down the full length of the tree, because the leaf node corresponding to the character doesn't exist.
 Rank queries on the other hand would still take much the same time on non-occurring characters as on occurring characters, because they spend most of their time in the single downward traversal of the tree they perform, and still will perform for non-occurring characters as it is only near the end of this traversal that the character will be found to not occur.
 
-Therefore having nun-uniform data would introduce a bias in our query tests based on the symbol we are querying for, one that would be difficult to avoid without introducing more bias by choosing exactly which characters to query for.
+Therefore having nun-uniform data would introduce a bias in our query tests based on the symbol we are querying for and it is a bias that would be difficult to avoid without introducing more bias by choosing exactly which characters to query for.
 
 There is also the problem of choosing which occurrence to query for in the case of select, as the character should occur at least that many times.
 When using uniform data we know that it is extremely unlikely for any character to occur less than some minimum number of times, because of their equal occurrence probability.
 
 If we used non-uniform data we would also have the problem of choosing which non-uniform distribution we should use, and there are many to choose from.
+
+To compare the effects of using uniform vs. non-uniform data we have made an experiment that compares the running time of building the wavelet tree and doing Rank and Select queries for the two distributions. 
+The experiment is described in Section~\ref{sec:uniformVsNonUniform}.
 
 \subsubsection{Non-uniform distribution choice}
 The wavelet tree has applications within full text indexing which suggests that having a distribution based on how words are distributed with in a normal English text could be a good choice, because it would be a realistic use case. 
@@ -65,7 +67,7 @@ We tried using the word frequencies in the NGSL~\citep{NGSL} wordlist which cont
 NGSL is based on data from the Cambridge English Corpus which is a multi-billion word collection of written, spoken and learner texts and is the largest of its kind.
 This fact combined with the fact that NGSL is fairly new (2013) makes us believe that the frequencies in the NGSL wordlist are accurate enough for our purpose.
 
-Estimating \textit{s} using NGSL gave us a value close to 1 which only grew closer to 1 the more words we used from the list.
+Estimating \textit{s} using a sunsequence of words from NGSL gave us a value close to 1 and it only grew closer to 1 the more words we used from the list.
 This is a problem because with an $s$ parameter of 1, a Zipf's Law distribution is uniform.
 It also tells us that the English language, or at least the part that has been aggregated in NGSL, might not, in fact, be following the Zipf's Law closely, as we would expect our calculations to converge towards some constant value $>1$.
 Instead we use the data from the NGSL word list and generate our own non-uniform dataset from it based directly on the word frequencies found in the NGSL word list.
