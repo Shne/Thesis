@@ -1,7 +1,7 @@
 \section{Precomputing Binary Rank in Blocks}
 During our experiment of skewing the tree, we concluded that most of the work during queries is performed inside each node, calculating the binary rank of each bitmap.
 Rank queries are simply summing up results of popcounting each word, and we considered whether precomputing these sums for blocks spanning several words, covering the bitmaps could improve the query times.
-When a block does not line up with the position a rank query is for, the algorithm can simply fall back to doing popcounting of either the remaining uncovered words or the excess covered words, whichever has fewer words.
+When a block does not line up with the position of a rank query is for, the algorithm can simply fall back to doing popcounting of either the remaining uncovered words or the extraneously covered words, whichever has fewer words.
 See Section~\ref{sec:rankQueriesWithPrecomputedRanksEdgeCases} for more explanation of this.
 
 The rank values can be precomputed easily and cheaply by doing so as the tree is built where each individual bit of the bitmap already needs to be computed and stored.
@@ -27,8 +27,9 @@ We will test and compare the Rank and Select running times and memory usage of f
 We allocate the bitmaps as one giant bitmap the size of the maximum possible size required to store all the bitmaps for all the nodes.
 We store them in a Depth-First-right manner, that is, the bitmap of the right child of a node comes right after the bitmap of the node.
 
-There are many other alternative memory layouts that might provide better performance, one such, and the one we believe has the greatest potential to improve the wavelet tree performance, is the van Emde Boas memory layout~\citep[Abstract]{Brodal02cacheoblivious} because of its cache-oblivious nature.
-It would be a challenge to implement, because we do not now the size of a bitmap of a node before having calculated the bitmap of the parent, and so we cannot know the position of each bitmap in the giant bitmap before having calculated the parent of each, meaning we must construct the tree in vEB layout order.
+There are many other alternative memory layouts that might provide better performance.
+The one we believe has the greatest potential to improve the wavelet tree performance, is the van Emde Boas memory layout~\citep[Abstract]{Brodal02cacheoblivious} because of its cache-oblivious nature.
+It would be a challenge to implement, because we do not know the size of a bitmap of a node before having calculated the bitmap of the parent, and so we cannot know the position of each bitmap in the giant bitmap before having calculated the parent of each, meaning we must construct the tree in vEB layout order.
 To support construction of the wavelet tree in vEB layout order our construction algorithm would have to be dramatically changed, possibly utilizing concurrency constructs such as a job queue and message passing, and so we skip this work for now and save it for future work in Section~\ref{sec:futurework_vebmemorylayout}.
 
 The sum of the size of all bitmaps on one layer of the tree can at most be $n$ and we can at most have $h$ layers, so the maximum size becomes
@@ -45,8 +46,8 @@ We then store an offset and a size for the bitmap in each node, so we can index 
 This should also cause a decrease in memory usage as the offset and size are stored in an unsigned long and unsigned int respectively, taking a total of $64+32=96$ bits per node, where each individual bitmap requires storage of at least a pointer to it, a point to where its internal array starts and a pointer to where it ends, taking up $3 \times 64=192$ bits per node.
 Additionally, when using an individual bitmap for each node, they would have been word-aligned, and the bits between the last used bit and the end of the last used word would have gone unused and so, wasted.
 
-We also allocate a vector for holding the precomputed block values of size
-\[ \frac{BitmapSize}{BlockSize} \]
+We also allocate a vector for holding the precomputed block values of size:
+\[Vector size = \frac{BitmapSize}{BlockSize} \]
 Instead of storing a pointer to the bitmap and precomputed values vector in each node, we store them once for the whole tree and then pass them down through the query methods when the tree is queried.
 
 We use integer division of the bitmap offset and the block size to index into said vector. It is an efficient and simple way to precompute the rank values of blocks of fixed size of the bitmap.
@@ -99,11 +100,11 @@ Figure~\ref{fig:PrecomputePopcountBlock} illustrates this.
 
 \subsubsection{Page-aligning the Blocks}
 Translation Lookaside Buffer misses are expensive and to avoid those, we can try to reduce the number of pages we load.
-Using concatenated bitmaps and the precomputed vector of ranks, we only need to load pages of the bitmap at the beginning and end of each node's bitmap, to compute the popcount binary rank directly on the bitmap, and only within one block at each end.
+Using concatenated bitmaps and the precomputed vector of ranks, we only need to load pages of the bitmap at the beginning and end of each node's bitmap, to compute the popcounted version of binary rank directly on the bitmap, and only within one block at each end.
 If the blocks are not aligned with the memory pages, then, even if the block size is less than a page, it might span more than one page and thus more than one page of memory must be loaded into the TLB.
-More precisely, we might at most load $2 \cdot \left( \lceil\frac{blockSize}{pageSize}\rceil +1 \right)$ pages to do the popcount binary rank computation at the beginning and end of each node.
+More precisely, the algorithm might at most load $2 \cdot \left( \lceil\frac{blockSize}{pageSize}\rceil +1 \right)$ pages to do the popcount binary rank computation at the beginning and end of each node.
 
-If we page-align the blocks, and use block sizes divisible by the page size or that the page is divisible by, the extra $+1$ will disappear, because a block can no longer span more pages than the number of pages its size is a multiple of.
+If the blocks are page-aligned, and has block sizes divisible by the page size or that the page is divisible by, the extra $+1$ will disappear, because a block can no longer span more pages than the number of pages its size is a multiple of.
 This means we can ensure that at most $2 \cdot \lceil\frac{blockSize}{pageSize}\rceil$ memory pages of the bitmap are loaded for each node by page-aligning the blocks.
 With an alphabet size of $2^{16}$ this amounts to saving up to 16 page loads per query.
 
@@ -124,7 +125,7 @@ If the sum is less than the queried-for occurrence, we know we will find the occ
 \subsubsection{Edge Cases}
 As with rank queries, there are edge cases at the beginning and end of each bitmap.
 However, in this case, the edge case at the end is easily handled as the test of sum of rank and occurrence-so-far should fail, sending the algorithm into the block with the previous select query method, finding the occurrence with no problem and no specific handling of the edge case.
-This is assuming the input occurrence parameter is valid, that is, at least that many occurrences of that character is in the original input string.
+This is assuming the input occurrence parameter is valid, meaning that at least that many occurrences of that character is in the original input string.
 
 For the other case, at the beginning of the bitmap, we do almost exactly the same as in the case for the rank query.
 In fact, we use a rank query to calculate the rank of the first part of the bitmap, using the trick of subtracting from the precomputed value if larger than half a block size, to figure out whether the occurrence is in the first part of the bitmap, and therefore whether we should do a select query on it or not.
@@ -133,15 +134,15 @@ In fact, we use a rank query to calculate the rank of the first part of the bitm
 We would like to analyse whether it is worth using a rank query to find out whether we should do a select query on the first part of the bitmap, as the rank query is purely extra work in the cases where the occurrence is in that part of the bitmap.
 
 We will assume an equal number of occurrences in the string of each character in the alphabet, a uniform distribution of each character in the string, and an equal probability of each valid parameter for the select query.
-A valid character parameter is one that exists in the input string and a valid occurrence parameter is an integer above 0 and below or equal to the number occurrences appearing in the input string.
+A valid character parameter is one that exists in the input string and a valid occurrence parameter is an integer above 0 and below or equal to the number of occurrences appearing in the input string.
 
 The rank query is a computation of worst-case cost $\frac{blockSize}{2}$ because it will at most popcount half of the block, because we utilize the precomputed rank value when advantageous.
-The popcount select query into the first partial block is an operation of worst-case cost $blockSize$ because it can at most popcount the entire block.
+The select query using popcount in the first partial block is an operation of worst-case cost $blockSize$ because it can at most popcount the entire block.
 So, in the worst case, when the sought-after occurrence is in the first partial block of the bitmap, $\frac{blockSize}{2}$ work is wasted, yet when the occurrence is elsewhere, $blockSize$ work is saved.
-This means that the boundary between where using the rank query becomes a gain or a loss in performance is where the ratio between times the occurrence is to be found in and outside the first partial block of the bitmap is $\frac{2}{3}$.
+This means that the boundary between where using the rank query becomes a gain or a loss in performance is where the ratio between the number of times the occurrence is to be found in and outside the first partial block of the bitmap is $\frac{2}{3}$.
 That is, when considering the worst-case query time for both queries, if the occurrence is to be found outside the first partial block of the bitmap more than one third of the time, using the rank query first to see if that partial block should be select queried is a gain in performance.
 
-Though, this is giving the select query a disadvantage in the analysis, as, even when the partial block is close to a block in size, it might terminate early if it found the sought-after occurrence of the character early in the partial block.
+This is giving the select query a disadvantage in the analysis, even when the partial block is close to a block in size and it might terminate early if the sought-after occurrence of the character if found early in the partial block.
 
 We believe it is an improvement, and will use it going forward, though it is not 100\% certain.
 We have considered doing tests to determine whether it is an improvement for the running time or not, but as we are under time constraints and we feel we have other, far more interesting, things to implement and test we will not be testing this.
@@ -154,7 +155,7 @@ Since the page size on our machines are 4096 bytes we should not use a block siz
 
 In Section~\ref{sec:queryRunTimePrecomputedBlockSizes} we find that the optimal block size is 16384 bits = 2048 bytes = $\frac{1}{2}$ page.
 
-Assuming we then store the precomputed values as 16-bit unsigned short integers it will only consume an extra 16 bits or 2 bytes per block of which there are $\frac{BitmapSize}{BlockSize}$ when we concatenate the bitmaps.
+Assuming we then store the precomputed values as 16-bit unsigned short integers it will only consume an extra 16 bits or 2 bytes per block and there there are $\frac{BitmapSize}{BlockSize}$ of these blocks when we concatenate the bitmaps.
 This means, assuming a block size of 2048 bytes, a relative extra space consumption of
 \[ \frac{ 2 \cdot \frac{BitmapSize}{BlockSize} }{BitmapSize} = \frac{2}{BlockSize} = \frac{2}{2048} = 0.0009765625 = 0.098\% \]
 of the bitmaps.
@@ -260,7 +261,7 @@ For both level 2 and level 3 cache misses, we also see a dip at 2 pages per bloc
 These sizes correspond to where blocks most often align with full pages as a block of size 2 pages will align with two pages and two blocks of size half a page will align with one page and two blocks of size 1.5 page will align with three pages.
 
 \textbf{[CONTINUE HERE]}
-The fact that the level 2 and level 3 performances are so near-identical can be explained by the fact that they are inclusive, that is, everything contained in level 2 is also in level 3 and
+The fact that the level 2 and level 3 performances are so near-identical can be explained by the fact that they are inclusive, meaning that everything contained in level 2 is also in level 3 and
 if all the cache misses in level 2 are from the prefetcher not being able to figure out what data is needed next, and it loads directly into level 2 then the level 3 cache will never have the correct data while 2 does not...
 
 Why this results in fewer level 2 and level 3 cache misses, we do not know.

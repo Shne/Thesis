@@ -15,14 +15,12 @@ It then gathers them in a number of snapshots and detailed snapshots, which can 
 \item[Callgrind]~\citep{callgrind} is a callgraph analyser tool in the Valgrind suite.
 It supports wrapping a single program.
 Valgrind compiles the analysed program into an intermediate representation and runs that completely in a virtual machine to extract information for its tools.
-This causes the program to run much slower while being analysed, but this is a minor concern for us.
+This causes the program to run much slower while being analysed, but this is a minor concern for us because it only increases the time it takes to tun our experiments but does not effect the results.
 Callgrind outputs a .callgrind file which can then be viewed in the kCacheGrind GUI program.
 We use it for finding hotspots in our code; which parts our program is spending most of its time in and therefore which parts we should try to optimize.
 \end{description}
 We calculate the CPU clock cycles using the \texttt{PAPI\_TOT\_CYC} papi event which return the total number of unhalted CPU clock cycles, including when the CPU clock changes to a higher frequency in what Intel calls "Turbo Boost" or more generally "dynamic overclocking".
-We believe this value to be more accurate than calculating cycles using \texttt{PAPI\_get\_real\_cyc()} which estimates the cycles based on wall time~\citep{PAPI-get-real-cyc}. 
-
-This means that \texttt{PAPI\_get\_real\_cyc()} depends on the Time Stamp Counter frequency which is constant. 
+We believe this value to be more accurate than calculating cycles using \texttt{PAPI\_get\_real\_cyc()} which estimates the cycles based on wall time~\citep{PAPI-get-real-cyc}and this means that \texttt{PAPI\_get\_real\_cyc()} depends on the Time Stamp Counter frequency which is constant. 
 Because of this the TSC frequency is not based on CPU frequency in any way and because work gets done at CPU frequency and not TSC frequency, \texttt{PAPI\_TOT\_CYC} seems like the best choice. 
 This is also recommended by Intel~\citep{IntelMeasuringTheAverageUnhaltedFrequency}.
 

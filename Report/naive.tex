@@ -1,5 +1,6 @@
 \section{Simple, Naïve Algorithm}
-This is the simple, straightforward, naïve implementation based on ~the description by Navarro~\citep[Section 2]{Navjda13}, before any smart ideas and optimizations.
+<<<<<<< Updated upstream
+This section deals with the simple, straightforward, naïve implementation based on ~the description by Navarro~\citep[Section 2]{Navjda13}, before any smart ideas and optimizations were introduced.
 We will call this version of the wavelet tree SimpleNaive.
 
 The construction of the wavelet tree is implemented similarly to the pseudo-code in Section~\ref{sec:nodeconstruction}.
@@ -16,7 +17,7 @@ Select queries were implemented as described in Section~\ref{sec:selectDescripti
 \subsubsection{Binary Rank using Popcount}
 \label{sec:popcountBinaryRank}
  
-To improve on this, we found the intrinsic cpu instruction \texttt{popcount} which will count the number of 1s in the binary representation of the number we pass to it.
+To improve \textproc{BinaryRank}, we used the intrinsic cpu instruction \texttt{popcount} which will count the number of 1s in the binary representation of the number we pass to it.
 Our use of \texttt{popcount} to improve binary rank and select queries was inspired by~ González et al.~\cite{Gonzalez05practicalimplementation} who used it to improving binary rank and binary select for bit arrays.
 Unlike González et al., we do not use a popcount function implemented in software, but rather the built in \texttt{popcount} instruction in the CPU instruction set.
 We can get an \texttt{unsigned long} pointer from the \texttt{vector<bool>} bitmap into the backing array. We will therefore be working on \texttt{unsigned long}s and call their size (64 bits on machine 1) our wordsize.
@@ -30,7 +31,7 @@ The binary rank can then be found by summing the result of calling \texttt{popco
 When the position argument of the rank query is not a multiple of the word size, we need to constrain what part of the last word is counted using \texttt{popcount}. This can be done by constructing a bitmask by bitshifting the number 1 \textit{position} times towards the most significant bit and then subtracting one, as that will create a word where the \textit{position} least significant bits are set to 1 and the rest to 0.
 Then we do a bitwise \texttt{AND} operation of this bitmask and the word containing the bit corresponding to \textit{position}, and call \texttt{popcount} on the result. 
 
-As also noted in~\citep{Navjda13}, we do not need to count the number of 0s, although required by the algorithm, as we can simply take the number of bits in the string and subtract the number of 1s to calculate the number of 0s.
+As also noted in~\citep{Navjda13}, we do not need to count the number of 0s, although required by the algorithm, as we can simply take the number of bits in the bitmap and subtract the number of 1s to calculate the number of 0s.
 
 \subsubsection{Binary Select using Popcount}
 \label{sec:ImplBinarySelect}
@@ -38,7 +39,8 @@ We improved \textproc{Binary Select} by again using the \texttt{popcount} instru
 We iterate through the words of the bitmap and call \texttt{popcount} for each word and sum up the results along the way. 
 When the sum after the next word would be greater than the sought number of occurrences we discard the \texttt{popcount} result for the next word and fall back to the simple binary select for that next word to find the position within that word.
 
-Defining the input occurrence parameter as $io$, the number of words iterated through so far $w$, the sum so far $sum$, and the wordsize $ws$, the occurrence argument for that last simple binary select is then the $io - sum$ and the output position is $w \times ws + \textproc{SimpleBinaryRank}(bitmapwords[ws+1], io - sum)$.
+We define the input occurrence parameter as $io$, the number of words iterated through so far as $w$, the sum so far as $sum$, and the wordsize as $ws$. 
+The occurrence argument for that last simple binary select is then the $io - sum$ and the output position is $w \times ws + \textproc{BinaryRank}(bitmapwords[ws+1], io - sum)$ \footnote{Using simple binary rank without \texttt{popcount}}.
 
 Again, when popcount for 0s instead of 1s is needed, we simply subtract the result of \texttt{popcount} from 1 to obtain the count of 0s.
 
@@ -86,22 +88,20 @@ When looking at the numbers of branch mispredictions and cache misses and so for
 \end{figure}
 %\restoregeometry
 
+\subsubsection{Running time of Tree Construction vs Alphabet Size}
 
 We would like to find out whether our implementation of the construction of the tree conforms to the theoretical running time of $O(n \log \sigma)$ and how much of an improvement using the \texttt{popcount} cpu instruction was for the queries.
 
-\paragraph{Test Setup}~\\
-The general setup is as described in Section~\ref{sec:ExpNotesGeneralSetup}.
+The general test setup is as described in Section~\ref{sec:ExpNotesGeneralSetup}.
 The query parameters were chosen as described in Section~\ref{sec:choiceOfQueryParameters}.
 
-\subsubsection{Running time of Tree Construction vs Alphabet Size}
-To test what Big-O notation running time our construction algorithm was running at, we implemented the following test setup.
-We tested the running time of building the tree relative to the alphabet size by running the program 5 times for each size of the alphabet we tested, and took the average value of the resulting measurements for each measurement type we used.
-We tested for alphabet sizes $2^p$ with $p = [8...23]$ and a constant input string length of $n = 10^8$, except in a single test (Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_plusSigma}) where we used $n = 10^2$.
+To test what Big-O notation running time our construction algorithm was running at, we tested the running time of building the tree relative to the alphabet size by running the program 5 times for each size of the alphabet, and took the average value of the resulting measurements for each measurement type we used.
+We tested for alphabet sizes $2^p$ with $p = [8...23]$ and used a constant input string of length $n = 10^8$, except in a single test (Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_plusSigma}) where we used $n = 10^2$.
 
 A theoretical running time of $O(n \cdot \log(\sigma))$ is equivalent to $a \cdot n \cdot \log(\sigma)$ where $a$ is some constant factor.
 Assuming our construction algorithm has this running time, a plot of the wall time divided by $n \cdot \log(\sigma)$ should converge on the constant factor $a$ as $\sigma \rightarrow \infty$
 In Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime} we have plotted this, and find that it could be said to be converging on a constant value until reaching an alphabet size of about $2^{16}$ whereafter it increases as $\sigma$ increases, with what looks like exponential growth.
-This means our implementation of the construction of a Wavelet Tree is not keeping within its theoretical running time for higher alphabet sizes.
+This means our implementation of the construction of a Wavelet Tree is not conforming to the theoretical running time for higher alphabet sizes.
 
 
 
@@ -111,9 +111,7 @@ Looking at the raw Wall Time and Branch Misprediction numbers in Figure~\ref{fig
 
 But if we instead plot the rate of Branch Mispredictions, as we have done in Figure~\ref{fig:naiveIntegerAlphabetSize_BMRate}, we can see that the rate of Branch Mispredictions stay constant for most of the tested alphabet sizes, and even decrease for large alphabet sizes.
 
-We next turn to look at Cache Misses, plotting all three levels in Figure~\ref{fig:naiveIntegerAlphabetSize_CM}.
-
-We see that cache misses increase for larger alphabet sizes up to an alphabet size of around $2^{18}$ after which they seem to remain constant for even larger alphabet sizes.
+We next turn to look at Cache Misses, plotting all three levels in Figure~\ref{fig:naiveIntegerAlphabetSize_CM} and see that cache misses increase for larger alphabet sizes up to an alphabet size of around $2^{18}$ after which they seem to remain constant for even larger alphabet sizes.
 This is in contrast to the wall time over theoretical running time plot in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime} that seem to remain somewhat constant until about $2^{18}$ after which it increases.
 We conclude the Cache Misses are not the problem.
 
@@ -136,27 +134,26 @@ In our further experimentation of the further improvements we do we will be usin
 It is a realistic use cases to use types such as \texttt{char}, \texttt{wchar16\_t} and \texttt{wchar32\_t} which are stored in 8, 16 and 32 bits respectively.
 \texttt{char}'s size of 8 bits corresponds only to the ASCII table with 256 entries and we believe that many real-world scenarios require a larger alphabet.
 \texttt{wchar16\_t} enables an alphabet up to $2^{16} = 65,536$, which should be enough for many use cases, such as full text indexing.
-Zachery B. Simpson~\citep{bookWordStatistics} has found that no book found in the Gutenberg Project uses more than 43113 distinct words.
-According to one website~\footnote{http://testyourvocab.com/blog/2013-05-10-Summary-of-results}, their testing suggests an average adult has a vocabulary of 20,000 - 35,000 words. 
+Zachery B. Simpson~\citep{bookWordStatistics} has found that no book occurring in the Gutenberg Project uses more than 43113 distinct words.
+According to one website~\footnote{http://testyourvocab.com/blog/2013-05-10-Summary-of-results}, testing suggests an average adult has a vocabulary of 20,000 - 35,000 words. 
 Others~\footnote{http://www.worldwidewords.org/articles/howmany.htm}~\footnote{http://english.stackexchange.com/questions/93289} cite researchers saying about 60,000 words is the actual limit when including names.
-Whichever is the actual number, they all suggest an alphabet size of $2^{16}$ is sufficient to index all the occurring words in a realistic use case text.
+Whichever is the actual number, they all suggest that an alphabet size of $2^{16}$ is sufficient to index all the occurring words in a realistic use case text.
 
 Looking at the graphs from this experiment we can see that building the tree using an alphabet size of $2^{16}$ is still fairly quick, not running into much trouble with TLB misses, and not exceeding the expected asymptotically bound running time.
 
-We also attempted using an alphabet size of 32, but our machines did not have enough memory.
+We also attempted using an alphabet size of 32, but our machines did not have enough memory for that to be possible.
 
 \subsubsection{Rank and Select using Popcount}
 \label{sec:experimentPopcountRankSelect}
 We wanted to see how much of an improvement using the native cpu instruction \texttt{popcount} was, and how it affected the cache misses, branch mispredictions and TLB misses.
 
 
-
 In Figure~\ref{fig:rankPopcountDiff}, Figure~\ref{fig:selectPopcountDiff}, and Figure~\ref{fig:valuesForPopcountDiff} we see the resulting relative cpu cycles, wall time, branch mispredictions, translation lookaside buffer misses, and cache misses for our rank and select queries, respectively.
-We have chosen the values for the queries not using popcount to be index 100 and calculated and plotted the relative values of the queries using popcount, to show which values increase, decrease and by what relative amount, all within the same graph.
+We have chosen the measured values of the queries not using popcount to be index 100 and calculated and plotted the relative values of the queries using popcount, to show which values increase or decrease by what relative amount, all within the same graph.
 In Figure~\ref{fig:valuesForPopcountDiff} we list the actual raw values as well as the percentages graphed in Figure~\ref{fig:rankPopcountDiff} and Figure~\ref{fig:selectPopcountDiff}.
 
 In all three figures we see that the algorithm using \texttt{popcount} is much faster, using only a fraction of the time of the other algorithm, about $0.011\%$ for rank and $0.0051\%$ for select.
-We see a massive decrease in branch mispredictions both for both rank and select queries. For the select queries we see a great reduction in Translation Lookaside Buffer Misses as well as Cache Misses, especially Level 2 and 3.
+We see a massive decrease in branch mispredictions for both rank and select queries. For the select queries we see a great reduction in Translation Lookaside Buffer Misses as well as Cache Misses, especially Level 2 and 3.
 For the rank queries, we see little improvement in TLBM and L1 CM, as well as a slightly larger improvement in L3 CM, but we also see a high increase in L2 CM Rate to more than double.
 The higher L2 Cache Miss Rate comes from both having fewer L2 Cache Hits and many more L2 Cache Misses.
 We have no good explanation to offer as to the L2 Cache Miss Rate increases so much, other than the algorithm being different and having a different access pattern.
@@ -172,7 +169,11 @@ By similar calculations the saved cpu cycles from branch mispredictions for \tex
 
 
 \subsubsection{Further improvements}
+<<<<<<< Updated upstream
 Looking at the values in Figure~\ref{fig:valuesForPopcountDiff}, we find that, of the measurements we collect, cache misses are among the highest and were not reduced significantly by using the \texttt{popcount} instruction.
+=======
+Looking at the values in Figure~\ref{fig:valuesForPopcountDiff} we find that, of the measurements we collect, cache misses are among the highest and were not reduced significantly by using the \texttt{popcountl} instruction.
+>>>>>>> Stashed changes
 Cache misses are expensive and reducing them could greatly increase the speed of queries on the wavelet tree.
 
 Inspired by Brodal et al.~\cite{gerthSkewedBinarySearchTrees} we will in Section~\ref{sec:memorylayout} look at skewing the tree as a means to reduce cache misses and branch mispredictions.
