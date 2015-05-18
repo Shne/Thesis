@@ -1,4 +1,4 @@
-\documentclass[a4paper, 12pt]{article}
+\documentclass[12pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{amsthm}
 \usepackage{algpseudocode}
@@ -23,7 +23,7 @@
 \usepackage{amsmath}
 \usepackage{paralist}
 \usepackage{mdwlist}
-%\usepackage[labeled]{multibib}
+\usepackage[labeled]{multibib}
 
 \usepackage{float}
 \graphicspath{{Gnuplot/Graphs/}}
@@ -40,9 +40,15 @@
 
 \newtheorem{definition}{Definition}
 
-%\newcites{A,B}{Primary Bibliography,Secondary Bibliography}
+\newcites{A,B}{Primary Bibliography,Secondary Bibliography}
 
-\title{Wavelet Tree Construction}
+\title{Practical Optimization of Wavelet Tree:\\
+Rank and Select Queries
+	\vspace{25mm}
+	\begin{center}
+		\includegraphics[width=0.7\textwidth]{front.png}
+	\end{center}
+}
 
 \date{\today}
 
@@ -55,10 +61,7 @@ Roland L. Pedersen (20092817)
 
 \begin{document}
 \maketitle
-\vspace{25mm}
-\begin{center}
-	\includegraphics[width=0.7\textwidth]{front.png}
-\end{center}
+
 \newpage
 \tableofcontents
 \newpage
@@ -89,8 +92,11 @@ Roland L. Pedersen (20092817)
 
 \input{futurework}
 
-\FloatBarrier
-\bibliography{Report}
-\bibliographystyle{unsrtnat} 
+\addcontentsline{toc}{section}{Primary Bibliography}
+\bibliographystyleA{unsrtnat}
+\bibliographyA{Report}
+\addcontentsline{toc}{section}{Secondary Bibliography}
+\bibliographystyleB{unsrtnat}
+\bibliographyB{Report}
 
 \end{document}

@@ -5,7 +5,7 @@ A cache is a small fast memory storage that holds the most recently used memory.
 Using caches can improve the memory access time many-fold, which is important since memory access is often a bottleneck in programs.
 Modern CPUs have a prefetcher that attempts to predict future memory accesses and fetches them into the cache ahead of time.
 Therefore, the pattern in which a program accesses the memory can have significant influence on the performance of the program.
-Modern memory systems usually have three levels of caches: Level 1 (L1), Level 2 (L2) and Level 3 (L3)~\citep[Section~4.5.1]{Tanenbaum}.
+Modern memory systems usually have three levels of caches: Level 1 (L1), Level 2 (L2) and Level 3 (L3)~\citeA[Section~4.5.1]{Tanenbaum}.
 
 \begin{figure}
 \includegraphics[width=\textwidth]{CacheLevels.pdf}
@@ -13,7 +13,7 @@ Modern memory systems usually have three levels of caches: Level 1 (L1), Level 2
 \label{fig:CacheLevels}
 \end{figure}
 
-Figure~\ref{fig:CacheLevels} \footnote{Figure borrowed from:~\citep[Section~4.5.1]{Tanenbaum}} shows how the three cache are placed in the relation to the CPU. 
+Figure~\ref{fig:CacheLevels} \footnote{Figure borrowed from:~\citeA[Section~4.5.1]{Tanenbaum}} shows how the three cache are placed in the relation to the CPU. 
 The L1 cache resides on the CPU chip itself and usually has a size in the range from 16 KB to 128 KB and because it is placed directly on the CPU chip it is able to provide extremely fast memory access.
 The L2 cache is placed next to the CPU chip on the CPU package and it is connected to the CPU via a high speed path. The L2 cache typically has a size between 512 KB and 1 MB which means that it can hold more data but is not able to provide as fast access as L1.
 The L3 cache is placed on the processor board and usually has a size around 3 MB. 
@@ -73,7 +73,7 @@ When a branching instruction is encountered, the CPU can either choose to stall 
 Modern programs are typically full of branch instructions.
 
 There are conditional branches and unconditional branches. 
-An example of an unconditional branch and a conditional branch is shown in Figure~\ref{fig:branchexample} \footnote{Example borrowed from:~\citep[Section~4.5.2]{Tanenbaum}} where \textit{BNE Else} is a conditional branch and \textit{BR Next} is an unconditional branch.
+An example of an unconditional branch and a conditional branch is shown in Figure~\ref{fig:branchexample} \footnote{Example borrowed from:~\citeA[Section~4.5.2]{Tanenbaum}} where \textit{BNE Else} is a conditional branch and \textit{BR Next} is an unconditional branch.
 
 \begin{figure}
 \begin{algorithmic}
@@ -168,7 +168,7 @@ Translating a virtual address into a physical address is an expensive operation 
 
 \subsubsection{Virtual memory: Pages}
 A virtual memory address \textit{va} is interpreted as a pair  containing the page number and a word number (offset within the page).
-A physical memory address \textit{pa} is interpreted a pair  consisting of the page frame number and the word number within the frame~\citep[Section~8.2.1]{OperatingSystemPrinciples}.
+A physical memory address \textit{pa} is interpreted a pair  consisting of the page frame number and the word number within the frame~\citeA[Section~8.2.1]{OperatingSystemPrinciples}.
 
 When loading a virtual memory page into the physical memory it is  necessary to be able to translate \textit{va} to \textit{pa}.
 Since the word number is the same in both \textit{va} and \textit{pa} the translation only needs to find the physical page frame that contains the virtual page.
@@ -184,7 +184,7 @@ Therefore it is necessary to keep track of the page and its current page frame w
 
 Sometimes a process contains multiple dynamically changing elements. 
 Placing such elements in a single address space is a difficult problem.
-The problem is solved by segmentation~\citep[Section~8.2.2]{OperatingSystemPrinciples}.
+The problem is solved by segmentation~\citeA[Section~8.2.2]{OperatingSystemPrinciples}.
 
 A segment is a collection of address spaces that can have different sizes.
 This allows the virtual memory to be organized in the same way as a given application by using a segment for each logical element in the application e.g. a function, an array or table.
@@ -196,7 +196,7 @@ The translation from \textit{va} to \textit{pa} gets an extra parameter when add
 The physical address is then found by first finding the page in the segmentation table and then finding the corresponding frame in the page table and then finding the frame in the physical memory. 
 This means that the translation from \textit{va} to \textit{pa} requires three physical reads.
 
-To reduce the number of reads needed when a virtual address is translated, a translation lookaside buffer (\textbf{TLB}) is used~\citep[Section~8.2.5]{OperatingSystemPrinciples}.
+To reduce the number of reads needed when a virtual address is translated, a translation lookaside buffer (\textbf{TLB}) is used~\citeA[Section~8.2.5]{OperatingSystemPrinciples}.
 The TLB saves the most recent translations of \textit{va} to \textit{pa} i.e. translated pagenumbers, to make them quickly available for future use.
 This means that subsequent accesses of a virtual address within a short period is able to bypass segmentation- and page table lookups and simply just access the needed page frame from the TLB and find it in the physical memory.
 When the page is available in the TLB it is called a \textbf{TLB hit}.

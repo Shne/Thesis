@@ -1,16 +1,16 @@
 \section{Related Work}
-The wavelet tree was first introduced in 2003 by Grossi, Gupta, and Vitter~\citep[Section 4.2]{Grossi:2003:HET:644108.644250} as a way to obtain faster rank and select query times on compressed suffix arrays while maintaining empirical entropy compression.
+The wavelet tree was first introduced in 2003 by Grossi, Gupta, and Vitter~\citeA[Section 4.2]{Grossi:2003:HET:644108.644250} as a way to obtain faster rank and select query times on compressed suffix arrays while maintaining empirical entropy compression.
 
-Later, and Gonzalo Navarro~\citep{Navjda13} explains how the wavelet tree has many and wide ranging useful applications, from string processing including full-text indexes and inverted indexes to geometry processing including various queries and computations on point grids and rectangle sets as well as graphs.
+Later, and Gonzalo Navarro~\citeA{Navjda13} explains how the wavelet tree has many and wide ranging useful applications, from string processing including full-text indexes and inverted indexes to geometry processing including various queries and computations on point grids and rectangle sets as well as graphs.
 
-Cristos Makris~\citep{WTSurvey} also describes several effective uses for a wavelet tree, including as a range searching data structure for e.g. minimum bounding volumes and effective storage compression.
+Cristos Makris~\citeA{WTSurvey} also describes several effective uses for a wavelet tree, including as a range searching data structure for e.g. minimum bounding volumes and effective storage compression.
 Using the wavelet tree as a compressing data structure is mainly about using various ways of encoding the bitmaps, such as using run-length encoding (RLE) on the bitmaps and storing the Burrows-Wheeler transformation (BWT) of the input string, or using Huffman Coding to shape the tree.
-The Burrows-Wheeler transformation was introduced by Burrows and Wheeler~\citep{BWToriginalArticle} in 1994.
-Ferragina et al.~\citep{waveletTreeEntropy} describes in more detail how BWT can be used to reduce the problem of compressing higher-order entropy to a problem of compressing 0-order entropy, which the wavelet tree then can do using RLE.
-Mäkinen and Navarro~\citep[Section~4]{FMcountOnBWT} invented the Huffman-shaped wavelet tree and describes in short the general principle of it without going into much detail.
+The Burrows-Wheeler transformation was introduced by Burrows and Wheeler~\citeA{BWToriginalArticle} in 1994.
+Ferragina et al.~\citeA{waveletTreeEntropy} describes in more detail how BWT can be used to reduce the problem of compressing higher-order entropy to a problem of compressing 0-order entropy, which the wavelet tree then can do using RLE.
+Mäkinen and Navarro~\citeA[Section~4]{FMcountOnBWT} invented the Huffman-shaped wavelet tree and describes in short the general principle of it without going into much detail.
 
-Another use of a wavelet tree is answering Range Quantile queries as is described by Gagie et al.~\citep[Section 3]{RangeQuantileQueries}.
+Another use of a wavelet tree is answering Range Quantile queries as is described by Gagie et al.~\citeA[Section 3]{RangeQuantileQueries}.
 
 
 
-Claude and Navarro~\citep[Section~2.2]{Claude08practicalrankselect} give a good description of how rank and select queries is performed on the wavelet tree in practice.
+Claude and Navarro~\citeA[Section~2.2]{Claude08practicalrankselect} give a good description of how rank and select queries is performed on the wavelet tree in practice.

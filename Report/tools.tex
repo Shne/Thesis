@@ -5,14 +5,14 @@ We have looked at and tested the capabilities of several profilers and tools for
 \subsubsection{Tools}
 We have used these tools to count cache misses, branch mispredictions, etc., measuring memory usage and finding hotspots in our code.
 \begin{description}
-\item[Perf]~\citep{perftool} is a performance analysing tools primarily implemented in the Linux kernel, available from version 2.6.31.
+\item[Perf]~\citeA{perftool} is a performance analysing tools primarily implemented in the Linux kernel, available from version 2.6.31.
 It supports reading and reporting various counters from the \textit{hardware}, meaning it does not emulate the CPU or anything similar, as some other tools like Callgrind do.
 It can profile the entire system or a specific process, but not subsections of a program.
-\item[PAPI]~\citep{PAPI}, short for Performance Application Programming Interface, will use the perf kernel driver when available but itself pre-dates perf.
+\item[PAPI]~\citeA{PAPI}, short for Performance Application Programming Interface, will use the perf kernel driver when available but itself pre-dates perf.
 It requires the analysed program itself to set up and initialize PAPI, but therefore also supports starting and stopping the counter data collection at specific points in the program, enabling profiling of subsections of the program.
-\item[Massif]~\citep{massif} is a heap profiler. It can count how much heap memory a program is using during its run by recording calls to malloc, calloc, realloc, memalign, new and new[] and other similar functions.
+\item[Massif]~\citeA{massif} is a heap profiler. It can count how much heap memory a program is using during its run by recording calls to malloc, calloc, realloc, memalign, new and new[] and other similar functions.
 It then gathers them in a number of snapshots and detailed snapshots, which can be useful for finding which parts of a program uses most memory.
-\item[Callgrind]~\citep{callgrind} is a callgraph analyser tool in the Valgrind suite.
+\item[Callgrind]~\citeA{callgrind} is a callgraph analyser tool in the Valgrind suite.
 It supports wrapping a single program.
 Valgrind compiles the analysed program into an intermediate representation and runs that completely in a virtual machine to extract information for its tools.
 This causes the program to run much slower while being analysed, but this is a minor concern for us because it only increases the time it takes to tun our experiments but does not effect the results.
@@ -20,9 +20,9 @@ Callgrind outputs a .callgrind file which can then be viewed in the kCacheGrind 
 We use it for finding hotspots in our code; which parts our program is spending most of its time in and therefore which parts we should try to optimize.
 \end{description}
 We calculate the CPU clock cycles using the \texttt{PAPI\_TOT\_CYC} papi event which return the total number of unhalted CPU clock cycles, including when the CPU clock changes to a higher frequency in what Intel calls "Turbo Boost" or more generally "dynamic overclocking".
-We believe this value to be more accurate than calculating cycles using \texttt{PAPI\_get\_real\_cyc()} which estimates the cycles based on wall time~\citep{PAPI-get-real-cyc}and this means that \texttt{PAPI\_get\_real\_cyc()} depends on the Time Stamp Counter frequency which is constant. 
+We believe this value to be more accurate than calculating cycles using \texttt{PAPI\_get\_real\_cyc()} which estimates the cycles based on wall time~\citeA{PAPI-get-real-cyc}and this means that \texttt{PAPI\_get\_real\_cyc()} depends on the Time Stamp Counter frequency which is constant. 
 Because of this the TSC frequency is not based on CPU frequency in any way and because work gets done at CPU frequency and not TSC frequency, \texttt{PAPI\_TOT\_CYC} seems like the best choice. 
-This is also recommended by Intel~\citep{IntelMeasuringTheAverageUnhaltedFrequency}.
+This is also recommended by Intel~\citeA{IntelMeasuringTheAverageUnhaltedFrequency}.
 
 In Table~\ref{papievents} we have listed the various counters and values we have read using PAPI and their description. Not every test uses every one of these.
 

@@ -21,13 +21,13 @@ The corresponding $x$-coordinate will be at the same position.
 Querying from a leaf gives the points in $y$-coordinate order because the leaves are sorted by $y$-coordinate.
 
 \subsection{Compression}
-The Wavelet Tree has many uses for compression of data~\citep{Navjda13}.
-Some of the main compression techniques are different ways of encoding the bitmaps and changing the shape of the tree~\citep[Section~3]{Navjda13}.
+The Wavelet Tree has many uses for compression of data~\citeA{Navjda13}.
+Some of the main compression techniques are different ways of encoding the bitmaps and changing the shape of the tree~\citeA[Section~3]{Navjda13}.
 
-The main advantage of the wavelet tree with regards to compression is that it supports entropy bounds in the attained space complexity of the various wavelet tree compression methods~\citep[Section~2.1]{WTSurvey}.
+The main advantage of the wavelet tree with regards to compression is that it supports entropy bounds in the attained space complexity of the various wavelet tree compression methods~\citeA[Section~2.1]{WTSurvey}.
 
 \subsubsection{Entropy}
-According to~\citep[Introduction]{WTSurvey} entropy can be defined as:
+According to~\citeA[Introduction]{WTSurvey} entropy can be defined as:
 
 \begin{mdframed}[nobreak, linecolor=lightgray, linewidth=2pt]
 \begin{definition}: Entropy \\\\
@@ -40,7 +40,7 @@ where $p_i$ is the probability of the $i^{th}$ symbol in the alphabet appearing 
 \end{definition} 
 \end{mdframed}
 
-Entropy represents a lower bound to the average number of bits needed to represent each symbol in $S$ according to the coding theorem of Shannon~\citep[Introduction]{WTSurvey} and is the bound that compression researchers compare their results to.
+Entropy represents a lower bound to the average number of bits needed to represent each symbol in $S$ according to the coding theorem of Shannon~\citeA[Introduction]{WTSurvey} and is the bound that compression researchers compare their results to.
 
 This theoretical definition of entropy is often replaced in scientific literature by a more practical definition: \textit{empirical entropy}.
 There are two versions: \textit{empirical zero-order entropy} $H_0$ and \textit{empirical $k^{th}$-order entropy} $H_k$. $H_k$ takes into account a context of size \textit{k} of the symbol appearances, ie. the suffixes of length $k$ of each symbol appearance in the string, while $H_0$ does not and treats symbols independently instead. 
@@ -62,15 +62,15 @@ $H_k = H_k(S) = \frac{1}{n} \sum\limits_{w \in \Sigma^k} | w_S |H_0(w_S)$
 \end{center}
 \end{definition}
 \end{mdframed}
-$H_k$ often defines a lower bound for bit space usage that is smaller than the lower bound of $H_0$\citep[Section~2]{waveletTreeEntropy}.
+$H_k$ often defines a lower bound for bit space usage that is smaller than the lower bound of $H_0$~\citeA[Section~2]{waveletTreeEntropy}.
 
 Using the Burrows-Wheeler transformation on the input the we can reduce the problem of achieving $H_k$ compression to achieving $H_0$ compression.
-In other words, if we have a good compression algorithm that achieves compression within the $H_0$ lower bound, then by using that algorithm on the Burrows-Wheeler transformation of the input we can achieve compression within the $H_k$ lower bound~\citep[Introduction]{waveletTreeEntropy}.
-The problem for a long time was that there existed no good way to achieve compression within the $H_0$ lower bound or at least it was a problem before the wavelet tree was invented~\citep[Introduction]{waveletTreeEntropy}.
+In other words, if we have a good compression algorithm that achieves compression within the $H_0$ lower bound, then by using that algorithm on the Burrows-Wheeler transformation of the input we can achieve compression within the $H_k$ lower bound~\citeA[Introduction]{waveletTreeEntropy}.
+The problem for a long time was that there existed no good way to achieve compression within the $H_0$ lower bound or at least it was a problem before the wavelet tree was invented~\citeA[Introduction]{waveletTreeEntropy}.
 
-To achieve \textit{zero-order entropy} a Huffman shaped wavelet tree can be used~\citep[Section~4]{FMcountOnBWT}. Claude and Navarro~\citep[Section~3]{Claude08practicalrankselect} describes a way to also have \textit{zero-order entropy} space usage for large alphabets. 
+To achieve \textit{zero-order entropy} a Huffman shaped wavelet tree can be used~\citeA[Section~4]{FMcountOnBWT}. Claude and Navarro~\citeA[Section~3]{Claude08practicalrankselect} describes a way to also have \textit{zero-order entropy} space usage for large alphabets. 
 It is therefore possible to get space usage within \textit{zero-order entropy} even for large alphabets using the wavelet tree. 
-\textit{Zero-order entropy} can also be achieved by run-length encoding the bitmaps in the wavelet tree, which is also the approach that is used when compressing the BWT transformation of the input string using the wavelet tree~\citep[Introduction (\textbf{B})]{waveletTreeEntropy}.
+\textit{Zero-order entropy} can also be achieved by run-length encoding the bitmaps in the wavelet tree, which is also the approach that is used when compressing the BWT transformation of the input string using the wavelet tree~\citeA[Introduction (\textbf{B})]{waveletTreeEntropy}.
 This means that using a combination of run-length encoding of bitmaps and taking the Burrows-Wheeler transformation of the input string using the wavelet tree it is possible to achieve compression near the lower bound of \textit{$k^{th}$-order entropy}.
 
 \subsubsection{Run-Length encoding}
@@ -105,7 +105,7 @@ This characteristic enables higher compression ratios when using techniques such
 The transformation is reversible, meaning it is possible to produce the original string from the Burrows-Wheeler transformed string, without any other information.
 Sorting $S$ would enable similar, or possibly better, compression ratios using run-length encoding, but it will not be reversible.
 
-A string $S$ of $n$ characters is transformed by the Burrows-Wheeler transformation~\citep{BWToriginalArticle} by forming $n$ cyclic shifts of $S$. 
+A string $S$ of $n$ characters is transformed by the Burrows-Wheeler transformation~\citeA{BWToriginalArticle} by forming $n$ cyclic shifts of $S$. 
 These $n$ permutations of $S$ are then sorted in lexicographical order.
 An extra character (\#), not in the alphabet of $S$, is added to keep track of the end of the original string.
 The BWT of $S$ is then the concatenation of the last character of each permutation in sorted order, excluding $\#$.
@@ -148,7 +148,7 @@ The original string is identified by having a \# at the end.
 
 Looking at BWT($S$) we can see that equal characters are now grouped together.
 It would not make much sense to compress something without being able to decompress it again.
-Burrows et al.~\citep[Section~2]{BWToriginalArticle} describes an algorithm for getting the original string from the Burrows-Wheeler transformed string.
+Burrows et al.~\citeA[Section~2]{BWToriginalArticle} describes an algorithm for getting the original string from the Burrows-Wheeler transformed string.
 It works by taking the BWT, then sorting it and then adding the BWT in front of the sorted value and then sorting that. 
 This procedure continues until the number of characters in each row is equal to the length of the BWT. 
 The original string is then the value with the end of line character \# at the end. 
@@ -221,19 +221,19 @@ One might wonder how \textproc{Rank} and \textproc{Select} queries can be useful
 We have not found any way to transform the results back, and the main use of constructing a Wavelet Tree on the BWT of a string seems to us, by far, to be compression.
 
 Rank and select queries on the BWT of a string does, however, have uses when working with the \textit{FM-index}, named after its inventors Paolo Ferragina and Giovanni Manzini, which is a self-index based on the Burrows-Wheeler transformation $BWT(S)$ that is able to find occurrences and positions of patterns (sub-strings) in \textit{S} by looking at $BWT(S)$. 
-Such a procedure is described by Mäkinen and Navarro~\citep[Section 2]{FMcountOnBWT}.
+Such a procedure is described by Mäkinen and Navarro~\citeA[Section 2]{FMcountOnBWT}.
 
 \subsubsection{Huffman-shaped Wavelet Trees}
 \label{sec:huffmanShapedWaveletTree}
-Mäkinen and Navarro~\citep[Section~4]{FMcountOnBWT} describes a Huffman Shaped Wavelet Tree which skews the tree to one side and places symbols with higher frequencies towards the other side so that they are closer to the root than those that have a lower frequency.
-More precisely, they are placed in the tree in such a way that the path from the root to a leaf corresponds to the binary Huffman Code~\citep[Introduction]{HuffmanCoding} of the symbol of that leaf.
+Mäkinen and Navarro~\citeA[Section~4]{FMcountOnBWT} describes a Huffman Shaped Wavelet Tree which skews the tree to one side and places symbols with higher frequencies towards the other side so that they are closer to the root than those that have a lower frequency.
+More precisely, they are placed in the tree in such a way that the path from the root to a leaf corresponds to the binary Huffman Code~\citeA[Introduction]{HuffmanCoding} of the symbol of that leaf.
 Using a Huffman Shaped Wavelet Tree is an alternative to run-length encoding.
 
 This approach skews the tree and as a result increases the height of the tree, which ordinarily would result in higher average query time, but by placing the most frequent symbols highest and least frequent symbols lowest, it decreases query time massively for symbols with high frequency.
 Queries on a Huffman shaped Wavelet Tree for a symbol that has a high frequency then returns faster than queries for a symbol that was less frequent.
 Assuming symbols that occur with high frequency are also queried for more often, the average query time could see a reduction when using a Huffman-shaped wavelet tree.
 
-The Huffman Code~\citep[Introduction]{HuffmanCoding} of a symbol occurring with high frequency is a shorter binary string than the Huffman code of a symbol occurring with low frequency.
+The Huffman Code~\citeA[Introduction]{HuffmanCoding} of a symbol occurring with high frequency is a shorter binary string than the Huffman code of a symbol occurring with low frequency.
 The most frequent symbol could be encoded in as little as one bit!
 This entails that the storage space required for the many occurrences of the most frequent symbols would be massively reduced, while the space required for the least frequent symbols would be increased.
 If the difference in frequency is sufficiently high, the reduction in space for the most frequent symbols would outweigh the increase in space for the least frequent and the overall storage requirement would be reduced.
@@ -266,7 +266,7 @@ This would return the middle element of the subsequence.
 The 3-Quantile can be found by setting $k$ to $\frac{1}{3}$ of the length of the subsequence. 
 Quantiles are important values within such fields as statistics and economics.
 
-The wavelet tree can be used to support efficient range quantile queries on a sequence \textit{S} of \textit{n} numbers in $O(\log(\sigma))$ time if $rank_b$ is supported in $O(1)$ time~\citep[Section 3]{RangeQuantileQueries}. 
+The wavelet tree can be used to support efficient range quantile queries on a sequence \textit{S} of \textit{n} numbers in $O(\log(\sigma))$ time if $rank_b$ is supported in $O(1)$ time~\citeA[Section 3]{RangeQuantileQueries}. 
 The range is denoted as $S[l ... r]$.
 A range quantile query based on a wavelet tree works by computing two rank queries on the bitmap of each node in a traversal from the root to a leaf node. 
 

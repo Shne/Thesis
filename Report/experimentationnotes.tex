@@ -57,13 +57,13 @@ The experiment is described in Section~\ref{sec:uniformVsNonUniform}.
 
 \subsubsection{Non-uniform distribution choice}
 The wavelet tree has applications within full text indexing which suggests that having a distribution based on how words are distributed with in a normal English text could be a good choice, because it would be a realistic use case. 
-Zipf's Law describes such a distribution~\citep[abstract]{ZipfsLawOnText} but it requires a distribution parameter $s$ that describes the frequency relation between each symbol, e.g. if the most frequent word has double the frequency of the 2nd most frequent word and this relation continues down the list of most frequent words, it is a Zipf's Law distribution with an $s$ parameter of 2.
+Zipf's Law describes such a distribution~\citeA[abstract]{ZipfsLawOnText} but it requires a distribution parameter $s$ that describes the frequency relation between each symbol, e.g. if the most frequent word has double the frequency of the 2nd most frequent word and this relation continues down the list of most frequent words, it is a Zipf's Law distribution with an $s$ parameter of 2.
 We have not been able to find anyone that describes which parameter value would produce a distribution most closely resembling real world English. 
 We have searched through various articles to find an $s$ value representative of the English language, but it does not seem like there is a single good value as it depends a lot on the type of text, e.g. scientific journals vs. newspapers vs. books.
-This is also a conclusion that Piantadosi~\citep[abstract]{ZipfsLawOnText} arrives at.
+This is also a conclusion that Piantadosi~\citeA[abstract]{ZipfsLawOnText} arrives at.
 
 It is possible to estimate \textit{s} for a given text but doing so then creates the problem of choosing a representative text to estimate \textit{s} from.
-We tried using the word frequencies in the NGSL~\citep{NGSL} wordlist which contain the 31,241 most used words in the English language and the frequency with which they appear, to estimate \textit{s}.
+We tried using the word frequencies in the NGSL~\citeA{NGSL} wordlist which contain the 31,241 most used words in the English language and the frequency with which they appear, to estimate \textit{s}.
 NGSL is based on data from the Cambridge English Corpus which is a multi-billion word collection of written, spoken and learner texts and is the largest of its kind.
 This fact combined with the fact that NGSL is fairly new (2013) makes us believe that the frequencies in the NGSL wordlist are accurate enough for our purpose.
 

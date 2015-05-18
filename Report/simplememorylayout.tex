@@ -1,7 +1,7 @@
 \section{Simple Algorithm with controlled Memory Layout and Skew}
 \label{sec:memorylayout}
 In this section, we describe our attempt to improve the query times for the wavelet tree by controlling the memory layout and skewing the tree.
-Brodal et al.~\cite{gerthSkewedBinarySearchTrees} showed that skewing a binary search tree could reduce the amount of cache misses and branch mispredictions considerately. Enough, in fact, to increase the speed of searching the tree manyfold, even though the skewing increased the depth of the tree structure.
+Brodal et al.~\citeA{gerthSkewedBinarySearchTrees} showed that skewing a binary search tree could reduce the amount of cache misses and branch mispredictions considerately. Enough, in fact, to increase the speed of searching the tree manyfold, even though the skewing increased the depth of the tree structure.
 
 Skewing the tree can reduce branch mispredictions by giving one branch, in the direction the tree is skewed, much higher probability of being the correct than the other, and so enabling the branch predicter unit to more often predict correctly. 
 Skewing the tree can also reduce cache misses by increasing the probability that the next piece of memory the algorithm accesses is already loaded into a cacheline by the time it is accessed because of prefetching.
@@ -10,7 +10,7 @@ To reduce cache misses by skewing the tree we must control the memory layout, be
 Allocating memory dynamically as we go might produce a similar layout and controlling the memory may not lead to increased performance, but it is the only way to ensure the memory layout is as we want it.
 
 Skewing the tree has the disadvantage of increasing the height, or depth, of the tree 
-and is defined for a skewed binary tree by J.~Nievergelt and E.~M. Reingold~\cite{Nievergelt:1972:BST:800152.804906} to be:
+and is defined for a skewed binary tree by J.~Nievergelt and E.~M. Reingold~\citeA{Nievergelt:1972:BST:800152.804906} to be:
 \[ h = \frac{log(2\sigma+1)}{ log(\frac{1}{1-\alpha})}\]
 where $\alpha = \frac{1}{skew}$ and $skew$ is the number we divide by to skew our tree, see Section~\ref{sec:SkewingTheTree}.
 
@@ -20,8 +20,8 @@ We have also altered the Naïve approach to support skewing, so we can compare w
 \subsection{Prefetching}
 Prefetching is a feature of the CPU whereby it can fetch other parts of the memory into cachelines even though it was not requested yet, if it believes it will be requested soon, to avoid having the program waiting for this fetching.
 In more advanced versions, it can even look at the access into memory of the running program and try to determine a pattern and prefetch memory according to this pattern.
-Looking at the Intel Optimization Manual~\cite{intel-optimization-manual} for our architecture\footnote{Our architecture is Ivy Bridge, but the optimization manual sections for Sandy Bridge holds true for Ivy Bridge as well, as stated in section 2.2.7 in~\cite{intel-optimization-manual}.} we find that it has streaming prefetchers loading into L1, L2, and last level cache. The streaming prefetchers detect accesses to ascending or descending addresses and can prefetch up to 20 lines ahead or behind. 
-Our architecture also has a prefetcher that can detect strides in memory access, as well as a "Next Page Prefetcher" that can load another memory page when detecting memory accesses near the page boundary~\footnote{See section 2.2.7 of~\cite{intel-optimization-manual}}.
+Looking at the Intel Optimization Manual~\citeA{intel-optimization-manual} for our architecture\footnote{Our architecture is Ivy Bridge, but the optimization manual sections for Sandy Bridge holds true for Ivy Bridge as well, as stated in section 2.2.7 in~\citeA{intel-optimization-manual}.} we find that it has streaming prefetchers loading into L1, L2, and last level cache. The streaming prefetchers detect accesses to ascending or descending addresses and can prefetch up to 20 lines ahead or behind. 
+Our architecture also has a prefetcher that can detect strides in memory access, as well as a "Next Page Prefetcher" that can load another memory page when detecting memory accesses near the page boundary~\footnote{See section 2.2.7 of~\citeA{intel-optimization-manual}}.
 
 
 \subsection{Skewing The Tree}

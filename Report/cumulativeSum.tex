@@ -50,7 +50,7 @@ When we realized this we attempted to combine the two approaches to get the best
 However, whatever we tried, it always seemed to be slower than the simple approach, and so we stopped trying to combine the two.
 
 It makes sense that our alternatives to branches is slower than branching with mispredictions.
-According to Agner Fogh~\citep{agner} the branch misprediction penalty in the Ivy Bridge Architecture is at least 15 clock cycles.
+According to Agner Fogh~\citeB{agner} the branch misprediction penalty in the Ivy Bridge Architecture is at least 15 clock cycles.
 If a branch is very hard to predict by going one way half the time and the other way the other half, it would be mispredicted about 50\% of the time, making it cost on average $1+\frac{15}{2}=8$ clock cycles.
 This means that our alternative method of computing something without using branches must cost less than 8 clock cycles to be an improvement.
 Looking at our code, the alternative methods where we have attempted to reduce branches could easily cost much more than 8 clock cycles, which explains why these methods resulted in a slowdown.
