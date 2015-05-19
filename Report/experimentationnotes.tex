@@ -15,11 +15,15 @@ Level 3 Total Cache	&	3072 kB \\ \hline
 
 \subsection{General Setup}
 \label{sec:ExpNotesGeneralSetup}
-We run 1000 queries 5 times for each variable parameter and register the total running time for each set of 1000 queries and then use the average of those 5 as the result.
+Our code was compiled using GCC 4.8.2 with compiler flags \texttt{-O3 -std=c++11 -march=native}.
+The \texttt{-march=native} flag was necessary to use the native \texttt{popcount} cpu instruction.
+Our PAPI library version was 5.4.0.0 using perf version 3.13.11-ckt18.
+
+We ran 1000 queries 5 times for each variable parameter and registered the total running time for each set of 1000 queries and then used the average of those 5 as the result.
 Examples of variable parameters used in our tests are the alphabet size, the skew of the tree or the block size.
 
-We calculate the standard deviation of the 5 runs and include that in the graphs as errorbars.
-All our graphs with lines (as opposed to bar-graphs) include the standard deviation as errorbars.
+We calculated the standard deviation of the 5 runs and include it in the graphs as errorbars.
+All our graphs include the standard deviation as errorbars.
 If one appears not to have any errorbars that means the standard deviation is so small it is difficult or impossible to see.
 
 \subsection{Choice of Input String}
