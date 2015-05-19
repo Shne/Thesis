@@ -1,21 +1,20 @@
 \section{Applications}
 \subsection{What The Wavelet Tree Can Represent}
-\textbf{[TODO: redo this subsection]}
 The Wavelet Tree has multiple applications that each utilize the wavelet tree differently and use it for storage of, and queries on, different types of data.
-These can be split into three main types: A sequence of values, a reordering or permutation, and a grid of points.
+These applications uses the wavelet tree to achieve different representations which can be split into three main types: A sequence of values, a reordering or permutation, and a grid of points.
 
 Using the Wavelet Tree to store a sequence of values is perhaps the most basic way to utilize the tree.
-The Wavelet Tree stores the values and their sequence and supports access, rank, and select queries.
+The Wavelet Tree stores the sequence and supports access, rank, and select queries on the sequence.
 
 The Wavelet Tree can also be used to describe a stable reordering, e.g. of the symbols in a string S. 
-If the leaves are traversed then all the occurrences of the smaller symbols are found first. \textbf{[TODO: describe the use of traversing the leaves like so]}
-By tracking the position of a symbol downwards through the Wavelet Tree we will find the new position of the symbol after the permutation.
-Tracking the position of a symbol upwards through the wavelet tree will where it is in the original string. 
+If the leaves are traversed then all the occurrences of the smaller symbols are found first and within the leaf they are ordered by original position.
+This means that the leaves of the symbols appear in ascending sorted order from left to right in the tree.
+If one then has a permutation of a string e.g a string sorted in descending order and stores it in a wavelet tree, it is then possible to access the symbols in either ascending or descending order based on whether the symbol is tracked downwards through the tree until the corresponding leaf is found, or whether the symbol is tracked upwards from the leaf. 
+The downward tracking would then result in an ascending order and the upward tracking would result in descending order.
+The wavelet tree is therefore able to represent a reordering of a string and the order is based on how the alphabet is sorted.
 
 A Wavelet Tree can also represent an $n \times n$ grid of $n$ points where no two points share the same row or column. 
-One can map a general set of $n$ points to such a discrete grid and then store the real points somewhere else.
-
-If we have points sorted by the $x$-coordinate and take only the $y$-coordinates $S_y[1,n] = y_1,y_2,...,y_n$ and save $S_y$ in a Wavelet Tree we can the find the \textit{i}th point in $x$-coordinate order by accessing the corresponding $y$-coordinate in the wavelet tree. 
+One can map a general set of $n$ points to such a discrete grid and then store the real points somewhere else. If we have points sorted by the $x$-coordinate and take only the $y$-coordinates $S_y[1,n] = y_1,y_2,...,y_n$ and save $S_y$ in a Wavelet Tree we can the find the \textit{i}th point in $x$-coordinate order by accessing the corresponding $y$-coordinate in the wavelet tree. 
 If we want the \textit{i}th point in $y$-coordinate order we can access the leaf of a given $y$-coordinate and find its corresponding $x$-coordinate by querying up through the tree until we find the original position of $y$ in $S$. 
 The corresponding $x$-coordinate will be at the same position.
 Querying from a leaf gives the points in $y$-coordinate order because the leaves are sorted by $y$-coordinate.
@@ -64,7 +63,7 @@ $H_k = H_k(S) = \frac{1}{n} \sum\limits_{w \in \Sigma^k} | w_S |H_0(w_S)$
 \end{mdframed}
 $H_k$ often defines a lower bound for bit space usage that is smaller than the lower bound of $H_0$~\citeA[Section~2]{waveletTreeEntropy}.
 
-Using the Burrows-Wheeler transformation on the input the we can reduce the problem of achieving $H_k$ compression to achieving $H_0$ compression.
+Using the Burrows-Wheeler transformation on the input we can reduce the problem of achieving $H_k$ compression to achieving $H_0$ compression.
 In other words, if we have a good compression algorithm that achieves compression within the $H_0$ lower bound, then by using that algorithm on the Burrows-Wheeler transformation of the input we can achieve compression within the $H_k$ lower bound~\citeA[Introduction]{waveletTreeEntropy}.
 The problem for a long time was that there existed no good way to achieve compression within the $H_0$ lower bound or at least it was a problem before the wavelet tree was invented~\citeA[Introduction]{waveletTreeEntropy}.
 
@@ -259,21 +258,20 @@ G. Navarro~\citeA[Section 5]{Navjda13} points to an application found by Ferragi
 G. Navarro~\citeA[Section 5]{Navjda13} also point to other similar results and improvements on the previous results by others, showing there is a wide interest in using wavelet trees to store a sequence and query for the occurrences of patterns within that sequence.
 
 G. Navarro~\citeA[Section 5]{Navjda13} further points out the uses of a wavelet tree as a positional inverted index.
-By storing the list of word identifiers in the wavelet tree we store both the text itself and the inverted index.
+By storing the list of word identifiers in the wavelet tree both the text itself and the inverted index is stored.
 Access queries will then return the word at the given position while select$_{c}$($S$, $i$) can be used to get the $i$th word in the inverted list of a word $c$ for the string $S$.
 Rank queries can be used effectively in some list intersection algorithms.
 The efficiency can be improved by using multi-ary wavelet trees or Huffman-shaped wavelet trees as the non-uniformity of word usage in language makes it a good candidate for Huffman coding.
 
-This use as an positional inverted index can also be extended to \textit{document retrieval}~\citeA[Section 5]{Navjda13} by introducing a document boundary character such as \$ and storing the concatenation of all the documents with the document boundary character in between each.
+The positional inverted index application can also be extended to \textit{document retrieval}~\citeA[Section 5]{Navjda13} by introducing a document boundary character such as \$ and storing the concatenation of all the documents with the document boundary character in between each.
 The first document containing some word $c$ is document number $j = \textproc{Rank}_\$(S, p) + 1$ where $p = \textproc{Select}_c(S, 1)$.
 Document $j$ ends at position $p' = \textproc{Select}_\$(S,j)$ and contains $o = \textproc{Rank}_c(S,p') - \textproc{Rank}_c(S,p)$ occurrences of the word $c$.
 The next occurrence of the word $c$ in another document is at $p_{next} = \textproc{Select}_c(S, o+1)$.
 
 
-
 \subsubsection{Range Quantile Query}
 A range quantile query is a query that returns the $k^{th}$ smallest number within a subsequence of a given sequence of elements.
-So if we are e.g. given a list of price changes on a laptop during the last year then a range quantile query is able to answer what the $k$-smallest price of the laptop was within for instance a month of that year.
+If we are e.g. given a list of price changes on a laptop during the last year then a range quantile query is able to answer what the $k$-smallest price of the laptop was within for instance a month of that year.
 It is therefore also easy to find quantiles like the 2-quantile (median) or the 3-quantile.
 To e.g. find the median, $k$ can be defined as half the length of the subsequence.
 This would return the middle element of the subsequence.
