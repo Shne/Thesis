@@ -24,12 +24,12 @@ We will test and compare the Rank and Select running times and memory usage of f
 
 
 \subsection{Concatenating the Bitmaps}
-We allocate the bitmaps as one giant bitmap the size of the maximum possible size required to store all the bitmaps for all the nodes.
-We store them in a Depth-First-right manner, that is, the bitmap of the right child of a node comes right after the bitmap of the node.
+The bitmaps are allocated as as one giant bitmap the size of the maximum possible size required to store all the bitmaps for all the nodes.
+They are stored in a Depth-First-right manner, that is, the bitmap of the right child of a node comes right after the bitmap of the node.
 
 There are many other alternative memory layouts that might provide better performance.
 The one we believe has the greatest potential to improve the wavelet tree performance, is the van Emde Boas memory layout~\citeA[Abstract]{Brodal02cacheoblivious} because of its cache-oblivious nature.
-It would be a challenge to implement, because we do not know the size of a bitmap of a node before having calculated the bitmap of the parent, and so we cannot know the position of each bitmap in the giant bitmap before having calculated the parent of each, meaning we must construct the tree in vEB layout order.
+It would be a challenge to implement, because the size of a bitmap of a node is unknown before the bitmap of the parent has been calculated, and so the position of each bitmap in the giant bitmap cannot be known before the parent of each has been calculated, meaning construct the tree must be constructed in vEB layout order.
 To support construction of the wavelet tree in vEB layout order our construction algorithm would have to be dramatically changed, possibly utilizing concurrency constructs such as a job queue and message passing, and so we skip this work for now and save it for future work in Section~\ref{sec:futurework_vebmemorylayout}.
 
 The sum of the size of all bitmaps on one layer of the tree can at most be $n$ and we can at most have $h$ layers, so the maximum size becomes
@@ -42,15 +42,15 @@ As a result we can conclude that allocated memory is not present in physical mem
 The effect of an optimistic memory allocation scheme and overcomitting is tested by Andries Brouwer \footnote{\url{http://www.win.tue.nl/~aeb/linux/lk/lk-9.html}} who confirms that it is possible to allocated more memory using \textit{malloc()} than what is physically available.
 So over-allocating the bitmap should not take up any more space than what will actually be needed.
 
-We then store an offset and a size for the bitmap in each node, so we can index into the giant bitmap and access the bits corresponding to the node.
+An offset and a size for the bitmap is the stored in each node, so it is possible to index into the giant bitmap and access the bits corresponding to the node.
 This should also cause a decrease in memory usage as the offset and size are stored in an unsigned long and unsigned int respectively, taking a total of $64+32=96$ bits per node, where each individual bitmap requires storage of at least a pointer to it, a point to where its internal array starts and a pointer to where it ends, taking up $3 \times 64=192$ bits per node.
 Additionally, when using an individual bitmap for each node, they would have been word-aligned, and the bits between the last used bit and the end of the last used word would have gone unused and so, wasted.
 
-We also allocate a vector for holding the precomputed block values of size:
+A vector is also allocated to hold the precomputed block values of size:
 \[Vector size = \frac{BitmapSize}{BlockSize} \]
-Instead of storing a pointer to the bitmap and precomputed values vector in each node, we store them once for the whole tree and then pass them down through the query methods when the tree is queried.
+Instead of storing a pointer to the bitmap and precomputed values vector in each node, they are stored once for the whole tree and then passed down through the query methods when the tree is queried.
 
-We use integer division of the bitmap offset and the block size to index into said vector. It is an efficient and simple way to precompute the rank values of blocks of fixed size of the bitmap, as we do not have to traverse the tree again.
+In order to be able to index into said vector, integer division of the bitmap offset and the block size is used. It is an efficient and simple way to precompute the rank values of blocks of fixed size of the bitmap, as we do not have to traverse the tree again.
 
 
 \subsubsection{Edge Cases}
@@ -59,9 +59,9 @@ The rank of a string can be expressed as the sum of the rank of any number and v
 Because the blocks must perfectly cover the string and not overlap, and the bitmaps of each node are not of same size, nor multiples of some single value, we have a problem if we want to use uniformly sized and distributed blocks.
 The problem exists at the boundary between bitmaps, where the precomputed rank value will be the sum of the rank of the end of the first bitmaps and the rank of the beginning of the second bitmap.
 
-Looking at a single bitmap for a node, there is an edge case for the first and last part of the bitmap, because they do not fill an entire block, so we cannot simply use the corresponding precomputed value as-is.
-Instead, we can compute the rank of the part of the block that our part does not fill and subtract that from the precomputed rank value.
-This is only worth doing when our part fills more than half a block, because then the other part is smaller than half a block and therefore quicker to compute.
+Looking at a single bitmap for a node, there is an edge case for the first and last part of the bitmap, because they do not fill an entire block, so the corresponding precomputed value cannot simply be used as-is.
+Instead, the rank of the part of the block that the bitmap does not fill can be computed and then subtracted from the precomputed rank value.
+This is only worth doing when the bitmap fills more than half a block, because then the other part is smaller than half a block and therefore quicker to compute.
 Figure~\ref{fig:PrecomputePopcountBlock} illustrates this.
 
 
@@ -99,7 +99,7 @@ Figure~\ref{fig:PrecomputePopcountBlock} illustrates this.
 
 
 \subsubsection{Page-aligning the Blocks}
-Translation Lookaside Buffer misses are expensive and to avoid those, we can try to reduce the number of pages we load.
+Translation Lookaside Buffer misses are expensive and to avoid those, we can try to reduce the number of pages that is loaded.
 Using concatenated bitmaps and the precomputed vector of ranks, we only need to load pages of the bitmap at the beginning and end of each node's bitmap, to compute the popcounted version of binary rank directly on the bitmap, and only within one block at each end.
 If the blocks are not aligned with the memory pages, then, even if the block size is less than a page, it might span more than one page and thus more than one page of memory must be loaded into the TLB.
 More precisely, the algorithm might at most load $2 \cdot \left( \lceil\frac{blockSize}{pageSize}\rceil +1 \right)$ pages to do the popcount binary rank computation at the beginning and end of each node.
@@ -119,7 +119,7 @@ We will test whether it increases the performance of rank and select queries whe
 \subsection{Select Queries with Precomputed Ranks}
 Select queries, although they do not return a rank value, can still utilize the precomputed rank values to skip much computation directly on the bitmap by iterating though them.
 Partway in a select query, if the sum of the occurrences found so far and the rank value of the current block of the bitmap is more than the queried-for occurrence, we can add that rank value to our occurrences seen so far and skip ahead to the next block and perform the same test.
-If the sum is less than the queried-for occurrence, we know we will find the occurrence in the current block and use our previously implemented method of calculating select using popcount, starting at this block.
+If the sum is less than the queried-for occurrence, we know the occurrence will be found in the current block and the previously implemented method of calculating select using popcount can then be used, starting at this block.
 
 
 \subsubsection{Edge Cases}
@@ -127,16 +127,16 @@ As with rank queries, there are edge cases at the beginning and end of each bitm
 However, in this case, the edge case at the end is easily handled as the test of sum of rank and occurrence-so-far should fail, sending the algorithm into the block with the previous select query method, finding the occurrence with no problem and no specific handling of the edge case.
 This is assuming the input occurrence parameter is valid, meaning that at least that many occurrences of that character is in the original input string.
 
-For the other case, at the beginning of the bitmap, we do almost exactly the same as in the case for the rank query.
-In fact, we use a rank query to calculate the rank of the first part of the bitmap, using the trick of subtracting from the precomputed value if larger than half a block size, to figure out whether the occurrence is in the first part of the bitmap, and therefore whether we should do a select query on it or not.
+For the other case, at the beginning of the bitmap, almost exactly the same as in the case for the rank query is done.
+In fact, a rank query is used to calculate the rank of the first part of the bitmap, using the trick of subtracting from the precomputed value if larger than half a block size, to figure out whether the occurrence is in the first part of the bitmap, and therefore whether a select query should be run on it or not.
 
 \paragraph{Using Rank Queries in Select Queries}~\\
-We would like to analyse whether it is worth using a rank query to find out whether we should do a select query on the first part of the bitmap, as the rank query is purely extra work in the cases where the occurrence is in that part of the bitmap.
+We would like to analyze whether it is worth using a rank query to find out whether we should do a select query on the first part of the bitmap, as the rank query is purely extra work in the cases where the occurrence is in that part of the bitmap.
 
 We will assume an equal number of occurrences in the string of each character in the alphabet, a uniform distribution of each character in the string, and an equal probability of each valid parameter for the select query.
 A valid character parameter is one that exists in the input string and a valid occurrence parameter is an integer above 0 and below or equal to the number of occurrences appearing in the input string.
 
-The rank query is a computation of worst-case cost $\frac{blockSize}{2}$ because it will at most popcount half of the block, because we utilize the precomputed rank value when advantageous.
+The rank query is a computation of worst-case cost $\frac{blockSize}{2}$ because it will at most popcount half of the block, because the precomputed rank value is utilized when advantageous.
 The select query using popcount in the first partial block is an operation of worst-case cost $blockSize$ because it can at most popcount the entire block.
 So, in the worst case, when the sought-after occurrence is in the first partial block of the bitmap, $\frac{blockSize}{2}$ work is wasted, yet when the occurrence is elsewhere, $blockSize$ work is saved.
 This means that the boundary between where using the rank query becomes a gain or a loss in performance is where the ratio between the number of times the occurrence is to be found in and outside the first partial block of the bitmap is $\frac{2}{3}$.
@@ -155,12 +155,12 @@ Since the page size on our machines are 4096 bytes we should not use a block siz
 
 In Section~\ref{sec:queryRunTimePrecomputedBlockSizes} we find that the optimal block size is 16384 bits = 2048 bytes = $\frac{1}{2}$ page.
 
-Assuming we then store the precomputed values as 16-bit unsigned short integers it will only consume an extra 16 bits or 2 bytes per block and there there are $\frac{BitmapSize}{BlockSize}$ of these blocks when we concatenate the bitmaps.
+Assuming the precomputed values are then stored as 16-bit unsigned short integers it will only consume an extra 16 bits or 2 bytes per block and there there are $\frac{BitmapSize}{BlockSize}$ of these blocks when the bitmaps are concatenated.
 This means, assuming a block size of 2048 bytes, a relative extra space consumption of
 \[ \frac{ 2 \cdot \frac{BitmapSize}{BlockSize} }{BitmapSize} = \frac{2}{BlockSize} = \frac{2}{2048} = 0.0009765625 = 0.098\% \]
 of the bitmaps, which is even less when considering the total space used including the nodes.
 
-When we do not concatenate the bitmaps there is a higher space consumption by the precomputed values, as each precomputed value do not cover an entire block and more precomputed values is therefore needed to cover all the bitmaps.
+When the bitmaps are not concatenated there is a higher space consumption by the precomputed values, as each precomputed value do not cover an entire block and more precomputed values is therefore needed to cover all the bitmaps.
 When the blocks are not page-aligned, each node has potentially one precomputed value not covering an entire block at the end of its bitmap.
 When blocks are page-aligned, there is another precomputed value potentially not covering an entire block at the beginning of each bitmap.
 The extra space consumption by the precomputed values when not concatenating the bitmaps is therefore limited proportionally to the number of nodes, which is at most $2 \sigma - 1$, making it limited proportionally by the alphabet size.

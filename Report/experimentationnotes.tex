@@ -88,4 +88,4 @@ We are also interested in avoiding introducing any bias by using only one type o
 If we had e.g. let both parameter values depend on the index of a single for-loop around the call to the query, we would have only tested low character values together with low position values and high character values together with high position values.
 
 Instead we let one parameter ascend from valid low values to valid high values with even spacing to reach the highest valid value in the lastly performed query. Meanwhile, the other parameter increases more rapidly with wider spacing, and then wraps around before passing highest valid value to then start again at low values, with an offset to not repeat parameter values, doing so many times before the end.
-This ensures we perform the queries for all combinations of high, medium and low parameter values in our experiments.
+This ensures the queries are performed for all combinations of high, medium and low parameter values in our experiments.

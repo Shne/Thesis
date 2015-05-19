@@ -12,10 +12,10 @@ Allocating memory dynamically as we go might produce a similar layout and contro
 Skewing the tree has the disadvantage of increasing the height, or depth, of the tree 
 and is defined for a skewed binary tree by J.~Nievergelt and E.~M. Reingold~\citeB{Nievergelt:1972:BST:800152.804906} to be:
 \[ h = \frac{log(2\sigma+1)}{ log(\frac{1}{1-\alpha})}\]
-where $\alpha = \frac{1}{skew}$ and $skew$ is the number we divide by to skew our tree, see Section~\ref{sec:SkewingTheTree}.
+where $\alpha = \frac{1}{skew}$ and $skew$ is the number that is divided by to skew our tree, see Section~\ref{sec:SkewingTheTree}.
 
 The algorithms in this implementation remain mostly the same algorithms as in the Simple, Naïve approach, but with modifications to handle a controlled memory layout and a skew of the tree.
-We have also altered the Naïve approach to support skewing, so we can compare whether the controlled memory layout has the desired effect.
+The Naïve approach has also been altered to support skewing in order to be able to compare whether the controlled memory layout has the desired effect.
 
 \subsection{Prefetching}
 Prefetching is a feature of the CPU whereby it can fetch other parts of the memory into cachelines even though it was not requested yet, if it believes it will be requested soon, to avoid having the program waiting for this fetching.
@@ -29,19 +29,19 @@ Our architecture also has a prefetcher that can detect strides in memory access,
 Skewing the tree is done by changing the way we find which character in the alphabet to split on in each node's construction.
 The split character is the last character in the alphabet of the left child node and to be able to skew the calculation we calculate it as
 \[SplitCharacter = \lfloor \frac{alphabetSize-1}{skew} + alphabetMin \rfloor \]
-where $alphabetSize$ is the size of the alphabet at this node, $alphabetMin$ is the first character in the alphabet at this node, and $skew$ is the skew parameter which is 2 for a balanced tree and higher for right-skewed trees. E.g. a $skew$ value of 4 will mean we skew the tree by, in each node, putting 25\% of the alphabet into the left child node and 75\% into the right.
-We then round the value down so it is an actual integer character instead of a decimal.
+where $alphabetSize$ is the size of the alphabet at this node, $alphabetMin$ is the first character in the alphabet at this node, and $skew$ is the skew parameter which is 2 for a balanced tree and higher for right-skewed trees. E.g. a $skew$ value of 4 skews the tree by 75\% to the right meaning that in each node 25\% of the alphabet is put into the left child node and 75\% is put into the right child node.
+The value is the rounded down so it is an actual integer character instead of a decimal.
 
 
 \subsection{Controlled Memory Layout}
 We still want to support dynamic input and alphabet sizes without recompilation, so the nodes must be dynamically allocated on the heap.
 
 The size of a node is known at compile time as it contains simply pointers to the parent node and left and right child nodes, as well as a boolean to flag it as a leaf node and its bitmap as a vector, which internally stores a pointer to its backing array.
-As such, we can and do allocate the memory for the nodes by allocating an array, then instantiate nodes into that array.
-We pass a reference to a pointer into the array from parent to child nodes during construction, so they know where to allocate their child nodes.
+As such, the memory for the nodes is allocated by allocating an array and then instantiating the nodes into that array.
+A reference to a pointer is passed into the array from parent to child nodes during construction, so they know where to allocate their child nodes.
 The pointer points to the position of the last node in the array, and so before each instantiation of a new node, we increment the pointer so it points to free space, then place the new node there.
 
-We do not control the memory layout of the bitmaps (yet), because skewing the tree will not help the prefetcher with regards to the bitmaps, except in a few specific cases, because of the way the bitmaps are used and the resulting access patterns.
+The memory layout of the bitmaps is not controlled (yet), because skewing the tree will not help the prefetcher with regards to the bitmaps, except in a few specific cases, because of the way the bitmaps are used and the resulting access patterns.
 The algorithms for rank and select stop querying each bitmap at some position inside the bitmap and then continue to the next bitmap in the next node.
 Rank stops when it reaches the position the query was searching up to, given as a parameter.
 Select stops when it has found the sought number of occurrences in the bitmap.
@@ -214,7 +214,7 @@ Since we use uniform data a balanced tree seems to be the best solution.
 
 
 
-When we skew the tree we do not split the alphabet into equal sizes and therefore add more data to the right side of the tree than to the left. 
+When the tree is skewed the alphabet is not split into equal sizes and therefore more data is added to the right side of the tree than to the left. 
 This increases the hight of the tree and we need to look at more nodes to find the result than if the tree was balanced and as a result of this we do more work because we have to access more nodes and bitmaps.
 
 We had hoped to reduce the amount of branch mispredictions and cache misses enough that they would reduce the running time more than the increase from having a deeper tree structure.

@@ -126,11 +126,11 @@ Intuitively this makes sense because leaf nodes correspond to only one character
 Figure~\ref{fig:RankDrawing} shows an example of how this concept works.
 
 Whether the query uses the left or right child in the recursive call is decided by what the symbol in represented as in the bitmap of the current node.
-The way we compute this is to compute which character corresponds to the middle of the alphabet for the current node, the "split character", and then check whether the queried-for symbol is lexicographically less than or equal to the split character. 
+This is computed by finding which character corresponds to the middle of the alphabet for the current node, the "split character", and then check whether the queried-for symbol is lexicographically less than or equal to the split character. 
 If this is the case the input symbol is represented by 0 since it would be in the alphabet of the left child.
 If it is not the case then the input symbol is represented as 1.
 
-We are using C++ for our implementation and we are utilizing the object-oriented paradigm, therefore \textproc{Rank($Character, Position$)} is defined on each node, and so, in the pseudo-code, it is called on the root node and the right and left child nodes instead of specifying the node as a parameter to the \textproc{Rank} function, as one would have done it in plain C.
+C++ is used for our implementation and the object-oriented paradigm is utilized and therefore \textproc{Rank($Character, Position$)} is defined on each node, and so, in the pseudo-code, it is called on the root node and the right and left child nodes instead of specifying the node as a parameter to the \textproc{Rank} function, as one would have done it in plain C.
 
 \begin{figure}
 \center \includegraphics[width=0.66\textwidth]{RankDrawing}
@@ -271,7 +271,7 @@ I each level the algorithm looks for either 0 or 1 based on how \textit{a} is re
 \end{algorithm}
 
 \textproc{BinarySelect} returns the position of the \textit{i}th occurrence of 1 or 0 (\textit{CharBit}) in a bitset. 
-It does so by looping through the bitset and when \textit{i} occurrences of either 1 or 0 (depending on whether we are in a left child or a right child) has been seen then the position of the last bit that was seen is returned.
+It does so by looping through the bitmap and when \textit{i} occurrences of either 1 or 0 (depending on whether the current node is a left child or a right child) has been seen then the position of the last bit that was seen is returned.
 \textproc{BinarySelect} takes O(n) time because the length of a bitmap is at most the length of the original input string.
 In Section~\ref{sec:ImplBinarySelect} we describe how to improve the practical running time of \textproc{BinarySelect}.
 

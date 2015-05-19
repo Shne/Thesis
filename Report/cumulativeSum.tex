@@ -4,7 +4,7 @@ It works so well, because it allows the algorithms to skip most of the bitmaps, 
 
 It is still however necessary to iterate through the precomputed values.
 Most of the time the algorithms are interested in the rank value at some position inside a bitmap and it is the rank from the beginning of the bitmap to the position and rarely just the rank of that particular block.
-Therefore we might be able to save a number of instructions by not iterating through the precomputed values if the precomputed values were already this cumulative sum of rank values through the bitmap.
+Therefore it might be possible to save a number of instructions by not iterating through the precomputed values if the precomputed values were already this cumulative sum of rank values through the bitmap.
 
 We will implement this based on UnalignedNaive and test the performance compared to the UnalignedNaive wavelet tree from Section~\ref{sec:queryRunTimePrecomputedBlockSizes}, using half a page size as the block size, as we found that to be the fastest configuration
 
