@@ -1,4 +1,33 @@
 \section{Future Work}
+We have many ideas for future work on practical implementation and optimization on wavelet trees.
 
 \subsection{vEB Memory Layout}
 \label{sec:futurework_vebmemorylayout}
+We tried a right-side depth-first memory layout in Section~\ref{sec:memorylayout} when we tried to skew the tree.
+Without trying to skew the tree, other memory layouts might still be able to improve the performance of the wavelet tree.
+Brodal et al.~\citeA{gerthSkewedBinarySearchTrees} tested several memory layouts for their skewed binary search tree and found that the blocked memory layout based on van Emde Boas Trees performed best for all skew values.
+It could be interesting to try a van Embe Boas memory layout for a balanced wavelet tree to see if it could improve the query performance.
+
+\subsection{Skew}
+In Section~\ref{sec:memorylayout} we tried skewing the tree to reduce cache misses and branch mispredictions and found that it was no improvement, in part because the wavelet tree spends most of the time in the rank or select queries calculating binary rank or select on the bitmaps.
+With our optimizations from later sections, we have reduced the amount of time spent calculating binary rank and select, and it is possible that skewing the tree might have a beneficial effect after having applied our other optimizations.
+
+\subsection{$d$-ary}
+Our wavelet trees are all binary which means their height is the base 2 logarithm of the alphabet size.
+With a higher $d$-ary tree the height would be reduced to base $d$ logarithm of the alphabet size.
+This could improve access, rank, and select query performance significantly as their traversal down or up the tree would be significantly shortened.
+
+A disadvantage of a $d$-ary wavelet tree is that each bitmap must encode $\log_2(d)$ bits of information for each character in the string, to signify which of the subtrees each character belongs to.
+This, in turn, makes using the native \texttt{popcount} cpu instruction impossible, perhaps unless some clever bitshifting and \texttt{XOR}ring could be applied to avoid manually counting sets of bits.
+On the other hand, using the stored precomputed values means only few sets of bits would have to be counted and perhaps the benefit from a lower tree will outweigh the loss from not using \texttt{popcount}.
+
+\subsubsection{SIMD}
+When constructing or traversing a $d$-ary wavelet tree, finding which of 4 or more subtrees to either pass a character too or traverse into requires comparing the character with more than just one split character.
+To improve the performance of this multi-way comparison, SIMD instructions might be employed with success.
+
+
+\subsection{Parallelization}
+To expand on the potential improvement from using SIMD instructions when constructing and traversing $d$-ary wavelet trees, some amount of parallelization of the algorithms might improve the performance even further.
+\subsubsection{On GPU}
+If parallelization proves to be an improvement, implementing them on the GPU e.g. using CUDA could be a massive improvement as modern GPUs have several hundred cores and if well-utilized can surpass the power of a modern CPU.
+
