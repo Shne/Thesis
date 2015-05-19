@@ -10,7 +10,7 @@ To reduce cache misses by skewing the tree we must control the memory layout, be
 Allocating memory dynamically as we go might produce a similar layout and controlling the memory may not lead to increased performance, but it is the only way to ensure the memory layout is as we want it.
 
 Skewing the tree has the disadvantage of increasing the height, or depth, of the tree 
-and is defined for a skewed binary tree by J.~Nievergelt and E.~M. Reingold~\citeA{Nievergelt:1972:BST:800152.804906} to be:
+and is defined for a skewed binary tree by J.~Nievergelt and E.~M. Reingold~\citeB{Nievergelt:1972:BST:800152.804906} to be:
 \[ h = \frac{log(2\sigma+1)}{ log(\frac{1}{1-\alpha})}\]
 where $\alpha = \frac{1}{skew}$ and $skew$ is the number we divide by to skew our tree, see Section~\ref{sec:SkewingTheTree}.
 
