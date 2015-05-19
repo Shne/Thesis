@@ -264,7 +264,11 @@ Access queries will then return the word at the given position while select$_{c}
 Rank queries can be used effectively in some list intersection algorithms.
 The efficiency can be improved by using multi-ary wavelet trees or Huffman-shaped wavelet trees as the non-uniformity of word usage in language makes it a good candidate for Huffman coding.
 
-Additional uses for storing sequences, according to G.Navarro~\citeA[Section 5]{Navjda13}, include storing and querying graphs.
+This use as an positional inverted index can also be extended to \textit{document retrieval}~\citeA[Section 5]{Navjda13} by introducing a document boundary character such as \$ and storing the concatenation of all the documents with the document boundary character in between each.
+The first document containing some word $c$ is document number $j = \textproc{Rank}_\$(S, p) + 1$ where $p = \textproc{Select}_c(S, 1)$.
+Document $j$ ends at position $p' = \textproc{Select}_\$(S,j)$ and contains $o = \textproc{Rank}_c(S,p') - \textproc{Rank}_c(S,p)$ occurrences of the word $c$.
+The next occurrence of the word $c$ in another document is at $p_{next} = \textproc{Select}_c(S, o+1)$.
+
 
 
 \subsubsection{Range Quantile Query}
@@ -276,7 +280,7 @@ This would return the middle element of the subsequence.
 The 3-Quantile can be found by setting $k$ to $\frac{1}{3}$ of the length of the subsequence. 
 Quantiles are important values within such fields as statistics and economics.
 
-The wavelet tree can be used to support efficient range quantile queries on a sequence \textit{S} of \textit{n} numbers in $O(\log(\sigma))$ time if $rank_b$ is supported in $O(1)$ time~\citeA[Section 3]{RangeQuantileQueries}. 
+Gagie et al.~\citeA{RangeQuantileQueries} show how the wavelet tree can be used to support efficient range quantile queries on a sequence \textit{S} of \textit{n} numbers in $O(\log(\sigma))$ time if $rank_b$ is supported in $O(1)$ time~\citeA[Section 3]{RangeQuantileQueries}. 
 The range is denoted as $S[l ... r]$.
 A range quantile query based on a wavelet tree works by computing two rank queries on the bitmap of each node in a traversal from the root to a leaf node. 
 
