@@ -249,12 +249,22 @@ A wavelet tree can be used to efficiently answer numerous queries in different p
 In this section we describe in some detail a select number of information retrieval scenarios.
 
 \subsubsection{Access, Rank, and Select Queries}
-The wavelet tree supports access in $O(\log \sigma)$ time, but unless compression is also used, access query is not the main reason to use a wavelet tree.
-Instead, the more interesting queries are rank and select queries, that are useful in and of themselves e.g. when used as a dictionary, but are also the building blocks of many other queries and algorithms.
+The wavelet tree supports access in $O(\log \sigma)$ time, but unless compression is also used, the access query is not the main reason to use a wavelet tree.
+Instead, the more interesting queries are rank and select queries, that are useful in and of themselves e.g. when used as a dictionary and a self-index, but are also the building blocks of many other queries and algorithms.
 
 The rank query for a symbol $s$ and a position $p$ will return how many of symbol $s$ occurs in the input string up to position $p$.
 The select query for symbol $s$ and occurrence parameter $o$ will return the position of the $o^{th}$ occurrence of $s$ in the input string.
 
+G. Navarro~\citeA[Section 5]{Navjda13} points to an application found by Ferragina and Manzini~\citeB[Section 3]{Opportunisticdatastructureswithapplications} that uses access and rank\footnote{Ferragina and Manzini calls rank queries "Occ" in their paper} queries to find the number of occurrences of a pattern $p$ in a string $S$ by storing and querying the Burrows-Wheeler transformation of the string $S^{BWT}$, enabling compression along with efficient query times.
+G. Navarro~\citeA[Section 5]{Navjda13} also point to other similar results and improvements on the previous results by others, showing there is a wide interest in using wavelet trees to store a sequence and query for the occurrences of patterns within that sequence.
+
+G. Navarro~\citeA[Section 5]{Navjda13} further points out the uses of a wavelet tree as a positional inverted index.
+By storing the list of word identifiers in the wavelet tree we store both the text itself and the inverted index.
+Access queries will then return the word at the given position while select$_{c}$($S$, $i$) can be used to get the $i$th word in the inverted list of a word $c$ for the string $S$.
+Rank queries can be used effectively in some list intersection algorithms.
+The efficiency can be improved by using multi-ary wavelet trees or Huffman-shaped wavelet trees as the non-uniformity of word usage in language makes it a good candidate for Huffman coding.
+
+Additional uses for storing sequences, according to G.Navarro~\citeA[Section 5]{Navjda13}, include storing and querying graphs.
 
 
 \subsubsection{Range Quantile Query}
