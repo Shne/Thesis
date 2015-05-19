@@ -4,7 +4,7 @@ It has applications in many areas, from string processing to geometry, and can f
 When~\citeA{Grossi:2003:HET:644108.644250} invented the Wavelet Tree, it was a milestone in compressed full-text indexing even though it is mentioned little in the paper.
 
 \subsection{Constructing the Wavelet Tree}
-\subsubsection{Informal Definition}
+\label{sec:nodeconstruction}
 A Wavelet Tree stores a string in a binary tree of bitmaps, each bitmap indicating for each character in the corresponding string in which half of the alphabet it resides.
 
 At the root node is stored a bitmap with the length of the input string, and each bit in this bitmap represents which half of the alphabet the character at the same position resides in.
@@ -14,8 +14,6 @@ Only the bitmaps are stored in each node.
 The alphabet of the input string can be stored in the tree.
 This process continues recursively in each sub tree until only one character is left in the alphabet of the input string of a sub tree.
 The sub tree is then considered a leaf node and needs not store a bitmap.
-
-An example of a Wavelet Tree can be seen in Figure~\ref{fig:WaveletTreeExample}.
 
 
 \figureBegin
@@ -34,8 +32,7 @@ An example of a Wavelet Tree can be seen in Figure~\ref{fig:WaveletTreeExample}.
 \label{fig:WaveletTreeExample}
 \figureEnd
 
-\subsubsection{Formal Definition}
-A Wavelet Tree for a sequence $S[1,n]$ over alphabet $[1 ... \sigma]$ can be described recursively over a sub-alphabet range $[a ... b] \subseteq [1 ... \sigma]$.
+More formally a Wavelet Tree for a sequence $S[1,n]$ over alphabet $[1 ... \sigma]$ can be described recursively over a sub-alphabet range $[a ... b] \subseteq [1 ... \sigma]$.
 A Wavelet Tree over alphabet $[a ... b]$ (also called $\sigma$) is a binary balanced tree with $b - a + 1$ leaves. If $a = b$ then the Wavelet Tree is simply a leaf labelled $a$. 
 Otherwise it has an internal root node $v_{root}$ that represents the string $S[1,n]$. 
 
@@ -53,18 +50,10 @@ Then the left child of $v_{root}$ is a Wavelet Tree for $S_0[1,n_0]$ over alphab
 \end{mdframed}
 \vspace{0.5 cm}
 
-
-\subsubsection{Complexity}
-The height of a filled Wavelet Tree is  $\lceil \log \sigma \rceil$ and it has $\sigma$ leaves and $\sigma - 1$ internal nodes. 
-At each level in the tree at most \textit{n} bits are stored in the bitmaps in total.
-If some characters of the alphabet do not occur in the input string, the sub trees of the Wavelet tree corresponding to those missing characters may be omitted depending on implementation.
-$n \lceil \log \sigma \rceil$ is an upper bound to the total number of bits that the Wavelet Tree stores in its bitmaps.
-The Wavelet Tree can theoretically be constructed in $O(n \log \sigma)$ time as the entire inputs string must be processed once fully for each layer of nodes, the string and the work split out among the nodes of that layer.
-
-
-\subsubsection{Pseudocode}
-\label{sec:nodeconstruction}
-The Wavelet Tree construction algorithm is recursively defined, calling itself to construct the left and right sub-tree from the root node and down. At each recursion the algorithm splits the given alphabet in two halves and traverses the given string putting each character into a left or right partition based on whether the character was in the left or right half of the alphabet.
+\noindent An example of a Wavelet Tree can be seen in Figure~\ref{fig:WaveletTreeExample}.
+ 
+The pseudo-code for the Wavelet Tree node construction algorithm is shown in Algorithm~\ref{alg:ConstructNode}. 
+It is recursively defined, calling itself to construct the left and right sub-tree from the root node and down. At each recursion the algorithm splits the given alphabet in two halves and traverses the given string putting each character into a left or right partition based on whether the character was in the left or right half of the alphabet.
 
 \begin{algorithm}
 \caption{Construction of nodes in the Wavelet Tree}
@@ -92,6 +81,14 @@ The Wavelet Tree construction algorithm is recursively defined, calling itself t
 \State \Call {ConstructNode} {InputString, InputAlphabet}
 \end{algorithmic}
 \end{algorithm}
+
+\subsubsection{Complexity}
+The height of a filled Wavelet Tree is  $\lceil \log \sigma \rceil$ and it has $\sigma$ leaves and $\sigma - 1$ internal nodes. 
+At each level in the tree at most \textit{n} bits are stored in the bitmaps in total.
+If some characters of the alphabet do not occur in the input string, the sub trees of the Wavelet tree corresponding to those missing characters may be omitted depending on implementation.
+$n \lceil \log \sigma \rceil$ is an upper bound to the total number of bits that the Wavelet Tree stores in its bitmaps.
+The Wavelet Tree can theoretically be constructed in $O(n \log \sigma)$ time as the entire inputs string must be processed once fully for each layer of nodes, the string and the work split out among the nodes of that layer.
+
 
 \subsection{Rank Query}
 \label{sec:rankDescription}
