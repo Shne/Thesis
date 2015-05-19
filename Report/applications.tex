@@ -104,7 +104,7 @@ This characteristic enables higher compression ratios when using techniques such
 The transformation is reversible, meaning it is possible to produce the original string from the Burrows-Wheeler transformed string, without any other information.
 Sorting $S$ would enable similar, or possibly better, compression ratios using run-length encoding, but it will not be reversible.
 
-A string $S$ of $n$ characters is transformed by the Burrows-Wheeler transformation~\citeA{BWToriginalArticle} by forming $n$ cyclic shifts of $S$. 
+A string $S$ of $n$ characters is transformed by the Burrows-Wheeler transformation~\citeA[Section~2]{BWToriginalArticle} by forming $n$ cyclic shifts of $S$. 
 These $n$ permutations of $S$ are then sorted in lexicographical order.
 An extra character (\#), not in the alphabet of $S$, is added to keep track of the end of the original string.
 The BWT of $S$ is then the concatenation of the last character of each permutation in sorted order, excluding $\#$.
