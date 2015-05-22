@@ -56,9 +56,9 @@ There are better data structures for answering rank queries on the entire string
 The second case is rare when the input string is bigger than the alphabet, and would only happen near the leaf nodes.
 
 \figureBegin
-\caption{Why concatenating bitmaps does not enable cache prefetching between bitmaps}
 \label{fig:QueryPrefetchFigure}
 \includegraphics[width=\textwidth]{QueryPrefetchFigure.pdf}
+\caption{How access patterns in a concatenated bitmap can defeat cache prefetching}
 \figureEnd
 
 
