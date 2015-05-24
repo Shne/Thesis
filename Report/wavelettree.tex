@@ -96,7 +96,7 @@ It can be answered by a single downward traversal of the wavelet tree.
 Starting at the root node, an access query will look up the bit $b$ at position $p$ in the bitmap of the root node.
 If $b$ is 0, we know that $c \in \Sigma_{left}$ and the algorithm must therefore traverse into the left child node.
 If $b$ is 1, it means that $c \in \Sigma_{right}$ and the algorithm should traverse into the right child node instead.
-Before we can continue down into the child node, we must know what position in the left (or right) substring $S_{left}$ (or $S_{right}$) the character has been mapped to.
+Before we can continue down into the child node, we must know what position in the left (or right) substring $S_{left}$ (or $S_{right}$) the character $c$ has been mapped to.
 
 If $b$ is 0, the position of $c$ in $S_{left}$ is the number of occurrences of 0 in the bitmap up to position $p$.
 If $b$ is 1, the position of $c$ in $S_{right}$ is the number of occurrences of 1 in the bitmap up to position $p$.
@@ -105,7 +105,7 @@ In the most basic way it can be calculated using a linear scan of the bitmap mak
 Later in this thesis we will work on improving the running time of the binary rank query.
 The result of the binary rank is then used as the position $p$ in the child node we traverse into.
 
-We continue this traversal until we reach a leaf node that will then correspond to the character at the original position $p$ given to the query.
+We continue this traversal until we reach a leaf node that will then correspond to the character at the original position $p$ given to the query, where we can then return the character.
 
 \subsection{Rank Query}
 \label{sec:rankDescription}
@@ -152,6 +152,8 @@ When the leaf is reached the position corresponds to the number of occurrences.}
 \subsection{Select query}
 \label{sec:selectDescription}
 The position of the $i$th occurrence of a character $c$ can be found with a select$_c(i)$ query.
+In Algorithm~\ref{alg:select}, we display pseudocode for select queries.
+
 The $i$th occurrence can be found with a traversal up through the wavelet tree starting at the leaf node corresponding to the character $c$ and ending at the root node.
 This means it is necessary to find the leaf node corresponding to $c$.
 
@@ -196,7 +198,7 @@ I each level the algorithm looks for either 0 or 1 based on how \textit{a} is re
 \State \Return Leaf.Parent.\textproc{SelectRec}(CharBit, Occurrence)
 \EndFunction
 
-\vspace{1cm}
+\vspace{5mm}
 
 \Function {SelectRec} {CharBit, Occurrence}
 \State Position $\gets$ \textproc{BinarySelect}(CharBit, Occurrence)
@@ -211,7 +213,7 @@ I each level the algorithm looks for either 0 or 1 based on how \textit{a} is re
 \State \Return Parent.\textproc{SelectRec}(CharBit, Position)
 \EndFunction
 
-\vspace{1cm}
+\vspace{5mm}
 
 \Function {GetLeaf} {$c$}
 \If{Self.isLeaf}
