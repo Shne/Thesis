@@ -232,7 +232,7 @@ This approach skews the tree and as a result increases the height of the tree, w
 Queries on a Huffman shaped Wavelet Tree for a symbol that has a high frequency then returns faster than queries for a symbol that was less frequent.
 Assuming symbols that occur with high frequency are also queried for more often, the average query time could see a reduction when using a Huffman-shaped wavelet tree.
 
-The Huffman Code~\citeA[Introduction]{HuffmanCoding} of a symbol occurring with high frequency is a shorter binary string than the Huffman code of a symbol occurring with low frequency.
+The Huffman Code~\citeB[Introduction]{HuffmanCoding} of a symbol occurring with high frequency is a shorter binary string than the Huffman code of a symbol occurring with low frequency.
 The most frequent symbol could be encoded in as little as one bit!
 This entails that the storage space required for the many occurrences of the most frequent symbols would be massively reduced, while the space required for the least frequent symbols would be increased.
 If the difference in frequency is sufficiently high, the reduction in space for the most frequent symbols would outweigh the increase in space for the least frequent and the overall storage requirement would be reduced.

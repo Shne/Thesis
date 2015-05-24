@@ -98,7 +98,7 @@ The Wavelet Tree can theoretically be constructed in $O(n \log \sigma)$ time as 
 \label{alg:rank}
 \begin{algorithmic} 
 \Function {Rank} {$Character, Position$}
-\If{$Self.IsLeaf()$}
+\If{\textit{Self.IsLeaf}()}
 \State \Return $Position$
 \EndIf
 \State $CharBit \gets$ bit representing $Character$ in bitmap of current node
