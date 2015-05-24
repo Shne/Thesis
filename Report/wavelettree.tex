@@ -31,6 +31,7 @@ They are only used for the construction of the tree, but can later be reconstruc
 Each bit in the bitmap corresponds to a character in the string $S_{parent}$.
 If a character $c$ at position $p$ in $S_{parent}$ is in the left side of the alphabet $\Sigma_{parent}$, that is $c \in \Sigma_{left}$, the bit in the bitmap at position $p$ will be set to 0.
 If instead $c \in \Sigma_{right}$, the bit at position $p$ will be set to 1.
+Assuming the alphabet is in sorted order with regards to the \textit{greater-than} ($>$) comparison operator, this can be computed as $c \in \Sigma_{right} = c > \Sigma[\lfloor\frac{\sigma}{2}\rfloor]$
 
 This process continues recursively in each child node except where only one character is left in the alphabet of the input string of a node, $\sigma_{parent} = 1$.
 That node is then considered a leaf node and needs not store a bitmap.
@@ -100,7 +101,7 @@ Before we can continue down into the child node, we must know what position in t
 If $b$ is 0, the position of $c$ in $S_{left}$ is the number of occurrences of 0 in the bitmap up to position $p$.
 If $b$ is 1, the position of $c$ in $S_{right}$ is the number of occurrences of 1 in the bitmap up to position $p$.
 This is also called the rank$_0(p)$ or rank$_1(p)$ or the \textit{binary rank} of 0 or 1 in the bitmap up to position $p$.
-In the most basic way it can be calculated using a linear scan of the bitmap.
+In the most basic way it can be calculated using a linear scan of the bitmap making it $O(n)$, and since it is calculated one per level of the tree, the access query becomes $O(n \cdot h) = O(n \lceil \log \sigma \rceil)$.
 Later in this thesis we will work on improving the running time of the binary rank query.
 The result of the binary rank is then used as the position $p$ in the child node we traverse into.
 
@@ -108,9 +109,6 @@ We continue this traversal until we reach a leaf node that will then correspond 
 
 \subsection{Rank Query}
 \label{sec:rankDescription}
-
-
-
 The rank of a character $c$ in a string $S$ up to position $p$ is written as rank$_{p}(c)$ and is defined as the number of occurrences of $c$ in the substring $S[0 \ldots p]$.
 
 The rank query on a wavelet tree starts from the root of the wavelet tree and moves down through the tree until it hits the leaf node corresponding to the input character much like the access query.
@@ -121,7 +119,7 @@ When the leaf node is reached, the binary rank calculated in the parent node is 
 Intuitively this makes sense because leaf nodes correspond to only one character and the rank of a character up to a position in a string containing only that character is the same as the position.
 Figure~\ref{fig:RankDrawing} shows an example of how this concept works.
 
-C++ is used for our implementation and the object-oriented paradigm is utilized and therefore \textproc{Rank($Character, Position$)} is defined on each node, and so, in the pseudo-code, it is called on the root node and the right and left child nodes instead of specifying the node as a parameter to the \textproc{Rank} function, as one would have done it in plain C.
+We have written the rank query as pseudo-code in Algorithm~\ref{alg:rank} using an object-oriented approach.
 
 \begin{figure}
 \center \includegraphics[width=0.66\textwidth]{RankDrawing}
@@ -134,30 +132,36 @@ When the leaf is reached the position corresponds to the number of occurrences.}
 \caption{Rank}
 \label{alg:rank}
 \begin{algorithmic} 
-\Function {Rank} {$Character, Position$}
-\If{\textit{Self.IsLeaf}()}
-\State \Return $Position$
+\Function {Rank} {$c, p$}
+\If{Self.IsLeaf}
+\State \Return $p$
 \EndIf
-\State $CharBit \gets$ bit representing $Character$ in bitmap of current node
-\State $Occurrence \gets$ \Call {BinaryRank} {$CharBit, Position, BitMap$}
-\If{$CharBit = 1$}
-	\State $Rank \gets$ RightChildNode.\Call {Rank} {$CharBit, Occurrence$}
+\State CharBit $\gets$ bit representing $c$ in bitmap of current node
+\State Occurrence $\gets$ \Call {BinaryRank} {CharBit, $p$}
+\If{CharBit $= 1$}
+	\State Rank $\gets$ RightChildNode.\Call {Rank} {$c$, Occurrence}
 \Else
-	\State $Rank \gets$ LeftChildNode.\Call {Rank} {$CharBit, Occurrence$}
+	\State Rank $\gets$ LeftChildNode.\Call {Rank} {$c$, Occurrence}
 \EndIf
-\State \Return $Rank$ 
+\State \Return Rank
 \EndFunction
-\State RootNode.\Call {Rank} {$Character, Position$}
 \end{algorithmic}
 \end{algorithm}
 
 
 \subsection{Select query}
 \label{sec:selectDescription}
-\textproc{Select} queries searches the Wavelet Tree for the position of the $i^{th}$ occurrence of the specified character.
-It starts from the leaf of the character and walks up through parent nodes to the root of the tree, which means it is necessary to know the leaf of the character. 
-This is accomplished using the \textproc{GetLeaf} method, which works by recursing down the tree from the root and choosing the right or left path based on whether the queried-for character is represented as a 0 or a 1 in the bitmap of the current node.
-The recursion stops when the leaf of the character is found.
+The position of the $i$th occurrence of a character $c$ can be found with a select$_c(i)$ query.
+The $i$th occurrence can be found with a traversal up through the wavelet tree starting at the leaf node corresponding to the character $c$ and ending at the root node.
+This means it is necessary to find the leaf node corresponding to $c$.
+
+The leaf node corresponding to a character $c$ can be found by a downward traversal of the tree, from the root to the leaf node without accessing any of the bitmaps.
+Which child node, left or right, should be traversed is determined by computing whether $c \in \Sigma_{left}$ or $c \in \Sigma_{right}$.
+If $c \in \Sigma_{left}$, the traversal continues in the left child node, otherwise it continues in the right child node.
+The traversal continues until a leaf node is reached as that will be the leaf node corresponding to $c$.
+In Algorithm~\ref{alg:select} we call the function performing this traversal \textproc{GetLeaf}.
+
+\textbf{[TODO: CONTINUE HERE, Jan]} \textbf{[TODO: be more general here, talk more about the wavelet tree, less about our code]}
 After having found the leaf the \textproc{Select} function can then compute which bit represents all the characters in the leaf node, called \textit{CharBit}, by knowing whether it is a right- or a left-child of its parent node.
 
 \textproc{SelectRec} is then called on the parent of the leaf which recursively traverses up the tree towards the root to find the position of the specified occurrence of the input character.
@@ -182,42 +186,41 @@ I each level the algorithm looks for either 0 or 1 based on how \textit{a} is re
 \caption{Select}
 \label{alg:select}
 \begin{algorithmic} 
-\Function {Select} {$Character, Occurrence$}
-\State $Leaf \gets GetLeaf(Character)$
-\If{$Leaf$ is $RightChild$}
-	\State $CharBit \gets 1$
+\Function {Select} {$c$, Occurrence}
+\State Leaf $\gets$ \Call{GetLeaf}{c}
+\If{Leaf is a right child node}
+	\State CharBit $\gets 1$
 \Else
-	\State $CharBit \gets 0$
+	\State CharBit $\gets 0$
 \EndIf
-\State \Return $Leaf.Parent.$\textproc{SelectRec}$(CharBit, Occurrence)$
+\State \Return Leaf.Parent.\textproc{SelectRec}(CharBit, Occurrence)
 \EndFunction
 
 \vspace{1cm}
 
-\Function {SelectRec} {$CharBit, Occurrence$}
-\If{$CurrentNode$ is $root$}
-	\State \Return \textproc{BinarySelect}$(CharBit, Occurrence)$
+\Function {SelectRec} {CharBit, Occurrence}
+\State Position $\gets$ \textproc{BinarySelect}(CharBit, Occurrence)
+\If{Self is the root node}
+	\State \Return Position
 \EndIf
-\State $Position \gets $\textproc{BinarySelect}$(CharBit, Occurrence)$
-\If{$CurrentNode$ is $RightChild$}
-	\State $CharBit \gets 1$
+\If{Self is a right child node}
+	\State CharBit $\gets 1$
 \Else
-	\State $CharBit \gets 0$
+	\State CharBit $\gets 0$
 \EndIf
-\State \Return $Parent.$\textproc{SelectRec}$(CharBit, Position)$
+\State \Return Parent.\textproc{SelectRec}(CharBit, Position)
 \EndFunction
 
 \vspace{1cm}
 
-\Function {GetLeaf} {$Character$}
+\Function {GetLeaf} {$c$}
 \If{Self.isLeaf}
 	\State \Return Self
 \EndIf
-\State $CharBit \gets character >$ middle character of alphabet
-\If{$CharBit = 1$}
-	\State \Return RightChild.GetLeaf($Character$)
-\ElsIf{$CharBit = 0$}
-	\State \Return LeftChild.GetLeaf($Character$)
+\If{$c \in \Sigma_{right}$}
+	\State \Return RightChild.GetLeaf($c$)
+\Else
+	\State \Return LeftChild.GetLeaf($c$)
 \EndIf
 \EndFunction
 \end{algorithmic}
