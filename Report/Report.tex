@@ -39,6 +39,16 @@
 \newcommand{\tab}[1]{\hspace{.2\textwidth}\rlap{#1}}
 
 \newtheorem{definition}{Definition}
+\newcommand{\defBegin}{
+	\vspace{0.5 cm}
+	\begin{mdframed}[nobreak, linecolor=lightgray, linewidth=2pt]
+	\begin{definition}
+}
+\newcommand{\defEnd}{
+	\end{definition}	
+	\end{mdframed}
+	\vspace{0.5 cm}
+}
 
 \newcites{A,B}{Primary Bibliography,Secondary Bibliography}
 

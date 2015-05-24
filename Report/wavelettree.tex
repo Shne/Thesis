@@ -1,20 +1,49 @@
 \section{The Wavelet Tree}
-The Wavelet Tree is a binary balanced tree structure, that was invented by Grossi, Grupta and Vitter~\citeA{Grossi:2003:HET:644108.644250} in 2003. 
-It has applications in many areas, from string processing to geometry, and can for instance be used to represent a sequence of elements, a reordering of elements or a grid of points. 
+The Wavelet Tree is a tree structure of bitmaps.
+It was invented by Grossi, Grupta and Vitter~\citeA{Grossi:2003:HET:644108.644250} in 2003.
+In its basic form, it is a balanced binary tree of bitmaps, encoding a \textit{sequence} or \textit{string} $S[1,n] = c_1c_2c_3 \ldots c_n$ of \textit{symbols} or \textit{characters} $c_i \in \Sigma$, where $\Sigma = [1 \ldots \sigma]$ is the \textit{alphabet} of $S$, in such a way that it supports a number of fast queries on $S$.
+A balanced wavelet tree over a string $S$ with alphabet $\Sigma$ will have height $h = \lceil \log \sigma \rceil$, and $2 \sigma - 1$ nodes, with $\sigma$ of those as leaf nodes and $\sigma - 1$ as internal nodes.
+
+With extensions a wavelet tree can be used for efficient compression of $S$ while still supporting the same queries, although not as fast.
+It has applications in many areas, from string processing to geometry, and can be used to represent, among others, a sequence of elements, a reordering of elements or a grid of points. 
 When~\citeA{Grossi:2003:HET:644108.644250} invented the Wavelet Tree, it was a milestone in compressed full-text indexing even though it is mentioned little in the paper.
+The wavelet tree has even been shown to be able to get close to a lower bound of compression called $k$th-order entropy encoding.
 
 \subsection{Constructing the Wavelet Tree}
 \label{sec:nodeconstruction}
-A Wavelet Tree stores a string in a binary tree of bitmaps, each bitmap indicating for each character in the corresponding string in which half of the alphabet it resides.
+The wavelet tree is constructed recursively, starting at the root node and going down, with each node in the tree receiving a string from its parent, except the root node that receives the full input string.
+Let $S_{parent}$ of length $n_{parent}$ be the string passed to the node from the parent node or, in the case of the root node, the input string to the wavelet tree itself.
+$\Sigma_{parent}$ is the alphabet over which $S_{parent}$ is defined where each entry in the alphabet, a \textit{character} or \textit{symbol}, has a position in the alphabet.
+$\sigma_{parent}$ is the size of $\Sigma_{parent}$.
+Each node stores a bitmap of size $n_{parent}$ as well as pointers to its left and right child nodes.
 
-At the root node is stored a bitmap with the length of the input string, and each bit in this bitmap represents which half of the alphabet the character at the same position resides in.
-At each node, the alphabet is split in half and the symbols in the left half are assigned bit value 0 in the bitmap and the symbols to the right are assigned bit value 1 so that there is a bit for each symbol in the string in the bitmap. 
-The symbols of the string that has bit-value 0 are concatenated in the order they appear in the string and are passed as input string to the left sub-tree and the ones with bit value 1 are passed as input string to the right sub-tree.
-Only the bitmaps are stored in each node.
-The alphabet of the input string can be stored in the tree.
-This process continues recursively in each sub tree until only one character is left in the alphabet of the input string of a sub tree.
-The sub tree is then considered a leaf node and needs not store a bitmap.
+Each node calculates the middle character of $\Sigma_{parent}$ and uses that to set the bits in the bitmap and split $S_{parent}$ in two substrings $S_{left}$ and $S_{right}$, passing those on to the left and right child nodes.
 
+Let $i = \left\lfloor\frac{\sigma}{2}\right\rfloor$ be the index of the middle of the alphabet $\Sigma_{parent}$.
+$S_{left}$ is then the subsequence of $S_{parent}$ formed by the characters $c \in S_{parent}$ where $c \in \Sigma_{parent}[1 \ldots i] = \Sigma_{left}$.
+$S_{right}$ is the subsequence of $S_{parent}$ formed by the characters $c \in S_{parent}$ where $c \in \Sigma_{parent}[i+1 \ldots \sigma_{parent}] = \Sigma_{right}$.
+Alternatively, $S_{left}$ can be considered to be the subsequence of $S_{parent}$ where all characters $c \in \Sigma_{right}$ have been stripped out. Similarly $S_{right}$ can be considered the subsequence of $S_{parent}$ where all characters $c \in \Sigma_{left}$ have been stripped out.
+This also means that the alphabets for the substrings $S_{left}$ and $S_{right}$ do not overlap, that is $\forall c \in \Sigma_{left}: c \notin \Sigma_{right}$ and vice versa.
+The characters in the subsequences $S_{left}$ and $S_{right}$ occur in the same order they do in $S_{parent}$.
+All these strings are not stored anywhere in the wavelet tree.
+They are only used for the construction of the tree, but can later be reconstructed from the information stored in the bitmaps if need be.
+
+Each bit in the bitmap corresponds to a character in the string $S_{parent}$.
+If a character $c$ at position $p$ in $S_{parent}$ is in the left side of the alphabet $\Sigma_{parent}$, that is $c \in \Sigma_{left}$, the bit in the bitmap at position $p$ will be set to 0.
+If instead $c \in \Sigma_{right}$, the bit at position $p$ will be set to 1.
+
+This process continues recursively in each child node except where only one character is left in the alphabet of the input string of a node, $\sigma_{parent} = 1$.
+That node is then considered a leaf node and needs not store a bitmap.
+Each node in a wavelet tree can be considered a full wavelet tree for the string $S_{parent}$ it was passed from its parent node.
+
+At each level in the tree at most \textit{n} bits are stored in the bitmaps in total, making $n \cdot h$ an upper bound to the total number of bits that a wavelet tree stores in its bitmaps.
+
+The Wavelet Tree can theoretically be constructed in $O(n \cdot h)$ time as the sum of the lengths of the strings being processed at any one layer of the tree is the length of the input string to the tree.
+
+An example of a Wavelet Tree can be seen in Figure~\ref{fig:WaveletTreeExample}.
+
+The pseudo-code for the Wavelet Tree node construction algorithm is shown in Algorithm~\ref{alg:ConstructNode}. 
+It is recursively defined, calling itself to construct the left and right sub-tree from the root node and down. At each recursion the algorithm splits the given alphabet in two halves and traverses the given string putting each character into a left or right partition based on whether the character was in the left or right half of the alphabet.
 
 \figureBegin
 \Tree
@@ -28,32 +57,9 @@ The sub tree is then considered a leaf node and needs not store a bitmap.
 	[.sfsfs\\10101 !\qsetw{5cm} 
 		%right -> left,right child
 		[.ff !\qsetw{5.3cm} ] [.sss !\qsetw{5.3cm} ]]] 
-\caption{Wavelet Tree on string \textit{adsfadaadsfaads} with alphabet $\sigma = adfs$. Note that only the bitmaps are actually stored in the tree. The characters are annotations for ease of understanding.}	
+\caption{Wavelet Tree on string \textit{adsfadaadsfaads} with alphabet $\Sigma = [\mathit{adfs}]$. Note that only the bitmaps are actually stored in the tree. The characters are annotations for ease of understanding.}	
 \label{fig:WaveletTreeExample}
 \figureEnd
-
-More formally a Wavelet Tree for a sequence $S[1,n]$ over alphabet $[1 ... \sigma]$ can be described recursively over a sub-alphabet range $[a ... b] \subseteq [1 ... \sigma]$.
-A Wavelet Tree over alphabet $[a ... b]$ (also called $\sigma$) is a binary balanced tree with $b - a + 1$ leaves. If $a = b$ then the Wavelet Tree is simply a leaf labelled $a$. 
-Otherwise it has an internal root node $v_{root}$ that represents the string $S[1,n]$. 
-
-Definition~\ref{def:SplittingTheString} defines more formally how the substrings of the input string passed to the left and right sub tree are constructed.
-
-
-\vspace{0.5 cm}
-\begin{mdframed}[nobreak, linecolor=lightgray, linewidth=2pt]
-\begin{definition} Splitting the string. \\\\
-Let $S_0[1,n_0] =$ subsequence of $S[1,n]$ formed by symbols $c \leq \sigma/2$.\\
-Let $S_1[1,n_1] =$ subsequence of $S[1,n]$ formed by symbols $c > \sigma/2$.\\\\
-Then the left child of $v_{root}$ is a Wavelet Tree for $S_0[1,n_0]$ over alphabet $[a ... \lfloor (a + b)/2 \rfloor]$ and right child of $v_{root}$ is a Wavelet Tree for $S_1[1,n_1]$ over alphabet $[1 + \lfloor (a + b)/2 \rfloor ... b]$.
-\label{def:SplittingTheString}
-\end{definition}
-\end{mdframed}
-\vspace{0.5 cm}
-
-\noindent An example of a Wavelet Tree can be seen in Figure~\ref{fig:WaveletTreeExample}.
- 
-The pseudo-code for the Wavelet Tree node construction algorithm is shown in Algorithm~\ref{alg:ConstructNode}. 
-It is recursively defined, calling itself to construct the left and right sub-tree from the root node and down. At each recursion the algorithm splits the given alphabet in two halves and traverses the given string putting each character into a left or right partition based on whether the character was in the left or right half of the alphabet.
 
 \begin{algorithm}
 \caption{Construction of nodes in the Wavelet Tree}
@@ -82,13 +88,9 @@ It is recursively defined, calling itself to construct the left and right sub-tr
 \end{algorithmic}
 \end{algorithm}
 
-\subsubsection{Complexity}
-The height of a filled Wavelet Tree is  $\lceil \log \sigma \rceil$ and it has $\sigma$ leaves and $\sigma - 1$ internal nodes. 
-At each level in the tree at most \textit{n} bits are stored in the bitmaps in total.
-If some characters of the alphabet do not occur in the input string, the sub trees of the Wavelet tree corresponding to those missing characters may be omitted depending on implementation.
-$n \lceil \log \sigma \rceil$ is an upper bound to the total number of bits that the Wavelet Tree stores in its bitmaps.
-The Wavelet Tree can theoretically be constructed in $O(n \log \sigma)$ time as the entire inputs string must be processed once fully for each layer of nodes, the string and the work split out among the nodes of that layer.
 
+\subsection{Access Query}
+\textbf{[TODO]}
 
 \subsection{Rank Query}
 \label{sec:rankDescription}
@@ -114,8 +116,9 @@ The Wavelet Tree can theoretically be constructed in $O(n \log \sigma)$ time as 
 \end{algorithmic}
 \end{algorithm}
 
-Rank counts the number of occurrences of the specified character up to and including the specified position. 
-It starts from the root of the Wavelet Tree and moves down through the tree until it hits the leaf of the input character.
+The rank of a character $c$ in a string $S$ up to position $p$ is written as rank$_{p}(c)$ and is defined as the number of occurrences of $c$ in the substring $S[0 \ldots p]$.
+
+The rank query on a wavelet tree starts from the root of the Wavelet Tree and moves down through the tree until it hits the leaf of the input character.
 In each level of the tree \textproc{BinaryRank} is calculated for the character. 
 The result of \textproc{BinaryRank} is used as the position parameter for the next recursive call to rank.
 When the leaf of the input symbol is reached, the position returned from the previous call to \textproc{BinaryRank} is already the rank of the input symbol up to the original input position.
