@@ -31,7 +31,9 @@ They are only used for the construction of the tree, but can later be reconstruc
 Each bit in the bitmap corresponds to a character in the string $S_{parent}$.
 If a character $c$ at position $p$ in $S_{parent}$ is in the left side of the alphabet $\Sigma_{parent}$, that is $c \in \Sigma_{left}$, the bit in the bitmap at position $p$ will be set to 0.
 If instead $c \in \Sigma_{right}$, the bit at position $p$ will be set to 1.
-Assuming the alphabet is in sorted order with regards to the \textit{greater-than} ($>$) comparison operator, this can be computed as $c \in \Sigma_{right} = c > \Sigma[\lfloor\frac{\sigma}{2}\rfloor]$
+Assuming the alphabet is in sorted order with regards to the \textit{greater-than} ($>$) comparison operator, this can be computed as $c \in \Sigma_{right} = c > \Sigma[\lfloor\frac{\sigma}{2}\rfloor]$.
+If the alphabet is not in sorted order, either lookups into the alphabet list or a mapping to and from an alphabet in sorted order will be needed to calculate whether a given character is on the left or right side of the alphabet.
+The leaf nodes of a wavelet tree will appear in the same order as the characters they represent appear in the alphabet used.
 
 This process continues recursively in each child node except where only one character is left in the alphabet of the input string of a node, $\sigma_{parent} = 1$.
 That node is then considered a leaf node and needs not store a bitmap.
@@ -106,6 +108,9 @@ Later in this thesis we will work on improving the running time of the binary ra
 The result of the binary rank is then used as the position $p$ in the child node we traverse into.
 
 We continue this traversal until we reach a leaf node that will then correspond to the character at the original position $p$ given to the query, where we can then return the character.
+
+We have chosen not to implement or test access queries on our implementations of a wavelet tree.
+We have done this to reduce the amount of code and testing needed and because the behaviour of rank (see Section~\ref{sec:rankDescription}) and access queries are so similar, e.g. both using binary rank, we believe implementing and testing only the more complicated rank query of these two will be representative enough of a real-world use case.
 
 \subsection{Rank Query}
 \label{sec:rankDescription}
