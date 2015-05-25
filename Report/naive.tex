@@ -8,8 +8,8 @@ It is explained in Section~\ref{sec:UsingIntAsChar} how this is equivalent to st
 $Bitmap$ is stored as a \texttt{vector<bool>} which is a tightly packed data structure, only using 1 bit per bool\footnote{\url{http://www.cplusplus.com/reference/vector/vector-bool/}}, plus a little bookkeeping data and at most 8 bytes minus 1 bit of superfluous stored data when the amount of bits stored does not align with 8 bytes.
 
 Rank queries were implemented as described in Section~\ref{sec:rankDescription} and
-binary rank was implemented as described in Section~\ref{sec:TheoryBinaryRank}.
-Select queries were implemented as described in Section~\ref{sec:selectDescription} with binary select implemented as described in Section~\ref{sec:binarySelectDescription}.
+binary rank was implemented as a simple linear scan of the bitmap.
+Select queries were implemented as described in Section~\ref{sec:selectDescription} with binary select implemented as a simple linear scan of the bitmap.
 
 \subsection{Optimizations}
 \label{sec:simpleoptimizations}

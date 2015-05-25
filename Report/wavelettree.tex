@@ -100,7 +100,7 @@ Before we can continue down into the child node, we must know what position in t
 
 If $b$ is 0, the position of $c$ in $S_{left}$ is the number of occurrences of 0 in the bitmap up to position $p$.
 If $b$ is 1, the position of $c$ in $S_{right}$ is the number of occurrences of 1 in the bitmap up to position $p$.
-This is also called the rank$_0(p)$ or rank$_1(p)$ or the \textit{binary rank} of 0 or 1 in the bitmap up to position $p$.
+This is also called rank$_0(p)$ or rank$_1(p)$ or the \textit{binary rank} of 0 or 1 in the bitmap up to position $p$.
 In the most basic way it can be calculated using a linear scan of the bitmap making it $O(n)$, and since it is calculated one per level of the tree, the access query becomes $O(n \cdot h) = O(n \lceil \log \sigma \rceil)$.
 Later in this thesis we will work on improving the running time of the binary rank query.
 The result of the binary rank is then used as the position $p$ in the child node we traverse into.
@@ -151,8 +151,8 @@ When the leaf is reached the position corresponds to the number of occurrences.}
 
 \subsection{Select query}
 \label{sec:selectDescription}
-The position of the $i$th occurrence of a character $c$ can be found with a select$_c(i)$ query.
-In Algorithm~\ref{alg:select}, we display pseudocode for select queries.
+The position of the $o$th occurrence of a character $c$ can be found with a select$_c(o)$ query.
+
 
 The $i$th occurrence can be found with a traversal up through the wavelet tree starting at the leaf node corresponding to the character $c$ and ending at the root node.
 This means it is necessary to find the leaf node corresponding to $c$.
@@ -161,22 +161,29 @@ The leaf node corresponding to a character $c$ can be found by a downward traver
 Which child node, left or right, should be traversed is determined by computing whether $c \in \Sigma_{left}$ or $c \in \Sigma_{right}$.
 If $c \in \Sigma_{left}$, the traversal continues in the left child node, otherwise it continues in the right child node.
 The traversal continues until a leaf node is reached as that will be the leaf node corresponding to $c$.
-In Algorithm~\ref{alg:select} we call the function performing this traversal \textproc{GetLeaf}.
 
-\textbf{[TODO: CONTINUE HERE, Jan]} \textbf{[TODO: be more general here, talk more about the wavelet tree, less about our code]}
-After having found the leaf the \textproc{Select} function can then compute which bit represents all the characters in the leaf node, called \textit{CharBit}, by knowing whether it is a right- or a left-child of its parent node.
 
-\textproc{SelectRec} is then called on the parent of the leaf which recursively traverses up the tree towards the root to find the position of the specified occurrence of the input character.
-It does so by calling \textproc{BinarySelect} which returns the position of the specified occurrence of the \textit{CharBit} in the bitmap of the current node. 
-This position is then used as the occurrence to find the position of in the next recursive call.
-When the root is reached the result of \textproc{BinarySelect} is the position of the specified occurrence of the character in the original input string and can be returned as such.
 
-Select queries are performed in collaboration by the \textproc{Select} and \textproc{SelectRec} functions because using two functions instead of one saves us a check for whether the current node is a leaf or not at each recursive call and since we start out in a leaf and will never meet one again that check would only be true once during the execution.
+After having found the leaf node the algorithm turns to do the upward traversal to find the position of the $i$th occurrence of $c$ in the bitmap of the root node.
+This is done by finding the $o$th occurrence of 1 or 0, the bit representing $c$, in the bitmaps from the found leaf node to the root node, the $o$th occurrence of 1 or 0 being the bitmap entry corresponding to the $i$th occurrence of $c$ in $S$.
+$o$ for a node $v$ is the position of the bit representing $c$ in the bitmap of the child node of $v$ that contains $c$.
+$o$ is calculated for each node during the upward traversal and increases (or at least does not decrease) as each bitmap higher up the tree corresponds to more and more of the original input string.
+To know which bit, 1 or 0, to look for the $o$th occurrence of, the algorithm must know which bit $c$ has been mapped to in those bitmaps.
+Starting at the leaf node corresponding to $c$, it can be computed which bit in the bitmap of the parent node represents all characters in this node, among them $c$, by comparing the left or right child node pointer of the parent node with the address of this node.
+If the right child pointer of the parent node points to the current node, then the current node is the right child of its parent node and $c$ and the rest of the characters in this node will be represented by a 1 in the bitmap of the parent node, otherwise it will be represented by a 0.
 
-Figuring out the \textit{CharBit} is a lot simpler for \textproc{Select} than for \textproc{Rank} since we query bottom-up and can just check whether the current node is a left child or a right child. 
-In \textproc{Rank} one needs to calculate the split character and then check whether the input character is before or after it in the alphabet in every recursive step.
+Having found the bit representing $c$ in the parent node, the algorithm will look for the position of the $o$th occurrence of that bit in the bitmap of the parent.
+This is also called select$_1(o)$ or select$_0(o)$ or the \textit{binary select} of 1 or 0 of the bitmap.
+It can be implemented as a linear scan of the bitmap, but this is inefficient and later in this thesis we will look at how to improve the running time of binary select.
+The position of this occurrence is then the new $o$ parameter for the next step up the tree.
 
-An example of how the intuition behind why \textproc{Select} works is shown in Figure~\ref{fig:SelectDrawing}.
+In Algorithm~\ref{alg:select}, we display pseudocode for select queries.
+\textproc{GetLeaf} is the function performing the initial downward traversal to find the leaf node corresponding to the character $c$.
+\textproc{SelectRec} is the function performing the upward traversal, finding the (varying) $o$th occurrences of 1 or 0 in the bitmaps up the tree, in a recursive manner.
+\textproc{Select} is the function computing the select$_{c}(o)$ query on the wavelet tree.
+It initiates the downward traversal via \textproc{GetLeaf} and then the upward traversal via \textproc{SelectRec}.
+
+An example traversal of a select query is shown in Figure~\ref{fig:SelectDrawing}.
 In the example the algorithm looks for the position of the 3rd \textit{a}.
 It starts in the leaf of \textit{a} and finds that he position of the 3rd \textit{a} is 3. 
 This position is then used in the parent as the occurrence to find the position of. 
@@ -239,32 +246,3 @@ The process terminates when the root is reached.}
 \label{fig:SelectDrawing}
 \end{figure}
 
-
-
-
-
-\subsubsection{Binary Select}
-\label{sec:binarySelectDescription}
-\textproc{BinarySelect} returns the position of the \textit{i}th occurrence of 1 or 0 (\textit{CharBit}) in a bitset. 
-It does so by looping through the bitmap and when \textit{i} occurrences of either 1 or 0 (depending on whether the current node is a left child or a right child) has been seen then the position of the last bit that was seen is returned.
-\textproc{BinarySelect} takes O(n) time because the length of a bitmap is at most the length of the original input string.
-In Section~\ref{sec:ImplBinarySelect} we describe how to improve the practical running time of \textproc{BinarySelect}.
-
-
-\begin{algorithm}
-\caption{BinarySelect}
-\label{alg:binaryselect}
-\begin{algorithmic}
-\Function {BinarySelect} {$Occourance, Bitmap, BitToCount$}
-\State $Occ \gets 0$
-\For{$bit$ in $Bitmap$}
-	\If{$bit = BitToCount$}
-		\If{$Occ = Occourance$}
-		\State \Return position of $bit$ in $Bitmap$
-	\EndIf
-	\State $Occ \gets Occ + 1$
-	\EndIf
-\EndFor
-\EndFunction
-\end{algorithmic}
-\end{algorithm}
