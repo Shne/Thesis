@@ -41,8 +41,7 @@ The general idea is to have the most heavily used cache-lines in the caches as m
 When designing a cache it is important to consider whether each cache-line can be stored in any cache slot or only in some of them.
 There are three approaches to solving this problem; \textit{direct mapped cache}, \textit{n-way set-associative cache} and \textit{fully associative cache}. 
 
-In a \textit{direct mapped cache} each cache-line can only be stored in a specific cache slot, the address of which is found by using a mapping function on address of the original main memory address, e.g.
-\[cacheAddress = memoryAddress\bmod cacheslots\]
+In a \textit{direct mapped cache} each cache-line can only be stored in a specific cache slot, the address of which is found by using a mapping function on the address of the original main memory address, e.g. the address modulo the number of cache slots.
 This means that two cache-lines cannot be mapped to the same slot simultaneously.
 Given a memory address it is only necessary to look for it in one place in the cache and if it is not there then it is not in the cache. Using this approach, and an appropriate mapping function, consecutive memory lines are placed in consecutive cache slots. 
 The problem with a \textit{direct mapped cache} is that since there are many more cache-lines in main memory than there is space for in the cache, many cache-lines ends up competing for the same slot. 
@@ -199,7 +198,7 @@ This means that the translation from \textit{va} to \textit{pa} requires three p
 To reduce the number of reads needed when a virtual address is translated, a translation lookaside buffer (\textbf{TLB}) is used~\citeA[Section~8.2.5]{OperatingSystemPrinciples}.
 The TLB saves the most recent translations of \textit{va} to \textit{pa} i.e. translated pagenumbers, to make them quickly available for future use.
 This means that subsequent accesses of a virtual address within a short period is able to bypass segmentation- and page table lookups and simply just access the needed page frame from the TLB and find it in the physical memory.
-When the page is available in the TLB it is called a \textbf{TLB hit}.
+When the page is available in the TLB it is called a \textit{TLB hit}.
 The TLB is not a large buffer and it can only hold a few virtual page translations at a time. 
-A \textbf{TLB miss} occurs when a given virtual page translation is not available in the TLB and as a consequence the virtual page needs to be translated using table lookups. 
+A \textit{TLB miss} occurs when a given virtual page translation is not available in the TLB and as a consequence the virtual page needs to be translated using table lookups. 
 A TLB miss is therefore expensive and it is a good idea to minimize them as much as possible to improve performance.

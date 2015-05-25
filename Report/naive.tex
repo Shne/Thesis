@@ -3,7 +3,7 @@ This section deals with the simple, straightforward, naïve implementation based
 We will call this version of the wavelet tree SimpleNaive.
 
 The construction of the wavelet tree is implemented similarly to the pseudo-code in Section~\ref{sec:nodeconstruction}.
-In our implementation $Alphabet$, $LeftAlphabet$, and $RightAlphabet$ are stored as two integer values each: a minimum and a maximum.
+In our implementation \textit{Alphabet}, \textit{LeftAlphabet}, and \textit{RightAlphabet} are stored as two integer values each: a minimum and a maximum.
 It is explained in Section~\ref{sec:UsingIntAsChar} how this is equivalent to storing the full alphabet and passing pointers into it around.
 $Bitmap$ is stored as a \texttt{vector<bool>} which is a tightly packed data structure, only using 1 bit per bool\footnote{\url{http://www.cplusplus.com/reference/vector/vector-bool/}}, plus a little bookkeeping data and at most 8 bytes minus 1 bit of superfluous stored data when the amount of bits stored does not align with 8 bytes.
 
@@ -20,7 +20,7 @@ To improve \textproc{BinaryRank} the intrinsic cpu instruction \texttt{popcount}
 Our use of \texttt{popcount} to improve binary rank and select queries was inspired by~ González et al.~\citeB{Gonzalez05practicalimplementation} who used it to improving binary rank and binary select for bit arrays.
 Unlike González et al., we do not use a popcount function implemented in software, but rather the built in \texttt{popcount} instruction in the CPU instruction set.
 An \texttt{unsigned long} pointer can be retrieved from the \texttt{vector<bool>} bitmap into the backing array. The implementation will therefore be working on \texttt{unsigned long}s and we will call their size (64 bits on machine 1) our wordsize.
-When using \texttt{popcount}, \textproc{BinaryRank} remains in theory an $O(N/wordsize) = O(N)$ operation, as \textit{wordsize} is a constant factor, but it has a large practical effect on performance as can be seen in Section~\ref{sec:experimentPopcountRankSelect}.
+When using \texttt{popcount}, \textproc{BinaryRank} remains in theory an $\smash O(\frac{N}{\mathit{wordsize}}) = O(N)$ operation, as \textit{wordsize} is a constant factor, but it has a large practical effect on performance as can be seen in Section~\ref{sec:experimentPopcountRankSelect}.
 
 To use \texttt{popcount} we call \texttt{\_\_builtin\_popcountl} which is a function built into the GCC compiler~\citeB{Popcount-GCC-Builtin}. 
 It takes an \texttt{unsigned long} as a parameter and returns the number of 1s in it. \texttt{\_\_builtin\_popcountl} will automatically figure out how to do popcount based on what CPU you are using. Popcount as an intrinsic cpu instruction is supported on both AMD~\citeA{AMD-Popcount} and Intel arhitectures~\citeA{Intel-Popcount}.
@@ -38,8 +38,8 @@ We improved \textproc{Binary Select} by again using the \texttt{popcount} instru
 We iterate through the words of the bitmap and call \texttt{popcount} for each word and sum up the results along the way. 
 When the sum after the next word would be greater than the sought number of occurrences we discard the \texttt{popcount} result for the next word and fall back to the simple binary select for that next word to find the position within that word.
 
-We define the input occurrence parameter as $io$, the number of words iterated through so far as $w$, the sum so far as $sum$, and the wordsize as $ws$. 
-The occurrence argument for that last simple binary select is then the $io - sum$ and the output position is $w \times ws + \textproc{BinaryRank}(bitmapwords[ws+1], io - sum)$ \footnote{Using simple binary rank without \texttt{popcount}}.
+We define the input occurrence parameter as \textit{io}, the number of words iterated through so far as \textit{w}, the sum so far as \textit{sum}, and the wordsize as \textit{ws}. 
+The occurrence argument for that last simple binary select is then the $\mathit{io} - \mathit{sum}$ and the output position is $w \times \mathit{ws} + \textproc{BinaryRank}(\mathit{bitmapwords}[\mathit{ws}+1], io - \mathit{sum})$ \footnote{Using simple binary rank without \texttt{popcount}}.
 
 Again, when popcount for 0s instead of 1s is needed, we simply subtract the result of \texttt{popcount} from 1 to obtain the count of 0s.
 
@@ -97,8 +97,8 @@ The query parameters were chosen as described in Section~\ref{sec:choiceOfQueryP
 To test what Big-O notation running time our construction algorithm was running at, we tested the running time of building the tree relative to the alphabet size by running the program 5 times for each size of the alphabet, and took the average value of the resulting measurements for each measurement type we used.
 We tested for alphabet sizes $2^p$ with $p = [8...23]$ and used a constant input string of length $n = 10^8$, except in a single test (Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_plusSigma}) where we used $n = 10^2$.
 
-A theoretical running time of $O(n \cdot \log(\sigma))$ is equivalent to $a \cdot n \cdot \log(\sigma)$ where $a$ is some constant factor.
-Assuming our construction algorithm has this running time, a plot of the wall time divided by $n \cdot \log(\sigma)$ should converge on the constant factor $a$ as $\sigma \rightarrow \infty$
+A theoretical running time of $O(n \log\sigma)$ is equivalent to $a \cdot n \log\sigma$ where $a$ is some constant factor.
+Assuming our construction algorithm has this running time, a plot of the wall time divided by $n \log\sigma$ should converge on the constant factor $a$ as $\sigma \rightarrow \infty$
 In Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime} we have plotted this, and find that it could be said to be converging on a constant value until reaching an alphabet size of about $2^{16}$ whereafter it increases as $\sigma$ increases, with what looks like exponential growth.
 This means our implementation of the construction of a Wavelet Tree is not conforming to the theoretical running time for higher alphabet sizes.
 
@@ -115,13 +115,13 @@ This is in contrast to the wall time over theoretical running time plot in Figur
 We conclude the Cache Misses are not the problem.
 
 We then considered that the difference in theoretical and practical running time might be explained by the fact that our algorithm spends a constant amount of time per node, constructing it, independent on the size of the input, $n$, and scaling linearly with alphabet size, $\sigma$.
-The actual running time should then be $a \cdot n \cdot \log(\sigma) + b \cdot \sigma$.
+The actual running time should then be $a \cdot n \log\sigma + b \sigma$.
 Since $n$ in our previous experiment is somewhat large ($10^8$), it might be the dominating factor in the running time.
-So to show whether the added $b \cdot \sigma$ term can explain the running time, we redid the experiment with a reduced length input string $n = 10^2$ and plotted it in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_plusSigma} divided by $\log(\sigma) + \sigma$ to see whether it would converge on some constant as $\sigma \rightarrow \infty$.
+So to show whether the added $b \sigma$ term can explain the running time, we redid the experiment with a reduced length input string $n = 10^2$ and plotted it in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_plusSigma} divided by $\sigma + \log \sigma$ to see whether it would converge on some constant as $\sigma \rightarrow \infty$.
 
 We can see in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_plusSigma} that it does not converge on any constant value other than 0, meaning the constant factor from each node cannot explain our implementation's running time.
 
-Having not found an explanation we pull data for Translation Lookaside Buffer Misses from the experiment and plot it together with wall time, both divided by $log(\sigma)$, in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_TLB}
+Having not found an explanation we pull data for Translation Lookaside Buffer Misses from the experiment and plot it together with wall time, both divided by $\log \sigma$, in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_TLB}
 
 
 
@@ -159,7 +159,7 @@ We have no good explanation to offer as to the L2 Cache Miss Rate increases so m
 It is not a problem at any rate, as we can see in the massive decrease in running time.
 
 We believe the massive reduction in branch mispredictions accounts for some of the saved cpu cycles.
-Given that the branch misprediction penalty on the Ivy Bridge architecture (on which this experiment was run) is about "15 cycles or more"~\citeA[Section 3.7]{agner}, we can calculate an estimate of how many cpu cycles the branch misprediction reduction has saved us.
+Given that the branch misprediction penalty on the Ivy Bridge architecture (on which this experiment was run) is about ``15 cycles or more''~\citeA[Section 3.7]{agner}, we can calculate an estimate of how many cpu cycles the branch misprediction reduction has saved us.
 The number of saved branch mispredictions for \textproc{rank} is then 1,396,757,616.4 - 22,682.2 = 1,396,734,934.2 mispredictions. Assuming a penalty of 15 cycles this becomes 1,396,734,934.2 $\cdot$ 15 = 20,951,024,013 cpu cycles saved, and given that the total number of cycles saved is 397,345,711,110.4 - 4,423,412,635.0 = 392,922,298,475, it is 20,951,024,013 / 392,922,298,475 = 0.05332103597 = 5.33\% of the total amount of cpu cycles saved.
 This means that the branch mispredictions do have an effect, but it is only a small part of this increase in speed. The main improvement, we expect, comes from using only a few cpu cycles per word of the bitmap to calculate the binary rank, as well as possibly the slight decrease in L1 and L3 cache misses.
 
@@ -203,7 +203,7 @@ Inspired by Brodal et al.~\citeA[Introduction]{gerthSkewedBinarySearchTrees} we 
 	
 	\begin{subfigure}{0.48\textwidth}
 		\input{naiveIntegerAlphabetSize_WallTime_plusSigma}
-		\caption{Wall Time divided by $log(\sigma) + \sigma$}
+		\caption{Wall Time divided by $\sigma + \log \sigma$}
 		\label{fig:naiveIntegerAlphabetSize_WallTime_plusSigma}
 	\end{subfigure}
 	\hfill

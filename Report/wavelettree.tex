@@ -12,32 +12,32 @@ The wavelet tree has even been shown to be able to get close to a lower bound of
 \subsection{Constructing the Wavelet Tree}
 \label{sec:nodeconstruction}
 The wavelet tree is constructed recursively, starting at the root node and going down, with each node in the tree receiving a string from its parent, except the root node that receives the full input string.
-Let $S_{parent}$ of length $n_{parent}$ be the string passed to the node from the parent node or, in the case of the root node, the input string to the wavelet tree itself.
-$\Sigma_{parent}$ is the alphabet over which $S_{parent}$ is defined where each entry in the alphabet, a \textit{character} or \textit{symbol}, has a position in the alphabet.
-$\sigma_{parent}$ is the size of $\Sigma_{parent}$.
-Each node stores a bitmap of size $n_{parent}$ as well as pointers to its left and right child nodes.
+Let $S_{\mathit{parent}}$ of length $n_{\mathit{parent}}$ be the string passed to the node from the parent node or, in the case of the root node, the input string to the wavelet tree itself.
+$\Sigma_{\mathit{parent}}$ is the alphabet over which $S_{\mathit{parent}}$ is defined where each entry in the alphabet, a \textit{character} or \textit{symbol}, has a position in the alphabet.
+$\sigma_{\mathit{parent}}$ is the size of $\Sigma_{\mathit{parent}}$.
+Each node stores a bitmap of size $n_{\mathit{parent}}$ as well as pointers to its left and right child nodes.
 
-Each node calculates the middle character of $\Sigma_{parent}$ and uses that to set the bits in the bitmap and split $S_{parent}$ in two substrings $S_{left}$ and $S_{right}$, passing those on to the left and right child nodes.
+Each node calculates the middle character of $\Sigma_{\mathit{parent}}$ and uses that to set the bits in the bitmap and split $S_{\mathit{parent}}$ in two substrings $S_{\mathit{left}}$ and $S_{\mathit{right}}$, passing those on to the left and right child nodes.
 
-Let $i = \left\lfloor\frac{\sigma}{2}\right\rfloor$ be the index of the middle of the alphabet $\Sigma_{parent}$.
-$S_{left}$ is then the subsequence of $S_{parent}$ formed by the characters $c \in S_{parent}$ where $c \in \Sigma_{parent}[1 \ldots i] = \Sigma_{left}$.
-$S_{right}$ is the subsequence of $S_{parent}$ formed by the characters $c \in S_{parent}$ where $c \in \Sigma_{parent}[i+1 \ldots \sigma_{parent}] = \Sigma_{right}$.
-Alternatively, $S_{left}$ can be considered to be the subsequence of $S_{parent}$ where all characters $c \in \Sigma_{right}$ have been stripped out. Similarly $S_{right}$ can be considered the subsequence of $S_{parent}$ where all characters $c \in \Sigma_{left}$ have been stripped out.
-This also means that the alphabets for the substrings $S_{left}$ and $S_{right}$ do not overlap, that is $\forall c \in \Sigma_{left}: c \notin \Sigma_{right}$ and vice versa.
-The characters in the subsequences $S_{left}$ and $S_{right}$ occur in the same order they do in $S_{parent}$.
+Let $i = \left\lfloor\frac{\sigma}{2}\right\rfloor$ be the index of the middle of the alphabet $\Sigma_{\mathit{parent}}$.
+$S_{\mathit{left}}$ is then the subsequence of $S_{\mathit{parent}}$ formed by the characters $c \in S_{\mathit{parent}}$ where $c \in \Sigma_{\mathit{parent}}[1 \ldots i] = \Sigma_{\mathit{left}}$.
+$S_{\mathit{right}}$ is the subsequence of $S_{\mathit{parent}}$ formed by the characters $c \in S_{\mathit{parent}}$ where $c \in \Sigma_{\mathit{parent}}[i+1 \ldots \sigma_{\mathit{parent}}] = \Sigma_{\mathit{right}}$.
+Alternatively, $S_{\mathit{left}}$ can be considered to be the subsequence of $S_{\mathit{parent}}$ where all characters $c \in \Sigma_{\mathit{right}}$ have been stripped out. Similarly $S_{\mathit{right}}$ can be considered the subsequence of $S_{\mathit{parent}}$ where all characters $c \in \Sigma_{\mathit{left}}$ have been stripped out.
+This also means that the alphabets for the substrings $S_{\mathit{left}}$ and $S_{\mathit{right}}$ do not overlap, that is $\forall c \in \Sigma_{\mathit{left}}: c \notin \Sigma_{\mathit{right}}$ and vice versa.
+The characters in the subsequences $S_{\mathit{left}}$ and $S_{\mathit{right}}$ occur in the same order they do in $S_{\mathit{parent}}$.
 All these strings are not stored anywhere in the wavelet tree.
 They are only used for the construction of the tree, but can later be reconstructed from the information stored in the bitmaps if need be.
 
-Each bit in the bitmap corresponds to a character in the string $S_{parent}$.
-If a character $c$ at position $p$ in $S_{parent}$ is in the left side of the alphabet $\Sigma_{parent}$, that is $c \in \Sigma_{left}$, the bit in the bitmap at position $p$ will be set to 0.
-If instead $c \in \Sigma_{right}$, the bit at position $p$ will be set to 1.
-Assuming the alphabet is in sorted order with regards to the \textit{greater-than} ($>$) comparison operator, this can be computed as $c \in \Sigma_{right} = c > \Sigma[\lfloor\frac{\sigma}{2}\rfloor]$.
+Each bit in the bitmap corresponds to a character in the string $S_{\mathit{parent}}$.
+If a character $c$ at position $p$ in $S_{\mathit{parent}}$ is in the left side of the alphabet $\Sigma_{\mathit{parent}}$, that is $c \in \Sigma_{\mathit{left}}$, the bit in the bitmap at position $p$ will be set to 0.
+If instead $c \in \Sigma_{\mathit{right}}$, the bit at position $p$ will be set to 1.
+Assuming the alphabet is in sorted order with regards to the \textit{greater-than} ($>$) comparison operator, this can be computed as $c \in \Sigma_{\mathit{right}} = c > \Sigma[\lfloor\frac{\sigma}{2}\rfloor]$.
 If the alphabet is not in sorted order, either lookups into the alphabet list or a mapping to and from an alphabet in sorted order will be needed to calculate whether a given character is on the left or right side of the alphabet.
 The leaf nodes of a wavelet tree will appear in the same order as the characters they represent appear in the alphabet used.
 
-This process continues recursively in each child node except where only one character is left in the alphabet of the input string of a node, $\sigma_{parent} = 1$.
+This process continues recursively in each child node except where only one character is left in the alphabet of the input string of a node, $\sigma_{\mathit{parent}} = 1$.
 That node is then considered a leaf node and needs not store a bitmap.
-Each node in a wavelet tree can be considered a full wavelet tree for the string $S_{parent}$ it was passed from its parent node.
+Each node in a wavelet tree can be considered a full wavelet tree for the string $S_{\mathit{parent}}$ it was passed from its parent node.
 
 At each level in the tree at most \textit{n} bits are stored in the bitmaps in total, making $n \cdot h$ an upper bound to the total number of bits that a wavelet tree stores in its bitmaps.
 
@@ -94,12 +94,12 @@ It is recursively defined, calling itself to construct the left and right sub-tr
 An access($p$) query is the query for what character $c$ was at position $p$ in the string $S$ the wavelet tree was constructed for.
 It can be answered by a single downward traversal of the wavelet tree.
 Starting at the root node, an access query will look up the bit $b$ at position $p$ in the bitmap of the root node.
-If $b$ is 0, we know that $c \in \Sigma_{left}$ and the algorithm must therefore traverse into the left child node.
-If $b$ is 1, it means that $c \in \Sigma_{right}$ and the algorithm should traverse into the right child node instead.
-Before we can continue down into the child node, we must know what position in the left (or right) substring $S_{left}$ (or $S_{right}$) the character $c$ has been mapped to.
+If $b$ is 0, we know that $c \in \Sigma_{\mathit{left}}$ and the algorithm must therefore traverse into the left child node.
+If $b$ is 1, it means that $c \in \Sigma_{\mathit{right}}$ and the algorithm should traverse into the right child node instead.
+Before we can continue down into the child node, we must know what position in the left (or right) substring $S_{\mathit{left}}$ (or $S_{\mathit{right}}$) the character $c$ has been mapped to.
 
-If $b$ is 0, the position of $c$ in $S_{left}$ is the number of occurrences of 0 in the bitmap up to position $p$.
-If $b$ is 1, the position of $c$ in $S_{right}$ is the number of occurrences of 1 in the bitmap up to position $p$.
+If $b$ is 0, the position of $c$ in $S_{\mathit{left}}$ is the number of occurrences of 0 in the bitmap up to position $p$.
+If $b$ is 1, the position of $c$ in $S_{\mathit{right}}$ is the number of occurrences of 1 in the bitmap up to position $p$.
 This is also called rank$_0(p)$ or rank$_1(p)$ or the \textit{binary rank} of 0 or 1 in the bitmap up to position $p$.
 In the most basic way it can be calculated using a linear scan of the bitmap making it $O(n)$, and since it is calculated one per level of the tree, the access query becomes $O(n \cdot h) = O(n \lceil \log \sigma \rceil)$.
 Later in this thesis we will work on improving the running time of the binary rank query.
@@ -161,8 +161,8 @@ The $i$th occurrence can be found with a traversal up through the wavelet tree s
 This means it is necessary to find the leaf node corresponding to $c$.
 
 The leaf node corresponding to a character $c$ can be found by a downward traversal of the tree, from the root to the leaf node without accessing any of the bitmaps.
-Which child node, left or right, should be traversed is determined by computing whether $c \in \Sigma_{left}$ or $c \in \Sigma_{right}$.
-If $c \in \Sigma_{left}$, the traversal continues in the left child node, otherwise it continues in the right child node.
+Which child node, left or right, should be traversed is determined by computing whether $c \in \Sigma_{\mathit{left}}$ or $c \in \Sigma_{\mathit{right}}$.
+If $c \in \Sigma_{\mathit{left}}$, the traversal continues in the left child node, otherwise it continues in the right child node.
 The traversal continues until a leaf node is reached as that will be the leaf node corresponding to $c$.
 
 
@@ -229,7 +229,7 @@ I each level the algorithm looks for either 0 or 1 based on how \textit{a} is re
 \If{Self.isLeaf}
 	\State \Return Self
 \EndIf
-\If{$c \in \Sigma_{right}$}
+\If{$c \in \Sigma_{\mathit{right}}$}
 	\State \Return RightChild.GetLeaf($c$)
 \Else
 	\State \Return LeftChild.GetLeaf($c$)

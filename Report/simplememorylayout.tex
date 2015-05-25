@@ -12,7 +12,7 @@ Allocating memory dynamically as we go might produce a similar layout and contro
 Skewing the tree has the disadvantage of increasing the height, or depth, of the tree 
 and is defined for a skewed binary tree by J.~Nievergelt and E.~M. Reingold~\citeB{Nievergelt:1972:BST:800152.804906} to be:
 \[ h = \frac{\log(2\sigma+1)}{ \log\frac{1}{1-\alpha}}\;,\]
-where $\alpha = \frac{1}{skew}$ and $skew$ is the number that is divided by to skew our tree, see Section~\ref{sec:SkewingTheTree}.
+where $\alpha = \frac{1}{\mathit{skew}}$ and \textit{skew} is the number that is divided by to skew our tree, see Section~\ref{sec:SkewingTheTree}.
 
 The algorithms in this implementation remain mostly the same algorithms as in the Simple, Naïve approach, but with modifications to handle a controlled memory layout and a skew of the tree.
 The Naïve approach has also been altered to support skewing in order to be able to compare whether the controlled memory layout has the desired effect.
@@ -28,8 +28,8 @@ Our architecture also has a prefetcher that can detect strides in memory access,
 \label{sec:SkewingTheTree}
 Skewing the tree is done by changing the way we find which character in the alphabet to split on in each node's construction.
 The split character is the last character in the alphabet of the left child node and to be able to skew the calculation we calculate it as
-\[SplitCharacter = \left\lfloor \frac{alphabetSize-1}{skew} + \mathit{alphabetMin} \right\rfloor \]
-where $alphabetSize$ is the size of the alphabet at this node, $alphabetMin$ is the first character in the alphabet at this node, and $skew$ is the skew parameter which is 2 for a balanced tree and higher for right-skewed trees. E.g. a $skew$ value of 4 skews the tree by 75\,\% to the right meaning that in each node 25\,\% of the alphabet is put into the left child node and 75\,\% is put into the right child node.
+\[\mathit{SplitCharacter} = \left\lfloor \frac{\mathit{alphabetSize}-1}{\mathit{skew}} + \mathit{alphabetMin} \right\rfloor \]
+where \textit{alphabetSize} is the size of the alphabet at this node, \textit{alphabetMin} is the first character in the alphabet at this node, and \textit{skew} is the skew parameter which is 2 for a balanced tree and higher for right-skewed trees. E.g. a \textit{skew} value of 4 skews the tree by 75\,\% to the right meaning that in each node 25\,\% of the alphabet is put into the left child node and 75\,\% is put into the right child node.
 The value is the rounded down so it is an actual integer character instead of a decimal.
 
 

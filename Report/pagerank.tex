@@ -39,15 +39,15 @@ where $n$ is the number of characters in the string and $h$ is the max height of
 Luckily for us, memory allocation in Linux does not actually take up space because Linux uses optimistic memory allocation which means that only when the memory is accessed will the actual physical memory be used \footnote{\url{http://man7.org/linux/man-pages/man3/malloc.3.html}}.
 This fact enables overcomitting which allows allocation of more memory than what is available which can be a problem for long running processes.
 As a result we can conclude that allocated memory is not present in physical memory before it is actually initialized.
-The effect of an optimistic memory allocation scheme and overcomitting is tested by Andries Brouwer \footnote{\url{http://www.win.tue.nl/~aeb/linux/lk/lk-9.html}} who confirms that it is possible to allocated more memory using \textit{malloc()} than what is physically available.
+The effect of an optimistic memory allocation scheme and overcomitting is tested by Andries Brouwer \footnote{\url{http://www.win.tue.nl/~aeb/linux/lk/lk-9.html}} who confirms that it is possible to allocated more memory using \texttt{malloc()} than what is physically available.
 So over-allocating the bitmap should not take up any more space than what will actually be needed.
 
 An offset and a size for the bitmap is the stored in each node, so it is possible to index into the giant bitmap and access the bits corresponding to the node.
 This should also cause a decrease in memory usage as the offset and size are stored in an unsigned long and unsigned int respectively, taking a total of $64+32=96$ bits per node, where each individual bitmap requires storage of at least a pointer to it, a point to where its internal array starts and a pointer to where it ends, taking up $3 \times 64=192$ bits per node.
 Additionally, when using an individual bitmap for each node, they would have been word-aligned, and the bits between the last used bit and the end of the last used word would have gone unused and so, wasted.
 
-A vector is also allocated to hold the precomputed block values of size:
-\[Vector size = \frac{BitmapSize}{BlockSize} \]
+A vector is also allocated to hold the precomputed block values of size
+\[\mathit{VectorSize} = \frac{\mathit{BitmapSize}}{\mathit{BlockSize}}.\]
 Instead of storing a pointer to the bitmap and precomputed values vector in each node, they are stored once for the whole tree and then passed down through the query methods when the tree is queried.
 
 In order to be able to index into said vector, integer division of the bitmap offset and the block size is used. It is an efficient and simple way to precompute the rank values of blocks of fixed size of the bitmap, as we do not have to traverse the tree again.
@@ -102,10 +102,10 @@ Figure~\ref{fig:PrecomputePopcountBlock} illustrates this.
 Translation Lookaside Buffer misses are expensive and to avoid those, we can try to reduce the number of pages that is loaded.
 Using concatenated bitmaps and the precomputed vector of ranks, we only need to load pages of the bitmap at the beginning and end of each node's bitmap, to compute the popcounted version of binary rank directly on the bitmap, and only within one block at each end.
 If the blocks are not aligned with the memory pages, then, even if the block size is less than a page, it might span more than one page and thus more than one page of memory must be loaded into the TLB.
-More precisely, the algorithm might at most load \[2 \cdot \left( \left\lceil\frac{blockSize}{pageSize}\right\rceil +1 \right)\] pages to do the popcount binary rank computation at the beginning and end of each node.
+More precisely, the algorithm might at most load \[2 \cdot \left( \left\lceil\frac{\mathit{blockSize}}{\mathit{pageSize}}\right\rceil +1 \right)\] pages to do the popcount binary rank computation at the beginning and end of each node.
 
 If the blocks are page-aligned, and has block sizes divisible by the page size or that the page is divisible by, the extra $+1$ will disappear, because a block can no longer span more pages than the number of pages its size is a multiple of.
-This means we can ensure that at most $2 \cdot \lceil\frac{blockSize}{pageSize}\rceil$ memory pages of the bitmap are loaded for each node by page-aligning the blocks.
+This means we can ensure that at most \[2 \cdot \left\lceil\frac{\mathit{blockSize}}{\mathit{pageSize}}\right\rceil\] memory pages of the bitmap are loaded for each node by page-aligning the blocks.
 With an alphabet size of $2^{16}$ this amounts to saving up to 16 page loads per query.
 
 While we expect that this will save some expensive TLB misses it also has some drawbacks, especially when not using concatenated bitmaps.
@@ -136,9 +136,9 @@ We would like to analyze whether it is worth using a rank query to find out whet
 We will assume an equal number of occurrences in the string of each character in the alphabet, a uniform distribution of each character in the string, and an equal probability of each valid parameter for the select query.
 A valid character parameter is one that exists in the input string and a valid occurrence parameter is an integer above 0 and below or equal to the number of occurrences appearing in the input string.
 
-The rank query is a computation of worst-case cost $\frac{blockSize}{2}$ because it will at most popcount half of the block, because the precomputed rank value is utilized when advantageous.
-The select query using popcount in the first partial block is an operation of worst-case cost $blockSize$ because it can at most popcount the entire block.
-So, in the worst case, when the sought-after occurrence is in the first partial block of the bitmap, $\frac{blockSize}{2}$ work is wasted, yet when the occurrence is elsewhere, $blockSize$ work is saved.
+The rank query is a computation of worst-case cost $\frac{\mathit{blockSize}}{2}$ because it will at most popcount half of the block, because the precomputed rank value is utilized when advantageous.
+The select query using popcount in the first partial block is an operation of worst-case cost \textit{blockSize} because it can at most popcount the entire block.
+So, in the worst case, when the sought-after occurrence is in the first partial block of the bitmap, $\frac{\mathit{blockSize}}{2}$ work is wasted, yet when the occurrence is elsewhere, \textit{blockSize} work is saved.
 This means that the boundary between where using the rank query becomes a gain or a loss in performance is where the ratio between the number of times the occurrence is to be found in and outside the first partial block of the bitmap is $\frac{2}{3}$.
 That is, when considering the worst-case query time for both queries, if the occurrence is to be found outside the first partial block of the bitmap more than one third of the time, using the rank query first to see if that partial block should be select queried is a gain in performance.
 
@@ -155,9 +155,9 @@ Since the page size on our machine are 4096 bytes we should not use a block size
 
 In Section~\ref{sec:queryRunTimePrecomputedBlockSizes} we find that the optimal block size is 16384 bits = 2048 bytes = $\frac{1}{2}$ page.
 
-Assuming the precomputed values are then stored as 16-bit unsigned short integers it will only consume an extra 16 bits or 2 bytes per block and there there are $\frac{BitmapSize}{BlockSize}$ of these blocks when the bitmaps are concatenated.
+Assuming the precomputed values are then stored as 16-bit unsigned short integers it will only consume an extra 16 bits or 2 bytes per block and there there are $\frac{\mathit{BitmapSize}}{\mathit{BlockSize}}$ of these blocks when the bitmaps are concatenated.
 This means, assuming a block size of 2048 bytes, a relative extra space consumption of
-\[ \frac{ 2 \cdot \frac{BitmapSize}{BlockSize} }{BitmapSize} = \frac{2}{BlockSize} = \frac{2}{2048} = 0.0009765625 = 0.098\% \]
+\[ \frac{ 2 \cdot \frac{\mathit{BitmapSize}}{\mathit{BlockSize}} }{\mathit{BitmapSize}} = \frac{2}{\mathit{BlockSize}} = \frac{2}{2048} = 0.0009765625 = 0.098\% \]
 of the bitmaps, which is even less when considering the total space used including the nodes.
 
 When the bitmaps are not concatenated there is a higher space consumption by the precomputed values, as each precomputed value do not cover an entire block and more precomputed values is therefore needed to cover all the bitmaps.
@@ -260,18 +260,15 @@ We see this drop again in level 3 total cache misses in Figure~\ref{fig:Precompu
 For both level 2 and level 3 cache misses, we also see a dip at 2 pages per block and lesser dips at 0.5 pages and 1.5 pages per block. 
 These sizes correspond to where blocks most often align with full pages as a block of size 2 pages will align with two pages and two blocks of size half a page will align with one page and two blocks of size 1.5 page will align with three pages.
 
-\textbf{[CONTINUE HERE]}
 The fact that the level 2 and level 3 performances are so near-identical can be explained by the fact that they are inclusive, meaning that everything contained in level 2 is also in level 3 and
-if all the cache misses in level 2 are from the prefetcher not being able to figure out what data is needed next, and it loads directly into level 2 then the level 3 cache will never have the correct data while 2 does not...
+if all the cache misses in level 2 are from the prefetcher not being able to figure out what data is needed next, and it loads directly into level 2 then the level 3 cache will never have the correct data while 2 does not.
 
 Why this results in fewer level 2 and level 3 cache misses, we do not know.
-\textbf{[TODO: speculated as to why]}
+
+
+
 
 \newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
-
-
-
-
 
 \begin{figure}\tiny
 
