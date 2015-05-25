@@ -123,15 +123,26 @@ Unlike the access query, the rank query is looking at a specified character $c$ 
 When the leaf node is reached, the binary rank calculated in the parent node is the rank of the input symbol up to the original input position.
 Intuitively this makes sense because leaf nodes correspond to only one character and the rank of a character up to a position in a string containing only that character is the same as the position.
 Figure~\ref{fig:RankDrawing} shows an example of how this concept works.
+In the example Rank looks for the number of occurrences \textit{o} of $c = $ \textit{'a'} until position $p = 10$.
+It begins in the root and queries recursively towards the leaf of \textit{'a'}. 
+In each recursive call $p = o_{parent}$. 
+In all the bitmaps \textit{'a'} is represented as 0 and in the root there are 6 occurrences of 0 until position 10. 
+In the left child node the algorithm then counts the number of 0s ($o=3$) until position 6 ($p=6$), and in the leaf it counts the number of 0s until position 3 of which there are 3 ($o=3, p=3$). 
+This means that there are 3 occurrences of \textit{'a'} in \textit{S} until $p=10$.
 
 We have written the rank query as pseudo-code in Algorithm~\ref{alg:rank} using an object-oriented approach.
 
 \begin{figure}
 \center \includegraphics[width=1\textwidth]{RankDrawing}
 \caption{Rank: This figure shows why the Rank algorithm works. 
-We query for the Rank of \textit{a} until position $p = 10$.
-The number of occurrences of 0s or 1s, depending on how the character is represented, are used as the position in the next level. 
-When the leaf is reached the position corresponds to the number of occurrences.}
+In this example the algorithm looks for the number of occurrences \textit{o} of $c = $ \textit{'a'} until position $p = 10$.
+It begins in the root and queries recursively towards the leaf of \textit{'a'}.
+The arrows indicate a mapping between the bitmaps.
+In each recursion $p = o_{parent}$.
+Looking at the arrows one can see why this is the case; they all point to positions in the child bitmap that is within $p_{child}$ indicated by the blue square.
+In the root there are 6 0s until position 10. 
+In the left node there are 3 0s until position 6
+and in the leaf there are 3 0s until position 3. This means there are 3 \textit{a}s until position 10 in S.}
 \label{fig:RankDrawing}
 \end{figure}
 
