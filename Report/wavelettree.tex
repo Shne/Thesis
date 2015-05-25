@@ -31,7 +31,7 @@ They are only used for the construction of the tree, but can later be reconstruc
 Each bit in the bitmap corresponds to a character in the string $S_{\mathit{parent}}$.
 If a character $c$ at position $p$ in $S_{\mathit{parent}}$ is in the left side of the alphabet $\Sigma_{\mathit{parent}}$, that is $c \in \Sigma_{\mathit{left}}$, the bit in the bitmap at position $p$ will be set to 0.
 If instead $c \in \Sigma_{\mathit{right}}$, the bit at position $p$ will be set to 1.
-Assuming the alphabet is in sorted order with regards to the \textit{greater-than} ($>$) comparison operator, this can be computed as $c \in \Sigma_{\mathit{right}} = c > \Sigma[\lfloor\frac{\sigma}{2}\rfloor]$.
+Assuming the alphabet is in sorted order with regards to the \textit{greater than} ($>$) comparison operator, this can be computed as $c \in \Sigma_{\mathit{right}} = c > \Sigma[\lfloor\frac{\sigma}{2}\rfloor]$.
 If the alphabet is not in sorted order, either lookups into the alphabet list or a mapping to and from an alphabet in sorted order will be needed to calculate whether a given character is on the left or right side of the alphabet.
 The leaf nodes of a wavelet tree will appear in the same order as the characters they represent appear in the alphabet used.
 
@@ -41,7 +41,7 @@ Each node in a wavelet tree can be considered a full wavelet tree for the string
 
 At each level in the tree at most \textit{n} bits are stored in the bitmaps in total, making $n \cdot h$ an upper bound to the total number of bits that a wavelet tree stores in its bitmaps.
 
-The Wavelet Tree can theoretically be constructed in $O(n \cdot h)$ time as the sum of the lengths of the strings being processed at any one layer of the tree is the length of the input string to the tree.
+The Wavelet Tree can theoretically be constructed in $O(n \cdot h)$ time as the sum of the lengths of the strings being processed at any single layer of the tree is the length of the input string to the tree.
 
 An example of a Wavelet Tree can be seen in Figure~\ref{fig:WaveletTreeExample}.
 

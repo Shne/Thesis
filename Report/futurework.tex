@@ -13,7 +13,7 @@ In Section~\ref{sec:memorylayout} we tried skewing the tree to reduce cache miss
 With our optimizations from later sections, we have reduced the amount of time spent calculating binary rank and select, and it is possible that skewing the tree might have a beneficial effect after having applied our other optimizations.
 
 \subsection{$d$-ary}
-Our wavelet trees are all binary which means their height is the base 2 logarithm of the alphabet size.
+Our wavelet trees are all binary which means their height is the base-2 logarithm of the alphabet size.
 With a higher $d$-ary tree the height would be reduced to base $d$ logarithm of the alphabet size.
 This could improve access, rank, and select query performance significantly as their traversal down or up the tree would be significantly shortened.
 

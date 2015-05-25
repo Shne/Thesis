@@ -147,10 +147,10 @@ In the case of nested loops occurring in a frequently called function, the amoun
 To eliminate the loop mispredictions two bits can be used instead of one in such a way that a branch must be predicted wrong twice in a row for the prediction scheme to change.
 This means that the different possible bit values becomes
 00, 01, 10 and 11.
-00 indicates that the last to branching instructions resulted in not jumping and "no jump" is predicted. If a conditional branching instruction is reached where this prediction is wrong the last bit is set to 1 and the bit value become 01. The predicter still predicts "no jump".
-If this prediction is correct for the next conditional branching instruction the binary value is set back to 00 and the prediction continues predicting "no jump" as before.
-If the previous "no jump" prediction instead was wrong at a 01 value, it will be changed to 11 and the future prediction changed to "jump".
-Two mispredictions are then required to change back to bit value 00 and "no jump" prediction, in a similar way it went from 00 to 11, except using 10 as the in-between value.
+00 indicates that the last to branching instructions resulted in not jumping and “no jump” is predicted. If a conditional branching instruction is reached where this prediction is wrong the last bit is set to 1 and the bit value become 01. The predicter still predicts “no jump”.
+If this prediction is correct for the next conditional branching instruction the binary value is set back to 00 and the prediction continues predicting “no jump” as before.
+If the previous “no jump” prediction instead was wrong at a 01 value, it will be changed to 11 and the future prediction changed to “jump”.
+Two mispredictions are then required to change back to bit value 00 and “no jump” prediction, in a similar way it went from 00 to 11, except using 10 as the in-between value.
 
 When the branch is correctly predicted there is still a problem.
 The address to go to for some conditional branches are computed values obtained from doing arithmetic on registers. 

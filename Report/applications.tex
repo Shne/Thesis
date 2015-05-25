@@ -1,7 +1,7 @@
 \section{Applications}
 \subsection{What The Wavelet Tree Can Represent}
 The Wavelet Tree has multiple applications that each utilize the wavelet tree differently and use it for storage of, and queries on, different types of data.
-These applications uses the wavelet tree to achieve different representations which can be split into three main types: A sequence of values, a reordering or permutation, and a grid of points.
+These applications use the wavelet tree to achieve different representations which can be split into three main types: A sequence of values, a reordering or permutation, and a grid of points.
 
 Using the Wavelet Tree to store a sequence of values is perhaps the most basic way to utilize the tree.
 The Wavelet Tree stores the sequence and supports access, rank, and select queries on the sequence.
@@ -35,14 +35,14 @@ Then \textit{entropy} H is defined as
 \begin{center}
 $H = \sum_{i=1}^{\sigma} p_i log_2(\frac{1}{p_i})$
 \end{center}
-where $p_i$ is the probability of the $i^{th}$ symbol in the alphabet appearing in \textit{S}.
+where $p_i$ is the probability of the $i$\emph{th} symbol in the alphabet appearing in \textit{S}.
 \end{definition} 
 \end{mdframed}
 
 Entropy represents a lower bound to the average number of bits needed to represent each symbol in $S$ according to the coding theorem of Shannon~\citeA[Introduction]{WTSurvey} and is the bound that compression researchers compare their results to.
 
 This theoretical definition of entropy is often replaced in scientific literature by a more practical definition: \textit{empirical entropy}.
-There are two versions: \textit{empirical zero-order entropy} $H_0$ and \textit{empirical $k^{th}$-order entropy} $H_k$. $H_k$ takes into account a context of size \textit{k} of the symbol appearances, ie. the suffixes of length $k$ of each symbol appearance in the string, while $H_0$ does not and treats symbols independently instead. 
+There are two versions: empirical zero-order entropy $H_0$ and empirical $k$th-order entropy $H_k$. $H_k$ takes into account a context of size \textit{k} of the symbol appearances, ie. the suffixes of length $k$ of each symbol appearance in the string, while $H_0$ does not and treats symbols independently instead. 
 
 \begin{mdframed}[nobreak, linecolor=lightgray, linewidth=2pt]
 \begin{definition}: Empirical zero-order entropy, $H_0$ \\
@@ -53,9 +53,9 @@ $H_0 = H_0(S) = \sum\limits_{c_i \in \Sigma} \frac{n_i}{n} log_2(\frac{n}{n_i})$
 \end{center}
 where $n_i$ is the number of appearances of character $c_i$ in $S$.
 \end{definition}
-\begin{definition}: Empirical $k^{th}$-order entropy, $H_k$ \\
+\begin{definition}: Empirical $k$\emph{th}-order entropy, $H_k$ \\
 For a string $w \in \Sigma^k$ let us define $w_S$ as the concatenation of characters that follow \textit{w} in \textit{S}. 
-Then the $k^{th}$-order empirical entropy of \textit{S}, is defined as follows
+Then the $k$\emph{th}-order empirical entropy of \textit{S}, is defined as follows
 \begin{center}
 $H_k = H_k(S) = \frac{1}{n} \sum\limits_{w \in \Sigma^k} | w_S |H_0(w_S)$
 \end{center}
@@ -67,10 +67,10 @@ Using the Burrows-Wheeler transformation on the input we can reduce the problem 
 In other words, if we have a good compression algorithm that achieves compression within the $H_0$ lower bound, then by using that algorithm on the Burrows-Wheeler transformation of the input we can achieve compression within the $H_k$ lower bound~\citeA[Introduction]{waveletTreeEntropy}.
 The problem for a long time was that there existed no good way to achieve compression within the $H_0$ lower bound or at least it was a problem before the wavelet tree was invented~\citeA[Introduction]{waveletTreeEntropy}.
 
-To achieve \textit{zero-order entropy} a Huffman shaped wavelet tree can be used~\citeA[Section~4]{FMcountOnBWT}. Claude and Navarro~\citeA[Section~3]{Claude08practicalrankselect} describes a way to also have \textit{zero-order entropy} space usage for large alphabets. 
-It is therefore possible to get space usage within \textit{zero-order entropy} even for large alphabets using the wavelet tree. 
-\textit{Zero-order entropy} can also be achieved by run-length encoding the bitmaps in the wavelet tree, which is also the approach that is used when compressing the BWT transformation of the input string using the wavelet tree~\citeA[Introduction (\textbf{B})]{waveletTreeEntropy}.
-This means that using a combination of run-length encoding of bitmaps and taking the Burrows-Wheeler transformation of the input string using the wavelet tree it is possible to achieve compression near the lower bound of \textit{$k^{th}$-order entropy}.
+To achieve zero-order entropy a Huffman shaped wavelet tree can be used~\citeA[Section~4]{FMcountOnBWT}. Claude and Navarro~\citeA[Section~3]{Claude08practicalrankselect} describes a way to also have zero-order entropy space usage for large alphabets. 
+It is therefore possible to get space usage within zero-order entropy even for large alphabets using the wavelet tree. 
+Zero-order entropy can also be achieved by run-length encoding the bitmaps in the wavelet tree, which is also the approach that is used when compressing the BWT transformation of the input string using the wavelet tree~\citeA[Introduction (\textbf{B})]{waveletTreeEntropy}.
+This means that using a combination of run-length encoding of bitmaps and taking the Burrows-Wheeler transformation of the input string using the wavelet tree it is possible to achieve compression near the lower bound of $k$th-order entropy.
 
 \subsubsection{Run-Length encoding}
 Run-length encoding (RLE) is a simple process where the number of consecutive repeats of each symbol is stored instead of storing the symbols themselves. 
@@ -154,7 +154,7 @@ The original string is then the value with the end of line character \# at the e
 An example of the process in shown in Figure~\ref{fig:reverseBwt}.
 
 \begin{figure}
-\caption{Example of how to do reverse BWT on string "acd\#". The returned value is "dca\#".}
+\caption{Example of how to do reverse BWT on string “acd\#”. The returned value is “dca\#”.}
 \label{fig:reverseBwt}
 \center
 \begin{tabular}{|l|l|l|l|l|l|l|}
@@ -252,9 +252,9 @@ The wavelet tree supports access in $O(\log \sigma)$ time, but unless compressio
 Instead, the more interesting queries are rank and select queries, that are useful in and of themselves e.g. when used as a dictionary and a self-index, but are also the building blocks of many other queries and algorithms.
 
 The rank query for a symbol $s$ and a position $p$ will return how many of symbol $s$ occurs in the input string up to position $p$.
-The select query for symbol $s$ and occurrence parameter $o$ will return the position of the $o^{th}$ occurrence of $s$ in the input string.
+The select query for symbol $s$ and occurrence parameter $o$ will return the position of the $o$th occurrence of $s$ in the input string.
 
-G. Navarro~\citeA[Section 5]{Navarro:2014:WT:2592317.2592708} points to an application found by Ferragina and Manzini~\citeB[Section 3]{Opportunisticdatastructureswithapplications} that uses access and rank\footnote{Ferragina and Manzini calls rank queries "Occ" in their paper} queries to find the number of occurrences of a pattern $p$ in a string $S$ by storing and querying the Burrows-Wheeler transformation of the string $S^{BWT}$, enabling compression along with efficient query times.
+G. Navarro~\citeA[Section 5]{Navarro:2014:WT:2592317.2592708} points to an application found by Ferragina and Manzini~\citeB[Section 3]{Opportunisticdatastructureswithapplications} that uses access and rank\footnote{Ferragina and Manzini calls rank queries “Occ” in their paper} queries to find the number of occurrences of a pattern $p$ in a string $S$ by storing and querying the Burrows-Wheeler transformation of the string $S^{BWT}$, enabling compression along with efficient query times.
 G. Navarro~\citeA[Section 5]{Navarro:2014:WT:2592317.2592708} also point to other similar results and improvements on the previous results by others, showing there is a wide interest in using wavelet trees to store a sequence and query for the occurrences of patterns within that sequence.
 
 G. Navarro~\citeA[Section 5]{Navarro:2014:WT:2592317.2592708} further points out the uses of a wavelet tree as a positional inverted index.
@@ -270,7 +270,7 @@ The next occurrence of the word $c$ in another document is at $p_{next} = \textp
 
 
 \subsubsection{Range Quantile Query}
-A range quantile query is a query that returns the $k^{th}$ smallest number within a subsequence of a given sequence of elements.
+A range quantile query is a query that returns the $k$th smallest number within a subsequence of a given sequence of elements.
 If we are e.g. given a list of price changes on a laptop during the last year then a range quantile query is able to answer what the $k$-smallest price of the laptop was within for instance a month of that year.
 It is therefore also easy to find quantiles like the 2-quantile (median) or the 3-quantile.
 To e.g. find the median, $k$ can be defined as half the length of the subsequence.
@@ -312,7 +312,7 @@ The two queries are $rank_b(l-1)$ and $rank_b(r)$ where $rank_b$ is the binary r
 $rank_b(l-1)$ is used to find the number of 1s and 0s in $b[1...(l-1)]$ and $rank_b(r) - rank_b(l-1)$ gives the number 1s and 0s in $b[l...r]$. 
 The algorithm goes to the left if there are more than \textit{k} 0s in $b[l...r]$ and set $l = ($number of 0s in $b[1...(l-1)])+1$ and $r=($number of 0s in $b[1...r])$. 
 The algorithm goes to the right if there are less than \textit{k} 0s in $b[l...r]$ and subtract the number of 0s in $b[l...r]$ from \textit{k} and set $l = ($number of 1s in $b[1...(l-1)])+1$ and set $r=($number of 1s in $b[1...r])$. 
-This procedure continues recursively until it hits a leaf and then returns the number stored in the leaf which corresponds to the $k^{th}$ smallest number in $S[l...r]$.
+This procedure continues recursively until it hits a leaf and then returns the number stored in the leaf which corresponds to the $k$th smallest number in $S[l...r]$.
 
 Algorithm~\ref{alg:RangeQuantileQuery} describes the pseudo-code for a range quantile query where $rank_1$ is a binary rank query which returns the number of 1s in the bitmap of $S$ in each node generated by the wavelet tree. 
 $rank_0$ return the number of 0s.

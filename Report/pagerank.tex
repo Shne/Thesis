@@ -24,7 +24,7 @@ We will test and compare the Rank and Select running times and memory usage of f
 
 
 \subsection{Concatenating the Bitmaps}
-The bitmaps are allocated as as one giant bitmap the size of the maximum possible size required to store all the bitmaps for all the nodes.
+The bitmaps are allocated as one giant bitmap the size of the maximum possible size required to store all the bitmaps for all the nodes.
 They are stored in a Depth-First-right manner, that is, the bitmap of the right child of a node comes right after the bitmap of the node.
 
 There are many other alternative memory layouts that might provide better performance.
@@ -155,7 +155,7 @@ Since the page size on our machine are 4096 bytes we should not use a block size
 
 In Section~\ref{sec:queryRunTimePrecomputedBlockSizes} we find that the optimal block size is 16384 bits = 2048 bytes = $\frac{1}{2}$ page.
 
-Assuming the precomputed values are then stored as 16-bit unsigned short integers it will only consume an extra 16 bits or 2 bytes per block and there there are $\frac{\mathit{BitmapSize}}{\mathit{BlockSize}}$ of these blocks when the bitmaps are concatenated.
+Assuming the precomputed values are then stored as 16-bit unsigned short integers it will only consume an extra 16 bits or 2 bytes per block and there are $\frac{\mathit{BitmapSize}}{\mathit{BlockSize}}$ of these blocks when the bitmaps are concatenated.
 This means, assuming a block size of 2048 bytes, a relative extra space consumption of
 \[ \frac{ 2 \cdot \frac{\mathit{BitmapSize}}{\mathit{BlockSize}} }{\mathit{BitmapSize}} = \frac{2}{\mathit{BlockSize}} = \frac{2}{2048} = 0.0009765625 = 0.098\% \]
 of the bitmaps, which is even less when considering the total space used including the nodes.
@@ -466,7 +466,7 @@ The remaining uncounted data, BSS and code segments should not affect our result
 But it might be the case that it is in fact these segments causing the strange results from PAPI, and that using concatenated bitmaps uses more memory than not and storing more information in the tree somehow uses less memory, sometimes, though we find this unlikely and choose to trust Massif's output more.
 
 Massif outputs 'snapshots' of the memory usage taken at certain points in the code where it deems them useful to the user.
-We have not simply used the snapshots produced automatically by Massif, but rather used the Client Request mechanism~\footnote{\url{http://valgrind.org/docs/manual/manual-core-adv.html}}of valgrind to send a \texttt{snapshot} command to the valgrind gdbserver, telling it to take a snapshot right after we've finished building the tree.
+We have not simply used the snapshots produced automatically by Massif, but rather used the Client Request mechanism~\footnote{\url{http://valgrind.org/docs/manual/manual-core-adv.html}}of valgrind to send a \texttt{snapshot} command to the valgrind gdbserver, telling it to take a snapshot right after we have finished building the tree.
 The values presented in Figure~\ref{fig:PrecomputedRankBlockSize_Massif} is thus calculated from such Massif snapshots taken right after the tree has completed building.
 
 Looking at Figure~\ref{fig:PrecomputedRankBlockSize_Massif} we see that the memory usage of the trees using precomputed values but not concatenated bitmaps, Naive and UnalignedNaive use more memory than the tree not using precomputed values, SimpleNaive, but only about 0.5\%.
