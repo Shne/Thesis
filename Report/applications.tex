@@ -20,8 +20,8 @@ The corresponding $x$-coordinate will be at the same position.
 Querying from a leaf gives the points in $y$-coordinate order because the leaves are sorted by $y$-coordinate.
 
 \subsection{Compression}
-The Wavelet Tree has many uses for compression of data~\citeA{Navjda13}.
-Some of the main compression techniques are different ways of encoding the bitmaps and changing the shape of the tree~\citeA[Section~3]{Navjda13}.
+The Wavelet Tree has many uses for compression of data~\citeA{Navarro:2014:WT:2592317.2592708}.
+Some of the main compression techniques are different ways of encoding the bitmaps and changing the shape of the tree~\citeA[Section~3]{Navarro:2014:WT:2592317.2592708}.
 
 The main advantage of the wavelet tree with regards to compression is that it supports entropy bounds in the attained space complexity of the various wavelet tree compression methods~\citeA[Section~2.1]{WTSurvey}.
 
@@ -254,16 +254,16 @@ Instead, the more interesting queries are rank and select queries, that are usef
 The rank query for a symbol $s$ and a position $p$ will return how many of symbol $s$ occurs in the input string up to position $p$.
 The select query for symbol $s$ and occurrence parameter $o$ will return the position of the $o^{th}$ occurrence of $s$ in the input string.
 
-G. Navarro~\citeA[Section 5]{Navjda13} points to an application found by Ferragina and Manzini~\citeB[Section 3]{Opportunisticdatastructureswithapplications} that uses access and rank\footnote{Ferragina and Manzini calls rank queries "Occ" in their paper} queries to find the number of occurrences of a pattern $p$ in a string $S$ by storing and querying the Burrows-Wheeler transformation of the string $S^{BWT}$, enabling compression along with efficient query times.
-G. Navarro~\citeA[Section 5]{Navjda13} also point to other similar results and improvements on the previous results by others, showing there is a wide interest in using wavelet trees to store a sequence and query for the occurrences of patterns within that sequence.
+G. Navarro~\citeA[Section 5]{Navarro:2014:WT:2592317.2592708} points to an application found by Ferragina and Manzini~\citeB[Section 3]{Opportunisticdatastructureswithapplications} that uses access and rank\footnote{Ferragina and Manzini calls rank queries "Occ" in their paper} queries to find the number of occurrences of a pattern $p$ in a string $S$ by storing and querying the Burrows-Wheeler transformation of the string $S^{BWT}$, enabling compression along with efficient query times.
+G. Navarro~\citeA[Section 5]{Navarro:2014:WT:2592317.2592708} also point to other similar results and improvements on the previous results by others, showing there is a wide interest in using wavelet trees to store a sequence and query for the occurrences of patterns within that sequence.
 
-G. Navarro~\citeA[Section 5]{Navjda13} further points out the uses of a wavelet tree as a positional inverted index.
+G. Navarro~\citeA[Section 5]{Navarro:2014:WT:2592317.2592708} further points out the uses of a wavelet tree as a positional inverted index.
 By storing the list of word identifiers in the wavelet tree both the text itself and the inverted index is stored.
 Access queries will then return the word at the given position while select$_{c}$($S$, $i$) can be used to get the $i$th word in the inverted list of a word $c$ for the string $S$.
 Rank queries can be used effectively in some list intersection algorithms.
 The efficiency can be improved by using multi-ary wavelet trees or Huffman-shaped wavelet trees as the non-uniformity of word usage in language makes it a good candidate for Huffman coding.
 
-The positional inverted index application can also be extended to \textit{document retrieval}~\citeA[Section 5]{Navjda13} by introducing a document boundary character such as \$ and storing the concatenation of all the documents with the document boundary character in between each.
+The positional inverted index application can also be extended to \textit{document retrieval}~\citeA[Section 5]{Navarro:2014:WT:2592317.2592708} by introducing a document boundary character such as \$ and storing the concatenation of all the documents with the document boundary character in between each.
 The first document containing some word $c$ is document number $j = \textproc{Rank}_\$(S, p) + 1$ where $p = \textproc{Select}_c(S, 1)$.
 Document $j$ ends at position $p' = \textproc{Select}_\$(S,j)$ and contains $o = \textproc{Rank}_c(S,p') - \textproc{Rank}_c(S,p)$ occurrences of the word $c$.
 The next occurrence of the word $c$ in another document is at $p_{next} = \textproc{Select}_c(S, o+1)$.

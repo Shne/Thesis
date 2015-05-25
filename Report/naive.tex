@@ -1,5 +1,5 @@
 \section{Simple, Naïve Algorithm}
-This section deals with the simple, straightforward, naïve implementation based on ~the description by Navarro~\citeA[Section 2]{Navjda13}, before any smart ideas and optimizations were introduced.
+This section deals with the simple, straightforward, naïve implementation based on ~the description by Navarro~\citeA[Section 2]{Navarro:2014:WT:2592317.2592708}, before any smart ideas and optimizations were introduced.
 We will call this version of the wavelet tree SimpleNaive.
 
 The construction of the wavelet tree is implemented similarly to the pseudo-code in Section~\ref{sec:nodeconstruction}.
@@ -30,7 +30,7 @@ The binary rank can then be found by summing the result of calling \texttt{popco
 When the position argument of the rank query is not a multiple of the word size, it is necessary to constrain what part of the last word is counted using \texttt{popcount}. This can be done by constructing a bitmask by bitshifting the number 1 \textit{position} times towards the most significant bit and then subtracting one, as that will create a word where the \textit{position} least significant bits are set to 1 and the rest to 0.
 Then we do a bitwise \texttt{AND} operation of this bitmask and the word containing the bit corresponding to \textit{position}, and call \texttt{popcount} on the result. 
 
-As also noted in~\citeA{Navjda13}, we do not need to count the number of 0s, although required by the algorithm, as we can simply take the number of bits in the bitmap and subtract the number of 1s to calculate the number of 0s.
+As also noted in~\citeA{Navarro:2014:WT:2592317.2592708}, we do not need to count the number of 0s, although required by the algorithm, as we can simply take the number of bits in the bitmap and subtract the number of 1s to calculate the number of 0s.
 
 \subsubsection{Binary Select using Popcount}
 \label{sec:ImplBinarySelect}

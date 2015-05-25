@@ -1,7 +1,7 @@
 \section{Related Work}
 The wavelet tree was first introduced in 2003 by Grossi, Gupta, and Vitter~\citeA[Section 4.2]{Grossi:2003:HET:644108.644250} as a way to obtain faster rank and select query times on compressed suffix arrays while maintaining empirical entropy compression.
 
-Later, and Gonzalo Navarro~\citeA{Navjda13} explains how the wavelet tree has many and wide ranging useful applications, from string processing including full-text indexes and inverted indexes to geometry processing including various queries and computations on point grids and rectangle sets as well as graphs.
+Later, and Gonzalo Navarro~\citeA{Navarro:2014:WT:2592317.2592708} explains how the wavelet tree has many and wide ranging useful applications, from string processing including full-text indexes and inverted indexes to geometry processing including various queries and computations on point grids and rectangle sets as well as graphs.
 
 Cristos Makris~\citeA{WTSurvey} also describes several effective uses for a wavelet tree, including viewing it as a range searching data structure for e.g. minimum bounding volumes and effective storage compression.
 Using the wavelet tree as a compressing data structure is mainly about using various ways of encoding the bitmaps, such as using run-length encoding (RLE) on the bitmaps and storing the Burrows-Wheeler transformation (BWT) of the input string, or using Huffman Coding to shape the tree.
