@@ -68,26 +68,24 @@ It is recursively defined, calling itself to construct the left and right sub-tr
 \caption{Construction of nodes in the Wavelet Tree}
 \label{alg:ConstructNode}
 \begin{algorithmic}
-\Function {ConstructNode} {$String, Alphabet$}
-\If{$Alphabet.Size() = 1$ or $String.Length() = 0$}
+\Function {ConstructNode} {S, $\Sigma$}
+\If{$|\Sigma|$ = 1 or $|S|$ = 0}
 	\State \Return
 \EndIf
-\State Split $Alphabet$ into $LeftAlphabet$ and $RightAlphabet$
-\State $Split \gets$ middle character in $Alphabet$
-\ForAll {$Character$ in $String$}
-	\If {$Character < Split$}
-		\State $LeftString.Append(Character)$
-		\State $Bitmap.Append(0)$
+\State ($\Sigma_{\mathit{left}}$, $\Sigma_{\mathit{right}}$) $\gets$ $\Sigma$
+\State SplitChar $\gets$ $\Sigma_{\mathit{left}}[\sigma_{\mathit{left}}]$
+\ForAll {$c$ in $S$}
+	\If {$c > $ SplitChar}
+		\State $S_{\mathit{right}}$.Append($c$)
+		\State Bitmap.Append(1)
 	\Else
-		\State $RightString.Append(Character)$
-		\State $Bitmap.Append(1)$
+		\State $S_{\mathit{left}}$.Append($c$)
+		\State Bitmap.Append(0)
 	\EndIf
 \EndFor
-\State $LeftNode \gets$ \Call {ConstructNode} {$LeftAlphabet, LeftString$}
-\State $RightNode \gets$ \Call {ConstructNode} {$RightAlphabet, RightString$}
+\State RightNode $\gets$ \Call {ConstructNode} {$S_{\mathit{right}}$, $\Sigma_{\mathit{right}}$}
+\State LeftNode $\gets$ \Call {ConstructNode} {$S_{\mathit{left}}$, $\Sigma_{\mathit{left}}$}
 \EndFunction
-
-\State \Call {ConstructNode} {InputString, InputAlphabet}
 \end{algorithmic}
 \end{algorithm}
 
