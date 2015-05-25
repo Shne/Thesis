@@ -32,7 +32,7 @@ badPatterns = [(r'\s()\\(ref|cite)', 'Space not \'~\' before ref/cite', []),
 				(r'Simd|simd()', 'SIMD',['thesis.tex']),
 				(r'==()', 'double-equality instead of $\gets $',[]),
 				(r"it's()", "it's vs. its",[]),
-				(r'-th|\$.\$th', 'use $i^{th}$ instead of i-th or ith',[]),
+				(r'-th|\^{th}\$', 'use $i$th instead of i-th or $i^{th}$',[]),
 				(r'bwt', 'use BWT instead of bwt or \textit{bwt}',[]),
 				(r"n't", "use do not/will not/does not instead of don't/won't/doesn't", []),
 				(r"let's", 'use "let us" instead of "let\'s"', []),
@@ -51,7 +51,6 @@ excludedRules = [
 	'COMMA_PARENTHESIS_WHITESPACE',
 	'EN_UNPAIRED_BRACKETS',
 	'ENGLISH_WORD_REPEAT_BEGINNING_RULE',
-	'EN_QUOTES',
 	'HE_VERB_AGR'
 ]
 
