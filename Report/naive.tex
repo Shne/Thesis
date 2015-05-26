@@ -142,37 +142,6 @@ Looking at the graphs from this experiment we can see that building the tree usi
 
 We also attempted using an alphabet size of 32, but our machine did not have enough memory for that to be possible.
 
-\subsubsection{Rank and Select using Popcount}
-\label{sec:experimentPopcountRankSelect}
-We wanted to see how much of an improvement using the native cpu instruction \texttt{popcount} was, and how it affected the cache misses, branch mispredictions and TLB misses.
-
-
-In Figure~\ref{fig:rankPopcountDiff}, Figure~\ref{fig:selectPopcountDiff}, and Figure~\ref{fig:valuesForPopcountDiff} we see the resulting relative cpu cycles, wall time, branch mispredictions, translation lookaside buffer misses, and cache misses for our rank and select queries, respectively.
-We have chosen the measured values of the queries not using popcount to be index 100 and calculated and plotted the relative values of the queries using popcount, to show which values increase or decrease by what relative amount, all within the same graph.
-In Figure~\ref{fig:valuesForPopcountDiff} we list the actual raw values as well as the percentages graphed in Figure~\ref{fig:rankPopcountDiff} and Figure~\ref{fig:selectPopcountDiff}.
-
-In all three figures we see that the algorithm using \texttt{popcount} is much faster, using only a fraction of the time of the other algorithm, about $0.011\%$ for rank and $0.0051\%$ for select.
-We see a massive decrease in branch mispredictions for both rank and select queries. For the select queries we see a great reduction in Translation Lookaside Buffer Misses as well as Cache Misses, especially Level 2 and 3.
-For the rank queries, we see little improvement in TLBM and L1 CM, as well as a slightly larger improvement in L3 CM, but we also see a high increase in L2 CM Rate to more than double.
-The higher L2 Cache Miss Rate comes from both having fewer L2 Cache Hits and many more L2 Cache Misses.
-We have no good explanation to offer as to the L2 Cache Miss Rate increases so much, other than the algorithm being different and having a different access pattern.
-It is not a problem at any rate, as we can see in the massive decrease in running time.
-
-We believe the massive reduction in branch mispredictions accounts for some of the saved cpu cycles.
-Given that the branch misprediction penalty on the Ivy Bridge architecture (on which this experiment was run) is about “15 cycles or more”\footnote{Section 3.7 in \url{http://www.agner.org/optimize/microarchitecture.pdf}}, we can calculate an estimate of how many cpu cycles the branch misprediction reduction has saved us.
-The number of saved branch mispredictions for \textproc{rank} is then 1,396,757,616.4 - 22,682.2 = 1,396,734,934.2 mispredictions. Assuming a penalty of 15 cycles this becomes 1,396,734,934.2 $\cdot$ 15 = 20,951,024,013 cpu cycles saved, and given that the total number of cycles saved is 397,345,711,110.4 - 4,423,412,635.0 = 392,922,298,475, it is 20,951,024,013 / 392,922,298,475 = 0.05332103597 = 5.33\% of the total amount of cpu cycles saved.
-This means that the branch mispredictions do have an effect, but it is only a small part of this increase in speed. The main improvement, we expect, comes from using only a few cpu cycles per word of the bitmap to calculate the binary rank, as well as possibly the slight decrease in L1 and L3 cache misses.
-
-
-By similar calculations the saved cpu cycles from branch mispredictions for \textproc{select} is at least 48,84\% of the total saved. We expect this is because of the much higher number of branch mispredictions and the lower number of cycles for the original select algorithm, as well as the fact that we cannot use \texttt{popcount} for every word of the bitmap but must go back to doing manual counting of the bits when we find the word the sought-after occurrence is in.
-
-
-\subsubsection{Further improvements}
-Looking at the values in Figure~\ref{fig:valuesForPopcountDiff} we find that, of the measurements we collect, cache misses are among the highest and were not reduced significantly by using the \texttt{popcount} instruction.
-Cache misses are expensive and reducing them could greatly increase the speed of queries on the wavelet tree.
-
-Inspired by Brodal et al.~\citeA[Introduction]{gerthSkewedBinarySearchTrees} we will in Section~\ref{sec:memorylayout} look at skewing the tree as a means to reduce cache misses and branch mispredictions.
-
 
 
 \newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
@@ -216,7 +185,42 @@ Inspired by Brodal et al.~\citeA[Introduction]{gerthSkewedBinarySearchTrees} we 
 	\label{fig:naiveIntegerAlphabetSize}
 \end{figure}
 \restoregeometry
-\clearpage
+
+
+
+
+\subsubsection{Rank and Select using Popcount}
+\label{sec:experimentPopcountRankSelect}
+We wanted to see how much of an improvement using the native cpu instruction \texttt{popcount} was, and how it affected the cache misses, branch mispredictions and TLB misses.
+
+
+In Figure~\ref{fig:rankPopcountDiff}, Figure~\ref{fig:selectPopcountDiff}, and Figure~\ref{fig:valuesForPopcountDiff} we see the resulting relative cpu cycles, wall time, branch mispredictions, translation lookaside buffer misses, and cache misses for our rank and select queries, respectively.
+We have chosen the measured values of the queries not using popcount to be index 100 and calculated and plotted the relative values of the queries using popcount, to show which values increase or decrease by what relative amount, all within the same graph.
+In Figure~\ref{fig:valuesForPopcountDiff} we list the actual raw values as well as the percentages graphed in Figure~\ref{fig:rankPopcountDiff} and Figure~\ref{fig:selectPopcountDiff}.
+
+In all three figures we see that the algorithm using \texttt{popcount} is much faster, using only a fraction of the time of the other algorithm, about $0.011\%$ for rank and $0.0051\%$ for select.
+We see a massive decrease in branch mispredictions for both rank and select queries. For the select queries we see a great reduction in Translation Lookaside Buffer Misses as well as Cache Misses, especially Level 2 and 3.
+For the rank queries, we see little improvement in TLBM and L1 CM, as well as a slightly larger improvement in L3 CM, but we also see a high increase in L2 CM Rate to more than double.
+The higher L2 Cache Miss Rate comes from both having fewer L2 Cache Hits and many more L2 Cache Misses.
+We have no good explanation to offer as to the L2 Cache Miss Rate increases so much, other than the algorithm being different and having a different access pattern.
+It is not a problem at any rate, as we can see in the massive decrease in running time.
+
+We believe the massive reduction in branch mispredictions accounts for some of the saved cpu cycles.
+Given that the branch misprediction penalty on the Ivy Bridge architecture (on which this experiment was run) is about “15 cycles or more”\footnote{Section 3.7 in \url{http://www.agner.org/optimize/microarchitecture.pdf}}, we can calculate an estimate of how many cpu cycles the branch misprediction reduction has saved us.
+The number of saved branch mispredictions for \textproc{rank} is then 1,396,757,616.4 - 22,682.2 = 1,396,734,934.2 mispredictions. Assuming a penalty of 15 cycles this becomes 1,396,734,934.2 $\cdot$ 15 = 20,951,024,013 cpu cycles saved, and given that the total number of cycles saved is 397,345,711,110.4 - 4,423,412,635.0 = 392,922,298,475, it is 20,951,024,013 / 392,922,298,475 = 0.05332103597 = 5.33\% of the total amount of cpu cycles saved.
+This means that the branch mispredictions do have an effect, but it is only a small part of this increase in speed. The main improvement, we expect, comes from using only a few cpu cycles per word of the bitmap to calculate the binary rank, as well as possibly the slight decrease in L1 and L3 cache misses.
+
+
+By similar calculations the saved cpu cycles from branch mispredictions for \textproc{select} is at least 48,84\% of the total saved. We expect this is because of the much higher number of branch mispredictions and the lower number of cycles for the original select algorithm, as well as the fact that we cannot use \texttt{popcount} for every word of the bitmap but must go back to doing manual counting of the bits when we find the word the sought-after occurrence is in.
+
+
+\subsubsection{Further improvements}
+Looking at the values in Figure~\ref{fig:valuesForPopcountDiff} we find that, of the measurements we collect, cache misses are among the highest and were not reduced significantly by using the \texttt{popcount} instruction.
+Cache misses are expensive and reducing them could greatly increase the speed of queries on the wavelet tree.
+
+Inspired by Brodal et al.~\citeA[Introduction]{gerthSkewedBinarySearchTrees} we will in Section~\ref{sec:memorylayout} look at skewing the tree as a means to reduce cache misses and branch mispredictions.
+
+
 
 \newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
 \begin{figure}\tiny
