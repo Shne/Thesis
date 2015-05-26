@@ -123,26 +123,26 @@ Unlike the access query, the rank query is looking at a specified character $c$ 
 When the leaf node is reached, the binary rank calculated in the parent node is the rank of the input symbol up to the original input position.
 Intuitively this makes sense because leaf nodes correspond to only one character and the rank of a character up to a position in a string containing only that character is the same as the position.
 Figure~\ref{fig:RankDrawing} shows an example of how this concept works.
-In the example Rank looks for the number of occurrences \textit{o} of $c = $ \textit{'a'} until position $p = 10$.
-It begins in the root and queries recursively towards the leaf of \textit{'a'}. 
-In each recursive call $p = o_{parent}$. 
-In all the bitmaps \textit{'a'} is represented as 0 and in the root there are 6 occurrences of 0 until position 10. 
-In the left child node the algorithm then counts the number of 0s ($o=3$) until position 6 ($p=6$), and in the leaf it counts the number of 0s until position 3 of which there are 3 ($o=3, p=3$). 
-This means that there are 3 occurrences of \textit{'a'} in \textit{S} until $p=10$.
+In the example, the rank query looks for the number of occurrences \textit{o} of the character $c = $ \textit{'a'} up to position $p = 10$.
+It begins at the root and queries recursively towards the leaf node corresponding to \textit{'a'}. 
+In each recursive call $p$ is set to $o_{parent}$ because only the 0s (or 1s) are mapped to the child node and $o$ indicates how many of these correspond to characters occurring before the original position $p_{parent}$.
+In all the bitmaps \textit{'a'} is represented as 0 and in the root there are 6 occurrences of 0 up to position 10. 
+In the left child node the algorithm then counts the number of 0s (3, making $o=3$) up to position 6 ($p=6$), and in the leaf it counts the number of 0s until position 3 of which there are 3 ($o=3, p=3$). 
+This means that there are 3 occurrences of \textit{'a'} in \textit{S} up to position 10.
 
 We have written the rank query as pseudo-code in Algorithm~\ref{alg:rank} using an object-oriented approach.
 
 \begin{figure}
 \center \includegraphics[width=1\textwidth]{RankDrawing}
-\caption{Rank: This figure shows why the Rank algorithm works. 
+\caption{Rank: This figure shows how the rank query algorithm works. 
 In this example the algorithm looks for the number of occurrences \textit{o} of $c = $ \textit{'a'} until position $p = 10$.
-It begins in the root and queries recursively towards the leaf of \textit{'a'}.
+It begins in the root and queries recursively towards the leaf node corresponding to \textit{'a'}.
 The arrows indicate a mapping between the bitmaps.
 In each recursion $p = o_{parent}$.
-Looking at the arrows one can see why this is the case; they all point to positions in the child bitmap that is within $p_{child}$ indicated by the blue square.
-In the root there are 6 0s until position 10. 
-In the left node there are 3 0s until position 6
-and in the leaf there are 3 0s until position 3. This means there are 3 \textit{a}s until position 10 in S.}
+Each of the 0s before $p_{parent}$ in the parent node maps to bits before $p$ the child node.
+In the root there are 6 0s up to position 10. 
+In the left node there are 3 0s up to position 6
+and in the leaf there are 3 0s up to position 3. This means there are 3 \textit{a}s up to position 10 in S.}
 \label{fig:RankDrawing}
 \end{figure}
 
