@@ -14,7 +14,7 @@ With our optimizations from later sections, we have reduced the amount of time s
 
 \subsection{$d$-ary}
 Our wavelet trees are all binary which means their height is the base-2 logarithm of the alphabet size.
-With a higher $d$-ary tree the height would be reduced to base $d$ logarithm of the alphabet size.
+With a $d$-ary tree the height would be reduced to base $d$ logarithm of the alphabet size.
 This could improve access, rank, and select query performance significantly as their traversal down or up the tree would be significantly shortened.
 
 A disadvantage of a $d$-ary wavelet tree is that each bitmap must encode $\log_2(d)$ bits of information for each character in the string, to signify which of the subtrees each character belongs to.
