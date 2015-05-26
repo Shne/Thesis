@@ -12,6 +12,14 @@ Mäkinen and Navarro~\citeA[Section~4]{FMcountOnBWT} invented the Huffman-shaped
 
 Another use of a wavelet tree is answering Range Quantile queries and is described by Gagie et al.~\citeA[Section 3]{RangeQuantileQueries}.
 
-
-
 Claude and Navarro~\citeA[Section~2.2]{Claude08practicalrankselect} give a good description of how rank and select queries is performed on the wavelet tree in practice.
+
+Julian Shun~\citeA{DBLP:journals/corr/Shun14} describes various parallelized algorithms for constructing the wavelet tree by utilizing the GPU, achieving up to a 27x speedup over the sequential construction algorithm.
+
+Alex Bowe~\citeA{MultiaryWaveletTreesInPractice} describes how a multiary wavelet tree can be combined with an RRR structure to support faster queries than a binary wavelet tree can accomplish using an RRR structure invented by Raman et. al. \citeB{DBLP:journals/corr/abs-0705-0552}.
+An RRR structure allows computation of binary rank in $O(1)$ time and provides zero-order entropy compression for binary strings.
+By using a multiary wavelet tree with the RRR structure it is possible to achieve higher order entropy compression.
+
+
+
+
