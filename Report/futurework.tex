@@ -31,3 +31,9 @@ To expand on the potential improvement from using SIMD instructions when constru
 \subsubsection{On GPU}
 If parallelization proves to be an improvement, implementing them on the GPU e.g. using CUDA could be a massive improvement as modern GPUs have several hundred cores and if well-utilized can surpass the power of a modern CPU.
 
+\subsection{RRR structure}
+The RRR structure allows computation of binary rank in $O(1)$ time. 
+It also implicitly achieves zero-order compression of the data.
+RRR uses some of the same concepts as we do in our CumulativeSum implementation: Precomputed ranks, cumulative sum of those and concatenation of bitmaps.
+It could be interesting to compare our implementation with RRR to see which one is faster.
+
