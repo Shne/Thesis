@@ -16,19 +16,21 @@ Select queries were implemented as described in Section~\ref{sec:selectDescripti
 \subsubsection{Binary Rank using Popcount}
 \label{sec:popcountBinaryRank}
  
-To improve \textproc{BinaryRank} the intrinsic cpu instruction \texttt{popcount}, which will count the number of 1s in the binary representation of the number that is passed to it, is used.
+To improve \textproc{BinaryRank} we will try using the intrinsic cpu instruction \texttt{popcount}, which will count the number of 1s in the binary representation of the number that is passed to it.
 Our use of \texttt{popcount} to improve binary rank and select queries was inspired by~ González et al.~\citeB{Gonzalez05practicalimplementation} who used it to improving binary rank and binary select for bit arrays.
-Unlike González et al., we do not use a popcount function implemented in software, but rather the built in \texttt{popcount} instruction in the CPU instruction set.
-An \texttt{unsigned long} pointer can be retrieved from the \texttt{vector<bool>} bitmap into the backing array. The implementation will therefore be working on \texttt{unsigned long}s and we will call their size (64 bits on machine 1) our wordsize.
+Unlike González et al., we do not use a popcount function implemented in software, but rather the built in \texttt{popcount} instruction in the CPU instruction set, which we assume to be the fastest way to calculate \texttt{popcount} since it is only a single instruction implemented in hardware.
+The built in cpu instruction takes as argument an \texttt{unsigned int} or an \texttt{unsigned long}.
+The \texttt{vector<bool>} stores the bits in a backing array of \texttt{unsigned long}s and a pointer to the desired position in this array can be retrieved from the \texttt{vector<bool>}.
+The implementation will therefore be working on \texttt{unsigned long}s and we will call their size (64 bits on machine 1) our \textit{wordsize}.
 When using \texttt{popcount}, \textproc{BinaryRank} remains in theory an $O(\frac{N}{\mathit{wordsize}}) = O(N)$ operation, as \textit{wordsize} is a constant factor, but it has a large practical effect on performance as can be seen in Section~\ref{sec:experimentPopcountRankSelect}.
 
 To use \texttt{popcount} we call \texttt{\_\_builtin\_popcountl} which is a function built into the GCC compiler\footnote{\url{gcc.gnu.org/onlinedocs/gcc-4.1.2/gcc/Other-Builtins.html}}. 
 It takes an \texttt{unsigned long} as a parameter and returns the number of 1s in it. \texttt{\_\_builtin\_popcountl} will automatically figure out how to do popcount based on what CPU you are using. Popcount as an intrinsic cpu instruction is supported on both AMD\footnote{\url{support.amd.com/TechDocs/24594.pdf}} and Intel arhitectures\footnote{\url{software.intel.com/sites/landingpage/IntrinsicsGuide}}.
-We have verified, by looking at the produced assembly code, that \texttt{popcount} is calculated using a cpu instruction \texttt{popcnt} on our computers which we assume to be the fastest way to calculate \texttt{popcount} since it is only a single instruction.
+We have verified, by looking at the produced assembly code, that \texttt{popcount} is calculated using a cpu instruction \texttt{popcnt} on our computers.
 	
-The binary rank can then be found by summing the result of calling \texttt{popcount} on each word of the bitmap up to a given \textit{position}.
-When the position argument of the rank query is not a multiple of the word size, it is necessary to constrain what part of the last word is counted using \texttt{popcount}. This can be done by constructing a bitmask by bitshifting the number 1 \textit{position} times towards the most significant bit and then subtracting one, as that will create a word where the \textit{position} least significant bits are set to 1 and the rest to 0.
-Then we do a bitwise \texttt{AND} operation of this bitmask and the word containing the bit corresponding to \textit{position}, and call \texttt{popcount} on the result. 
+The binary rank can then be found by summing the result of calling \texttt{popcount} on each word of the bitmap up to a given position $p$.
+When the position argument of the rank query is not a multiple of the word size, it is necessary to constrain what part of the last word is counted using \texttt{popcount}. This can be done by constructing a bitmask by bitshifting the number 1 $p$ times towards the most significant bit and then subtracting one, as that will create a word where the $p$ least significant bits are set to 1 and the rest to 0.
+Then we do a bitwise \texttt{AND} operation of this bitmask and the word containing the bit corresponding to $p$, and call \texttt{popcount} on the result. 
 
 As also noted in~\citeA{Navarro:2014:WT:2592317.2592708}, we do not need to count the number of 0s, although required by the algorithm, as we can simply take the number of bits in the bitmap and subtract the number of 1s to calculate the number of 0s.
 
@@ -38,8 +40,7 @@ We improved \textproc{Binary Select} by again using the \texttt{popcount} instru
 We iterate through the words of the bitmap and call \texttt{popcount} for each word and sum up the results along the way. 
 When the sum after the next word would be greater than the sought number of occurrences we discard the \texttt{popcount} result for the next word and fall back to the simple binary select for that next word to find the position within that word.
 
-We define the input occurrence parameter as \textit{io}, the number of words iterated through so far as \textit{w}, the sum so far as \textit{sum}, and the wordsize as \textit{ws}. 
-The occurrence argument for that last simple binary select is then the $\mathit{io} - \mathit{sum}$ and the output position is $w \times \mathit{ws} + \textproc{BinaryRank}(\mathit{bitmapwords}[\mathit{ws}+1], io - \mathit{sum})$ \footnote{Using simple binary rank without \texttt{popcount}}.
+If we define the input occurrence parameter as $o$, the number of words iterated through so far as \textit{w}, the sum so far as \textit{sum}, and the wordsize as \textit{ws}, then the occurrence argument for that last simple binary select is then the $o - \mathit{sum}$ and the output position is $w \times \mathit{ws} + \textproc{BinaryRank}(\mathit{bitmapwords}[\mathit{ws}+1], o - \mathit{sum})$ \footnote{Using simple binary rank without \texttt{popcount}}.
 
 Again, when popcount for 0s instead of 1s is needed, we simply subtract the result of \texttt{popcount} from 1 to obtain the count of 0s.
 
