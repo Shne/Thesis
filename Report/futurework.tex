@@ -1,5 +1,5 @@
 \section{Future Work}
-We have many ideas for future work on practical implementation and optimization on wavelet trees.
+We have many ideas for future work on practical implementation and optimization of wavelet trees.
 
 \subsection{vEB Memory Layout}
 \label{sec:futurework_vebmemorylayout}
@@ -13,12 +13,12 @@ In Section~\ref{sec:memorylayout} we tried skewing the tree to reduce cache miss
 With our optimizations from later sections, we have reduced the amount of time spent calculating binary rank and select, and it is possible that skewing the tree might have a beneficial effect after having applied our other optimizations.
 
 \subsection{$d$-ary}
-Our wavelet trees are all binary which means their height is the base-2 logarithm of the alphabet size.
+In our implementations we have used a binary wavelet tree which means its height is the base-2 logarithm of the alphabet size.
 With a $d$-ary tree the height would be reduced to base $d$ logarithm of the alphabet size.
 This could improve access, rank, and select query performance significantly as their traversal down or up the tree would be significantly shortened.
 
 A disadvantage of a $d$-ary wavelet tree is that each bitmap must encode $\log_2(d)$ bits of information for each character in the string, to signify which of the subtrees each character belongs to.
-This, in turn, makes using the native \texttt{popcount} cpu instruction impossible, perhaps unless some clever bitshifting and \texttt{XOR}ring could be applied to avoid manually counting sets of bits.
+This makes using the native \texttt{popcount} cpu instruction impossible, perhaps unless some clever bitshifting and \texttt{XOR}ring could be applied to avoid manually counting sets of bits.
 On the other hand, using the stored precomputed values means only few sets of bits would have to be counted and perhaps the benefit from a lower tree will outweigh the loss from not using \texttt{popcount}.
 
 \subsubsection{SIMD}

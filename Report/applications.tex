@@ -225,7 +225,7 @@ Such a procedure is described by Mäkinen and Navarro~\citeA[Section 2]{FMcountO
 \subsubsection{Huffman-shaped Wavelet Trees}
 \label{sec:huffmanShapedWaveletTree}
 Mäkinen and Navarro~\citeA[Section~4]{FMcountOnBWT} describes a Huffman Shaped Wavelet Tree which skews the tree to one side and places symbols with higher frequencies towards the other side so that they are closer to the root than those that have a lower frequency.
-More precisely, they are placed in the tree in such a way that the path from the root to a leaf corresponds to the binary Huffman Code~\citeA[Introduction]{HuffmanCoding} of the symbol of that leaf.
+More precisely, they are placed in the tree in such a way that the path from the root to a leaf corresponds to the binary Huffman Code~\citeB[Introduction]{HuffmanCoding} of the symbol of that leaf.
 Using a Huffman Shaped Wavelet Tree is an alternative to run-length encoding.
 
 This approach skews the tree and as a result increases the height of the tree, which ordinarily would result in higher average query time, but by placing the most frequent symbols highest and least frequent symbols lowest, it decreases query time massively for symbols with high frequency.
