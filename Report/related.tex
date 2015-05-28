@@ -4,7 +4,7 @@ The wavelet tree was first introduced in 2003 by Grossi, Gupta, and Vitter~\cite
 Gonzalo Navarro~\citeA{Navarro:2014:WT:2592317.2592708} explains how the wavelet tree has many and wide ranging useful applications, from string processing including compression, full-text indexes and inverted indexes to geometry processing including various queries and computations on point grids and rectangle sets as well as graphs. 
 In \citeA[Section 9]{Navarro:2014:WT:2592317.2592708} it is also mentioned that there are other data structures that achieves better time complexity than the wavelet tree, but the wavelet tree is more practical and easy to understand and implement.
 
-Cristos Makris~\citeA{WTSurvey} also describes several effective uses for a wavelet tree, including viewing it as a range searching data structure for e.g. minimum bounding volumes and effective storage compression.
+Cristos Makris~\citeA{WTSurvey} also describes several effective uses of a wavelet tree, including viewing it as a range searching data structure for e.g. minimum bounding volumes and effective storage compression.
 Using the wavelet tree as a compressing data structure is mainly about using various ways of encoding the bitmaps, such as using run-length encoding (RLE) on the bitmaps and storing the Burrows-Wheeler transformation (BWT) of the input string, or using Huffman Coding to shape the tree.
 The Burrows-Wheeler transformation was introduced by Burrows and Wheeler~\citeA[Abstract]{BWToriginalArticle} in 1994.
 Ferragina et al.~\citeA[Section~2]{waveletTreeEntropy} describes in more detail how BWT can be used to reduce the problem of compressing higher-order entropy to a problem of compressing 0-order entropy, which the wavelet tree then can do using RLE.

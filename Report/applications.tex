@@ -6,8 +6,9 @@ These applications use the wavelet tree to achieve different representations whi
 Using the Wavelet Tree to store a sequence of values is perhaps the most basic way to utilize the tree.
 The Wavelet Tree stores the sequence and supports access, rank, and select queries on the sequence.
 
-The Wavelet Tree can also be used to describe a stable reordering, e.g. of the symbols in a string S. 
-If the leaves are traversed then all the occurrences of the smaller symbols are found first and within the leaf they are ordered by original position.
+The Wavelet Tree can also be used to describe a stable reordering of the symbols in a string S, \textit{stable} meaning that the relative order of entries of the same symbol remain the same.
+This property can be relevant e.g. when using key-value pairs where the order of values matters even when the keys are identical.
+This also means that if the leaves are traversed, with all the occurrences of the smaller symbols found first, then all the symbols within a leaf are ordered by their position in the original string.
 This means that the leaves of the symbols appear in ascending sorted order from left to right in the tree.
 If one then has a permutation of a string e.g a string sorted in descending order and stores it in a wavelet tree, it is then possible to access the symbols in either ascending or descending order based on whether the symbol is tracked downwards through the tree until the corresponding leaf is found, or whether the symbol is tracked upwards from the leaf. 
 The downward tracking would then result in an ascending order and the upward tracking would result in descending order.
@@ -26,6 +27,7 @@ Some of the main compression techniques are different ways of encoding the bitma
 The main advantage of the wavelet tree with regards to compression is that it supports entropy bounds in the attained space complexity of the various wavelet tree compression methods~\citeA[Section~2.1]{WTSurvey}.
 
 \subsubsection{Entropy}
+\label{sec:entropy}
 According to~\citeA[Introduction]{WTSurvey} entropy can be defined as:
 
 \begin{mdframed}[nobreak, linecolor=lightgray, linewidth=2pt]
