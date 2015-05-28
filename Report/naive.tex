@@ -59,9 +59,9 @@ We did not expect it would make as much difference for rank queries as they cann
 Looking at Figure~\ref{fig:UniformVsNonUniform} we see that our theories have been confirmed. 
 The build time in Figure~\ref{fig:UniformVsNonUniform_Build_WallTime} is noticeably lower for the non-uniform data.
 The select query time in Figure~\ref{fig:UniformVsNonUniform_Select_WallTime} is almost half for non-uniform data as that of uniform data.
-The rank wall times are much closer and this time it is on uniform data that it is slightly faster, by about 1.6\%.
+The rank wall times are much more similar and it is on uniform data that it is slightly faster, but only by about 1.6\%.
 We expect this is because the non-uniform data just so happens to be distributed so that some of the query parameters used in our test result in a slightly slower execution compared to the uniform data.
-When looking at the numbers of branch mispredictions and cache misses and so forth, we find that the rank queries on the non-uniform data have about 4\% more level 3 cache misses, but little difference in the other measurements.
+When looking at the numbers of branch mispredictions and cache misses and so forth, we find that the rank queries on the non-uniform data have about 4\% more level 3 cache misses, and even less difference in the other measurements.
 
 
 %\newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
@@ -101,19 +101,19 @@ We tested for alphabet sizes $2^p$ with $p = [8...23]$ and used a constant input
 A theoretical running time of $O(n \log\sigma)$ is equivalent to $a \cdot n \log\sigma$ where $a$ is some constant factor.
 Assuming our construction algorithm has this running time, a plot of the wall time divided by $n \log\sigma$ should converge on the constant factor $a$ as $\sigma \rightarrow \infty$
 In Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime} we have plotted this, and find that it could be said to be converging on a constant value until reaching an alphabet size of about $2^{16}$ whereafter it increases as $\sigma$ increases, with what looks like exponential growth.
-This means our implementation of the construction of a Wavelet Tree is not conforming to the theoretical running time for higher alphabet sizes.
+This means our implementation of the construction of a wavelet tree is not conforming to the theoretical running time for higher alphabet sizes.
 
 
 
-To attempt to understand why our algorithm performs so, we turn to the many other measurements available to us through PAPI: Branch Mispredictions, Cache Misses, etc.
+To attempt to understand why our algorithm performs so, we turn to the many other measurements available to us through PAPI: branch mispredictions, cache misses, etc.
 
-Looking at the raw Wall Time and Branch Misprediction numbers in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_BM} it might seem natural to conclude that the Branch Mispredictions are to blame.
+Looking at the raw wall time and branch misprediction numbers in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_BM} it might seem natural to conclude that the branch mispredictions are to blame.
 
-But if we instead plot the rate of Branch Mispredictions, as we have done in Figure~\ref{fig:naiveIntegerAlphabetSize_BMRate}, we can see that the rate of Branch Mispredictions stay constant for most of the tested alphabet sizes, and even decrease for large alphabet sizes.
+But if we instead plot the rate of branch mispredictions, as we have done in Figure~\ref{fig:naiveIntegerAlphabetSize_BMRate}, we can see that the rate of branch mispredictions stay constant for most of the tested alphabet sizes, and even decrease for large alphabet sizes.
 
-We next turn to look at Cache Misses, plotting all three levels in Figure~\ref{fig:naiveIntegerAlphabetSize_CM} and see that cache misses increase for larger alphabet sizes up to an alphabet size of around $2^{18}$ after which they seem to remain constant for even larger alphabet sizes.
+We next turn to look at cache misses, plotting all three levels in Figure~\ref{fig:naiveIntegerAlphabetSize_CM} and see that cache misses increase for larger alphabet sizes up to an alphabet size of around $2^{18}$ after which they seem to remain constant for even larger alphabet sizes.
 This is in contrast to the wall time over theoretical running time plot in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime} that seem to remain somewhat constant until about $2^{18}$ after which it increases.
-We conclude the Cache Misses are not the problem.
+We conclude the cache misses are not the problem.
 
 We then considered that the difference in theoretical and practical running time might be explained by the fact that our algorithm spends a constant amount of time per node, constructing it, independent on the size of the input, $n$, and scaling linearly with alphabet size, $\sigma$.
 The actual running time should then be $a \cdot n \log\sigma + b \sigma$.
@@ -122,16 +122,13 @@ So to show whether the added $b \sigma$ term can explain the running time, we re
 
 We can see in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_plusSigma} that it does not converge on any constant value other than 0, meaning the constant factor from each node cannot explain our implementation's running time.
 
-Having not found an explanation we pull data for Translation Lookaside Buffer Misses from the experiment and plot it together with wall time, both divided by $\log \sigma$, in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_TLB}
-
-
-
+Having not found an explanation we pull data for translation lookaside buffer misses from the experiment and plot it together with wall time, both divided by $\log \sigma$, in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_TLB}
 
 We can see that the TLB Misses increase drastically from alphabet size about $2^{20}$ and up.
 Having found no other reasonable explanation for the discrepancy between the theoretical and our implementation's actual running time, we believe that TLB Misses is the culprit.
 
 In our further experimentation of the further improvements we do we will be using an alphabet size of $2^{16}$.
-It is a realistic use cases to use types such as \texttt{char}, \texttt{wchar16\_t} and \texttt{wchar32\_t} which are stored in 8, 16 and 32 bits respectively.
+It is a realistic use case to use a type such as \texttt{char}, \texttt{wchar16\_t} or \texttt{wchar32\_t} which are stored in 8, 16 and 32 bits respectively.
 \texttt{char}'s size of 8 bits corresponds only to the ASCII table with 256 entries and we believe that many real-world scenarios require a larger alphabet.
 \texttt{wchar16\_t} enables an alphabet up to $2^{16} = 65,536$, which should be enough for many use cases, such as full text indexing.
 Zachery B. Simpson\footnote{\url{mine-control.com/zack/guttenberg/}} has found that no book occurring in the Gutenberg Project uses more than 43113 distinct words.
@@ -141,7 +138,7 @@ Whichever is the actual number, they all suggest that an alphabet size of $2^{16
 
 Looking at the graphs from this experiment we can see that building the tree using an alphabet size of $2^{16}$ is still fairly quick, not running into much trouble with TLB misses, and not exceeding the expected asymptotically bound running time.
 
-We also attempted using an alphabet size of 32, but our machine did not have enough memory for that to be possible.
+We also attempted using an alphabet size of 32, but our machine did not have enough memory for that to be possible on a sizeable input string.
 
 
 
