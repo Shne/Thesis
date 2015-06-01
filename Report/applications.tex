@@ -22,7 +22,7 @@ Querying from a leaf gives the points in $y$-coordinate order because the leaves
 
 \subsection{Compression}
 The Wavelet Tree has many uses for compression of data~\citeA{Navarro:2014:WT:2592317.2592708}.
-Some of the main compression techniques are different ways of encoding the bitmaps and changing the shape of the tree~\citeA[Section~3]{Navarro:2014:WT:2592317.2592708}.
+Some of the main compression techniques are different ways of encoding the bitmaps and changing the shape of the wavelet tree~\citeA[Section~3]{Navarro:2014:WT:2592317.2592708}.
 
 The main advantage of the wavelet tree with regards to compression is that it supports entropy bounds in the attained space complexity of the various wavelet tree compression methods~\citeA[Section~2.1]{WTSurvey}.
 
@@ -31,12 +31,12 @@ The main advantage of the wavelet tree with regards to compression is that it su
 According to~\citeA[Introduction]{WTSurvey} entropy can be defined as:
 
 \begin{mdframed}[nobreak, linecolor=lightgray, linewidth=2pt]
-\begin{definition}: Entropy \\\\
-Let \textit{S} be a sequence of \textit{n} symbols from an alphabet $\Sigma = \lbrace c_1 ... c_\sigma \rbrace$ with cardinality $\sigma$.
+\begin{definition}: \emph{Entropy} \\\\
+Let \textit{S} be a sequence of \textit{n} symbols from an alphabet $\Sigma = \lbrace c_1, \ldots, c_\sigma \rbrace$ with cardinality $\sigma$.
 Then \textit{entropy} H is defined as
-\begin{center}
-$H = \sum_{i=1}^{\sigma} p_i log_2(\frac{1}{p_i})$
-\end{center}
+\[
+	H = \sum_{i=1}^{\sigma} p_i \log \frac{1}{p_i} \; ,
+\]
 where $p_i$ is the probability of the $i$\emph{th} symbol in the alphabet appearing in \textit{S}.
 \end{definition} 
 \end{mdframed}
@@ -44,18 +44,18 @@ where $p_i$ is the probability of the $i$\emph{th} symbol in the alphabet appear
 Entropy represents a lower bound to the average number of bits needed to represent each symbol in $S$ according to the coding theorem of Shannon~\citeA[Introduction]{WTSurvey} and is the bound that compression researchers compare their results to.
 
 This theoretical definition of entropy is often replaced in scientific literature by a more practical definition: \textit{empirical entropy}.
-There are two versions: empirical zero-order entropy $H_0$ and empirical $k$th-order entropy $H_k$. $H_k$ takes into account a context of size \textit{k} of the symbol appearances, ie. the suffixes of length $k$ of each symbol appearance in the string, while $H_0$ does not and treats symbols independently instead. 
+There are two versions: empirical zero-order entropy $H_0$ and empirical $k$th-order entropy $H_k$. $H_k$ takes into account a context of size \textit{k} of the symbol appearances, i.e. the suffixes of length $k$ of each symbol appearance in the string, while $H_0$ does not and treats symbols independently instead. 
 
 \begin{mdframed}[nobreak, linecolor=lightgray, linewidth=2pt]
-\begin{definition}: Empirical zero-order entropy, $H_0$ \\
-Let \textit{S} be a sequence of \textit{n} symbols from an alphabet $\Sigma = \lbrace c_1 ... c_\sigma \rbrace$.
-Then \textit{entropy} $H_0$ is defined as
+\begin{definition}: \emph{Empirical zero-order entropy, $H_0$} \\
+Let \textit{S} be a sequence of \textit{n} symbols from an alphabet $\Sigma = \lbrace c_1, \ldots, c_\sigma \rbrace$.
+The entropy $H_0$ is defined as
 \begin{center}
-$H_0 = H_0(S) = \sum\limits_{c_i \in \Sigma} \frac{n_i}{n} log_2(\frac{n}{n_i})$
+$H_0 = H_0(S) = \sum\limits_{c_i \in \Sigma} \frac{n_i}{n} \log(\frac{n}{n_i})$
 \end{center}
 where $n_i$ is the number of appearances of character $c_i$ in $S$.
 \end{definition}
-\begin{definition}: Empirical $k$\emph{th}-order entropy, $H_k$ \\
+\begin{definition}: \emph{Empirical $k$\emph{th}-order entropy, $H_k$} \\
 For a string $w \in \Sigma^k$ let us define $w_S$ as the concatenation of characters that follow \textit{w} in \textit{S}. 
 Then the $k$\emph{th}-order empirical entropy of \textit{S}, is defined as follows
 \begin{center}
@@ -63,7 +63,10 @@ $H_k = H_k(S) = \frac{1}{n} \sum\limits_{w \in \Sigma^k} | w_S |H_0(w_S)$
 \end{center}
 \end{definition}
 \end{mdframed}
-$H_k$ often defines a lower bound for bit space usage that is smaller than the lower bound of $H_0$~\citeA[Section~2]{waveletTreeEntropy}.
+The entropy $H_k$ often defines a lower bound for bit space usage that is smaller than the lower bound of $H_0$~\citeA[Section~2]{waveletTreeEntropy}.
+
+There is a number of ways to achieve $k$th-order or zero-order entropy compression in a wavelet tree, the details of which we will go into in the following sections.
+The techniques used include the Burrows-Wheeler Transformation (see Section~\ref{sec:BWT}), using Run-Length Encoding (see Section~\ref{sec:RLE}), and Huffman-Shaping the wavelet tree (see Section~\ref{sec:huffmanShapedWaveletTree})
 
 Using the Burrows-Wheeler transformation on the input we can reduce the problem of achieving $H_k$ compression to achieving $H_0$ compression.
 In other words, if we have a good compression algorithm that achieves compression within the $H_0$ lower bound, then by using that algorithm on the Burrows-Wheeler transformation of the input we can achieve compression within the $H_k$ lower bound~\citeA[Introduction]{waveletTreeEntropy}.
@@ -71,10 +74,11 @@ The problem for a long time was that there existed no good way to achieve compre
 
 To achieve zero-order entropy a Huffman shaped wavelet tree can be used~\citeA[Section~4]{FMcountOnBWT}. Claude and Navarro~\citeA[Section~3]{Claude08practicalrankselect} describes a way to also have zero-order entropy space usage for large alphabets. 
 It is therefore possible to get space usage within zero-order entropy even for large alphabets using the wavelet tree. 
-Zero-order entropy can also be achieved by run-length encoding the bitmaps in the wavelet tree, which is also the approach that is used when compressing the BWT transformation of the input string using the wavelet tree~\citeA[Introduction (\textbf{B})]{waveletTreeEntropy}.
-This means that using a combination of run-length encoding of bitmaps and taking the Burrows-Wheeler transformation of the input string using the wavelet tree it is possible to achieve compression near the lower bound of $k$th-order entropy.
+Zero-order entropy can also be achieved by run-length encoding the bitmaps in the wavelet tree, which is an approach that can be used when compressing the Burrows-Wheeler transformation of the input string using the wavelet tree~\citeA[Introduction (\textbf{B})]{waveletTreeEntropy}.
+This means that using a combination of run-length encoding of bitmaps and taking the Burrows-Wheeler Transformation of the input string using the wavelet tree it is possible to achieve compression near the lower bound of $k$th-order entropy.
 
 \subsubsection{Run-Length encoding}
+\label{sec:RLE}
 Run-length encoding (RLE) is a simple process where the number of consecutive repeats of each symbol is stored instead of storing the symbols themselves. 
 If we have the string \textit{aaaaacccaaaaabbbaa} we can run-length encode this to \textit{a5c3a5b3a2} which is a smaller string containing the same information.
 It is necessary to store the symbol and its number of consecutive repeating occurrences because we need to be able to identify which symbol occurs where and how many times in order to be able to reproduce the original string.
@@ -85,23 +89,25 @@ Since a binary number only has an alphabet of size two it is not necessary to st
 As an example, if we look at the bitmap of an input string \textit{aaaaacccaaaaabbbaa} which is \textit{000001110000000000} when stored in a wavelet tree, then it can be encoded and stored as the numbers $5~3~10$.
 Figure~\ref{fig:RleWaveletTree} shows an example of a wavelet tree with run-length encoded bitmaps.
 
-If we do not consider how a computer saves numbers but only consider the amount of numbers that needs to be stored then $RLE(000001110000000000)$ achieves a great reduction in space.
+If we do not consider how a computer saves numbers but only consider the amount of length-encoding numbers that needs to be stored then our example RLE compression of $000001110000000000$ achieves a great reduction in space.
 From 18 numbers to only 3 numbers, which contain the same information.
 
 If we do consider how a computer saves numbers then the reduction is not that great because if we assume that each number is represented as an integer, then the run-length encoded bitmap uses more space than just storing the original bitmap. 
-This is because an integer uses 4 bytes of space which is 32 bits and we need to store three integers giving us a total of $32 bits \times 3 = 96 bits$ which is significantly larger than just the 18 bits we need to store for the original bitmap assuming we can store 1 and 0 using only 1 bit \footnote{This can be accomplished using C++ and Vector$<$bool$>$}. 
+This is because an integer uses 4 bytes of space which is 32 bits and we need to store three integers giving us a total of $32 bits \times 3 = 96 bits$ which is significantly larger than just the 18 bits we need to store for the original bitmap assuming we can store 1 and 0 using only 1 bit\footnote{This can be accomplished using C++ and Vector$<$bool$>$}. 
 This means that the symbols in the string need to, on average, repeat consecutively more than 32 times before RLE achieves better space usage than just storing the bitmaps.
 This is assuming 4-byte integers are used to store the RLE values. 
 To be able to support storing the RLE of any bitmap, even one containing only 0s or only 1s, the RLE values should be able to store as high a value as the bitmap is long, which might require more bytes per value.
-A 32-bit unsigned integer supports storing a value up to $2^{32} = \num{4294967296}$. 
+A 32-bit unsigned integer supports storing a value up to $2^{32} = \num{4294967296}$.
+Alternatively, variable-length encoding of the numbers can be used.
 The limit on bitmap length is also the maximum supported length of input string for a wavelet tree.
 
-RLE is still useful despite of this limitation because you usually want to compress massive amounts of data and if that data uses an alphabet that is small enough then, as previously stated RLE can achieve compression close to the zero-order entropy when working with binary alphabets.
+RLE is still useful despite of this limitation when using fixed-length encoding because you usually want to compress massive amounts of data and if that data uses an alphabet that is small enough then, as previously stated RLE can achieve compression close to the zero-order entropy when working with binary alphabets.
 
 If the Burrows-Wheeler transformation is applied to the string before it is saved in the wavelet tree and run-length encoded then the number of consecutive repeats of a symbol is increased which enables even greater compression.
 
 \subsubsection{Burrows-Wheeler transformation}
-The Burrows-Wheeler transformation transforms a string $S$ into a string of the same length with the same characters with the characteristic that characters are grouped into runs of similar characters.
+\label{sec:BWT}
+The Burrows-Wheeler Transformation (BWT) transforms a string $S$ into a string of the same length with the same characters with the characteristic that characters are grouped into runs of similar characters.
 This characteristic enables higher compression ratios when using techniques such as run-length encoding.
 The transformation is reversible, meaning it is possible to produce the original string from the Burrows-Wheeler transformed string, without any other information.
 Sorting $S$ would enable similar, or possibly better, compression ratios using run-length encoding, but it will not be reversible.
@@ -156,7 +162,7 @@ The original string is then the value with the end of line character \# at the e
 An example of the process in shown in Figure~\ref{fig:reverseBwt}.
 
 \begin{figure}
-\caption{Example of how to do reverse BWT on string “acd\#”. The returned value is “dca\#”.}
+\caption{Example of how to do reverse BWT on string “\textit{acd\#}”. The returned value is “\textit{dca\#}”.}
 \label{fig:reverseBwt}
 \center
 $\begin{bmatrix}
@@ -177,8 +183,28 @@ $\begin{bmatrix}
 \begin{tabular}{|l|l|l|l|l|l|l|}
 \hline
 Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 \\
-\hline
-\begin{tabular}[c]{@{}l@{}}a\\ c\\ d\\ \#\end{tabular} & \begin{tabular}[c]{@{}l@{}}\#\\ a\\ c\\ d\end{tabular} & \begin{tabular}[c]{@{}l@{}}a\#\\ ca\\ dc\\ \#d\end{tabular} & \begin{tabular}[c]{@{}l@{}}\#d\\ a\#\\ ca\\ dc\end{tabular} & \begin{tabular}[c]{@{}l@{}}a\#d\\ ca\#\\ dca\\ \#dc\end{tabular} & \begin{tabular}[c]{@{}l@{}}\#dc\\ a\#d\\ ca\#\\ dca\end{tabular} & \begin{tabular}[c]{@{}l@{}}a\#dc\\ ca\#d\\ \textbf{dca\#}\\ \#dca\end{tabular} \\ \hline
+\hline 
+\begin{tabular}{@{}>{$}l<{$}@{}}
+	a\\ c\\ d\\ \#
+\end{tabular} & 
+\begin{tabular}{@{}>{$}l<{$}@{}}
+	\#\\ a\\ c\\ d
+\end{tabular} & 
+\begin{tabular}{@{}>{$}l<{$}@{}}
+	a\#\\ ca\\ dc\\ \#d
+\end{tabular} & 
+\begin{tabular}{@{}>{$}l<{$}@{}}
+	\#d\\ a\#\\ ca\\ dc
+\end{tabular} & 
+\begin{tabular}{@{}>{$}l<{$}@{}}
+	a\#d\\ ca\#\\ dca\\ \#dc
+\end{tabular} & 
+\begin{tabular}{@{}>{$}l<{$}@{}}
+	\#dc\\ a\#d\\ ca\#\\ dca
+\end{tabular} & 
+\begin{tabular}{@{}>{$}l<{$}@{}}
+	a\#dc\\ ca\#d\\ \textbf{dca\#}\\ \#dca
+\end{tabular} \\ \hline
 \end{tabular}
 \end{figure}
 

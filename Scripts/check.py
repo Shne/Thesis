@@ -41,7 +41,8 @@ badPatterns = [(r'\s()\\(ref|cite)', 'Space not \'~\' before ref/cite', []),
 				(r'(?<!igure|ction|ition|rithm|Table)~\\ref{', '~\\ref{} should follow either Figure, Section, Definition, Algorithm or Table', []),
 				(r'(?<!-)order entropy', 'use kth-order entropy instead of kth order entropy', []),
 				(r'\\texttt{popcountl}', 'use popcount instead of popcountl when discussing the use of it.', []),
-				(r'(?!\.\w+)(Wall Time|Cache Miss(es)?|Branch Miss(es)?|Translation Lookaside Buffer|Wavelet Tree)', 'Consistently use lower-case unless first word of sentence or first time introduction or header etc.', []),
+				# (r'(?!\.\w+)(Wall Time|Cache Miss(es)?|Branch Miss(es)?|Translation Lookaside Buffer|Wavelet Tree)', 'Consistently use lower-case unless first word of sentence or first time introduction or header etc.', []),
+				(r'(ie\.|eg\.)', 'use i.e. and e.g. instead of ie. and eg.', []),
 				]
 sublime = r'subl'
 
