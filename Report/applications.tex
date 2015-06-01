@@ -19,6 +19,8 @@ One can map a general set of $n$ points to such a discrete grid and then store t
 If we want the \textit{i}th point in $y$-coordinate order we can access the leaf of a given $y$-coordinate and find its corresponding $x$-coordinate by querying up through the tree until we find the original position of $y$ in $S$. 
 The corresponding $x$-coordinate will be at the same position.
 Querying from a leaf gives the points in $y$-coordinate order because the leaves are sorted by $y$-coordinate.
+The purpose of storing an $n \times n$ grid this way using a wavelet tree is to be able to find points within a rectangle $[ x_{min}, x_{max} ] \times [ y_{min}, y_{max} ]$ or in other words to do two-dimensional range search queries in $O(\log n)$ time.
+This running time can be improved to $O(\frac{\log n}{\log \log n})$ using $O(n \log n)$ bits and this running time cannot be improved within space $O(n \log^{O(1)} n)$ \citeA[Section 7.1]{Navarro:2014:WT:2592317.2592708}
 
 \subsection{Compression}
 The Wavelet Tree has many uses for compression of data~\citeA{Navarro:2014:WT:2592317.2592708}.
