@@ -160,17 +160,21 @@ It would not make much sense to compress something without being able to decompr
 Burrows et al.~\citeA[Section~2]{BWToriginalArticle} describes an algorithm for getting the original string from the Burrows-Wheeler transformed string.
 It works by taking the BWT, then sorting it and then adding the BWT in front of the sorted value and then sorting that. 
 This procedure continues until the number of characters in each row is equal to the length of the BWT. 
+After each sorting step each column in the sorted result corresponds to a column in \textit{M'}. 
+After the last sorting the result is equal to \textit{M'}.
 The original string is then the value with the end of line character \# at the end. 
 An example of the process in shown in Figure~\ref{fig:reverseBwt}.
 
+
 \begin{figure}
 \center
-$\begin{bmatrix}
+$M = \begin{bmatrix}
 	dca\#\\
 	ca\#d\\
 	a\#dc\\
 	\#dca
 \end{bmatrix} \Rightarrow
+M' = 
 \begin{bmatrix}
 	\#dc\textbf{a}\\
 	a\#d\textbf{c}\\
@@ -180,9 +184,9 @@ $\begin{bmatrix}
 
 \vspace{0.5cm}
 
-\begin{tabular}{|l|l|l|l|l|l|l|}
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
 \hline
-Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 \\
+Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 & Sort 4\\
 \hline 
 \begin{tabular}{@{}>{$}l<{$}@{}}
 	a\\ c\\ d\\ \#
@@ -204,6 +208,9 @@ Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 \\
 \end{tabular} & 
 \begin{tabular}{@{}>{$}l<{$}@{}}
 	a\#dc\\ ca\#d\\ \textbf{dca\#}\\ \#dca
+\end{tabular} &
+\begin{tabular}{@{}>{$}l<{$}@{}}
+	\#dca\\ a\#dc\\ ca\#d\\ \textbf{dca\#}\\
 \end{tabular} \\ \hline
 \end{tabular}
 \caption{Example of how to do reverse BWT on string “\textit{acd\#}”. The returned value is “\textit{dca\#}”.}
