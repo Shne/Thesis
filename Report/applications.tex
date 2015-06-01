@@ -164,8 +164,6 @@ The original string is then the value with the end of line character \# at the e
 An example of the process in shown in Figure~\ref{fig:reverseBwt}.
 
 \begin{figure}
-\caption{Example of how to do reverse BWT on string “\textit{acd\#}”. The returned value is “\textit{dca\#}”.}
-\label{fig:reverseBwt}
 \center
 $\begin{bmatrix}
 	dca\#\\
@@ -177,7 +175,7 @@ $\begin{bmatrix}
 	\#dc\textbf{a}\\
 	a\#d\textbf{c}\\
 	ca\#\textbf{d}\\
-	dca\#
+	dca\textbf{\#}
 \end{bmatrix}$
 
 \vspace{0.5cm}
@@ -208,6 +206,8 @@ Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 \\
 	a\#dc\\ ca\#d\\ \textbf{dca\#}\\ \#dca
 \end{tabular} \\ \hline
 \end{tabular}
+\caption{Example of how to do reverse BWT on string “\textit{acd\#}”. The returned value is “\textit{dca\#}”.}
+\label{fig:reverseBwt}
 \end{figure}
 
 
