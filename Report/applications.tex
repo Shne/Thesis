@@ -160,7 +160,7 @@ It would not make much sense to compress something without being able to decompr
 Burrows et al.~\citeA[Section~2]{BWToriginalArticle} describes an algorithm for getting the original string from the Burrows-Wheeler transformed string.
 It works by taking the BWT, then sorting it and then adding the BWT in front of the sorted value and then sorting that. 
 This procedure continues until the number of characters in each row is equal to the length of the BWT. 
-After each sorting step each column in the sorted result corresponds to a column in \textit{M'}. 
+After each sorting step each column in the sorted result corresponds to the column at the same position in \textit{M'}. 
 After the last sorting the result is equal to \textit{M'}.
 The original string is then the value with the end of line character \# at the end. 
 An example of the process in shown in Figure~\ref{fig:reverseBwt}.
