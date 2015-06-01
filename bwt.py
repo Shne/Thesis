@@ -19,14 +19,20 @@ def bwt(s):
 		permuted_s_list = []
 
 	M_strings = []
+	print("---------------------------")
+	print("M = ")
 	for lst in M:
 		str1 = ''.join(lst)
+		print(str1)
 		M_strings.append(str1)
 
 	M_strings.sort()
 
 	M_sorted = []
+	print("---------------------------")
+	print("M-sorted = ")
 	for str1 in M_strings:
+		print(str1)
 		M_sorted.append(list(str1))
 
 	bwt_string = []
@@ -36,6 +42,7 @@ def bwt(s):
 		char = lst[last_column_index]
 		bwt_string.append(char)
 
+	print("---------------------------")
 	print("bwt = " + ''.join(bwt_string))
 	return ''.join(bwt_string)
 
@@ -77,4 +84,4 @@ def reverseBwt(s):
 
 
 theBwt = bwt("dca#")
-reverseBwt(theBwt)
+# reverseBwt(theBwt)

@@ -159,6 +159,21 @@ An example of the process in shown in Figure~\ref{fig:reverseBwt}.
 \caption{Example of how to do reverse BWT on string “acd\#”. The returned value is “dca\#”.}
 \label{fig:reverseBwt}
 \center
+$\begin{bmatrix}
+	dca\#\\
+	ca\#d\\
+	a\#dc\\
+	\#dca
+\end{bmatrix} \Rightarrow
+\begin{bmatrix}
+	\#dc\textbf{a}\\
+	a\#d\textbf{c}\\
+	ca\#\textbf{d}\\
+	dca\#
+\end{bmatrix}$
+
+\vspace{0.5cm}
+
 \begin{tabular}{|l|l|l|l|l|l|l|}
 \hline
 Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 \\
@@ -232,7 +247,7 @@ Using a Huffman Shaped Wavelet Tree is an alternative to run-length encoding.
 
 This approach skews the tree and as a result increases the height of the tree, which ordinarily would result in higher average query time, but by placing the most frequent symbols highest and least frequent symbols lowest, it decreases query time massively for symbols with high frequency.
 Queries on a Huffman shaped Wavelet Tree for a symbol that has a high frequency then returns faster than queries for a symbol that was less frequent.
-Assuming symbols that occur with high frequency are also queried for more often, the average query time could see a reduction when using a Huffman-shaped wavelet tree.
+Assuming symbols that occur with high frequency are also queried for more often, the average query time are reduced when using a Huffman-shaped wavelet tree.
 
 The Huffman Code~\citeB[Introduction]{HuffmanCoding} of a symbol occurring with high frequency is a shorter binary string than the Huffman code of a symbol occurring with low frequency.
 The most frequent symbol could be encoded in as little as one bit!
