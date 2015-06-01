@@ -3,5 +3,5 @@ In this thesis we perform a survey on the applications of wavelet trees.
 We also implement various versions of wavelet trees, each version an attempt at improving the previous.
 For each version we test and compare the running times of construction and queries on the wavelet tree. 
 We analyse the results using Cache Miss, Branch Misprediction and Translation Lookaside Buffer Miss measurements to explain the differences in the running time, and as and inspiration for the next attempt at optimization.
-From our analysis and tests we learn that the best practical improvement on construction and query times is achieved by reducing cache misses and cpu cycles. 
+From our analysis and tests we find various changes that improve the query running times on the wavelet tree, and also some that worsen the running time even when improving some of the other measurements.
 \end{abstract}
