@@ -126,7 +126,7 @@ This means that there are 3 occurrences of \textit{'a'} in \textit{S} up to posi
 We have written the rank query as pseudo-code in Algorithm~\ref{alg:rank} using an object-oriented approach.
 
 \begin{figure}
-\center \includegraphics[width=1\textwidth]{RankDrawing}
+\center \includegraphics[width=0.8\textwidth]{RankDrawing}
 \caption{Rank: This figure shows how the rank query algorithm works. 
 In this example the algorithm looks for the number of occurrences \textit{o} of $c = $ \textit{'a'} until position $p = 10$.
 It begins in the root and queries recursively towards the leaf node corresponding to \textit{'a'}.
@@ -164,7 +164,6 @@ and in the leaf there are 3 0s up to position 3. This means there are 3 \textit{
 \label{sec:selectDescription}
 The position of the $o$th occurrence of a character $c$ can be found with a select$_c(o)$ query.
 
-
 The $i$th occurrence can be found with a traversal up through the wavelet tree starting at the leaf node corresponding to the character $c$ and ending at the root node.
 This means it is necessary to find the leaf node corresponding to $c$.
 
@@ -172,8 +171,6 @@ The leaf node corresponding to a character $c$ can be found by a downward traver
 Which child node, left or right, should be traversed is determined by computing whether $c \in \Sigma_{\mathit{left}}$ or $c \in \Sigma_{\mathit{right}}$.
 If $c \in \Sigma_{\mathit{left}}$, the traversal continues in the left child node, otherwise it continues in the right child node.
 The traversal continues until a leaf node is reached as that will be the leaf node corresponding to $c$.
-
-
 
 After having found the leaf node the algorithm turns to do the upward traversal to find the position of the $i$th occurrence of $c$ in the bitmap of the root node.
 This is done by finding the $o$th occurrence of 1 or 0, the bit representing $c$, in the bitmaps from the found leaf node to the root node, the $o$th occurrence of 1 or 0 being the bitmap entry corresponding to the $i$th occurrence of $c$ in $S$.
@@ -244,7 +241,7 @@ Select starts in the leaf of \textit{a} where $p = 3$ and $o = 3$ and moves recu
 \end{algorithm}
 
 \begin{figure}
-\center \includegraphics[width=1\textwidth]{SelectDrawing}
+\center \includegraphics[width=0.8\textwidth]{SelectDrawing}
 \caption{Select: This figure shows how the select algorithm works. 
 In this example Select looks for the position of the 3rd occurrence of \textit{a} which is represented as 0 in the leaf.
 Select starts in the leaf of \textit{a} where $p = 3$ and $o = 3$ and moves recursively towards the root. Along the way Select looks for the position of the 3rd occurrence of 0 in the parent of the leaf, which is 5, ($p=5, o=3$) and in the root it then looks for the position of the 5th occurrence of 0 which is 9, ($p=9, o=5$)  corresponding to the position of the 3rd \textit{a} in \textit{S}.}
