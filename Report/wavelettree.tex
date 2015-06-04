@@ -163,7 +163,6 @@ and in the leaf there are 3 0s up to position 3. This means there are 3 \textit{
 \subsection{Select query}
 \label{sec:selectDescription}
 The position of the $o$th occurrence of a character $c$ can be found with a select$_c(o)$ query.
-
 The $i$th occurrence can be found with a traversal up through the wavelet tree starting at the leaf node corresponding to the character $c$ and ending at the root node.
 This means it is necessary to find the leaf node corresponding to $c$.
 
@@ -174,13 +173,13 @@ The traversal continues until a leaf node is reached as that will be the leaf no
 
 After having found the leaf node the algorithm turns to do the upward traversal to find the position of the $i$th occurrence of $c$ in the bitmap of the root node.
 This is done by finding the $o$th occurrence of 1 or 0, the bit representing $c$, in the bitmaps from the found leaf node to the root node, the $o$th occurrence of 1 or 0 being the bitmap entry corresponding to the $i$th occurrence of $c$ in $S$.
-$o$ for a node $v$ is the position of the bit representing $c$ in the bitmap of the child node of $v$ that contains $c$.
-$o$ is calculated for each node during the upward traversal and increases (or at least does not decrease) as each bitmap higher up the tree corresponds to more and more of the original input string.
+For a node $v$, $o$ is the position of the bit representing $c$ in the bitmap of the child node of $v$ that contains $c$.
+Occurrence $o$ is calculated for each node during the upward traversal and $o$ increases (or at least does not decrease) as each bitmap higher up in the tree corresponds to more and more of the original input string.
 To know which bit, 1 or 0, to look for the $o$th occurrence of, the algorithm must know which bit $c$ has been mapped to in those bitmaps.
-Starting at the leaf node corresponding to $c$, it can be computed which bit in the bitmap of the parent node represents all characters in this node, among them $c$, by comparing the left or right child node pointer of the parent node with the address of this node.
+Starting at the leaf node corresponding to $c$,  which bit in the bitmap of the parent node that represents all characters in this node, among them $c$, can be computed by comparing the left or right child node pointer of the parent node with the address of this node.
 If the right child pointer of the parent node points to the current node, then the current node is the right child of its parent node and $c$ and the rest of the characters in this node will be represented by a 1 in the bitmap of the parent node, otherwise it will be represented by a 0.
 
-Having found the bit representing $c$ in the parent node, the algorithm will look for the position of the $o$th occurrence of that bit in the bitmap of the parent.
+Having found the bit representing $c$ in the parent node, the algorithm looks for the position of the $o$th occurrence of that bit in the bitmap of the parent.
 This is also called select$_1(o)$ or select$_0(o)$ or the \textit{binary select} of 1 or 0 of the bitmap.
 It can be implemented as a linear scan of the bitmap, but this is inefficient and later in this thesis we will look at how to improve the running time of binary select.
 The position of this occurrence is then the new $o$ parameter for the next step up the tree.
@@ -192,9 +191,9 @@ In Algorithm~\ref{alg:select}, we display pseudocode for select queries.
 It initiates the downward traversal via \textproc{GetLeaf} and then the upward traversal via \textproc{SelectRec}.
 
 An example of how the intuition behind why \textproc{Select} works is shown in Figure~\ref{fig:SelectDrawing}.
-In the example the algorithm looks for the position of the 3rd occurrence of \textit{a}.
-It looks of either 0 or 1 based on how a is represented in the bitmap of the current node. In this example \textit{a} is always represented as 0.
-Select starts in the leaf of \textit{a} where $p = 3$ and $o = 3$ and moves recursively towards the root. In each recursive call $o_{parent} = p_{child}$, meaning that $p_{child}$ becomes the occurrence Select looks for in the parent. In this example Select therefore looks for the position of the 3rd occurrence of 0 in the parent of the leaf, which is 5. In the root it then looks for the position of the 5th occurrence of 0 which is 9 corresponding to the position of the 3rd \textit{a} in \textit{S}.
+In the example the algorithm looks for the position of the 3rd occurrence of \textit{'a'}.
+It looks for either 0 or 1 based on how \textit{'a'} is represented in the bitmap of the current node. In this example \textit{'a'} is always represented as 0.
+Select starts in the leaf of \textit{'a'} where $p = 3$ and $o = 3$ and moves recursively towards the root. In each recursive call $o_{parent} = p_{child}$, meaning that $p_{child}$ becomes the occurrence Select looks for in the parent. In this example Select therefore looks for the position of the 3rd occurrence of 0 in the parent of the leaf, which is 5. In the root it then looks for the position of the 5th occurrence of 0 which is 9 corresponding to the position of the 3rd \textit{a} in \textit{S}.
 
 \begin{algorithm}
 \caption{Select}
