@@ -2,7 +2,7 @@
 The wavelet tree was first introduced in 2003 by Grossi, Gupta, and Vitter~\citeA[Section 4.2]{Grossi:2003:HET:644108.644250} as a way to obtain faster rank and select query times on compressed suffix arrays while maintaining empirical entropy compression.
 
 Gonzalo Navarro~\citeA{Navarro:2014:WT:2592317.2592708} explains how the wavelet tree has many and wide ranging useful applications, from string processing including compression, full-text indexes and inverted indexes to geometry processing including various queries and computations on point grids and rectangle sets as well as graphs. 
-In \citeA[Section 9]{Navarro:2014:WT:2592317.2592708} it is also mentioned that there are other data structures that achieves better time complexity than the wavelet tree, but the wavelet tree is more practical and easy to understand and implement.
+Gonzalo Navarro~\citeA[Section 9]{Navarro:2014:WT:2592317.2592708} also mentions that there are other data structures that achieves better time complexity than the wavelet tree, but the wavelet tree is more practical and easy to understand and implement.
 
 Cristos Makris~\citeA{WTSurvey} also describes several effective uses of a wavelet tree, including viewing it as a range searching data structure for e.g. minimum bounding volumes and effective storage compression.
 Using the wavelet tree as a compressing data structure is mainly about using various ways of encoding the bitmaps, such as using run-length encoding (RLE) on the bitmaps and storing the Burrows-Wheeler transformation (BWT) of the input string, or using Huffman Coding to shape the tree.
@@ -16,7 +16,7 @@ Claude and Navarro~\citeA[Section~2.2]{Claude08practicalrankselect} give a good 
 
 Julian Shun~\citeA{DBLP:journals/corr/Shun14} describes various parallelized algorithms for constructing the wavelet tree by utilizing the GPU, achieving up to a 27x speedup over the sequential construction algorithm.
 
-Alex Bowe~\citeA{MultiaryWaveletTreesInPractice} describes how a multiary wavelet tree can be combined with an RRR structure to support faster queries than a binary wavelet tree can accomplish using an RRR structure invented by Raman et. al. \citeB{DBLP:journals/corr/abs-0705-0552}.
+Alex Bowe~\citeA{MultiaryWaveletTreesInPractice} describes how a multiary wavelet tree can be combined with an RRR structure to support faster queries than a binary wavelet tree can accomplish using an RRR structure invented by Raman et. al.~\citeB{DBLP:journals/corr/abs-0705-0552}.
 An RRR structure allows computation of binary rank in $O(1)$ time and provides zero-order entropy compression for binary strings.
 By using a multiary wavelet tree with the RRR structure it is possible to achieve higher order entropy compression.
 

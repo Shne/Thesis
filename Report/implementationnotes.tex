@@ -26,8 +26,8 @@ This was slower than e.g. piping from \texttt{/dev/random} into a file, but we n
 
 \subsection{Reading Input}
 At first the input data was read from stdin using the \texttt{getline(cin, \&string)} function. 
-Once we applied a profiler we found this to be horrendously slow, our Naïve algorithm spending about 20\% of its running time on resizing IO buffers. 
-We then switched to using the \texttt{ifstream} class and IO time was reduced significantly to below 1\% of total running time.
+Once we applied a profiler we found this to be horrendously slow, our Naïve algorithm spending about 20\,\% of its running time on resizing IO buffers. 
+We then switched to using the \texttt{ifstream} class and IO time was reduced significantly to below 1\,\% of total running time.
 
 \subsection{Verifying the Results}
 To ensure that our implementations are correct, we implemented some simple and slow algorithms in python to calculate rank and select on the same input data we construct the wavelet trees on.

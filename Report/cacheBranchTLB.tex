@@ -195,7 +195,7 @@ The translation from \textit{va} to \textit{pa} gets an extra parameter when add
 The physical address is then found by first finding the page in the segmentation table and then finding the corresponding frame in the page table and then finding the frame in the physical memory. 
 This means that the translation from \textit{va} to \textit{pa} requires three physical reads.
 
-To reduce the number of reads needed when a virtual address is translated, a translation lookaside buffer (\textbf{TLB}) is used~\citeA[Section~8.2.5]{OperatingSystemPrinciples}.
+To reduce the number of reads needed when a virtual address is translated, a translation lookaside buffer (TLB) is used~\citeA[Section~8.2.5]{OperatingSystemPrinciples}.
 The TLB saves the most recent translations of \textit{va} to \textit{pa} i.e. translated pagenumbers, to make them quickly available for future use.
 This means that subsequent accesses of a virtual address within a short period is able to bypass segmentation- and page table lookups and simply just access the needed page frame from the TLB and find it in the physical memory.
 When the page is available in the TLB it is called a \textit{TLB hit}.

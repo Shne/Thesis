@@ -43,6 +43,7 @@ badPatterns = [(r'\s()\\(ref|cite)', 'Space not \'~\' before ref/cite', []),
 				(r'\\texttt{popcountl}', 'use popcount instead of popcountl when discussing the use of it.', []),
 				# (r'(?!\.\w+)(Wall Time|Cache Miss(es)?|Branch Miss(es)?|Translation Lookaside Buffer|Wavelet Tree)', 'Consistently use lower-case unless first word of sentence or first time introduction or header etc.', []),
 				(r'(ie\.|eg\.)', 'use i.e. and e.g. instead of ie. and eg.', []),
+				(r'\d\\%', 'use \\, between number and %', [])
 				]
 sublime = r'subl'
 

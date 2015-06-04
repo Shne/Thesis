@@ -144,7 +144,7 @@ That is, when considering the worst-case query time for both queries, if the occ
 
 This is giving the select query a disadvantage in the analysis, even when the partial block is close to a block in size and it might terminate early if the sought-after occurrence of the character if found early in the partial block.
 
-We believe it is an improvement, and will use it going forward, though it is not 100\% certain.
+We believe it is an improvement, and will use it going forward, though it is not 100\,\% certain.
 We have considered doing tests to determine whether it is an improvement for the running time or not, but as we are under time constraints and we feel we have other, far more interesting, things to implement and test we will not be testing this.
 
 
@@ -157,7 +157,7 @@ In Section~\ref{sec:queryRunTimePrecomputedBlockSizes} we find that the optimal 
 
 Assuming the precomputed values are then stored as 16-bit unsigned short integers it will only consume an extra 16 bits or 2 bytes per block and there are $\frac{\mathit{BitmapSize}}{\mathit{BlockSize}}$ of these blocks when the bitmaps are concatenated.
 This means, assuming a block size of 2048 bytes, a relative extra space consumption of
-\[ \frac{ 2 \cdot \frac{\mathit{BitmapSize}}{\mathit{BlockSize}} }{\mathit{BitmapSize}} = \frac{2}{\mathit{BlockSize}} = \frac{2}{2048} = 0.0009765625 = 0.098\% \]
+\[ \frac{ 2 \cdot \frac{\mathit{BitmapSize}}{\mathit{BlockSize}} }{\mathit{BitmapSize}} = \frac{2}{\mathit{BlockSize}} = \frac{2}{2048} = 0.0009765625 = 0.098\,\% \]
 of the bitmaps, which is even less when considering the total space used including the nodes.
 
 When the bitmaps are not concatenated there is a higher space consumption by the precomputed values, as each precomputed value do not cover an entire block and more precomputed values is therefore needed to cover all the bitmaps.
@@ -196,13 +196,13 @@ The query parameters were chosen as described in Section~\ref{sec:choiceOfQueryP
 In Figure~\ref{fig:PrecomputedRankBlockSize_Rank_WallTime} we have plotted the rank query wall time in $\mu s$ for the wavelet trees using precomputed rank values.
 
 We see that both concatenating the bitmaps and page-aligning the blocks is consistently slower, which was expected for concatenating the bitmaps, but not entirely so for page-aligning the blocks.
-Preallocated is on average about 6.22\% slower than UnalignedPreallocated, so page-aligning the blocks when using concatenated bitmaps is a 6.22\% performance hit.
-Preallocated is on average about 13.85\% slower than Naive, meaning concatenating the bitmaps when using page-aligned blocks is a 13.85\% performance hit.
+Preallocated is on average about 6.22\,\% slower than UnalignedPreallocated, so page-aligning the blocks when using concatenated bitmaps is a 6.22\,\% performance hit.
+Preallocated is on average about 13.85\,\% slower than Naive, meaning concatenating the bitmaps when using page-aligned blocks is a 13.85\,\% performance hit.
 
 Naive has its fastest running time at 1 page per block, whereas both trees using concatenated bitmaps (Preallocated and UnalignedPreallocated) seem to have a slightly better performance with a slightly higher or slightly lower block size, at 0.75 and 1.25 page per block.
 
 UnalignedNaive is the surprising outlier in this graph with a much lower wall time, especially for smaller block sizes.
-At block size = 0.5 page size, where UnalignedNaive is fastest, it only takes 65.58\% of the time that Naive does at block size = 1 page size, where Naive is fastest.
+At block size = 0.5 page size, where UnalignedNaive is fastest, it only takes 65.58\,\% of the time that Naive does at block size = 1 page size, where Naive is fastest.
 
 Much of the increased running time of Rank queries on the two Preallocated wavelet trees can be explained by the increased amount of instructions needed to calculate the rank of the first part inside the first block of each bitmap because the precomputed value includes part of the preceding bitmap, as well as the ineffectiveness of utilizing the precomputed rank values for small bitmaps, for the same reason.
 This is also corroborated by Figure~\ref{fig:PrecomputedRankBlockSize_Rank_BranchExe} that plots the number of branches executed.
@@ -218,7 +218,7 @@ We believe this is a result of UnalignedNaive not having to do any calculations 
 This means that a number of if-statements comparing the size of the bitmap with the block size to figure out whether the precomputed value can be used is not present in UnalignedNaive, where they are present in the others.
 
 Looking at Figure~\ref{fig:PrecomputedRankBlockSize_Rank_TLB} we can see that our expressed goal of reducing TLB misses when using page-aligned blocks is achieved when not using concatenated bitmaps, though only little but TLBs are not reduced when concatenated bitmaps are used which is in line with our expectation.
-On the other hand, we see that TLB misses are reduced to about 29.80\% when using concatenated bitmaps in the page-aligned version and to about 26.39\% when not page-aligning the blocks.
+On the other hand, we see that TLB misses are reduced to about 29.80\,\% when using concatenated bitmaps in the page-aligned version and to about 26.39\,\% when not page-aligning the blocks.
 This improvement was not enough to make up for the extra bookkeeping code, however, it seems.
 We also notice that the two trees using non-concatenated bitmaps, Naive and UnalignedNaive has a noticeable drop in TLB misses at a block size of 1 page size.
 
@@ -469,8 +469,8 @@ Massif outputs 'snapshots' of the memory usage taken at certain points in the co
 We have not simply used the snapshots produced automatically by Massif, but rather used the Client Request mechanism~\footnote{\url{http://valgrind.org/docs/manual/manual-core-adv.html}}of valgrind to send a \texttt{snapshot} command to the valgrind gdbserver, telling it to take a snapshot right after we have finished building the tree.
 The values presented in Figure~\ref{fig:PrecomputedRankBlockSize_Massif} is thus calculated from such Massif snapshots taken right after the tree has completed building.
 
-Looking at Figure~\ref{fig:PrecomputedRankBlockSize_Massif} we see that the memory usage of the trees using precomputed values but not concatenated bitmaps, Naive and UnalignedNaive use more memory than the tree not using precomputed values, SimpleNaive, but only about 0.5\%.
-We also see that memory is indeed saved by using the concatenated bitmaps in Preallocated and UnalignedPreallocated, though only about 1.5\% compared to the other trees using precomputed values.
+Looking at Figure~\ref{fig:PrecomputedRankBlockSize_Massif} we see that the memory usage of the trees using precomputed values but not concatenated bitmaps, Naive and UnalignedNaive use more memory than the tree not using precomputed values, SimpleNaive, but only about 0.5\,\%.
+We also see that memory is indeed saved by using the concatenated bitmaps in Preallocated and UnalignedPreallocated, though only about 1.5\,\% compared to the other trees using precomputed values.
 
 Our attempts to reduce the memory usage by concatenating the bitmaps seems to have succeeded, but looking back at the running times for the rank and select queries in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_WallTime} and Figure~\ref{fig:PrecomputedRankBlockSize_Select_WallTime}, we suspect the few percentage reduction in memory usage is not worth the massive decrease in rank query performance and the slight decrease in select query performance.
 
@@ -480,8 +480,8 @@ We have found that our UnalignedNaive precomputed tree using block size = 0.5 pa
 We therefore consider UnalignedNaive at block size 0.5 page size to be our best wavelet tree implementation so far, even though it uses more memory than SimpleNaive or the Preallocated variants.
 
 We have compared the running time of 1000 rank and select queries for UnalignedNaive and SimpleNaive in Figure~\ref{fig:PrecomputedRankBlockSize_vsNaiveInteger}.
-The wall time for rank queries on the UnalignedNaive tree is only 0.27\% of the wall time of rank queries on the SimpleNaive tree as can be seen in Figure~\ref{fig:PrecomputedRankBlockSize_vsNaiveInteger_Rank}.
-The wall time for select queries on the UnalignedNaive tree is only 0.73\% of the wall time of select queries on the SimpleNaive tree as can be seen in Figure~\ref{fig:PrecomputedRankBlockSize_vsNaiveInteger_Select}.
+The wall time for rank queries on the UnalignedNaive tree is only 0.27\,\% of the wall time of rank queries on the SimpleNaive tree as can be seen in Figure~\ref{fig:PrecomputedRankBlockSize_vsNaiveInteger_Rank}.
+The wall time for select queries on the UnalignedNaive tree is only 0.73\,\% of the wall time of select queries on the SimpleNaive tree as can be seen in Figure~\ref{fig:PrecomputedRankBlockSize_vsNaiveInteger_Select}.
 
 We can see that it is a great improvement to use precomputed rank values in both rank and select queries, with more gain for rank.
 

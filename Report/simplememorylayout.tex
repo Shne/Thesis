@@ -52,7 +52,7 @@ This makes it unable to utilize the prefetched data and will try to access memor
 So regardless of where the bitmap that is accessed next is stored, following right after the first or elsewhere in memory, a cache miss will occur.
 
 The exceptions to this are when either the entire bitmap is used for the query, that is, when the rank query is for the entire string, or the bitmap is small enough that the beginning of the next bitmap can fit within the same word.
-The first case is not a very common query in most use cases, and the second case is rare when the input string is much bigger than the alphabet, and would only happen near the leaf nodes.
+The first case is not a common query in most use cases, and the second case is rare when the input string is much bigger than the alphabet, and would only happen near the leaf nodes.
 Neither scenario happens often enough to warrant controlling the bitmap memory layouts.
 
 \figureBegin

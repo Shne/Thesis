@@ -51,7 +51,7 @@ However, whatever we tried, it always seemed to be slower than the simple approa
 
 It makes sense that our alternatives to branches is slower than branching with mispredictions.
 According to Agner Fog\footnote{Section 3.7 in \url{http://www.agner.org/optimize/microarchitecture.pdf}} the branch misprediction penalty in the Ivy Bridge Architecture is at least 15 clock cycles.
-If a branch is very hard to predict by going one way half the time and the other way the other half, it would be mispredicted about 50\% of the time, making it cost on average $1+\frac{15}{2}=8$ clock cycles.
+If a branch is very hard to predict by going one way half the time and the other way the other half, it would be mispredicted about 50\,\% of the time, making it cost on average $1+\frac{15}{2}=8$ clock cycles.
 This means that our alternative method of computing something without using branches must cost less than 8 clock cycles to be an improvement.
 Looking at our code, the alternative methods where we have attempted to reduce branches could easily cost much more than 8 clock cycles, which explains why these methods resulted in a slowdown.
 The amount of branch mispredictions was reduced. Just not enough to make up for the increased amount of work required.
@@ -61,15 +61,15 @@ The amount of branch mispredictions was reduced. Just not enough to make up for 
 \subsubsection{Build Time and Memory Usage}
 In Figure~\ref{fig:CumulativeSumBuild} we have plotted the wall time and memory usage of building the UnalignedNaive and CumulativeSum Wavelet Trees.
 In Figure~\ref{fig:CumulativeSumBuildWalltime} we can see that it takes slightly longer to build the tree when we have to calculate the cumulative sum across the precomputed values we store.
-It is only a difference of 151 milliseconds or an increase from UnalignedNaive to CumulativeSum of 1.00\%.
+It is only a difference of 151 milliseconds or an increase from UnalignedNaive to CumulativeSum of 1.00\,\%.
 In Figure~\ref{fig:CumulativeSumBuildMemoryUsage} we can see that there is, as expected, no significant difference in memory usage between the two trees.
-If we look closer at the raw data, there is a slight (124 KB) increase in memory usage when storing the cumulative sum, which constitutes an increase of about 0.0168\%, and is even less than what we expected.
+If we look closer at the raw data, there is a slight (124 KB) increase in memory usage when storing the cumulative sum, which constitutes an increase of about 0.0168\,\%, and is even less than what we expected.
 When taking the performance gain on queries into account then the small increased time and memory usage when building the tree is negligible.
 
 \subsubsection{Rank Queries}
 In Figure~\ref{fig:CumulativeSumRank} we have plotted various measurements for Rank queries on the UnalignedNaive and CumulativeSum trees.
 In Figure~\ref{fig:CumulativeSumRankWalltime} we can see that storing and using the cumulative sum of rank values instead of the rank values for each block improves the running time of rank queries.
-UnalignedNaive spends 3.57 milliseconds on 1000 queries, where CumulativeSum spends 3.04 milliseconds, an improvement of 14.77\%.
+UnalignedNaive spends 3.57 milliseconds on 1000 queries, where CumulativeSum spends 3.04 milliseconds, an improvement of 14.77\,\%.
 
 Looking at Figure~\ref{fig:CumulativeSumRankBranchMiss}, Figure~\ref{fig:CumulativeSumRankBranchMissRate}, and Figure~\ref{fig:CumulativeSumRankBranchExe} we can see that the tree using cumulative sums has much fewer branch mispredictions and a lower misprediction rate, as well as executing fewer conditional branches overall during rank queries.
 This can be explained by the removal of a for-loop in CumulativeSum that iterated over the precomputed values, summing them up to calculate the rank, instead replacing it with a single lookup of a precomputed value.
@@ -90,14 +90,14 @@ The level 2 cache miss rate (not shown) is therefore somewhat misleading as it w
 \label{sec:cumulativeSumExperimentSelectQueries}
 In Figure~\ref{fig:CumulativeSumSelect} we have plotted the same measurements as in Figure~\ref{fig:CumulativeSumRank}, but for Select queries, including our “branchless” variant of the cumulativeSum select query.
 
-In Figure~\ref{fig:CumulativeSumSelectWalltime} we can see that storing and using the cumulative sum of precomputed rank values is also an improvement for select queries, with a reduction in wall time of 22.07\%.
+In Figure~\ref{fig:CumulativeSumSelectWalltime} we can see that storing and using the cumulative sum of precomputed rank values is also an improvement for select queries, with a reduction in wall time of 22.07\,\%.
 Our “branchless” approach is also faster than not using the cumulative sum, but much slower than the simpler approach.
 
 Looking at Figure!\ref{fig:CumulativeSumSelectBranchExe} we can see that both approaches using the cumulative sum executes much fewer conditional branches, which we believe is caused by using the binary search instead of having to iterate through every precomputed value from the beginning of the bitmap to the position where the sought-after occurrence lies.
 Ironically, the “branchless” approach executes more conditional branches than the simple approach, which we believe is because it can not terminate the binary search early, leading to more branching code executed in the extra jumps in the binary search.
 
 In Figure~\ref{fig:CumulativeSumSelectBranchMiss} and Figure!\ref{fig:CumulativeSumSelectBranchMissRate} we can see that the simple approach using cumulative sum has, as expected, more branch mispredictions and a higher branch misprediction rate than both the others.
-The additional number of branch mispredictions contribute about $\num{508704}$ extra clock cycles, assuming 15 clock cycles per misprediction, which is only 1.87\% of the total number of clock cycles used in the simple approach using cumulative sum.
+The additional number of branch mispredictions contribute about $\num{508704}$ extra clock cycles, assuming 15 clock cycles per misprediction, which is only 1.87\,\% of the total number of clock cycles used in the simple approach using cumulative sum.
 
 In Figure~\ref{fig:CumulativeSumRankTLBMiss} we can see that the simple approach also has more TLB misses than the others, yet this still has not made it slower than the others.
 
