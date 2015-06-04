@@ -167,11 +167,10 @@ It would not make much sense to compress something without being able to decompr
 Burrows et al.~\citeA[Section~2]{BWToriginalArticle} describes an algorithm for getting the original string from the Burrows-Wheeler transformed string.
 It works by taking the BWT, then sorting it and then adding the BWT in front of the sorted value and then sorting that. 
 This procedure continues until the number of characters in each row is equal to the length of the BWT. 
+An example of the process in shown in Figure~\ref{fig:reverseBwt}.
 After each sorting step each column in the sorted result corresponds to the column at the same position in \textit{M'}. 
 After the last sorting the result is equal to \textit{M'}.
 The original string is then the value with the end of line character \# at the end. 
-An example of the process in shown in Figure~\ref{fig:reverseBwt}.
-
 
 \begin{figure}
 \center
@@ -214,7 +213,7 @@ Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 & Sort 4\\
 	\#dc\\ a\#d\\ ca\#\\ dca
 \end{tabular} & 
 \begin{tabular}{@{}>{$}l<{$}@{}}
-	a\#dc\\ ca\#d\\ \textbf{dca\#}\\ \#dca
+	a\#dc\\ ca\#d\\ dca\#\\ \#dca
 \end{tabular} &
 \begin{tabular}{@{}>{$}l<{$}@{}}
 	\#dca\\ a\#dc\\ ca\#d\\ \textbf{dca\#}\\
@@ -279,7 +278,7 @@ One might wonder how \textproc{Rank} and \textproc{Select} queries can be useful
 We have not found any way to transform the results back, and the main use of constructing a Wavelet Tree on the BWT of a string seems to us, by far, to be compression.
 
 Rank and select queries on the BWT of a string does, however, have uses when working with the \textit{FM-index}, named after its inventors Paolo Ferragina and Giovanni Manzini, which is a self-index based on the Burrows-Wheeler transformation $BWT(S)$ that is able to find occurrences and positions of patterns (sub-strings) in \textit{S} by looking at $BWT(S)$. 
-Such a procedure is described by Mäkinen and Navarro~\citeA[Section 2]{FMcountOnBWT}.
+The procedure for doing so is described by Mäkinen and Navarro~\citeA[Section 2]{FMcountOnBWT}.
 
 \subsubsection{Huffman-shaped Wavelet Trees}
 \label{sec:huffmanShapedWaveletTree}
