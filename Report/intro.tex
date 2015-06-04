@@ -21,7 +21,7 @@ The Wavelet Tree is a tree structure of bitmaps.
 It was invented by Grossi, Grupta and Vitter~\citeA{Grossi:2003:HET:644108.644250} in 2003.
 In its basic form, it is a balanced binary tree of bitmaps, encoding a \textit{sequence} or \textit{string} $S[1,n] = c_1c_2c_3 \ldots c_n$ of \textit{symbols} or \textit{characters} $c_i \in \Sigma$, where $\Sigma = [1 \ldots \sigma]$ is the \textit{alphabet} of $S$, in such a way that it supports a number of fast queries on $S$.
 A balanced wavelet tree over a string $S$ with alphabet $\Sigma$ will have height $h = \lceil \log \sigma \rceil$, and $2 \sigma - 1$ nodes, with $\sigma$ of those as leaf nodes and $\sigma - 1$ as internal nodes.
-In this thesis, we use $\log$ as having base 2 unless otherwise noted.
+In this thesis, when we write $\log$ we actually mean $\log_2$ unless otherwise noted.
 
 The wavelet tree supports access, rank and select queries.
 An access($p$) query on a wavele tree construced on string $S$ is the query for what character $c$ is at position $p$ in the string $S$.
@@ -30,5 +30,5 @@ The position of the $o$th occurrence of a character $c$ can be found with a sele
 
 With extensions, a wavelet tree can be used for efficient compression of $S$ while still supporting the same queries, although not as fast.
 It has applications in many areas, from string processing to geometry, and can be used to represent, among others, a sequence of elements, a reordering of elements or a grid of points. 
-When~\citeA{Grossi:2003:HET:644108.644250} invented the Wavelet Tree, it was a milestone in compressed full-text indexing even though it is mentioned little in the paper.
+When Grossi et al.~\citeA{Grossi:2003:HET:644108.644250} invented the Wavelet Tree, it was a milestone in compressed full-text indexing even though it is mentioned little in the paper.
 The wavelet tree has even been shown to be able to get close to a lower bound of compression called $k$th-order entropy encoding (see Section~\ref{sec:entropy}).
