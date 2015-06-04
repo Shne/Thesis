@@ -7,26 +7,25 @@ In our implementation \textit{Alphabet}, \textit{LeftAlphabet}, and \textit{Righ
 It is explained in Section~\ref{sec:UsingIntAsChar} how this is equivalent to storing the full alphabet and passing pointers into it around.
 $Bitmap$ is stored as a \texttt{vector<bool>} which is a tightly packed data structure, only using 1 bit per bool\footnote{\url{http://www.cplusplus.com/reference/vector/vector-bool/}}, plus a little bookkeeping data and at most 8 bytes minus 1 bit of superfluous stored data when the amount of bits stored does not align with 8 bytes.
 
-Rank queries were implemented as described in Section~\ref{sec:rankDescription} and
-binary rank was implemented as a simple linear scan of the bitmap.
-Select queries were implemented as described in Section~\ref{sec:selectDescription} with binary select implemented as a simple linear scan of the bitmap.
+Rank queries is implemented as described in Section~\ref{sec:rankDescription} and
+binary rank is implemented as a simple linear scan of the bitmap.
+Select queries is implemented as described in Section~\ref{sec:selectDescription} with binary select implemented as a simple linear scan of the bitmap.
 
 \subsection{Optimizations}
 \label{sec:simpleoptimizations}
 \subsubsection{Binary Rank using Popcount}
 \label{sec:popcountBinaryRank}
- 
-To improve \textproc{BinaryRank} we will try using the intrinsic cpu instruction \texttt{popcount}, which will count the number of 1s in the binary representation of the number that is passed to it.
+To improve \textproc{BinaryRank} we will use the intrinsic cpu instruction \texttt{popcount}, which will count the number of 1s in the binary representation of the number that is passed to it.
 Our use of \texttt{popcount} to improve binary rank and select queries was inspired by~ González et al.~\citeB{Gonzalez05practicalimplementation} who used it to improving binary rank and binary select for bit arrays.
-Unlike González et al., we do not use a popcount function implemented in software, but rather the built in \texttt{popcount} instruction in the CPU instruction set, which we assume to be the fastest way to calculate \texttt{popcount} since it is only a single instruction implemented in hardware.
-The built in cpu instruction takes as argument an \texttt{unsigned int} or an \texttt{unsigned long}.
+Unlike González et al., we do not use a popcount function implemented in software, but rather the built-in \texttt{popcount} instruction in the CPU instruction set, which we assume to be the fastest way to calculate \texttt{popcount} since it is only a single instruction implemented in hardware.
+The built-in \texttt{popcount} cpu instruction takes as argument an \texttt{unsigned int} or an \texttt{unsigned long}.
 The \texttt{vector<bool>} stores the bits in a backing array of \texttt{unsigned long}s and a pointer to the desired position in this array can be retrieved from the \texttt{vector<bool>}.
 The implementation will therefore be working on \texttt{unsigned long}s and we will call their size (64 bits on machine 1) our \textit{wordsize}.
 When using \texttt{popcount}, \textproc{BinaryRank} remains in theory an $O(\frac{N}{\mathit{wordsize}}) = O(N)$ operation, as \textit{wordsize} is a constant factor, but it has a large practical effect on performance as can be seen in Section~\ref{sec:experimentPopcountRankSelect}.
 
 To use \texttt{popcount} we call \texttt{\_\_builtin\_popcountl} which is a function built into the GCC compiler\footnote{\url{gcc.gnu.org/onlinedocs/gcc-4.1.2/gcc/Other-Builtins.html}}. 
 It takes an \texttt{unsigned long} as a parameter and returns the number of 1s in it. \texttt{\_\_builtin\_popcountl} will automatically figure out how to do popcount based on what CPU you are using. Popcount as an intrinsic cpu instruction is supported on both AMD\footnote{\url{support.amd.com/TechDocs/24594.pdf}} and Intel arhitectures\footnote{\url{software.intel.com/sites/landingpage/IntrinsicsGuide}}.
-We have verified, by looking at the produced assembly code, that \texttt{popcount} is calculated using a cpu instruction \texttt{popcnt} on our computers.
+We have verified, by looking at the produced assembly code, that \texttt{popcount} is calculated using the cpu instruction \texttt{popcnt} on our test machine.
 	
 The binary rank can then be found by summing the result of calling \texttt{popcount} on each word of the bitmap up to a given position $p$.
 When the position argument of the rank query is not a multiple of the word size, it is necessary to constrain what part of the last word is counted using \texttt{popcount}. This can be done by constructing a bitmask by bitshifting the number 1 $p$ times towards the most significant bit and then subtracting one, as that will create a word where the $p$ least significant bits are set to 1 and the rest to 0.
@@ -113,12 +112,12 @@ But if we instead plot the rate of branch mispredictions, as we have done in Fig
 
 We next turn to look at cache misses, plotting all three levels in Figure~\ref{fig:naiveIntegerAlphabetSize_CM} and see that cache misses increase for larger alphabet sizes up to an alphabet size of around $2^{18}$ after which they seem to remain constant for even larger alphabet sizes.
 This is in contrast to the wall time over theoretical running time plot in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime} that seem to remain somewhat constant until about $2^{18}$ after which it increases.
-We conclude the cache misses are not the problem.
+We can conclude that the cache misses are not the problem.
 
-We then considered that the difference in theoretical and practical running time might be explained by the fact that our algorithm spends a constant amount of time per node, constructing it, independent on the size of the input, $n$, and scaling linearly with alphabet size, $\sigma$.
-The actual running time should then be $a \cdot n \log\sigma + b \sigma$.
+We then considered that the difference in theoretical and practical running time might be our algorithm spending a constant amount of time per node, constructing it. This factor would be independent of the size of the input, $n$, and scaling linearly with alphabet size, $\sigma$ as that determines the number of nodes in the tree.
+If so, the actual running time should then be $a \cdot n \log\sigma + b \sigma$.
 Since $n$ in our previous experiment is somewhat large ($10^8$), it might be the dominating factor in the running time.
-So to show whether the added $b \sigma$ term can explain the running time, we redid the experiment with a reduced length input string $n = 10^2$ and plotted it in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_plusSigma} divided by $\sigma + \log \sigma$ to see whether it would converge on some constant as $\sigma \rightarrow \infty$.
+So to show whether the added $b \sigma$ term can explain the running time, we redid the experiment with a reduced length input string $n = 10^2$ and plotted it in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_plusSigma} divided by $\log(\sigma) + \sigma$ to see whether it would converge on some constant as $\sigma \rightarrow \infty$.
 
 We can see in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_plusSigma} that it does not converge on any constant value other than 0, meaning the constant factor from each node cannot explain our implementation's running time.
 
@@ -127,7 +126,7 @@ Having not found an explanation we pull data for translation lookaside buffer mi
 We can see that the TLB Misses increase drastically from alphabet size about $2^{20}$ and up.
 Having found no other reasonable explanation for the discrepancy between the theoretical and our implementation's actual running time, we believe that TLB Misses is the culprit.
 
-In our further experimentation of the further improvements we do we will be using an alphabet size of $2^{16}$.
+In our further experimentation of the further optimization attempts we do, we will be using an alphabet size of $2^{16}$.
 It is a realistic use case to use a type such as \texttt{char}, \texttt{wchar16\_t} or \texttt{wchar32\_t} which are stored in 8, 16 and 32 bits respectively.
 \texttt{char}'s size of 8 bits corresponds only to the ASCII table with 256 entries and we believe that many real-world scenarios require a larger alphabet.
 \texttt{wchar16\_t} enables an alphabet up to $2^{16} = 65,536$, which should be enough for many use cases, such as full text indexing.
@@ -170,7 +169,7 @@ We also attempted using an alphabet size of 32, but our machine did not have eno
 	
 	\begin{subfigure}{0.48\textwidth}
 		\input{naiveIntegerAlphabetSize_WallTime_plusSigma}
-		\caption{Wall Time divided by $\sigma + \log \sigma$}
+		\caption{Wall Time divided by $\log(\sigma) + \sigma$}
 		\label{fig:naiveIntegerAlphabetSize_WallTime_plusSigma}
 	\end{subfigure}
 	\hfill
