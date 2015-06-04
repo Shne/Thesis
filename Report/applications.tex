@@ -30,10 +30,11 @@ The main advantage of the wavelet tree with regards to compression is that it su
 
 \subsubsection{Entropy}
 \label{sec:entropy}
-According to~\citeA[Introduction]{WTSurvey} entropy can be defined as:
+Cristos Makris~\citeA[Introduction]{WTSurvey} gives a definition of entropy as found in Definition~\ref{def:entropy}.
 
+\begin{floatdef}
 \begin{mdframed}[nobreak, linecolor=lightgray, linewidth=2pt]
-\begin{definition}: \emph{Entropy} \\\\
+\begin{definition}\label{def:entropy}: \emph{Entropy} \\\\
 Let \textit{S} be a sequence of \textit{n} symbols from an alphabet $\Sigma = \lbrace c_1, \ldots, c_\sigma \rbrace$ with cardinality $\sigma$.
 Then \textit{entropy} H is defined as
 \[
@@ -42,14 +43,16 @@ Then \textit{entropy} H is defined as
 where $p_i$ is the probability of the $i$\emph{th} symbol in the alphabet appearing in \textit{S}.
 \end{definition} 
 \end{mdframed}
+\end{floatdef}
 
 Entropy represents a lower bound to the average number of bits needed to represent each symbol in $S$ according to the coding theorem of Shannon~\citeA[Introduction]{WTSurvey} and is the bound that compression researchers compare their results to.
 
 This theoretical definition of entropy is often replaced in scientific literature by a more practical definition: \textit{empirical entropy}.
-There are two versions: empirical zero-order entropy $H_0$ and empirical $k$th-order entropy $H_k$. $H_k$ takes into account a context of size \textit{k} of the symbol appearances, i.e. the suffixes of length $k$ of each symbol appearance in the string, while $H_0$ does not and treats symbols independently instead. 
+There are two versions: empirical zero-order entropy $H_0$ and empirical $k$th-order entropy $H_k$, and they are defined in Definition~\ref{def:emp0entropy} and \ref{def:empkentropy}. $H_k$ takes into account a context of size \textit{k} of the symbol appearances, i.e. the suffixes of length $k$ of each symbol appearance in the string, while $H_0$ does not and treats symbols independently instead. 
 
+\begin{floatdef}
 \begin{mdframed}[nobreak, linecolor=lightgray, linewidth=2pt]
-\begin{definition}: \emph{Empirical zero-order entropy, $H_0$} \\
+\begin{definition}\label{def:emp0entropy}: \emph{Empirical zero-order entropy, $H_0$} \\
 Let \textit{S} be a sequence of \textit{n} symbols from an alphabet $\Sigma = \lbrace c_1, \ldots, c_\sigma \rbrace$.
 The entropy $H_0$ is defined as
 \begin{center}
@@ -57,7 +60,7 @@ $H_0 = H_0(S) = \sum\limits_{c_i \in \Sigma} \frac{n_i}{n} \log(\frac{n}{n_i})$
 \end{center}
 where $n_i$ is the number of appearances of character $c_i$ in $S$.
 \end{definition}
-\begin{definition}: \emph{Empirical $k$\emph{th}-order entropy, $H_k$} \\
+\begin{definition}\label{def:empkentropy}: \emph{Empirical $k$\emph{th}-order entropy, $H_k$} \\
 For a string $w \in \Sigma^k$ let us define $w_S$ as the concatenation of characters that follow \textit{w} in \textit{S}. 
 Then the $k$\emph{th}-order empirical entropy of \textit{S}, is defined as follows
 \begin{center}
@@ -65,6 +68,8 @@ $H_k = H_k(S) = \frac{1}{n} \sum\limits_{w \in \Sigma^k} | w_S |H_0(w_S)$
 \end{center}
 \end{definition}
 \end{mdframed}
+\end{floatdef}
+
 The entropy $H_k$ often defines a lower bound for bit space usage that is smaller than the lower bound of $H_0$~\citeA[Section~2]{waveletTreeEntropy}.
 
 There is a number of ways to achieve $k$th-order or zero-order entropy compression in a wavelet tree, the details of which we will go into in the following sections.
