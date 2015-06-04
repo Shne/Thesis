@@ -19,7 +19,7 @@ One can map a general set of $n$ points to such a discrete grid and then store t
 If we want the \textit{i}th point in $y$-coordinate order we can access the leaf of a given $y$-coordinate and find its corresponding $x$-coordinate by querying up through the tree until we find the original position of $y$ in $S$. 
 The corresponding $x$-coordinate will be at the same position.
 Querying from a leaf gives the points in $y$-coordinate order because the leaves are sorted by $y$-coordinate.
-The purpose of storing an $n \times n$ grid this way using a wavelet tree is to be able to find points within a rectangle $[ x_{min}, x_{max} ] \times [ y_{min}, y_{max} ]$ or in other words to do two-dimensional range search queries in $O(\log n)$ time.
+The purpose of storing an $n \times n$ grid this way using a wavelet tree is to be able to find points within a rectangle $[ x_{min}, x_{max} ] \times [ y_{min}, y_{max} ]$ in order to for instance be able to do two-dimensional range search queries in $O(\log n)$ time.
 This running time can be improved to $O(\frac{\log n}{\log \log n})$ using $O(n \log n)$ bits and this running time cannot be improved within space $O(n \log^{O(1)} n)$~\citeA[Section 7.1]{Navarro:2014:WT:2592317.2592708}
 
 \subsection{Compression}
@@ -72,7 +72,7 @@ $H_k = H_k(S) = \frac{1}{n} \sum\limits_{w \in \Sigma^k} | w_S |H_0(w_S)$
 
 The entropy $H_k$ often defines a lower bound for bit space usage that is smaller than the lower bound of $H_0$~\citeA[Section~2]{waveletTreeEntropy}.
 
-There is a number of ways to achieve $k$th-order or zero-order entropy compression in a wavelet tree, the details of which we will go into in the following sections.
+There is a number of ways to achieve $k$th-order or zero-order entropy compression in a wavelet tree, the details of which is described later.
 The techniques used include the Burrows-Wheeler Transformation (see Section~\ref{sec:BWT}), using Run-Length Encoding (see Section~\ref{sec:RLE}), and Huffman-Shaping the wavelet tree (see Section~\ref{sec:huffmanShapedWaveletTree})
 
 Using the Burrows-Wheeler transformation on the input we can reduce the problem of achieving $H_k$ compression to achieving $H_0$ compression.
@@ -81,15 +81,17 @@ The problem for a long time was that there existed no good way to achieve compre
 
 To achieve zero-order entropy a Huffman shaped wavelet tree can be used~\citeA[Section~4]{FMcountOnBWT}. Claude and Navarro~\citeA[Section~3]{Claude08practicalrankselect} describes a way to also have zero-order entropy space usage for large alphabets. 
 It is therefore possible to get space usage within zero-order entropy even for large alphabets using the wavelet tree. 
+Huffman shaping does not care about how symbols are grouped but only looks at their frequency of appearance.
+Because of this building a Huffman shaped wavelet tree on the Burrows-Wheeler transformation of a string is not different from building it using the original string.
 Zero-order entropy can also be achieved by run-length encoding the bitmaps in the wavelet tree, which is an approach that can be used when compressing the Burrows-Wheeler transformation of the input string using the wavelet tree~\citeA[Introduction (\textbf{B})]{waveletTreeEntropy}.
-This means that using a combination of run-length encoding of bitmaps and taking the Burrows-Wheeler Transformation of the input string using the wavelet tree it is possible to achieve compression near the lower bound of $k$th-order entropy.
+Run-length encoding takes symbol grouping into account and this means that using a combination of run-length encoding of bitmaps and taking the Burrows-Wheeler Transformation of the input string and using the wavelet tree it is possible to achieve compression within the lower bound of $k$th-order entropy.
 
 \subsubsection{Run-Length encoding}
 \label{sec:RLE}
 Run-length encoding (RLE) is a simple process where the number of consecutive repeats of each symbol is stored instead of storing the symbols themselves. 
 If we have the string \textit{aaaaacccaaaaabbbaa} we can run-length encode this to \textit{a5c3a5b3a2} which is a smaller string containing the same information.
 It is necessary to store the symbol and its number of consecutive repeating occurrences because we need to be able to identify which symbol occurs where and how many times in order to be able to reproduce the original string.
-The longer the sequence of a repeating symbol is the less space is used, since it can be stored as one number plus the related symbol.
+The longer the sequence of a repeating symbol is, the less space is used since it can be stored as one number plus the related symbol.
 
 When representing the string using a wavelet tree, the problem gets reduced to run-length encoding a string of bits (the bitmap in each node).
 Since a binary number only has an alphabet of size two it is not necessary to store both the symbol and its occurrence but only the occurrence, if we adopt the convention that the first number is always the amount of 0s and the second number is always the amount of 1s, continuing this trend for the entire string so that even-index numbers correspond to 0 and odd-index to 1. 
