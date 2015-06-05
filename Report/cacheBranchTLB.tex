@@ -19,7 +19,7 @@ The L2 cache is placed next to the CPU chip on the CPU package and it is connect
 The L3 cache is placed on the processor board and usually has a size around 3 MB. 
 Since it is placed further away from the cpu it is not able to provide as fast access as L1 and L2 but still much faster than fetching data from RAM.
 
-All three caches are inclusive which means that L2 contains the data from L1 and L3 contains the data from L2.
+All three caches are inclusive which means that L2 contains the data from L1 and L3 contains the data from L1 and L2.
 This means that if data is evicted from L1 it will still reside in the L2 and L3 caches or if data is evicted from L2 it will still reside in L3. 
 This is an advantage because it allows fast access to data even if it is evicted from L1 or L2. 
 If the caches were not inclusive then it would result in a many more data requests to the main memory.
@@ -27,7 +27,7 @@ If the caches were not inclusive then it would result in a many more data reques
 There are two types of address locality that the caches exploit to improve performance: Spatial Locality and Temporal Locality.
 Spatial Locality is that, when memory locations have addresses numerically close to a recently accessed memory location, they have increased probability of being accessed soon.
 Temporal Locality is that, when memory locations have been accessed recently, they have increased probability of being accessed again soon.
-The cache exploits spatial locality by fetching more data than has been requested, either by loading a larger chunk of memory than requested, such as a cache-line, or by speculatively fetching more cache-lines based on previously recognized access pattern.  This speculation is performed by the cache prefetcher and assumes that it is possible to anticipate future requests by looking at the previous access pattern.
+The cache exploits spatial locality by fetching more data than has been requested, either by loading a larger chunk of memory than requested, such as a cache-line, or by speculatively fetching more cache-lines based on previously recognized access patterns.  This speculation is performed by the cache prefetcher and assumes that it is possible to anticipate future requests by looking at the previous access pattern.
 Temporal locality is exploited by choosing what to evict on a cache miss and normally it is the data entries that has been accessed least recently that are evicted.
 
 Data in the main memory is split into blocks of fixed size called \textit{cache-lines}. 
@@ -44,12 +44,12 @@ There are three approaches to solving this problem; \textit{direct mapped cache}
 In a \textit{direct mapped cache} each cache-line can only be stored in a specific cache slot, the address of which is found by using a mapping function on the address of the original main memory address, e.g. the address modulo the number of cache slots.
 This means that two cache-lines cannot be mapped to the same slot simultaneously.
 Given a memory address it is only necessary to look for it in one place in the cache and if it is not there then it is not in the cache. Using this approach, and an appropriate mapping function, consecutive memory lines are placed in consecutive cache slots. 
-The problem with a \textit{direct mapped cache} is that since there are many more cache-lines in main memory than there is space for in the cache, many cache-lines ends up competing for the same slot. 
+The problem with a \textit{direct mapped cache} is that since there are many more cache-lines in main memory than there are space for in the cache, many cache-lines ends up competing for the same slot. 
 These competing cache-lines might end up constantly evicting each other which results in a substantial performance loss.
 
 This problem can be fixed by using a \textit{n-way set-associative cache}, which is a cache that allows \textit{n} slots for each cache address.
 This way if we have two cache-lines \textit{A} and \textit{B} whose addresses map to the same cache address and that address is already occupied by \textit{A} while \textit{B} tries to use the same address then \textit{A} does not have to be evicted because the cache has $n-1$ other slots to place \textit{B} in.
-If all \textit{n} slots are occupied then a cache-line from one of them has to be evicted.
+If all \textit{n} slots are occupied, then a cache-line from one of them has to be evicted.
 The question then becomes: Which one?
 
 A popular algorithm, that determines which cache-lines to evict is called \textit{LRU (Least Recently Used)}.
@@ -57,7 +57,7 @@ It works by keeping an ordering of the slots at a cache address.
 When a cache-line that is present in the cache is accessed the LRU algorithm updates the list by moving the entry corresponding to the accessed cache-line to the top of the list.
 When an entry needs to be replaced it is the one at the end of the list that is evicted because it is the least recently used entry.
 
-Alternatively, a \textit{fully associative cache} allows any cache-line to be saved in any cache slot but it is complicated and costly to implement in hardware because it for instance  might need to keep an ordered LRU list for the entire cache which would require a lot of bookkeeping.
+A \textit{fully associative cache} allows any cache-line to be saved in any cache slot but it is complicated and costly to implement in hardware because it for instance  might need to keep an ordered LRU list for the entire cache which would require a lot of bookkeeping.
 
 The \textit{n-way set-associative cache} is the most popular choice because it has a good trade-off between implementation complexity and cache-hit rate.
 
@@ -67,7 +67,7 @@ There are many steps in executing a single instruction in a modern computer.
 It has to be fetched, decoded, registers has to be loaded with the required data etc.
 Because of this, modern computers are highly pipelined, meaning that they execute different steps for consecutive instructions in parallel.
 That is, instruction 1 might be executed while instruction 2 is being decoded while instruction 3 is being fetched from the program code memory section.
-A pipelined architecture can bring great speed improvement, but because of how it works, it works best on non-branching code because the result of a branch determines which instructions should be fetched, decoded and executed next.
+A pipelined architecture can cause great speed improvement, but because of how it works, it works best on non-branching code because the result of a branch determines which instructions should be fetched, decoded and executed next.
 When a branching instruction is encountered, the CPU can either choose to stall until the branching instruction has been executed, or it can try to predict the outcome of the branch before it is executed with the condition that it must be able to roll back any instructions executed between the prediction and the execution of the branching code.
 Modern programs are typically full of branch instructions.
 
@@ -98,10 +98,10 @@ A possible translation to assembly looks like this:
 \label{fig:branchexample}
 \end{figure}
 
-An unconditional branch is a simple jump to a specified label, it is not based on a condition and is less of a problem than condition branches because while the target of the jump is known before the instruction is executed, it is not yet known when the fetch unit goes to fetch the next instruction.
+An unconditional branch is a simple jump to a specified label, it is not based on a condition and is less of a problem than conditional branches because while the target of the jump is known before the instruction is executed, it is not yet known when the fetch unit goes to fetch the next instruction.
 Having no branching instructions also means the fetch unit is able to read consecutive words from memory and make better use of prefetching.
 
-A conditional branch jumps to one of two places in the code based on whether a given condition is true of false.
+A conditional branch jumps to one of two places in the code based on whether a given condition is true or false.
 The ambiguity in a conditional branch is problematic because of the nature of modern pipelined CPU architectures where the stage of the pipeline that computes the result of a comparison is many stages later than the fetching unit.
 Before the result of the comparison is computed, the fetcher does not know where in the program code to fetch from.
 
@@ -127,7 +127,7 @@ The profile-driven prediction scheme is not something that the compiler can sudd
 The forward branches are not taken. 
 
 \item[\textbf{4. Profile-driven prediction:}]
-Here the branches of the program is profiled by running the program and the information is given to the compiler to use for branch prediction. This of course requires the program to be compiled then run in order to be profiled and the compiled again to incorporate the branch info.
+Here the branches of the program is profiled by running the program and the information is given to the compiler to use for branch prediction. This of course requires the program to be compiled then run in order to be profiled and then compiled again to incorporate the branch info.
 \end{description}
 
 In \textbf{Dynamic branch prediction} the branch prediction is carried out at runtime and tries to the adapt to the program's current behaviour.
@@ -135,7 +135,7 @@ This is better than just having some static schemes to choose from because it al
 The basic idea in dynamic branch prediction is to use the past branch behaviour to predict the future branch.
 
 One way to do dynamic branch prediction is to have a history table that logs conditional branches as they occur, to be able to look up what direction they took when they appear again.
-The simplest way to implement the history table is to have it contain one bit for each conditional branch instruction that indicates whether the conditional branch was taken or not that last time it was executed.
+The simplest way to implement the history table is to have it contain one bit for each conditional branch instruction that indicates whether the conditional branch was taken or not last time it was executed.
 With this approach the branch will be predicted to go in that same direction as it did the last time. 
 If the prediction is wrong the bit in the history table is flipped.
 
@@ -147,10 +147,10 @@ In the case of nested loops occurring in a frequently called function, the amoun
 To eliminate the loop mispredictions two bits can be used instead of one in such a way that a branch must be predicted wrong twice in a row for the prediction scheme to change.
 This means that the different possible bit values becomes
 00, 01, 10 and 11.
-00 indicates that the last to branching instructions resulted in not jumping and “no jump” is predicted. If a conditional branching instruction is reached where this prediction is wrong the last bit is set to 1 and the bit value become 01. The predicter still predicts “no jump”.
+00 indicates that the last two branching instructions resulted in not jumping and “no jump” is predicted. If a conditional branching instruction is reached where this prediction is wrong the last bit is set to 1 and the bit value becomes 01. The predicter still predicts “no jump”.
 If this prediction is correct for the next conditional branching instruction the binary value is set back to 00 and the prediction continues predicting “no jump” as before.
 If the previous “no jump” prediction instead was wrong at a 01 value, it will be changed to 11 and the future prediction changed to “jump”.
-Two mispredictions are then required to change back to bit value 00 and “no jump” prediction, in a similar way it went from 00 to 11, except using 10 as the in-between value.
+Two mispredictions are then required to change back to bit value 00 and “no jump” prediction, in a similar way it goes from 00 to 11, except using 10 as the in-between value.
 
 When the branch is correctly predicted there is still a problem.
 The address to go to for some conditional branches are computed values obtained from doing arithmetic on registers. 
@@ -161,8 +161,9 @@ The previous address can then be used to branch to when the corresponding condit
 
 \subsection{Virtual Memory and Translation Lookaside Buffer misses}
 Modern computers uses virtual memory to address the problems of sharing limited memory between processes and/or users.
-Virtual memory hides the presence of physical memory and instead presents an abstract view of main memory by concealing the fact that physical memory is not allocated to a program as a single continuous region while also concealing the actual size of the main memory creating the illusion that the available memory for a given process is larger than what is physically available.
-This illusion is accomplished by dividing the virtual memory into smaller subsections called \textbf{pages}, which can be loaded into physical memory when needed.
+Virtual memory hides the presence of physical memory and instead presents an abstract view of main memory by concealing the fact that physical memory is not allocated to a program as a single continuous region while also concealing the actual size of the main memory.
+This creates the illusion that the available memory for a given process is larger than what is physically available.
+The illusion is accomplished by dividing the virtual memory into smaller subsections called \textbf{pages}, which can be loaded into physical memory when needed.
 Translating a virtual address into a physical address is an expensive operation and the Translation Lookaside Buffer (TLB) helps to speed up this process.
 
 \subsubsection{Virtual memory: Pages}
