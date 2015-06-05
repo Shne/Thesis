@@ -37,7 +37,7 @@ The even amount of occurrences of each character also means there will be little
 \label{sec:expnotesUniformVsNonuniform}
 Uniform data for a wavelet tree is a string with each character occurring with the same probability at each position and therefore with similar frequencies.
 If the data is non-uniform it means that some symbols from the alphabet will appear with a significantly higher frequency than others.
-If one knows the frequencies of all symbols in the alphabet, without needing it to be exact, then one can build a Huffman shaped Wavelet Tree (described in Section~\ref{sec:huffmanShapedWaveletTree}) and we believe it will beat out any balanced wavelet tree in terms of performance.
+If one knows the frequencies of all symbols in the alphabet, without needing it to be exact, then one can build a Huffman shaped Wavelet Tree (described in Section~\ref{sec:huffmanShapedWaveletTree}) and we expect it will beat out any balanced wavelet tree in terms of performance.
 The frequencies can be found by a simple linear scan of the input string before building the tree.
 
 We are more interested in the general case of being able to perform well on any input string and so we do not want to implement optimizations that require a specific character distribution in the input string.

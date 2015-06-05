@@ -24,11 +24,11 @@ A balanced wavelet tree over a string $S$ with alphabet $\Sigma$ will have heigh
 In this thesis, when we write $\log$ we actually mean $\log_2$ unless otherwise noted.
 
 The wavelet tree supports access, rank and select queries.
-An access($p$) query on a wavele tree construced on string $S$ is the query for what character $c$ is at position $p$ in the string $S$.
+An access($p$) query on a wavelet tree construced on string $S$ is the query for what character $c$ is at position $p$ in the string $S$.
 The rank of a character $c$ in a string $S$ up to position $p$ is written as rank$_{p}(c)$ and is defined as the number of occurrences $o$ of $c$ in the substring $S[0, \ldots, p]$.
 The position of the $o$th occurrence of a character $c$ can be found with a select$_c(o)$ query.
 
 With extensions, a wavelet tree can be used for efficient compression of $S$ while still supporting the same queries, although not as fast.
 It has applications in many areas, from string processing to geometry, and can be used to represent, among others, a sequence of elements, a reordering of elements or a grid of points \citeA[Section~4]{Navarro:2014:WT:2592317.2592708}. 
 When Grossi et al.~\citeA{Grossi:2003:HET:644108.644250} invented the Wavelet Tree, it was a milestone in compressed full-text indexing even though it is mentioned little in the paper.
-The wavelet tree has even been shown to be able to get close to a lower bound of compression called $k$th-order entropy encoding (see Section~\ref{sec:entropy}).
+The wavelet tree has even been shown to be able to get close to a lower bound of compression called $k$th-order entropy encoding, and we discuss this in Section~\ref{sec:entropy}.

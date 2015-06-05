@@ -23,6 +23,7 @@ The purpose of storing an $n \times n$ grid this way using a wavelet tree is to 
 This running time can be improved to $O(\frac{\log n}{\log \log n})$ using $O(n \log n)$ bits and this running time cannot be improved within space $O(n \log^{O(1)} n)$~\citeA[Section 7.1]{Navarro:2014:WT:2592317.2592708}
 
 \subsection{Compression}
+\label{sec:compression}
 The Wavelet Tree has many uses for compression of data~\citeA{Navarro:2014:WT:2592317.2592708}.
 Some of the main compression techniques are different ways of encoding the bitmaps and changing the shape of the wavelet tree~\citeA[Section~3]{Navarro:2014:WT:2592317.2592708}.
 
@@ -305,6 +306,7 @@ A wavelet tree can be used to efficiently answer numerous queries in different p
 In this section we describe in some detail a select number of information retrieval scenarios.
 
 \subsubsection{Access, Rank, and Select Queries}
+\label{sec:accessRankSelectUses}
 The three queries supported by a wavelet tree are access, rank, and select.
 They are often used together to answer more complex queries when the wavelet tree is used as e.g. a dictionary or a self-index.
 They can also form the building blocks for many other, more advanced algorithms and queries.
@@ -331,6 +333,7 @@ The next occurrence of the word $c$ in another document is at $p_{next} = \textp
 
 
 \subsubsection{Range Quantile Query}
+\label{sec:rangequantilequery}
 A range quantile query is a query that returns the $k$th smallest number within a subsequence of a given sequence of elements.
 If we are e.g. given a list of price changes on a laptop during the last year then a range quantile query is able to answer what the \textit{k}th-smallest price of the laptop was within for instance a month of that year.
 It is therefore also easy to find quantiles like the 2-quantile (median) or the 3-quantile.

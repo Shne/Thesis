@@ -4,15 +4,18 @@
 \label{sec:UsingIntAsChar}
 The Wavelet Tree is a data structure for strings. 
 Using the C++ \texttt{char array} or C++11 \texttt{string} types would seem natural in this case, but they each have problems.
-The C and C++ \texttt{char} type is only of size 1 byte allowing us only to use an alphabet size of up to 256, making testing the running times dependency on alphabet size difficult as we believe inaccuracies in the running time would exceed the difference in running time between the available sizes of the alphabet.
+The C and C++ \texttt{char} type is only of size 1 byte allowing us only to use an alphabet size of up to 256.
+This makes testing the dependency of the running times on alphabet size difficult, as we believe inaccuracies in the running time would exceed the difference in running time between the available sizes of the alphabet.
 
 The C++11 \texttt{string} and arrays of type \texttt{char32\_t} does not have this problem and supports character types up to 32-bit unsigned. 
 The problem then lies in output and readability as characters corresponding to byte values below 32 are special non-printable control characters such as carriage-return and backspace. 
 At higher byte values other non-printable control characters and otherwise unreadable characters appear again. This means we would have to be selective with the allowed byte values in our alphabets if we want it to be readable for output and debugging, thereby ending up with an alphabet that is non-continuous on the set of byte values as a result, which is inconvenient.
-Because of this, we have for convenience chosen to simply use arrays of integers as our strings in our implementations.
-This will have no impact on performance as both characters and integers are simply different representations of byte values.
+Because of this, we have for convenience chosen to simply use vectors of integers as our strings in our implementations.
+E.g. we will use \texttt{uint} instead of \texttt{char32\_t}, which both take 4 bytes of memory.
+We believe this will have no impact on performance as both characters and integers are simply different representations of byte values.
 
-We assume in our implementation that the alphabet is always continuous on the set of byte values and store the alphabet as a minimum and maximum value, instead of storing each value in some data structure to pass around or point into.
+In our implementation, we assume that the alphabet is always continuous on the sorted set of byte values, i.e. the alphabet spans all values possible between some minimum and maximum value, with no gaps.
+Thus, we store the alphabet as a minimum and maximum value, instead of storing each value in some data structure to pass around or point into.
 This is for convenience as any other non-continuous alphabet could simply be mapped to a continuous run of byte values and used in the same way. 
 This mapping could e.g. be done by storing an array of the alphabet in sorted order and using pointers into this array to signify the characters. 
 Lookup into the array is not necessary unless printing for human reading, since comparison of the pointer addresses returns the same result as comparing the bytes.
@@ -21,7 +24,7 @@ We will still use the terms “character/symbol” and “string” in our descr
 
 
 \subsection{Generating the Data}
-We implemented a small script in Python to generate our input strings and write them in binary format to files.
+We implemented a small script in Python to generate our input strings of 4-byte integer values and write them in binary format to files.
 This was slower than e.g. piping from \texttt{/dev/random} into a file, but we needed to constrain the alphabet and even though slow, a script was the easiest way to achieve that.
 
 \subsection{Reading Input}
@@ -48,7 +51,7 @@ This is wasted memory because the input string is not actually needed any longer
 Because one sub-node constructor is simply called first and then the other when the first has completed and finally return once both subnodes has completed constructing themselves, we end up completing the construction of the nodes in post-order.
 This means the scopes of the root node and those near the root is kept alive for most of the running time of the construction algorithm, and much memory is wasted.
 The solution is to allocate these strings on the heap instead, passing pointers to the subnode constructors and having them delete them (as their input strings) once they have split them.
-Doing this reduced the memory usage so much that we could run it for input strings with a length above $10^8$ without exhausting the 8GB available memory on our test machine.
+Doing this reduced the memory usage so much that we could run it for input strings with a length above $10^8$ characters without exhausting the 8GB available memory on our test machine.
 
 
 \subsection{Bitmap implementation choice}
@@ -67,4 +70,6 @@ It does not try to mimic a container and lacks some features such as an iterator
 It also does not guarantee that the bits will be allocated consecutively in memory and has no raw pointer access to the data in memory. 
 This is a problem when calling popcount on all machine words from beginning up to some index.
 \end{description}
+
+\textbf{[TODO: reference experimental results from PieterseEtAl\_SAICSIT2010.pdf]}
 

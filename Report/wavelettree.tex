@@ -3,6 +3,8 @@
 
 \subsection{Constructing the Wavelet Tree}
 \label{sec:nodeconstruction}
+An example of a Wavelet Tree can be seen in Figure~\ref{fig:WaveletTreeExample}.
+
 The wavelet tree is constructed recursively, starting at the root node and moving down the tree, with each node in the tree receiving a string constructed by its parent, except the root node that receives the full input string.
 Let $S_{\mathit{parent}}$ of length $n_{\mathit{parent}}$ be the string passed to the node from the parent node or, in the case of the root node, the input string to the wavelet tree itself.
 $\Sigma_{\mathit{parent}}$ is the alphabet over which $S_{\mathit{parent}}$ is defined where each entry in the alphabet, a \textit{character} or \textit{symbol}, has a position in the alphabet.
@@ -34,8 +36,6 @@ Each node in a wavelet tree can be considered a full wavelet tree for the string
 At each level in the tree at most \textit{n} bits are stored in the bitmaps in total, making $n \cdot h$ an upper bound to the total number of bits that a wavelet tree stores in its bitmaps.
 
 The Wavelet Tree can theoretically be constructed in $O(n \cdot h)$ time as the sum of the lengths of the strings being processed at any single layer of the tree is the length of the input string to the tree.
-An example of a Wavelet Tree can be seen in Figure~\ref{fig:WaveletTreeExample}.
-
 
 The pseudo-code for the Wavelet Tree node construction algorithm is shown in Algorithm~\ref{alg:ConstructNode}. 
 It is recursively defined, calling itself to construct the left and right sub-tree from the root node and down. At each recursion the algorithm splits the given alphabet in two halves and traverses the given string putting each character into a left or right partition based on whether the character was in the left or right half of the alphabet.

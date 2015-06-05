@@ -33,11 +33,11 @@ Temporal Locality is that, when memory locations have been accessed recently, th
 The cache exploits spatial locality by fetching more data than has been requested, either by loading a larger chunk of memory than requested, such as a cache-line, or by speculatively fetching more cache-lines based on previously recognized access patterns.  This speculation is performed by the cache prefetcher and assumes that it is possible to anticipate future requests by looking at the previous access pattern.
 Temporal locality is exploited by choosing what to evict on a cache miss and normally it is the data entries that has been accessed least recently that are evicted.
 
-Data in the main memory is split into blocks of fixed size called \textit{cache-lines}. 
+Data in the main memory is split into blocks of fixed size called \emph{cache-lines}. 
 There are usually 4 to 64 consecutive bytes in a cache-line. 
 Some of these cache-lines are always present in the caches. 
 If a requested word is in the cache, a trip to main memory can be avoided, but if the word is not in the cache then a cache-line must be evicted from the cache (assuming that the cache is full, which it always is after the first few seconds of operation) and the cache-line containing the word must be fetched from main memory or a lower level cache if one is present. 
-This is called a \textbf{cache miss} and has a high penalty because fetching a new cache-line is expensive.
+This is called a \emph{cache miss} and has a high penalty because fetching a new cache-line is expensive.
 The general idea is to have the most heavily used cache-lines in the caches as much of the time as possible to reduce the amount of cache misses.
 
 \subsubsection{Cache associativity}
@@ -110,7 +110,7 @@ Before the result of the comparison is computed, the fetcher does not know where
 
 Old pipelined machines would just stall until it was decided what branch to take. 
 Doing this has a heavy impact on performance, especially if there is a lot of conditional branches in a program.
-Modern machines try to predict what branch will be taken, using a branch prediction unit, and then executes that code until it is known whether the branch was predicted correctly or not. 
+Modern machines try to predict what branch will be taken, using a \emph{branch prediction unit}, and then executes that code until it is known whether the branch was predicted correctly or not. 
 If the branch was predicted correctly then the execution simply continues.
 If the branch was mispredicted then the executed instructions in the mispredicted branch needs to be rolled back and the correct branch must be taken. 
 Undoing the effects of the wrong execution path is an expensive operation which means that it is important to minimize the amount of branch mispredictions as much as possible to get good performance.
@@ -150,7 +150,7 @@ In the case of nested loops occurring in a frequently called function, the amoun
 To eliminate the loop mispredictions two bits can be used instead of one in such a way that a branch must be predicted wrong twice in a row for the prediction scheme to change.
 This means that the different possible bit values becomes
 00, 01, 10 and 11.
-00 indicates that the last two branching instructions resulted in not jumping and “no jump” is predicted. If a conditional branching instruction is reached where this prediction is wrong the last bit is set to 1 and the bit value becomes 01. The predicter still predicts “no jump”.
+Bit value 00 indicates that the last two branching instructions resulted in not jumping and “no jump” is predicted. If a conditional branching instruction is reached where this prediction is wrong the last bit is set to 1 and the bit value becomes 01. The predicter still predicts “no jump”.
 If this prediction is correct for the next conditional branching instruction the binary value is set back to 00 and the prediction continues predicting “no jump” as before.
 If the previous “no jump” prediction instead was wrong at a 01 value, it will be changed to 11 and the future prediction changed to “jump”.
 Two mispredictions are then required to change back to bit value 00 and “no jump” prediction, in a similar way it goes from 00 to 11, except using 10 as the in-between value.
@@ -163,7 +163,7 @@ The previous address can then be used to branch to when the corresponding condit
 
 
 \subsection{Virtual Memory and Translation Lookaside Buffer misses}
-Modern computers uses virtual memory to address the problems of sharing limited memory between processes and/or users.
+Modern computers use virtual memory to address the problems of sharing limited memory between multiple processes and/or users.
 Virtual memory hides the presence of physical memory and instead presents an abstract view of main memory by concealing the fact that physical memory is not allocated to a program as a single continuous region while also concealing the actual size of the main memory.
 This creates the illusion that the available memory for a given process is larger than what is physically available.
 The illusion is accomplished by dividing the virtual memory into smaller subsections called \textbf{pages}, which can be loaded into physical memory when needed.
@@ -200,7 +200,7 @@ The physical address is then found by first finding the page in the segmentation
 This means that the translation from \textit{va} to \textit{pa} requires three physical reads.
 
 To reduce the number of reads needed when a virtual address is translated, a translation lookaside buffer (TLB) is used~\citeA[Section~8.2.5]{OperatingSystemPrinciples}.
-The TLB saves the most recent translations of \textit{va} to \textit{pa} i.e. translated pagenumbers, to make them quickly available for future use.
+The TLB saves the most recent translations of \textit{va} to \textit{pa}, i.e. translated page numbers, to make them quickly available for future use.
 This means that subsequent accesses of a virtual address within a short period is able to bypass segmentation- and page table lookups and simply just access the needed page frame from the TLB and find it in the physical memory.
 When the page is available in the TLB it is called a \textit{TLB hit}.
 The TLB is not a large buffer and it can only hold a few virtual page translations at a time. 
