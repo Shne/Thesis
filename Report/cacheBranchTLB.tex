@@ -12,11 +12,11 @@ Modern memory systems usually have three levels of caches: Level 1 (L1), Level 2
 
 \begin{figure}
 \includegraphics[width=\textwidth]{CacheLevels.pdf}
-\caption{The three cache levels}
+\caption{The three cache levels. Figure borrowed from:~\citep[Section~4.5.1]{Tanenbaum}}
 \label{fig:CacheLevels}
 \end{figure}
 
-Figure~\ref{fig:CacheLevels} \footnote{Figure borrowed from:~\citeA[Section~4.5.1]{Tanenbaum}} shows how the three cache are placed in the relation to the CPU. 
+Figure~\ref{fig:CacheLevels} shows how the three cache are placed in the relation to the CPU. 
 The L1 cache resides on the CPU chip itself and usually has a size in the range from 16 KB to 128 KB and because it is placed directly on the CPU chip it is able to provide extremely fast memory access.
 The L2 cache is placed next to the CPU chip on the CPU package and it is connected to the CPU via a high speed path. The L2 cache typically has a size between 512 KB and 1 MB which means that it can hold more data but is not able to provide as fast access as L1.
 The L3 cache is placed on the processor board and usually has a size around 3 MB. 
