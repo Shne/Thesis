@@ -7,7 +7,7 @@ See Section~\ref{sec:rankQueriesWithPrecomputedRanksEdgeCases} for more explanat
 The rank values can be precomputed easily and cheaply by doing so as the tree is built where each individual bit of the bitmap already needs to be computed and stored.
 The algorithm increments a counter for the corresponding block each time it sets a bit to 1 in the bitmap.
 
-The size of the precomputed blocks is a new variable that could have influence on the running time and memory usage.
+The size of the precomputed blocks, \textit{blockSize}, is a new variable that could have influence on the running time and memory usage.
 Some advantages of larger blocks is less memory usage and fewer precomputed value lookups for the same part of the bitmap.
 Some advantages of smaller blocks are that they can cover more precisely the part of the bitmap that is relevant to the query, leading to fewer calls to popcount.
 We will experiment to find an optimal value for our system.

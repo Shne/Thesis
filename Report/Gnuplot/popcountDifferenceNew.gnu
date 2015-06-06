@@ -10,12 +10,13 @@ set boxwidth 1.0
 set style fill solid
 
 set yrange [0:205]
+set ylabel "Percent of Simple"
 
 set key top left vertical
 set output 'popcountRankNew.tex'
-plot '../Data/popcountRankNew.data' every 3    using 1:2 title "Simple Binary Rank " with boxes ls 1,\
-     '../Data/popcountRankNew.data' every 3::1 using 1:2 title "Binary Rank w/Popcount" with boxes ls 2
+plot '../Data/popcountRankNew.data' every 3    using 1:2 title "Simple" with boxes ls 1,\
+     '../Data/popcountRankNew.data' every 3::1 using 1:2 title "Using Popcount" with boxes ls 2
 
 set output 'popcountSelectNew.tex'
-plot '../Data/popcountSelectNew.data' every 3    using 1:2 title "Simple Binary Select" with boxes ls 1,\
-     '../Data/popcountSelectNew.data' every 3::1 using 1:2 title "Binary Select w/Popcount" with boxes ls 2
+plot '../Data/popcountSelectNew.data' every 3    using 1:2 title "Simple" with boxes ls 1,\
+     '../Data/popcountSelectNew.data' every 3::1 using 1:2 title "Using Popcount" with boxes ls 2
