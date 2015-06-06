@@ -169,6 +169,9 @@ We expect to see a difference in memory usage between using concatenated bitmaps
 However, we expect most of the difference to come from the space used by the bitmaps themselves, and therefore a noticeable difference between the data structure concatenating the bitmaps and the others, with a little difference between using page-aligned and non-page-aligned blocks, with the one using page-aligned blocks using most memory.
 
 
+\subsection{Dependence of Block Size on Input Size}
+\textbf{[TODO: discuss/analyse how the best $b$ depends on $n$, for each bitmap, $\sqrt{n}$. a wavelet tree has many bitmaps of decreasing size, optimal $b$ likely smaller than theoretical]}
+
 
 \subsection{Experiments}
 We will test and compare the Rank and Select running times of three wavelet trees using precomputed rank values for varying block sizes: one using concatenated bitmaps and aligned blocks named Preallocated, one using concatenated bitmaps but not aligned blocks named UnalignedPreallocated, one using aligned blocks but not concatenated bitmaps, called Naive,

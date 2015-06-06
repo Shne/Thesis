@@ -95,7 +95,7 @@ The general test setup is as described in Section~\ref{sec:ExpNotesGeneralSetup}
 The query parameters were chosen as described in Section~\ref{sec:choiceOfQueryParameters}.
 
 To test what Big-O notation running time our construction algorithm was running at, we tested the running time of building the tree relative to the alphabet size by running the program 5 times for each size of the alphabet, and took the average value of the resulting measurements for each measurement type we used.
-We tested for alphabet sizes $2^p$ with $p = [8...23]$ and used a constant input string of length $n = 10^8$, except in a single test (Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_plusSigma}) where we used $n = 10^2$.
+We tested for alphabet sizes $2^p$ with $p = [8...23]$ and used a constant input string of length $n = 10^8$ characters, except in a single test (Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_plusSigma}) where we used $n = 10^2$.
 
 A theoretical running time of $O(n \log\sigma)$ is equivalent to $a \cdot n \log\sigma$ where $a$ is some constant factor.
 Assuming our construction algorithm has this running time, a plot of the wall time divided by $n \log\sigma$ should converge on the constant factor $a$ as $\sigma \rightarrow \infty$
@@ -204,9 +204,12 @@ We have no good explanation to offer as to the L2 cache miss rate increases so m
 It is not a problem at any rate, as we can see in the massive decrease in running time.
 
 We believe the massive reduction in branch mispredictions accounts for some of the saved cpu cycles.
-Given that the branch misprediction penalty on the Ivy Bridge architecture, on which this experiment was run, is about “15 cycles or more”\footnote{Section 3.7 in \url{http://www.agner.org/optimize/microarchitecture.pdf}}, we can calculate an estimate of how many cpu cycles the branch misprediction reduction has saved us.
+Agner Fog has tested the Ivy Bridge architecture and found that the branch misprediction penalty is “15 cycles or more”\footnote{Section 3.7 in \url{http://www.agner.org/optimize/microarchitecture.pdf}}\addtocounter{footnote}{-1}\addtocounter{Hfootnote}{-1}.
+We have not tested this claim ourselves, but choose to trust him, as we only use it to  get an approximate percent value of how much of the difference in running time the branch mispredictions can account for.
+Given that the branch misprediction penalty on the Ivy Bridge architecture, on which this experiment was run, is about “15 cycles or more”\footnotemark, we can calculate an estimate of how many cpu cycles the branch misprediction reduction has saved us.
 The number of saved branch mispredictions for \textproc{rank} is then 1,396,757,616.4 - 22,682.2 = 1,396,734,934.2 mispredictions. Assuming a penalty of 15 cycles this becomes 1,396,734,934.2 $\cdot$ 15 = 20,951,024,013 cpu cycles saved, and given that the total number of cycles saved is 397,345,711,110.4 - 4,423,412,635.0 = 392,922,298,475, it is 20,951,024,013 / 392,922,298,475 = 0.05332103597 = 5.33\,\% of the total amount of cpu cycles saved.
 This means that the branch mispredictions do have an effect, but it is only a small part of this increase in speed. The main improvement, we expect, comes from using only a few cpu cycles per word of the bitmap to calculate the binary rank, as well as possibly the slight decrease in L1 and L3 cache misses.
+
 
 
 By similar calculations the saved cpu cycles from branch mispredictions for \textproc{select} is at least 48,84\,\% of the total saved. We expect this is because of the much higher number of branch mispredictions and the lower number of cycles for the original select algorithm, as well as the fact that we cannot use \texttt{popcount} for every word of the bitmap but must go back to doing manual counting of the bits when we find the word the sought-after occurrence is in.
