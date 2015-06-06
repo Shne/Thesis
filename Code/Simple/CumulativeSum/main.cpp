@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
     uint alphabetSize = pow(2, atoi(argv[AS_ARG_NUM]));
     uint blockSize;
     if(argc > BLOCKSIZE_ARG_NUM) {
-        blockSize = atoi(argv[BLOCKSIZE_ARG_NUM]) * CHAR_BIT;
+        blockSize = atof(argv[BLOCKSIZE_ARG_NUM]) * CHAR_BIT;
     } else {
         blockSize = sysconf(_SC_PAGESIZE)/2 * CHAR_BIT;
     }
