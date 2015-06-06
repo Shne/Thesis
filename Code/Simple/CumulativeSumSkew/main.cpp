@@ -19,6 +19,7 @@
 #define EVENTSET_ARG_NUM 4
 #define BLOCKSIZE_ARG_NUM 5
 #define FILENAME_ARG_NUM 6
+#define SKEW_ARG_NUM 7
 #define NUM_REQUIRED_ARGS 5
 
 using namespace std;
@@ -41,6 +42,13 @@ int main(int argc, char** argv) {
         blockSize = atof(argv[BLOCKSIZE_ARG_NUM]) * CHAR_BIT;
     } else {
         blockSize = sysconf(_SC_PAGESIZE)/2 * CHAR_BIT;
+    }
+    
+    float skew;
+    if(argc > SKEW_ARG_NUM) {
+        skew = atof(argv[SKEW_ARG_NUM]);
+    } else {
+        skew = 2;
     }
     
     /***************/
@@ -80,18 +88,18 @@ int main(int argc, char** argv) {
     /***************/
     string test = string(argv[TEST_ARG_NUM]);
     if(test == "build") {
-        testBuildTime(amount, alphabetSize, pathname, blockSize, eventset, events, values, num_events, input);
+        testBuildTime(amount, alphabetSize, pathname, blockSize, eventset, events, values, num_events, input, skew);
     }
     else if(test == "buildmemory") {
-        testBuildMemory(amount, alphabetSize, blockSize, input);
+        testBuildMemory(amount, alphabetSize, blockSize, input, skew);
     }
     else if(test == "rank"){
-        Tree tree = Tree(input, amount, alphabetSize, blockSize);    
-        testRankQuery(amount, alphabetSize, pathname, blockSize, eventset, events, values, num_events, tree);
+        Tree tree = Tree(input, amount, alphabetSize, blockSize, skew);    
+        testRankQuery(amount, alphabetSize, pathname, blockSize, eventset, events, values, num_events, tree, skew);
     }
     else if(test == "select"){
-        Tree tree = Tree(input, amount, alphabetSize, blockSize);
-        testSelectQuery(amount, alphabetSize, pathname, blockSize, eventset, events, values, num_events, tree);
+        Tree tree = Tree(input, amount, alphabetSize, blockSize, skew);
+        testSelectQuery(amount, alphabetSize, pathname, blockSize, eventset, events, values, num_events, tree, skew);
     }
 
     return 0;

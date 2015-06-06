@@ -21,8 +21,9 @@ private:
     Node root;
     ulong alphabetMin, alphabetMax, inputSize;
     uint blockSize;
+    float skew;
 public:
-    Tree(vector<uint>* input, uint amount, uint alphabetSize, uint blockSize);
+    Tree(vector<uint>* input, uint amount, uint alphabetSize, uint blockSize, float skew);
     int rank(uint character, ulong index);
     int select(uint character, ulong occurance);
 };

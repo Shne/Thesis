@@ -58,11 +58,11 @@ LDLIBSOPTIONS=-lpapi
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/cumulativesum
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/cumulativesumskew
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/cumulativesum: ${OBJECTFILES}
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/cumulativesumskew: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/cumulativesum ${OBJECTFILES} ${LDLIBSOPTIONS}
+	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/cumulativesumskew ${OBJECTFILES} ${LDLIBSOPTIONS}
 
 ${OBJECTDIR}/Node.o: Node.cpp 
 	${MKDIR} -p ${OBJECTDIR}
@@ -85,7 +85,7 @@ ${OBJECTDIR}/main.o: main.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/cumulativesum
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/cumulativesumskew
 
 # Subprojects
 .clean-subprojects:

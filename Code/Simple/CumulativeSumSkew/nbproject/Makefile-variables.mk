@@ -9,27 +9,27 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=GNU-Linux-x86
 CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-Linux-x86
-CND_ARTIFACT_NAME_Debug=cumulativesum
-CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/cumulativesum
+CND_ARTIFACT_NAME_Debug=cumulativesumskew
+CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/cumulativesumskew
 CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Debug=cumulativesum.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/cumulativesum.tar
+CND_PACKAGE_NAME_Debug=cumulativesumskew.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/cumulativesumskew.tar
 # Release configuration
 CND_PLATFORM_Release=GNU-Linux-x86
 CND_ARTIFACT_DIR_Release=dist/Release/GNU-Linux-x86
-CND_ARTIFACT_NAME_Release=cumulativesum
-CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/cumulativesum
+CND_ARTIFACT_NAME_Release=cumulativesumskew
+CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/cumulativesumskew
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Release=cumulativesum.tar
-CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/cumulativesum.tar
+CND_PACKAGE_NAME_Release=cumulativesumskew.tar
+CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/cumulativesumskew.tar
 # ReleaseBranchlessSelect configuration
 CND_PLATFORM_ReleaseBranchlessSelect=GNU-Linux-x86
 CND_ARTIFACT_DIR_ReleaseBranchlessSelect=dist/ReleaseBranchlessSelect/GNU-Linux-x86
-CND_ARTIFACT_NAME_ReleaseBranchlessSelect=cumulativesum
-CND_ARTIFACT_PATH_ReleaseBranchlessSelect=dist/ReleaseBranchlessSelect/GNU-Linux-x86/cumulativesum
+CND_ARTIFACT_NAME_ReleaseBranchlessSelect=cumulativesumskew
+CND_ARTIFACT_PATH_ReleaseBranchlessSelect=dist/ReleaseBranchlessSelect/GNU-Linux-x86/cumulativesumskew
 CND_PACKAGE_DIR_ReleaseBranchlessSelect=dist/ReleaseBranchlessSelect/GNU-Linux-x86/package
-CND_PACKAGE_NAME_ReleaseBranchlessSelect=cumulativesum.tar
-CND_PACKAGE_PATH_ReleaseBranchlessSelect=dist/ReleaseBranchlessSelect/GNU-Linux-x86/package/cumulativesum.tar
+CND_PACKAGE_NAME_ReleaseBranchlessSelect=cumulativesumskew.tar
+CND_PACKAGE_PATH_ReleaseBranchlessSelect=dist/ReleaseBranchlessSelect/GNU-Linux-x86/package/cumulativesumskew.tar
 #
 # include compiler specific variables
 #

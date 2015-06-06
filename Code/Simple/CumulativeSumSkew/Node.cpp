@@ -12,7 +12,7 @@
 
 using namespace std;
 
-Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, uint blockSize)
+Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, uint blockSize, float skew)
     : isLeaf(false), left(nullptr), right(nullptr), parent(parentNode) {
 
     uint alphabetSize = alphabetMax - alphabetMin +1;
@@ -21,7 +21,7 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
         return;
     }
 
-    uint split = (uint)((alphabetSize-1)/2 + alphabetMin);
+    uint split = (uint) ((alphabetSize-1)/skew) + alphabetMin;
     uint leftAlphabetMin = alphabetMin;
     uint leftAlphabetMax = split;
     uint rightAlphabetMin = split+1;
@@ -57,13 +57,13 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
     input->clear();
     delete input;
     if(rightString->size() > 0) {
-        right = new Node(rightString, rightAlphabetMin, rightAlphabetMax, this, blockSize);
+        right = new Node(rightString, rightAlphabetMin, rightAlphabetMax, this, blockSize, skew);
     } else {
         rightString->clear();
         delete rightString;
     }
     if(leftString->size() > 0) {
-        left = new Node(leftString, leftAlphabetMin, leftAlphabetMax, this, blockSize);
+        left = new Node(leftString, leftAlphabetMin, leftAlphabetMax, this, blockSize, skew);
     } else {
         leftString->clear();
         delete leftString;
@@ -71,13 +71,13 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
 }
 
 
-uint Node::rank(uint character, uint index, uint alphabetMin, uint alphabetMax, uint blockSize){
+uint Node::rank(uint character, uint index, uint alphabetMin, uint alphabetMax, uint blockSize, float skew){
     if(isLeaf){
         return index;
     }
     
     uint alphabetSize = alphabetMax - alphabetMin +1;
-    uint split = (uint)((alphabetSize-1)/2 + alphabetMin);
+    uint split = (uint)((alphabetSize-1)/skew + alphabetMin);
     uint leftAlphabetMin = alphabetMin;
     uint leftAlphabetMax = split;
     uint rightAlphabetMin = split+1;
@@ -90,12 +90,12 @@ uint Node::rank(uint character, uint index, uint alphabetMin, uint alphabetMax, 
 //        pos = binaryRank(index);
 //        pos = popcountBinaryRank(0, index);
         pos = blockBinaryRank(index, blockSize);
-        rank = right->rank(character, pos, rightAlphabetMin, rightAlphabetMax, blockSize);
+        rank = right->rank(character, pos, rightAlphabetMin, rightAlphabetMax, blockSize, skew);
     }else if(left != nullptr){
 //        pos = index - binaryRank(index);
 //        pos = index - popcountBinaryRank(0, index);
         pos = index - blockBinaryRank(index, blockSize);
-        rank = left->rank(character, pos, leftAlphabetMin, leftAlphabetMax, blockSize);
+        rank = left->rank(character, pos, leftAlphabetMin, leftAlphabetMax, blockSize, skew);
     }
     
     return rank;
@@ -195,13 +195,13 @@ uint Node::binarySelect(bool charBit, ulong occurrence) {
     cout << "Occurance too high!" << endl;
 }
 
-Node* Node::getLeaf(uint character, uint alphabetMin, uint alphabetMax) {
+Node* Node::getLeaf(uint character, uint alphabetMin, uint alphabetMax, float skew) {
     if(isLeaf){
         return this;
     }
 
     uint alphabetSize = alphabetMax - alphabetMin +1;
-    uint split = (uint)((alphabetSize-1)/2 + alphabetMin);
+    uint split = (uint)((alphabetSize-1)/skew + alphabetMin);
     uint leftAlphabetMin = alphabetMin;
     uint leftAlphabetMax = split;
     uint rightAlphabetMin = split+1;
@@ -211,9 +211,9 @@ Node* Node::getLeaf(uint character, uint alphabetMin, uint alphabetMax) {
 
     Node* leaf = nullptr;
     if(charBit && right != nullptr){
-        leaf = right->getLeaf(character, rightAlphabetMin, rightAlphabetMax); //right sub tree
+        leaf = right->getLeaf(character, rightAlphabetMin, rightAlphabetMax, skew); //right sub tree
     }else if(left != nullptr){
-        leaf = left->getLeaf(character, leftAlphabetMin, leftAlphabetMax); //right sub tree
+        leaf = left->getLeaf(character, leftAlphabetMin, leftAlphabetMax, skew); //right sub tree
     }
 
     return leaf;

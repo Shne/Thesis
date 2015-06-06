@@ -38,12 +38,12 @@ private:
     Node* right;
 public:
     Node();
-    Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, uint blockSize);
-    uint rank(uint character, uint index, uint alphabetMin, uint alphabetMax, uint blockSize);
+    Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, uint blockSize, float skew);
+    uint rank(uint character, uint index, uint alphabetMin, uint alphabetMax, uint blockSize, float skew);
     uint blockBinaryRank(uint pos, uint blockSize);
     ulong popcountBinaryRank(uint offset, uint pos);
     uint binaryRank(uint offset, uint length);
-    Node* getLeaf(uint character, uint alphabetMin, uint alphabetMax);
+    Node* getLeaf(uint character, uint alphabetMin, uint alphabetMax, float skew);
     uint leafSelect(uint character, ulong occurrence, uint blockSize);
     uint select(bool charBit, ulong occurrence, uint blockSize);
     uint blockBinarySelect(bool charBit, uint occurrence, uint blockSize);

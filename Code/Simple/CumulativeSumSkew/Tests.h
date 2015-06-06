@@ -40,7 +40,7 @@ inline void getPapiAvailableEvents(){
         
         if(PAPI_query_event(i | PAPI_PRESET_MASK) != PAPI_OK){                        
             cout << EventCodeStr << ": false" << endl;
-        }else{
+        } else {
             cout << EventCodeStr << ": true" << endl;
         }
     }
@@ -61,7 +61,7 @@ inline void testSetup(int eventset, int* events, int num_events){
 }
 
 inline void testTearDown(uint amount, uint alphabetSize, string test, string pathname,
-        uint blockSize, int eventset, int* events, long_long* values, int num_events){
+        uint blockSize, int eventset, int* events, long_long* values, int num_events, float skew){
     /* Stop counting events */
     int retval = PAPI_stop_counters(values, num_events);
     if (retval != PAPI_OK) handle_error(retval);
@@ -82,6 +82,7 @@ inline void testTearDown(uint amount, uint alphabetSize, string test, string pat
             << "test=" << test << "\t"
 #endif
             << "amount=" << amount << "\t"
+            << "skew=" << skew << "\t"
             << "alphabetSize=" << alphabetSize << "\t"
             << "blockSize=" << blockSize << "\t"
             << "real_cycles=" << end_cycles - start_cycles << "\t" //real cycles
@@ -103,7 +104,8 @@ inline void testTearDown(uint amount, uint alphabetSize, string test, string pat
 
 
 inline void testSelectQuery(uint amount, uint alphabetSize, string pathname, 
-        uint blockSize, int eventset, int* events, long_long* values, int num_events, Tree tree){
+        uint blockSize, int eventset, int* events, long_long* values, int num_events, 
+        Tree tree, float skew){
     testSetup(eventset, events, num_events);
     uint queries = 1000;
     uint charStep = alphabetSize/queries;
@@ -116,7 +118,7 @@ inline void testSelectQuery(uint amount, uint alphabetSize, string pathname,
         uint character = index*charStep;
         results[index] = tree.select(character, occurrence);
     }
-    testTearDown(amount, alphabetSize, "select", pathname, blockSize, eventset, events, values, num_events);
+    testTearDown(amount, alphabetSize, "select", pathname, blockSize, eventset, events, values, num_events, skew);
     for(uint i=0; i < queries; i++) {
         cout << results[i] << " ";
     }
@@ -124,7 +126,8 @@ inline void testSelectQuery(uint amount, uint alphabetSize, string pathname,
 }
 
 inline void testRankQuery(uint amount, uint alphabetSize, string pathname, 
-        uint blockSize, int eventset, int* events, long_long* values, int num_events, Tree tree){
+        uint blockSize, int eventset, int* events, long_long* values, int num_events,
+        Tree tree, float skew){
     testSetup(eventset, events, num_events); 
     uint queries = 1000;
     uint charStep = alphabetSize/queries;
@@ -138,7 +141,7 @@ inline void testRankQuery(uint amount, uint alphabetSize, string pathname,
         uint character = index*charStep;
         results[index] = tree.rank(character, pos);
     }
-    testTearDown(amount, alphabetSize, "rank", pathname, blockSize, eventset, events, values, num_events);
+    testTearDown(amount, alphabetSize, "rank", pathname, blockSize, eventset, events, values, num_events, skew);
     for(uint i=0; i < queries; i++) {
         cout << results[i] << " ";
     }
@@ -146,16 +149,17 @@ inline void testRankQuery(uint amount, uint alphabetSize, string pathname,
 }
 
 inline void testBuildTime(uint amount, uint alphabetSize, string pathname, 
-        uint blockSize, int eventset, int* events, long_long* values, int num_events, vector<uint>* input){
+        uint blockSize, int eventset, int* events, long_long* values, int num_events,
+        vector<uint>* input, float skew){
     testSetup(eventset, events, num_events);
-    Tree tree = Tree(input, amount, alphabetSize, blockSize);
-    testTearDown(amount, alphabetSize, "build", pathname, blockSize, eventset, events, values, num_events);
+    Tree tree = Tree(input, amount, alphabetSize, blockSize, skew);
+    testTearDown(amount, alphabetSize, "build", pathname, blockSize, eventset, events, values, num_events, skew);
     
     cout << tree.rank(0, amount) << endl; //just to make sure nothing is optimized away
 }
 
-inline void testBuildMemory(uint amount, uint alphabetSize, uint blockSize, vector<uint>* input) {
-    Tree tree = Tree(input, amount, alphabetSize, blockSize);
+inline void testBuildMemory(uint amount, uint alphabetSize, uint blockSize, vector<uint>* input, float skew) {
+    Tree tree = Tree(input, amount, alphabetSize, blockSize, skew);
     if(RUNNING_ON_VALGRIND) VALGRIND_MONITOR_COMMAND("snapshot ../../../massifBuildMemorySnapshot");
     
     cout << tree.rank(0, amount) << endl; //just to make sure nothing is optimized away
