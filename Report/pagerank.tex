@@ -508,4 +508,41 @@ We can see that it is a great improvement to use precomputed rank values in both
 We have run our experiment for rank queries on the UnalignedNaive wavelet tree using varying block sizes, for 4 different input sizes, $n = [10^5, 10^6, 10^7, 10^8]$, to show that the optimal block size $b$ depends on $n$, and to show that the optimal block size $b$ is less that the theoretically optimal $b$ for the root bitmap, when using a fixed block size throughout the wavelet tree.
 We did not run this experiment for select queries, because of problems choosing appropriate query parameters for the smaller input sizes, and because we felt little additional valuable information would be gained.
 
-In Figure~\ref{} \textbf{[TODO: non-CumSum graphs for varying $n$]}
+In Figure~\ref{fig:PrecomputedRankBlockSizeVaryN_Rank_WallTime} we have plotted the wall times for various block sizes for four different values of $n$.
+The x-axis is logarithmic as we tested for block size values as powers of 2, to reach a wide range of block sizes without having to run hundreds of tests yet still have several tests at low values.
+\textbf{[TODO: describe graphs and results after having run them on test machine]}
+
+
+
+\newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
+
+\begin{figure}\tiny
+
+\begin{subfigure}{0.48\textwidth}
+	\input{PrecomputedRankBlockSizeVaryN_5_Rank_WallTime}
+	\caption{$n = 10^5$}
+	\label{fig:PrecomputedRankBlockSizeVaryN_5_Rank_WallTime}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{PrecomputedRankBlockSizeVaryN_6_Rank_WallTime}
+	\caption{$n = 10^6$}
+	\label{fig:PrecomputedRankBlockSizeVaryN_6_Rank_WallTime}
+\end{subfigure}
+
+\begin{subfigure}{0.48\textwidth}
+	\input{PrecomputedRankBlockSizeVaryN_7_Rank_WallTime}
+	\caption{$n = 10^7$}
+	\label{fig:PrecomputedRankBlockSizeVaryN_7_Rank_WallTime}
+\end{subfigure}
+\hfill	
+\begin{subfigure}{0.48\textwidth}
+	\input{PrecomputedRankBlockSizeVaryN_8_Rank_WallTime}
+	\caption{$n = 10^8$}
+	\label{fig:PrecomputedRankBlockSizeVaryN_8_Rank_WallTime}
+\end{subfigure}
+\caption{Walltimes for varying block sizes are four different input sizes. The blue vertical line is the theoretical optimal block size at $\sqrt{n}$. Notice that the x-axis is logarithmic.}
+\label{fig:PrecomputedRankBlockSizeVaryN_Rank_WallTime}
+\end{figure}
+
+\restoregeometry

@@ -2,6 +2,7 @@
 
 import re
 
+amountList = []
 alphabetSizeList = []
 blockSizeList = []
 skewList = []
@@ -27,6 +28,7 @@ def getData(input_, algorithm, test):
 
 	match = "algorithm="+algorithm+"\ttest="+test+"\t.*";
 
+	amountListReg = re.compile(match+"amount=(?P<amount>\d+)")
 	alphabetSizeReg = re.compile(match+"alphabetSize=(?P<alphabetSize>\d+)")
 	blockSizeReg = re.compile(match+"blockSize=(?P<blockSize>\d+)")
 	skewReg = re.compile(match+"skew=(?P<skew>\d+(\.\d*)?)")
@@ -48,6 +50,7 @@ def getData(input_, algorithm, test):
 	reset()
 
 	for line in inputFile:
+		amount = amountListReg.search(line)
 		alphabetSize = alphabetSizeReg.search(line)
 		blockSize = blockSizeReg.search(line)
 		skew = skewReg.search(line)
@@ -66,6 +69,8 @@ def getData(input_, algorithm, test):
 		memResident = memResidentReg.search(line)
 		memHighWatermark = memHighWatermarkReg.search(line)
 
+		if amount is not None:
+			amountList.append(int(amount.group('amount')))
 		if alphabetSize is not None:
 			alphabetSizeList.append(int(alphabetSize.group('alphabetSize')))
 		if blockSize is not None:
@@ -107,6 +112,7 @@ def getData(input_, algorithm, test):
 		l2CacheMissRateList.append([float(l2DataCacheMissesList[i])/l2DataCacheHitsList[i]])
 
 def reset():
+	del amountList[:]
 	del alphabetSizeList[:]
 	del blockSizeList[:]
 	del skewList[:]
@@ -130,6 +136,8 @@ def reset():
 def getReadOutputLists(valueListKeys):
 	valueLists = []
 	for key in valueListKeys:
+		if(key == "amountList"):
+			valueLists.append(amountList)
 		if(key == "alphabetSizeList"):
 			valueLists.append(alphabetSizeList)
 		elif(key == "blockSizeList"):
