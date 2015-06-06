@@ -7,10 +7,10 @@ See Section~\ref{sec:rankQueriesWithPrecomputedRanksEdgeCases} for more explanat
 The rank values can be precomputed easily and cheaply by doing so as the tree is built where each individual bit of the bitmap already needs to be computed and stored.
 The algorithm increments a counter for the corresponding block each time it sets a bit to 1 in the bitmap.
 
-The size of the precomputed blocks, \textit{blockSize}, is a new variable that could have influence on the running time and memory usage.
+The size of the precomputed blocks, $b$, is a new variable that could have influence on the running time and memory usage.
 Some advantages of larger blocks is less memory usage and fewer precomputed value lookups for the same part of the bitmap.
 Some advantages of smaller blocks are that they can cover more precisely the part of the bitmap that is relevant to the query, leading to fewer calls to popcount.
-We will experiment to find an optimal value for our system.
+Later, in Section~\ref{sec:bDependOnN}, we will analyse how the optimal block size $b$ depends on the input size $n$, and later again we will experiment with varying block sizes to see how it works in practise for a wavelet tree and to see how it corresponds to the theoretical analysis.
 
 To further reduce the space used by the precomputed values, we considered concatenating all the bitmaps into one big bitmap and keeping a single vector of precomputed rank values for blocks for the entire bitmap. 
 That would eliminate the many cases where the length of a bitmap does not align with the block size and the last precomputed value for that bitmap will therefore not cover an entire block, leading to more precomputed values than minimally needed to cover all the bitmaps.
@@ -47,7 +47,7 @@ This should also cause a decrease in memory usage as the offset and size are sto
 Additionally, when using an individual bitmap for each node, they would have been word-aligned, and the bits between the last used bit and the end of the last used word would have gone unused and so, wasted.
 
 A vector is also allocated to hold the precomputed block values of size
-\[\mathit{VectorSize} = \frac{\mathit{BitmapSize}}{\mathit{BlockSize}}.\]
+\[\mathit{VectorSize} = \frac{\mathit{BitmapSize}}{b}.\]
 Instead of storing a pointer to the bitmap and precomputed values vector in each node, they are stored once for the whole tree and then passed down through the query methods when the tree is queried.
 
 In order to be able to index into said vector, integer division of the bitmap offset and the block size is used. It is an efficient and simple way to precompute the rank values of blocks of fixed size of the bitmap, as we do not have to traverse the tree again.
@@ -102,10 +102,10 @@ Figure~\ref{fig:PrecomputePopcountBlock} illustrates this.
 Translation Lookaside Buffer misses are expensive and to avoid those, we can try to reduce the number of pages that is loaded.
 Using concatenated bitmaps and the precomputed vector of ranks, we only need to load pages of the bitmap at the beginning and end of each node's bitmap, to compute the popcounted version of binary rank directly on the bitmap, and only within one block at each end.
 If the blocks are not aligned with the memory pages, then, even if the block size is less than a page, it might span more than one page and thus more than one page of memory must be loaded into the TLB.
-More precisely, the algorithm might at most load \[2 \cdot \left( \left\lceil\frac{\mathit{blockSize}}{\mathit{pageSize}}\right\rceil +1 \right)\] pages to do the popcount binary rank computation at the beginning and end of each node.
+More precisely, the algorithm might at most load \[2 \cdot \left( \left\lceil\frac{b}{\mathit{pageSize}}\right\rceil +1 \right)\] pages to do the popcount binary rank computation at the beginning and end of each node.
 
 If the blocks are page-aligned, and has block sizes divisible by the page size or that the page is divisible by, the extra $+1$ will disappear, because a block can no longer span more pages than the number of pages its size is a multiple of.
-This means we can ensure that at most \[2 \cdot \left\lceil\frac{\mathit{blockSize}}{\mathit{pageSize}}\right\rceil\] memory pages of the bitmap are loaded for each node by page-aligning the blocks.
+This means we can ensure that at most \[2 \cdot \left\lceil\frac{b}{\mathit{pageSize}}\right\rceil\] memory pages of the bitmap are loaded for each node by page-aligning the blocks.
 With an alphabet size of $2^{16}$ this amounts to saving up to 16 page loads per query.
 
 While we expect that this will save some expensive TLB misses it also has some drawbacks, especially when not using concatenated bitmaps.
@@ -136,9 +136,9 @@ We would like to analyze whether it is worth using a rank query to find out whet
 We will assume an equal number of occurrences in the string of each character in the alphabet, a uniform distribution of each character in the string, and an equal probability of each valid parameter for the select query.
 A valid character parameter is one that exists in the input string and a valid occurrence parameter is an integer above 0 and below or equal to the number of occurrences appearing in the input string.
 
-The rank query is a computation of worst-case cost $\frac{\mathit{blockSize}}{2}$ because it will at most popcount half of the block, because the precomputed rank value is utilized when advantageous.
-The select query using popcount in the first partial block is an operation of worst-case cost \textit{blockSize} because it can at most popcount the entire block.
-So, in the worst case, when the sought-after occurrence is in the first partial block of the bitmap, $\frac{\mathit{blockSize}}{2}$ work is wasted, yet when the occurrence is elsewhere, \textit{blockSize} work is saved.
+The rank query is a computation of worst-case cost $\frac{b}{2}$ because it will at most popcount half of the block, because the precomputed rank value is utilized when advantageous.
+The select query using popcount in the first partial block is an operation of worst-case cost $b$ because it can at most popcount the entire block.
+So, in the worst case, when the sought-after occurrence is in the first partial block of the bitmap, $\frac{b}{2}$ work is wasted, yet when the occurrence is elsewhere, $b$ work is saved.
 This means that the boundary between where using the rank query becomes a gain or a loss in performance is where the ratio between the number of times the occurrence is to be found in and outside the first partial block of the bitmap is $\frac{2}{3}$.
 That is, when considering the worst-case query time for both queries, if the occurrence is to be found outside the first partial block of the bitmap more than one third of the time, using the rank query first to see if that partial block should be select queried is a gain in performance.
 
@@ -155,9 +155,9 @@ Since the page size on our machine are 4096 bytes we should not use a block size
 
 In Section~\ref{sec:queryRunTimePrecomputedBlockSizes} we find that the optimal block size is 16384 bits = 2048 bytes = $\frac{1}{2}$ page.
 
-Assuming the precomputed values are then stored as 16-bit unsigned short integers it will only consume an extra 16 bits or 2 bytes per block and there are $\frac{\mathit{BitmapSize}}{\mathit{BlockSize}}$ of these blocks when the bitmaps are concatenated.
+Assuming the precomputed values are then stored as 16-bit unsigned short integers it will only consume an extra 16 bits or 2 bytes per block and there are $\frac{\mathit{BitmapSize}}{b}$ of these blocks when the bitmaps are concatenated.
 This means, assuming a block size of 2048 bytes, a relative extra space consumption of
-\[ \frac{ 2 \cdot \frac{\mathit{BitmapSize}}{\mathit{BlockSize}} }{\mathit{BitmapSize}} = \frac{2}{\mathit{BlockSize}} = \frac{2}{2048} = 0.0009765625 = 0.098\,\% \]
+\[ \frac{ 2 \cdot \frac{\mathit{BitmapSize}}{b} }{\mathit{BitmapSize}} = \frac{2}{b} = \frac{2}{2048} = 0.0009765625 = 0.098\,\% \]
 of the bitmaps, which is even less when considering the total space used including the nodes.
 
 When the bitmaps are not concatenated there is a higher space consumption by the precomputed values, as each precomputed value do not cover an entire block and more precomputed values is therefore needed to cover all the bitmaps.
@@ -169,8 +169,23 @@ We expect to see a difference in memory usage between using concatenated bitmaps
 However, we expect most of the difference to come from the space used by the bitmaps themselves, and therefore a noticeable difference between the data structure concatenating the bitmaps and the others, with a little difference between using page-aligned and non-page-aligned blocks, with the one using page-aligned blocks using most memory.
 
 
-\subsection{Dependence of Block Size on Input Size}
-\textbf{[TODO: discuss/analyse how the best $b$ depends on $n$, for each bitmap, $\sqrt{n}$. a wavelet tree has many bitmaps of decreasing size, optimal $b$ likely smaller than theoretical]}
+\subsection{Dependence of Optimal Block Size on Input Size}
+\label{sec:bDependOnN}
+Whether or not using precomputed values in blocks is an improvement in running time or not, depends on which block size is used.
+If the block size is only 1 bit, then there is nothing to be gained from looking up the value via the precomputed rank instead of looking at the bit in the bitmap.
+If the block size is the same size as the entire bitmap, then it can only be useful when the positional parameter $p$ for the rank query is above half the size of the bitmap, as the rank of a smaller part of the bitmap beyond the halfway point can then be calculated and subtracted.
+
+The work needed to compute the binary rank of a bitmap of size $n$ without using a precomputed value, but using popcount on pieces (machine words) of the bitmap of size \textit{ws} is $O(\frac{n}{\mathit{ws}})$ to scan the bitmap using popcount up to the word spanning position $p$ and $O(\mathit{ws})$ to calculate the rank up to position $p$ within that word, making it in total $O(\frac{n}{\mathit{ws}} + \mathit{ws})$.
+
+When using lookups of precomputed values, the analysis is similar.
+It costs $O(\frac{n}{b} + b)$ to calculate the binary rank when using precomputed values.
+The optimal block size should be one that minimizes this.
+The derivative of $\frac{n}{b}+b$ is $1-\frac{n}{b^2}$ and its root is $n = b^2$ making the optimal block size $b = \sqrt{n}$.
+This is only the optimal block size for a single bitmap, and a wavelet tree has many bitmaps of varying sizes $n$ that are lower near the leaves.
+This means that the best block size in a wavelet tree is either one that varies for each bitmap or, if using a fixed block size, some value below the theoretically optimal block size for the root bitmap.
+
+Later, in Section~\ref{} \textbf{[TODO]}, we show using a fixed block size $b$ that it does indeed depend on $n$ and the practically optimal value of $b$ is below the theoretically optimal size of $b$ for the root bitmap.
+
 
 
 \subsection{Experiments}
