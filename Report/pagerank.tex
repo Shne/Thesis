@@ -171,7 +171,7 @@ However, we expect most of the difference to come from the space used by the bit
 
 \subsection{Dependence of Optimal Block Size on Input Size}
 \label{sec:bDependOnN}
-Whether or not using precomputed values in blocks is an improvement in running time or not, depends on which block size is used.
+Whether or not using precomputed values in blocks is an improvement in running time of rank queries or not, depends on which block size is used.
 If the block size is only 1 bit, then there is nothing to be gained from looking up the value via the precomputed rank instead of looking at the bit in the bitmap.
 If the block size is the same size as the entire bitmap, then it can only be useful when the positional parameter $p$ for the rank query is above half the size of the bitmap, as the rank of a smaller part of the bitmap beyond the halfway point can then be calculated and subtracted.
 
@@ -184,7 +184,7 @@ The derivative of $\frac{n}{b}+b$ is $1-\frac{n}{b^2}$ and its root is $n = b^2$
 This is only the optimal block size for a single bitmap, and a wavelet tree has many bitmaps of varying sizes $n$ that are lower near the leaves.
 This means that the best block size in a wavelet tree is either one that varies for each bitmap or, if using a fixed block size, some value below the theoretically optimal block size for the root bitmap.
 
-Later, in Section~\ref{} \textbf{[TODO]}, we show using a fixed block size $b$ that it does indeed depend on $n$ and the practically optimal value of $b$ is below the theoretically optimal size of $b$ for the root bitmap.
+Later, in Section~\ref{sec:expOptimalBlockSizeDependsOnInputSize}, we show using a fixed block size $b$ for each bitmap, that the optimal $b$ does indeed depend on $n$ and the practically optimal value of $b$ is below the theoretically optimal size of $b$ for the root bitmap.
 
 
 
@@ -494,7 +494,7 @@ Our attempts to reduce the memory usage by concatenating the bitmaps seems to ha
 
 
 \subsubsection{Improvement of using precomputed values}
-We have found that our UnalignedNaive precomputed tree using block size = 0.5 page size is the fastest for rank queries and about as fast as the Naive tree for select queries.
+We have found that our UnalignedNaive precomputed tree using block size = 0.5 page size is the fastest for rank queries for input size $n = 10^8$ characters, and about as fast as the Naive tree for select queries.
 We therefore consider UnalignedNaive at block size 0.5 page size to be our best wavelet tree implementation so far, even though it uses more memory than SimpleNaive or the Preallocated variants.
 
 We have compared the running time of 1000 rank and select queries for UnalignedNaive and SimpleNaive in Figure~\ref{fig:PrecomputedRankBlockSize_vsNaiveInteger}.
@@ -503,3 +503,9 @@ The wall time for select queries on the UnalignedNaive tree is only 0.73\,\% of 
 
 We can see that it is a great improvement to use precomputed rank values in both rank and select queries, with more gain for rank.
 
+\subsubsection{The Dependence of Optimal Block Size on Input Size}
+\label{sec:expOptimalBlockSizeDependsOnInputSize}
+We have run our experiment for rank queries on the UnalignedNaive wavelet tree using varying block sizes, for 4 different input sizes, $n = [10^5, 10^6, 10^7, 10^8]$, to show that the optimal block size $b$ depends on $n$, and to show that the optimal block size $b$ is less that the theoretically optimal $b$ for the root bitmap, when using a fixed block size throughout the wavelet tree.
+We did not run this experiment for select queries, because of problems choosing appropriate query parameters for the smaller input sizes, and because we felt little additional valuable information would be gained.
+
+In Figure~\ref{} \textbf{[TODO: non-CumSum graphs for varying $n$]}
