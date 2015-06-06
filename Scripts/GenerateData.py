@@ -138,7 +138,8 @@ def generateNonUniformRealData(powerAmount):
 
 start = time.time()
 # generateNonUniformRealData(8)
-generateIntegerDataNotPower(8,31241)
+generateIntegerData(6, 16)
+# generateIntegerDataNotPower(8,31241)
 # remapDataFileSymbols(8, 31241)
 elapsed = time.time()-start
 print("time = " + str(elapsed))
