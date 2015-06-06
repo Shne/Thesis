@@ -3,6 +3,13 @@
 In this section, we describe our attempt to improve the query times for the wavelet tree by controlling the memory layout and skewing the tree.
 Brodal et al.~\citeA{gerthSkewedBinarySearchTrees} showed that skewing a binary search tree could reduce the amount of cache misses and branch mispredictions considerately. Enough, in fact, to increase the speed of searching the tree manyfold, even though the skewing increased the depth of the tree structure.
 
+We now analyse the theoretical worst case running time of constructing and querying a balanced wavelet tree vs. a skewed wavelet tree.
+Constructing a balanced wavelet tree takes  $O(n \cdot \log \sigma)$ time because the hight of the tree is $\lceil \log \sigma \rceil$ and there are $n$ elements in each level.
+When skewing the tree it is possible to only split one type of character $c \in \Sigma$ into one side of the tree and split the rest of the characters into the other side.
+This results in a long chain of non-leaf nodes that all has a leaf-child in the same side.
+The tree then has a hight of $O(\sigma)$, which is larger than the height $\lceil \log \sigma \rceil$ of the balanced tree.
+
+
 Skewing the tree can reduce branch mispredictions by giving one branch, in the direction the tree is skewed, much higher probability of being the correct than the other, and so enabling the branch predicter unit to more often predict correctly. 
 Skewing the tree can also reduce cache misses by increasing the probability that the next piece of memory the algorithm accesses is already loaded into a cacheline by the time it is accessed because of prefetching.
 

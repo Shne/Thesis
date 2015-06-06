@@ -8,6 +8,24 @@ Therefore it might be possible to save a number of instructions by not iterating
 
 We will implement this based on UnalignedNaive and test the performance compared to the UnalignedNaive wavelet tree from Section~\ref{sec:queryRunTimePrecomputedBlockSizes}, using half a page size as the block size, as we found that to be the fastest configuration.
 
+
+\begin{figure}\tiny
+\begin{subfigure}{0.45\textwidth}
+	\input{CumulativeSumBlockSizeWallTimeRank}
+	\caption{Rank: Varying Blocksize for $n=10^8$ characters}
+	\label{fig:CumulativeSumBlockSizeWallTimeRank}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.45\textwidth}
+	\input{CumulativeSumBlockSizeWallTimeSelect}
+	\caption{Rank: Varying Blocksize for $n=10^8$ characters}
+	\label{fig:CumulativeSumBlockSizeWallTimeSelect}
+\end{subfigure}
+\caption{Running times for varying block sizes.}
+\label{fig:CumulativeSumBlockSize}
+\end{figure}
+
+
 \subsection{Advantages of Cumulative Sum}
 As previously mentioned, the rank and select query algorithms do not actually need the rank values of individual blocks, but rather the cumulative sum rank value from the beginning of the bitmap to some position.
 If we instead implemented the precomputed values as being the cumulative sum of rank values of each block from the beginning of the bitmap up to and including the block corresponding to the precomputed value, we could save a lot of precomputed value lookups in the rank and select queries.

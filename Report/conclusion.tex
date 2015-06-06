@@ -18,8 +18,8 @@ The optimizations are their results can be summed up as follows:
 \item[Precompute and store binary rank values] in blocks for each bitmap in each node. Use the precomputed values for the most part to reduce the amount of CPU cycles and memory accesses needed. High improvement in running time.
 \item[Concatenate bitmaps and precomputed values] to reduce memory usage and possibly improve cache performance. Little improvement in memory usage, worse running time.
 \item[Align bitmaps with memory pages] to reduce TLB misses. Slightly worse running time.
-\item[Store cumulative sum of precomputed values] instead of raw binary rank values to further reduce CPU cycles and memory accesses needed. Fair improvement of running time.
-\item[Replace branching code with arithmetic operations] in select queries to reduce number of branches and thereby branch mispredictions. Worse running time.
+\item[Store cumulative sum of precomputed values] instead of raw binary rank values to further reduce CPU cycles and memory accesses needed. Fastest improvement of running time out of all our optimizations but uses more memory than the others but only $0.5\;\%$ more than a wavelet tree with concatenated bitmaps, which is the one that uses the smallest amount of memory.
+\item[Replace branching code with arithmetic operations] in select queries to reduce number of branches and thereby branch mispredictions. This resulted in a worse running time.
 \end{description*}
 
 In general, improvements that reduced the raw amount of computations and memory accesses needed were a big improvement, whereas improvements focusing on reducing a single type of penalty, such as BM or TLB misses, were either barely an improvement or no improvement at all.

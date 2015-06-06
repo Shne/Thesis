@@ -17,15 +17,20 @@ outputFilename = 'CumulativeSumBlockSize_n8as16.output'
 def addNewline():
 	open('Output/'+outputFilename, 'a').write('\n')
 
+
+
 subprocess.Popen(['make','CONF=Release', 'clean'], cwd=cumulativeSumCwd).wait()
 subprocess.Popen(['make','CONF=Release'], cwd=cumulativeSumCwd).wait()
 subprocess.Popen(['make','CONF=ReleaseBranchlessSelect', 'clean'], cwd=cumulativeSumCwd).wait()
 subprocess.Popen(['make','CONF=ReleaseBranchlessSelect'], cwd=cumulativeSumCwd).wait()
 
-repeats = 1
+repeats = 5
 
-
+# beat at 264
 blockSizes = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12]
+blockSizes2 = []  
+for i in range(1, 41):
+	blockSizes2.append(i*128)
 
 
 print("CumulativeSum: Rank \n")
@@ -39,18 +44,18 @@ addNewline()
 
 print("CumulativeSum: Select Branching \n")
 test = 'select'
-for blockSize in blockSizes:
+for blockSize in blockSizes2:
 	for _ in range(repeats):
-		args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
+		args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize/8), outputFilename]
 		subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
 
 addNewline()
 
 print("CumulativeSum: Select Branchless \n")
 test = 'select'
-for blockSize in blockSizes:
+for blockSize in blockSizes2:
 	for _ in range(repeats):
-		args = [cumulativeSumBranchlessProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
+		args = [cumulativeSumBranchlessProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize/8), outputFilename]
 		subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
 
 addNewline()
