@@ -17,11 +17,13 @@ It could e.g. be done by a single sweep through the precomputed values vector af
 
 Rank queries will benefit from the precomputed values being cumulative sums because they can do a single lookup of the precomputed value corresponding to the block covering the queried-for position.
 The need to calculate rank by \texttt{popcount}ing within a single block and manually counting the bits within a single word remains unchanged.
+This means that the required work per level of the tree changes from $O(\frac{n}{b}+b)$ to $O(b)$, making the total work required for a rank query $O(b \log \sigma)$.
 
 Select queries should also see some benefit.
 Previously, the select query would iterate through the precomputed values and sum them up, looking for when it surpasses the sought-after occurrence, and then calculate the position within a single block using \texttt{popcount} and manual counting of bits within a single word.
 Using cumulative precomputed rank values, the select query is be able to use binary search on the precomputed value vector to find the word wherein the occurrence is.
 Using \texttt{popcount} within a block and manual counting within a word still remains unchanged.
+This makes the previously required work per level change from $O(\frac{n}{b} + b)$ to $O(\log \frac{n}{b} + b)$, making the total work required for a select query $O((\log \frac{n}{b} + b) \log \sigma)$.
 
 \subsection{Disadvantages of Cumulative Sum}
 The precomputed values are no longer limited in value size by the block size but rather the bitmap size, as the last value in the precomputed rank value vector could potentially become as large as the bitmap is long.
