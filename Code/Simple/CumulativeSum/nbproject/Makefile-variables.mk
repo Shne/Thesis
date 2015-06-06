@@ -30,6 +30,14 @@ CND_ARTIFACT_PATH_ReleaseBranchlessSelect=dist/ReleaseBranchlessSelect/GNU-Linux
 CND_PACKAGE_DIR_ReleaseBranchlessSelect=dist/ReleaseBranchlessSelect/GNU-Linux-x86/package
 CND_PACKAGE_NAME_ReleaseBranchlessSelect=cumulativesum.tar
 CND_PACKAGE_PATH_ReleaseBranchlessSelect=dist/ReleaseBranchlessSelect/GNU-Linux-x86/package/cumulativesum.tar
+# CumulativeSumMoreQueries configuration
+CND_PLATFORM_CumulativeSumMoreQueries=GNU-Linux-x86
+CND_ARTIFACT_DIR_CumulativeSumMoreQueries=dist/CumulativeSumMoreQueries/GNU-Linux-x86
+CND_ARTIFACT_NAME_CumulativeSumMoreQueries=cumulativesum
+CND_ARTIFACT_PATH_CumulativeSumMoreQueries=dist/CumulativeSumMoreQueries/GNU-Linux-x86/cumulativesum
+CND_PACKAGE_DIR_CumulativeSumMoreQueries=dist/CumulativeSumMoreQueries/GNU-Linux-x86/package
+CND_PACKAGE_NAME_CumulativeSumMoreQueries=cumulativesum.tar
+CND_PACKAGE_PATH_CumulativeSumMoreQueries=dist/CumulativeSumMoreQueries/GNU-Linux-x86/package/cumulativesum.tar
 #
 # include compiler specific variables
 #

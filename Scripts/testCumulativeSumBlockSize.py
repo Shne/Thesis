@@ -7,11 +7,11 @@ from time import sleep
 amount = 8
 alphabetSize = 16
 
-cumulativeSumProgram = "dist/Release/GNU-Linux-x86/cumulativesum"
+cumulativeSumProgram = "dist/CumulativeSumMoreQueries/GNU-Linux-x86/cumulativesum"
 cumulativeSumCwd = 'Code/Simple/CumulativeSum'
 cumulativeSumBranchlessProgram = "dist/ReleaseBranchlessSelect/GNU-Linux-x86/cumulativesum"
 
-outputFilename = 'CumulativeSumBlockSize_n8as16.output'
+outputFilename = 'CumulativeSumBlockSize_n8as16_10000Queries.output'
 
 
 def addNewline():
@@ -19,10 +19,11 @@ def addNewline():
 
 
 
-subprocess.Popen(['make','CONF=Release', 'clean'], cwd=cumulativeSumCwd).wait()
-subprocess.Popen(['make','CONF=Release'], cwd=cumulativeSumCwd).wait()
+subprocess.Popen(['make','CONF=CumulativeSumMoreQueries', 'clean'], cwd=cumulativeSumCwd).wait()
+subprocess.Popen(['make','CONF=CumulativeSumMoreQueries'], cwd=cumulativeSumCwd).wait()
 subprocess.Popen(['make','CONF=ReleaseBranchlessSelect', 'clean'], cwd=cumulativeSumCwd).wait()
 subprocess.Popen(['make','CONF=ReleaseBranchlessSelect'], cwd=cumulativeSumCwd).wait()
+
 
 repeats = 5
 

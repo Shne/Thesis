@@ -105,7 +105,11 @@ inline void testTearDown(uint amount, uint alphabetSize, string test, string pat
 inline void testSelectQuery(uint amount, uint alphabetSize, string pathname, 
         uint blockSize, int eventset, int* events, long_long* values, int num_events, Tree tree){
     testSetup(eventset, events, num_events);
+#ifdef TenhousandQueries
+    uint queries = 10000;
+#else
     uint queries = 1000;
+#endif
     uint charStep = alphabetSize/queries;
     uint occurrencePack = 10;
     uint occurrenceStep = queries/occurrencePack;

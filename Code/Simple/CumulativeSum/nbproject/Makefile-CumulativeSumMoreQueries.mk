@@ -23,7 +23,7 @@ AS=as
 # Macros
 CND_PLATFORM=GNU-Linux-x86
 CND_DLIB_EXT=so
-CND_CONF=ReleaseBranchlessSelect
+CND_CONF=CumulativeSumMoreQueries
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 
@@ -44,8 +44,8 @@ OBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=-m64 -g -march=native -DBRANCHLESSSELECT -DTenthousandQueries
-CXXFLAGS=-m64 -g -march=native -DBRANCHLESSSELECT -DTenthousandQueries
+CCFLAGS=-m64 -g -march=native -DTenthousandQueries
+CXXFLAGS=-m64 -g -march=native -DTenthousandQueries
 
 # Fortran Compiler Flags
 FFLAGS=
