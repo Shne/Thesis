@@ -25,6 +25,7 @@ In the skewed version of the tree the rank query time then becomes worst-case $O
 
 \textbf{[TODO: memory analysis]}
 
+
 From the theoretical analysis of construction time and query time of a skewed wavelet tree it is theoretically not an improvement to skew the tree.
 Skewing the tree can however reduce branch mispredictions, as shown by Brodal et al.~\citeA[Abstract]{gerthSkewedBinarySearchTrees}.
 It does so by giving the branch in the direction the tree is skewed a much higher probability of being the correct than the other, which enables the branch prediction unit to predict correctly more often. 
