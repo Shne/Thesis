@@ -95,7 +95,7 @@ Notable challenges include implementing rank and select queries that utilized co
 
 \begin{description}
 \item[Popcount Instruction] works on whole machine words at a time and so our code had to figure out when it was worth using the instruction and handle any excess bits counted or any bits not counted.
-\item[Concatenated Bitmaps] required that our code correctly handled the edge cases where bitmaps touch each other, making sure to only count the number of 0s or 1s on the correctly side of the boundary.
+\item[Concatenated Bitmaps] required that our code correctly handled the edge cases where bitmaps touch each other, making sure to only count the number of 0s or 1s on the correct side of the boundary.
 This was done by using pointer arithmetic and calculating various offsets, misalignments and offsets of offsets and misalignments.
 It only became more complicated when using precomputed values as well.
 \item[Page-aligned Blocks] only introduced more handling and bookkeeping of offsets and offsets of offsets.
