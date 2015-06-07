@@ -1,0 +1,189 @@
+\section{Cumulative Sum with Controlled Memory Layout and Skew}
+\label{sec:memorylayout}
+In this section, we describe our attempt to improve the query times for the wavelet tree by controlling the memory layout and skewing the tree.
+Skewing the tree means that we force the it to be unbalanced with a bias to one side. 
+Brodal et al.~\citeA{gerthSkewedBinarySearchTrees} showed that skewing a binary search tree could reduce the amount of cache misses and branch mispredictions considerately. Enough, in fact, to increase the speed of searching the tree manyfold, even though the skewing increased the depth of the tree structure.
+
+To reduce cache misses by skewing the tree we must control the memory layout, because by skewing the tree to the right, we increase the likelihood of a traversal similar to a depth-first-search going down the right side first (DFSr). So we want to place the data in memory so that a DFSr traversal through the tree would result in sequential address accesses.
+Allocating memory dynamically as we go might produce a similar layout and controlling the memory may not lead to increased performance, but it is the only way to ensure the memory layout is as we want it.
+
+Skewing the tree has the disadvantage of increasing the height, or depth, of the tree.
+J.~Nievergelt and E.~M. Reingold~\citeB{Nievergelt:1972:BST:800152.804906} defined the height for a skewed binary tree to be at most:
+\[ h_{max} = \frac{\log(m+1)}{ \log\frac{1}{1-\alpha}} \;,\]
+where $m$ is the total number of nodes in the tree, that is $2 \sigma - 1$ in our wavelet tree, and $\alpha = \frac{1}{\mathit{skew}}$ and \textit{skew} is the number that is divided by to skew our tree, see Section~\ref{sec:SkewingTheTree}.
+Together this makes the height at most
+\[ h_{max} = \frac{\log(2 \sigma)}{ \log\frac{\mathit{skew}}{\mathit{skew} - 1}}  \;.\]
+Which, when the tree is balanced, so $\mathit{skew} = 2$, makes the height at most $h_{max} = \log \sigma + 1$ which agrees with our definition of the height $h = \lceil \log \sigma \rceil$.
+
+Let us analyse the theoretical worst case running time of constructing and querying a balanced wavelet tree vs. a skewed wavelet tree.
+
+Constructing a balanced wavelet tree takes  $O(n \cdot \log \sigma)$ time because the height of the tree is $\lceil \log \sigma \rceil$ and there are $n$ elements in each level.
+When skewing the tree the height of the tree becomes as defined above and the construction time becomes $O(n \cdot h_{max})$.
+
+The query time for rank on a balanced wavelet tree is $O(b \log \sigma)$ and for select $O(b \log \sigma + \log \frac{n}{b} \log \sigma)$.
+In the skewed version of the tree the rank query time then becomes worst-case $O(b \cdot h_{max})$. The query time for select becomes $O(b \cdot h_{max} + \log \frac{n}{b} \cdot h_{max})$
+
+From the theoretical analysis of construction time and query time of a skewed wavelet tree it is theoretically not an improvement to skew the tree.
+Skewing the tree can however reduce branch mispredictions, as shown by Brodal et al.~\citeA[\textbf{Abstract}]{gerthSkewedBinarySearchTrees}.
+It does so by giving the branch in the direction the tree is skewed a much higher probability of being the correct than the other, which enables the branch prediction unit to predict correctly more often. 
+Skewing the tree can also reduce cache misses by increasing the probability that the next piece of memory the algorithm accesses is already loaded into a cacheline by the time it is accessed because of prefetching.
+
+The algorithms for construction and queries in this implementation remain mostly the same as before in CumulativeSum, but with modifications to handle a controlled memory layout and a skew of the tree.
+
+\subsection{Prefetching}
+Prefetching is a feature of the CPU whereby it can fetch other parts of the memory into cachelines even though it was not requested yet, if it believes it will be requested soon, to avoid having the program waiting for this fetching.
+In more advanced versions, it can even look at the access into memory of the running program and try to determine a pattern and prefetch memory according to this pattern.
+Looking at the Intel Optimization Manual~\citeB{intel-optimization-manual} for our architecture\footnote{Our architecture is Ivy Bridge, but the optimization manual sections for Sandy Bridge holds true for Ivy Bridge as well, as stated in section 2.2.7 in~\citeB{intel-optimization-manual}.} we find that it has streaming prefetchers loading into L1, L2, and last level cache. The streaming prefetchers detect accesses to ascending or descending addresses and can prefetch up to 20 lines ahead or behind. 
+Our architecture also has a prefetcher that can detect strides in memory access, as well as a “Next Page Prefetcher” that can load another memory page when detecting memory accesses near the page boundary~\footnote{See section 2.2.7 of~\citeB{intel-optimization-manual}}.
+
+
+\subsection{Skewing The Tree}
+\label{sec:SkewingTheTree}
+Skewing the tree is done by changing the way we find which character in the alphabet to split on in each node's construction.
+The split character is the last character in the alphabet of the left child node and to be able to skew the calculation we calculate it as
+\[\mathit{SplitCharacter} = \left\lfloor \frac{\mathit{alphabetSize}-1}{\mathit{skew}} + \mathit{alphabetMin} \right\rfloor \]
+where \textit{alphabetSize} is the size of the alphabet at this node, \textit{alphabetMin} is the first character in the alphabet at this node, and \textit{skew} is the skew parameter which is 2 for a balanced tree and higher for right-skewed trees. E.g. a \textit{skew} value of 4 skews the tree by 75\,\% to the right so that, in each node, 25\,\% of the alphabet is put into the left child node and 75\,\% is put into the right child node.
+We only use integer values as characters, so the calculated split character is rounded down.
+
+
+\subsection{Controlled Memory Layout}
+We still want to support dynamic input and alphabet sizes without recompilation, so the nodes must be dynamically allocated on the heap.
+
+The size of a node is known at compile time as it contains fixed-size pointers to the parent node and left and right child nodes, as well as a boolean to flag it as a leaf node and its bitmap as a vector, which internally stores a pointer to its backing array.
+As such, the memory for the nodes is allocated by allocating an array and then instantiating the nodes into that array.
+A reference to a pointer is passed into the array from parent to child nodes during construction, so they know where to allocate their child nodes.
+The pointer points to the position of the last node in the array, and so before each instantiation of a new node, we increment the pointer so it points to free space, then place the new node there.
+
+The memory layout of the bitmaps are not controlled, because skewing the tree will not help the prefetcher with regards to the bitmaps, except in a few specific cases, because of the way the bitmaps are used and the resulting access patterns.
+The algorithms for rank and select stop querying each bitmap at some position inside the bitmap and then continue to the next bitmap in the next node.
+Rank stops when it reaches the position the query was searching up to, given as a parameter.
+Select stops when it has found the sought number of occurrences in the bitmap.
+In both these cases the rest of the bitmap is not used and any such data the prefetcher has fetched would have been in vain.
+The prefetcher cannot tell from the algorithms access pattern when it will jump ahead to the next bitmap, and every such jump will therefore give rise to a cache miss.
+The problem is shown in Figure~\ref{fig:QueryPrefetchFigure}. The drawing assumes the bitmap is stored sequentially and the prefetcher prefetches the next cache line (colored green), but the algorithm stops at some position and skips ahead to the next bitmap. 
+This makes it unable to utilize the prefetched data and will try to access memory that is not in the cache yet; a cache miss.
+So regardless of where the bitmap that is accessed next is stored, following right after the first or elsewhere in memory, a cache miss will occur.
+
+The exceptions to this are when either the entire bitmap is used for the query, that is, when the rank query is for the entire string, or the bitmap is small enough that the beginning of the next bitmap can fit within the same word.
+The first case is not a common query in most use cases, and the second case is rare when the input string is much bigger than the alphabet, and would only happen near the leaf nodes.
+Neither scenario happens often enough to warrant controlling the bitmap memory layouts.
+
+\figureBegin
+
+\includegraphics[width=\textwidth]{QueryPrefetchFigure.pdf}
+\caption{How access patterns in a concatenated bitmap can defeat cache prefetching}
+\label{fig:QueryPrefetchFigure}
+\figureEnd
+
+
+
+\subsection{Experiments}
+
+\subsubsection{Queries when skewing the Wavelet Tree using uncontrolled and controlled memory layout}
+In this experiment we want to test whether queries on a skewed tree using controlled memory layout is an improvement in running time.
+
+\paragraph{Test Setup}~\\
+The general setup is as described in Section~\ref{sec:ExpNotesGeneralSetup}.
+The query parameters were chosen as described in Section~\ref{sec:choiceOfQueryParameters}.
+The results can be seen in Figure~\ref{fig:NaiveRankSkewRunningTime} and Figure~\ref{fig:NaiveSelectSkewRunningTime}.
+We skew the wavelet tree as described in Section~\ref{sec:SkewingTheTree}).
+
+\paragraph{Results}~\\
+\textbf{[TODO: complete rewrite with new graphs, results, etc. from this]}
+
+
+\textbf{[TODO: new graphs]}
+
+\iffalse
+\newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
+
+\begin{figure}\tiny
+\begin{subfigure}{0.48\textwidth}
+	\input{naiveRankSkewRunningTime}
+	\caption{Wall Time}
+	\label{fig:NaiveRankSkewRunningTime}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{NaiveVsControlledNodeMemorySkewRankQuery_BMrate}
+	\caption{Branch Misprediction Rate}
+	\label{fig:NaiveVsControlledNodeMemorySkewRankQueryBMrate}
+\end{subfigure}
+
+
+\begin{subfigure}{0.48\textwidth}
+	\input{L1NaiveVsControlledNodeMemorySkewRankQueryCacheMisses}
+	\caption{Level 1 Data Cache Misses}
+	\label{fig:L1NaiveControlledNodeMemoryRankSkewCacheMisses}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+ 	\input{L2L3NaiveVsControlledNodeMemorySkewRankQueryCacheMisses}
+	\caption{Level 2 Data and 3 Total Cache Misses}
+	\label{fig:L2L3NaiveControlledNodeMemoryRankSkewCacheMisses}
+\end{subfigure}
+
+\begin{subfigure}{0.48\textwidth}
+	\input{NaiveVsControlledNodeMemorySkewRankQuery_L2_DCMrate}
+	\caption{Level 2 Data Cache Miss Rate}
+	\label{fig:NaiveVsControlledNodeMemorySkewRankQuery_L2_DCMrate}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{NaiveVsControlledNodeMemorySkewRankQueryTLB}
+	\caption{TLB Misses}
+	\label{fig:NaiveVsControlledNodeMemorySkewRankQueryTLB}
+\end{subfigure}
+
+\caption{Various measurements for Rank queries on SimpleNaive and ControlledMemory wavelet trees with various skew.}
+\label{fig:NaiveVsControlledNodeMemorySkewRankQuery}
+
+\end{figure}
+
+
+
+\begin{figure}\tiny
+\begin{subfigure}{0.48\textwidth}
+	\input{naiveSelectSkewRunningTime}
+	\caption{Wall Time}
+	\label{fig:NaiveSelectSkewRunningTime}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{NaiveVsControlledNodeMemorySkewSelectQuery_BMrate}
+	\caption{Branch Misprediction Rate}
+	\label{fig:NaiveVsControlledNodeMemorySkewSelectQueryBMrate}
+\end{subfigure}
+
+\begin{subfigure}{0.48\textwidth}
+	\input{L1NaiveVsControlledNodeMemorySkewSelectQueryCacheMisses}
+	\caption{Level 1 Data Cache Misses}
+	\label{fig:L1NaiveControlledNodeMemorySelectSkewCacheMisses}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+ 	\input{L2L3NaiveVsControlledNodeMemorySkewSelectQueryCacheMisses}
+	\caption{Level 2 Data and 3 Total Cache Misses}
+	\label{fig:L2L3NaiveControlledNodeMemorySelectSkewCacheMisses}
+\end{subfigure}
+
+\begin{subfigure}{0.48\textwidth}
+	\input{NaiveVsControlledNodeMemorySkewSelectQuery_L2_DCMrate}
+	\caption{Level 2 Data Cache Miss Rate}
+	\label{fig:NaiveVsControlledNodeMemorySkewSelectQuery_L2_DCMrate}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{NaiveVsControlledNodeMemorySkewSelectQueryTLB}
+	\caption{TLB Misses}
+	\label{fig:NaiveVsControlledNodeMemorySkewSelectQueryTLB}
+\end{subfigure}
+
+\caption{Various measurements for Select queries on SimpleNaive and ControlledMemory wavelet trees with various skew.}
+\label{fig:NaiveVsControlledNodeMemorySkewSelectQuery}
+
+\end{figure}
+
+
+\restoregeometry
+\fi
