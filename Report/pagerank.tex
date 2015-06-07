@@ -1,5 +1,5 @@
 \section{Precomputing Binary Rank in Blocks}
-During our experiment of skewing the tree, we concluded that most of the work during queries is performed inside each node, calculating the binary rank of each bitmap.
+Using the profiling tool callgrind, we concluded that most of the work during queries is performed inside each node, calculating the binary rank of each bitmap.
 Rank queries are simply summing up results of popcounting each word, and we considered whether precomputing these sums for blocks spanning several words, covering the bitmaps could improve the query times.
 When a block does not line up with the position of a rank query is for, the algorithm can simply fall back to doing popcounting of either the remaining uncovered words or the extraneously covered words, whichever has fewer words.
 See Section~\ref{sec:rankQueriesWithPrecomputedRanksEdgeCases} for more explanation of this.
