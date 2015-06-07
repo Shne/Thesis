@@ -22,18 +22,23 @@ def avg(list):
 
 testDataFile = 'Output/CumulativeSumBlockSize_n8as16_10000Queries.output'
 testsPerSize = 5
+columns = "[blockSize]  [Walltime]  [WalltimeErr]" + "\n"
+
+
 
 gnuplotFile = open("Report/Gnuplot/Data/CumulativeSumBlockSize_Rank.data", "w")
-gnuplotFile.write("[blockSize]  [Walltime]" + "\n")
+gnuplotFile.write(columns)
 ReadOutput.getData(testDataFile, "CumulativeSum", "rank")
-for i in range(0, 24):
+for i in range(0, 40):
 	WriteData(i, testsPerSize)
 
 ReadOutput.reset()
 gnuplotFile.close()
 
+
+
 gnuplotFile = open("Report/Gnuplot/Data/CumulativeSumBlockSize_Select.data", "w")
-gnuplotFile.write("[blockSize]  [Walltime]" + "\n")
+gnuplotFile.write(columns)
 ReadOutput.getData(testDataFile, "CumulativeSum", "select")
 
 for i in range(0, 40):
@@ -42,9 +47,35 @@ for i in range(0, 40):
 ReadOutput.reset()
 gnuplotFile.close()
 
+
+
 gnuplotFile = open("Report/Gnuplot/Data/CumulativeSumBlockSize_SelectBranchless.data", "w")
-gnuplotFile.write("[blockSize]  [Walltime]" + "\n")
+gnuplotFile.write(columns)
 ReadOutput.getData(testDataFile, "CumulativeSum", "selectBranchless")
+
+for i in range(0, 40):
+	WriteData(i, testsPerSize)
+
+ReadOutput.reset()
+gnuplotFile.close()
+
+
+
+gnuplotFile = open("Report/Gnuplot/Data/CumulativeSumBlockSize_Build.data", "w")
+gnuplotFile.write(columns)
+ReadOutput.getData(testDataFile, "CumulativeSum", "build")
+
+for i in range(0, 40):
+	WriteData(i, testsPerSize)
+
+ReadOutput.reset()
+gnuplotFile.close()
+
+
+testDataFile = 'Output/CumulativeSumBlockSizeZoomedRank_n8as16_10000Queries.output'
+gnuplotFile = open("Report/Gnuplot/Data/CumulativeSumBlockSize_ZoomedRank.data", "w")
+gnuplotFile.write(columns)
+ReadOutput.getData(testDataFile, "CumulativeSum", "rank")
 
 for i in range(0, 40):
 	WriteData(i, testsPerSize)

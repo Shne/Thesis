@@ -25,6 +25,11 @@ Using cumulative precomputed rank values, the select query is be able to use bin
 Using \texttt{popcount} within a block and manual counting within a word still remains unchanged.
 This makes the previously required work per level change from $O(\frac{n}{b} + b)$ to $O(\log \frac{n}{b} + b)$, making the total work required for a select query $O((\log \frac{n}{b} + b) \log \sigma)$.
 
+In Section~\ref{sec:OptimalBlockSizeForRankAndSelect} we test what block size achieves the best running time for rank, select and branchless select.
+We test rank for low block sizes since $O(b \log \sigma)$ indicates that the lower \textit{b} is, the faster the running time is.
+The running time for select can also be written as $O(b \log \sigma + \log \frac{n}{b}) \log \sigma)$ and comparing it to the running time of rank we can see that select has an extra term: $\log \frac{n}{b}) \log \sigma)$.
+The effect of this extra term is that the optimal block size is higher for select than for rank.
+
 \subsection{Disadvantages of Cumulative Sum}
 The precomputed values are no longer limited in value size by the block size but rather the bitmap size, as the last value in the precomputed rank value vector could potentially become as large as the bitmap is long.
 Storing the cumulative sums will then require more bytes per value and thus use more space in the end.
@@ -70,6 +75,7 @@ When taking the performance gain on queries into account then the small increase
 
 
 \subsubsection{Optimal Block Size for Rank and Select}
+\label{sec:OptimalBlockSizeForRankAndSelect}
 We have made a test for Rank, Select and SelectBranchless that shows their running times for varying block sizes.
 Running time is measured for 10,000 queries in stead of the 1000 queries we use in all of our other tests. 
 This was done because, using 1000 queries, the running times were too small and too varied between the five runs for each block size that it became difficult to conclude anything concrete. 
@@ -80,6 +86,8 @@ From Figure~\ref{fig:CumulativeSumBlockSizeWallTimeRank} we observe that the bes
 
 Block sizes for select and the branchless version of select vary in a range from 128 to 5120 bits with a difference of 128 bits between each block size. 
 Select achieves the best running time with a block size of [\textbf{TODO}] and the branchless version achieves the best running time using a block size of 2048 bits.
+The found block sizes fits with the theoretical Big-O analysis.
+Rank is best with a small block size and select is also better with a relatively small block size that is larger than the one for rank.
 
 
 \newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
@@ -98,7 +106,7 @@ Select achieves the best running time with a block size of [\textbf{TODO}] and t
 
 \begin{subfigure}{0.45\textwidth}
 	\input{CumulativeSumBlockSizeWallTimeSelectBranchless}
-	\caption{Select: Varying Blocksize for $n=10^8$ characters}
+	\caption{Branchless Select: Varying Blocksize for $n=10^8$ characters}
 	\label{fig:CumulativeSumBlockSizeWallTimeSelectBranchless}
 \end{subfigure}
 

@@ -5,7 +5,7 @@ import subprocess
 import numpy
 
 testDataFileName = 'Output/CumulativeSumVsUnalignedNaive_build_blocksize_memory.output'
-testsPerSize = 2
+testsPerSize = 5
 
 
 
