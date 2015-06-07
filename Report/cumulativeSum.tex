@@ -69,7 +69,7 @@ If we look closer at the raw data, there is a slight (124 KB) increase in memory
 When taking the performance gain on queries into account then the small increased time and memory usage when building the tree is negligible.
 
 
-\subsubsection{Blocksize with best running time for Rank and Select}
+\subsubsection{Optimal Block Size for Rank and Select}
 We have made a test for Rank, Select and SelectBranchless that shows their running times for varying block sizes.
 Running time is measured for 10,000 queries in stead of the 1000 queries we use in all of our other tests. 
 This was done because, using 1000 queries, the running times were too small and too varied between the five runs for each block size that it became difficult to conclude anything concrete. 
@@ -81,6 +81,8 @@ From Figure~\ref{fig:CumulativeSumBlockSizeWallTimeRank} we observe that the bes
 Block sizes for select and the branchless version of select vary in a range from 128 to 5120 bits with a difference of 128 bits between each block size. 
 Select achieves the best running time with a block size of [\textbf{TODO}] and the branchless version achieves the best running time using a block size of 2048 bits.
 
+
+\newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
 \begin{figure}\tiny
 \begin{subfigure}{0.45\textwidth}
 	\input{CumulativeSumBlockSizeWallTimeRank}
@@ -104,6 +106,7 @@ Select achieves the best running time with a block size of [\textbf{TODO}] and t
 \label{fig:CumulativeSumBlockSize}
 \end{figure}
 
+\restoregeometry
 
 \subsubsection{Rank Queries}
 In Figure~\ref{fig:CumulativeSumRank} we have plotted various measurements for Rank queries on the UnalignedNaive and CumulativeSum trees.
