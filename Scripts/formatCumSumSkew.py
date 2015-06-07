@@ -7,7 +7,7 @@ import numpy
 
 
 testDataFile = 'Output/CumulativeSumSkew_n8as16.output'
-testsPerSize = 5
+testsPerSize = 1
 
 
 def avg(list):
@@ -22,7 +22,7 @@ def formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize):
 	gnuplotFile.write(Utils.getMaxRelativeStddevStr(ReadOutput, dataListKeys, testsPerSize) + "\n")
 	gnuplotFile.write(Utils.getAvgRelativeStddevStr(ReadOutput, dataListKeys, testsPerSize) + "\n")
 
-	for i in range(int(len(ReadOutput.amountList)/testsPerSize)):
+	for i in range(int(len(ReadOutput.wallTimeList)/testsPerSize)):
 		startIndex = i*testsPerSize
 		endIndex = startIndex + testsPerSize
 
