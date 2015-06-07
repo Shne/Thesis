@@ -23,8 +23,10 @@ When skewing the tree the height of the tree becomes as defined above and the co
 The query time for rank on a balanced wavelet tree is $O(b \log \sigma)$ and for select $O(b \log \sigma + \log \frac{n}{b} \log \sigma)$.
 In the skewed version of the tree the rank query time then becomes worst-case $O(b \cdot h_{max})$. The query time for select becomes $O(b \cdot h_{max} + \log \frac{n}{b} \cdot h_{max})$
 
+\textbf{[TODO: memory analysis]}
+
 From the theoretical analysis of construction time and query time of a skewed wavelet tree it is theoretically not an improvement to skew the tree.
-Skewing the tree can however reduce branch mispredictions, as shown by Brodal et al.~\citeA[\textbf{Abstract}]{gerthSkewedBinarySearchTrees}.
+Skewing the tree can however reduce branch mispredictions, as shown by Brodal et al.~\citeA[Abstract]{gerthSkewedBinarySearchTrees}.
 It does so by giving the branch in the direction the tree is skewed a much higher probability of being the correct than the other, which enables the branch prediction unit to predict correctly more often. 
 Skewing the tree can also reduce cache misses by increasing the probability that the next piece of memory the algorithm accesses is already loaded into a cacheline by the time it is accessed because of prefetching.
 
