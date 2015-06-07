@@ -8,9 +8,6 @@ Therefore it might be possible to save a number of instructions by not iterating
 
 We will implement this based on UnalignedNaive and test the performance compared to the UnalignedNaive wavelet tree from Section~\ref{sec:queryRunTimePrecomputedBlockSizes}, using half a page size as the block size, as we found that to be the fastest configuration.
 
-
-
-
 \subsection{Advantages of Cumulative Sum}
 As previously mentioned, the rank and select query algorithms do not actually need the rank values of individual blocks, but rather the cumulative sum rank value from the beginning of the bitmap to some position.
 If we instead implemented the precomputed values as being the cumulative sum of rank values of each block from the beginning of the bitmap up to and including the block corresponding to the precomputed value, we could save a lot of precomputed value lookups in the rank and select queries.
@@ -71,7 +68,18 @@ In Figure~\ref{fig:CumulativeSumBuildMemoryUsage} we can see that there is, as e
 If we look closer at the raw data, there is a slight (124 KB) increase in memory usage when storing the cumulative sum, which constitutes an increase of about 0.0168\,\%, and is even less than what we expected.
 When taking the performance gain on queries into account then the small increased time and memory usage when building the tree is negligible.
 
-\subsubsection{Optimal Block Size for Rank and Select Queries}
+
+\subsubsection{Blocksize with best running time for Rank and Select}
+We have made a test for Rank, Select and SelectBranchless that shows their running times for varying block sizes.
+Running time is measured for 10,000 queries in stead of the 1000 queries we use in all of our other tests. 
+This was done because, using 1000 queries, the running times were too small and too varied between the five runs for each block size that it became difficult to conclude anything concrete. 
+Increasing the number of queries to 10,000 decreased the variance to a more usable level.The test results are shown in Figure~\ref{fig:CumulativeSumBlockSize}.
+
+The block sizes vary for rank in a range from 4 to 96 bits increasing by 4 bits.
+From Figure~\ref{fig:CumulativeSumBlockSizeWallTimeRank} we observe that the best running time is achieved using a block size of 8 bits. 
+
+Block sizes for select and the branchless version of select vary in a range from 128 to 5120 bits with a difference of 128 bits between each block size. 
+Select achieves the best running time with a block size of [\textbf{TODO}] and the branchless version achieves the best running time using a block size of 2048 bits.
 
 \begin{figure}\tiny
 \begin{subfigure}{0.45\textwidth}
@@ -85,10 +93,16 @@ When taking the performance gain on queries into account then the small increase
 	\caption{Select: Varying Blocksize for $n=10^8$ characters}
 	\label{fig:CumulativeSumBlockSizeWallTimeSelect}
 \end{subfigure}
-\caption{Running times for varying block sizes.}
+
+\begin{subfigure}{0.45\textwidth}
+	\input{CumulativeSumBlockSizeWallTimeSelectBranchless}
+	\caption{Select: Varying Blocksize for $n=10^8$ characters}
+	\label{fig:CumulativeSumBlockSizeWallTimeSelectBranchless}
+\end{subfigure}
+
+\caption{Running times of rank and select for varying block sizes. The Block size range for rank is different from Select and SelectBranchless}
 \label{fig:CumulativeSumBlockSize}
 \end{figure}
-
 
 
 \subsubsection{Rank Queries}

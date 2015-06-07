@@ -20,7 +20,7 @@ def avg(list):
 	if len(list) is 0: return 0
 	return sum(list)/len(list)
 
-testDataFile = 'Output/CumulativeSumBlockSize_n8as16.output'
+testDataFile = 'Output/CumulativeSumBlockSize_n8as16_10000Queries.output'
 testsPerSize = 5
 
 gnuplotFile = open("Report/Gnuplot/Data/CumulativeSumBlockSize_Rank.data", "w")

@@ -34,12 +34,12 @@ for i in range(1, 41):
 	blockSizes2.append(i*128)
 
 
-print("CumulativeSum: Rank \n")
-test = 'rank'
-for blockSize in blockSizes:
-	for _ in range(repeats):
-		args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
-		subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
+# print("CumulativeSum: Rank \n")
+# test = 'rank'
+# for blockSize in blockSizes:
+# 	for _ in range(repeats):
+# 		args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
+# 		subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
 
 addNewline()
 
@@ -50,14 +50,14 @@ for blockSize in blockSizes2:
 		args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize/8), outputFilename]
 		subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
 
-addNewline()
+# addNewline()
 
-print("CumulativeSum: Select Branchless \n")
-test = 'select'
-for blockSize in blockSizes2:
-	for _ in range(repeats):
-		args = [cumulativeSumBranchlessProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize/8), outputFilename]
-		subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
+# print("CumulativeSum: Select Branchless \n")
+# test = 'select'
+# for blockSize in blockSizes2:
+# 	for _ in range(repeats):
+# 		args = [cumulativeSumBranchlessProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize/8), outputFilename]
+# 		subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
 
-addNewline()
-addNewline()
+# addNewline()
+# addNewline()
