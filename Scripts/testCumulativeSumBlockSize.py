@@ -34,12 +34,12 @@ for i in range(1, 41):
 	blockSizes2.append(i*128)
 
 
-# print("CumulativeSum: Rank \n")
-# test = 'rank'
-# for blockSize in blockSizes:
-# 	for _ in range(repeats):
-# 		args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
-# 		subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
+print("CumulativeSum: Rank \n")
+test = 'rank'
+for blockSize in blockSizes:
+	for _ in range(repeats):
+		args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
+		subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
 
 addNewline()
 
