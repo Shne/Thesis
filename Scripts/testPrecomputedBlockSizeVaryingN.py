@@ -27,7 +27,7 @@ for amount in amounts:
 	for blockSize in blockSizeRange:
 		test = 'rank'
 		for _ in range(repeats):
-			outputFilename = 'PrecomputedRankBlockSizeVaryN_n'+amount+'as16.output'
+			outputFilename = 'PrecomputedRankBlockSizeVaryN_n'+str(amount)+'as16.output'
 			args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
 			subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
 
