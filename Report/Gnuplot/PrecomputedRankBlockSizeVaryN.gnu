@@ -5,7 +5,7 @@ set key top horizontal
 
 set term epslatex size 3.2,2.5 color font "" 6
 set border
-set logscale x
+set logscale x 2
 
 # WALL TIME
 set xlabel "Block Size (bits)"
@@ -24,7 +24,7 @@ plot '../Data/PrecomputedRankBlockSizeVaryN_6_Rank.data' every ::2 using 4:3 wit
 	'' every ::2 using 4:3:5 with yerrorbars linetype 1 notitle
 unset arrow 1
 
-set arrow 1 from 3162,0 to 3162,25000 nohead lc rgb 'blue'
+set arrow 1 from 3162,0 to 3162,20000 nohead lc rgb 'blue'
 set output 'PrecomputedRankBlockSizeVaryN_7_Rank_WallTime.tex'
 plot '../Data/PrecomputedRankBlockSizeVaryN_7_Rank.data' every ::2 using 4:3 with linespoints linetype 1 title "UnalignedNaive",\
 	'' every ::2 using 4:3:5 with yerrorbars linetype 1 notitle

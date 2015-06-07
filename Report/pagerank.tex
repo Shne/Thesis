@@ -510,7 +510,13 @@ We did not run this experiment for select queries, because of problems choosing 
 
 In Figure~\ref{fig:PrecomputedRankBlockSizeVaryN_Rank_WallTime} we have plotted the wall times for various block sizes for four different values of $n$.
 The x-axis is logarithmic as we tested for block size values as powers of 2, to reach a wide range of block sizes without having to run hundreds of tests yet still have several tests at low values.
-\textbf{[TODO: describe graphs and results after having run them on test machine]}
+
+For all four graphs in Figure~\ref{fig:PrecomputedRankBlockSizeVaryN_Rank_WallTime} we can see that the performance at the theoretical optimal block size for the root bitmap  at $\sqrt{n}$ is good, and close to the minimum in wall time.
+Therefore, the optimal block size for a wavelet tree using precomputed rank values in blocks should compute its block size based in the size of the input for better performance.
+
+Surprisingly, we find that the minimum in wall time is at a block size not below the theoretical optimal block size, but instead slightly above it if anything at all.
+We had expected that the other bitmaps, smaller than the root bitmap and therefore having smaller optimal block sizes, would have skewed the optimal block size downward.
+The difference in performance between the theoretically optimal block size of $\sqrt{n}$ and the measured optimal block size is small, especially for the larger input sizes, and using a block size of $\sqrt{n}$ would be a sufficient optimization in most cases.
 
 
 
@@ -541,7 +547,7 @@ The x-axis is logarithmic as we tested for block size values as powers of 2, to 
 	\caption{$n = 10^8$}
 	\label{fig:PrecomputedRankBlockSizeVaryN_8_Rank_WallTime}
 \end{subfigure}
-\caption{Walltimes for varying block sizes are four different input sizes. The blue vertical line is the theoretical optimal block size at $\sqrt{n}$. Notice that the x-axis is logarithmic.}
+\caption{Walltimes for varying block sizes are four different input sizes. The vertical blue line is at $\sqrt{n}$, the theoretical optimal block size for the root bitmap. Notice that the x-axis is logarithmic.}
 \label{fig:PrecomputedRankBlockSizeVaryN_Rank_WallTime}
 \end{figure}
 
