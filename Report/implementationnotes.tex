@@ -62,7 +62,7 @@ It would also be necessary to allocate a bitmap with room for $n$ bits for each 
 Another reason why we cannot use \texttt{std::bitset} is because it does not support pointer access, which means that it is impossible to do queries using \texttt{popcount}, which is a CPU instruction we utilize to improve the practical running time of \textproc{Rank} and \textproc{Select} queries and is described in Section~\ref{sec:simpleoptimizations}.
 We also believe that an actual usable practical implementation should be able to handle different sizes of input at run time instead of compile time. 
 
-\item[\texttt{vector<bool>}] is a specialised implementation for \texttt{bool} that packs the data so that each \texttt{bool} only takes up one bit and is not an actual C++ container, though it tries to mimic some of the behaviour. 
+\item[\texttt{std::vector<bool>}] is a specialised implementation for \texttt{bool} that packs the data so that each \texttt{bool} only takes up one bit and is not an actual C++ container, though it tries to mimic some of the behaviour. 
 It is basically the STL implementation of a dynamically allocated bitset. This is the implementation we decided to use for our bitmap because it allows dynamic allocation and pointer access.
 
 \item[\texttt{boost::dynamic\_bitset}] is the Boost library's take on a dynamic bitset. 
@@ -71,7 +71,16 @@ It also does not guarantee that the bits will be allocated consecutively in memo
 This is a problem when calling popcount on all machine words from beginning up to some index.
 \end{description}
 
-\textbf{[TODO: reference experimental results from PieterseEtAl\_SAICSIT2010.pdf]}
+We chose to use \texttt{vector<bool>} mainly because it supported direct pointer access into the backing array and that backing array was a single continuous array so we could do pointer arithmetic across an entire bitmap.
+\texttt{boost::dynamic\_bitset} does not support any of this.
+
+Pieterse et al.~\citeB{Pieterse:2010:PCB:1899503.1899530} has tested 5 different bitvector implementations for C++, including \texttt{std::vector<bool>} and \texttt{boost::dynamic\_bitset}.
+In terms of running time, \texttt{std::vector<bool>} performs the worst of the tested bitvectors for their test case.
+But, their test case does not at all resemble the way we use it.
+We do not utilize any of the extra functions or features they have tested such as the reset operation and bitwise operations on entire arrays.
+
+In terms of memory, \texttt{std::vector<bool>} performed the best by using the least amount of memory, owing to its simple implementation storing no additional meta information and using only a single raw array as its backing data format.
+This is a characteristic we like for our purposes as we basically use it as an array with easier access to single bit values.
 
 \subsection{Challenges in Implementation}
 The wavelet tree is a somewhat simple data structure as a tree structure of bitmaps implemented using pointers and dynamic bitsets.
