@@ -12,7 +12,7 @@
 
 using namespace std;
 
-Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, uint blockSize, float skew)
+Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, uint blockSize, Node* &node_pt, float skew)
     : isLeaf(false), left(nullptr), right(nullptr), parent(parentNode) {
 
     uint alphabetSize = alphabetMax - alphabetMin +1;
@@ -57,13 +57,15 @@ Node::Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parent
     input->clear();
     delete input;
     if(rightString->size() > 0) {
-        right = new Node(rightString, rightAlphabetMin, rightAlphabetMax, this, blockSize, skew);
+        node_pt++;
+        right = new (node_pt) Node(rightString, rightAlphabetMin, rightAlphabetMax, this, blockSize, node_pt, skew);
     } else {
         rightString->clear();
         delete rightString;
     }
     if(leftString->size() > 0) {
-        left = new Node(leftString, leftAlphabetMin, leftAlphabetMax, this, blockSize, skew);
+        node_pt++;
+        left = new (node_pt) Node(leftString, leftAlphabetMin, leftAlphabetMax, this, blockSize, node_pt, skew);
     } else {
         leftString->clear();
         delete leftString;

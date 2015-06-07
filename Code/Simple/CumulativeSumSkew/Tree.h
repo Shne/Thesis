@@ -18,7 +18,7 @@ using namespace std;
 class Tree {
     
 private:
-    Node root;
+    Node* root;
     ulong alphabetMin, alphabetMax, inputSize;
     uint blockSize;
     float skew;

@@ -38,7 +38,7 @@ private:
     Node* right;
 public:
     Node();
-    Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, uint blockSize, float skew);
+    Node(vector<uint>* input, uint alphabetMin, uint alphabetMax, Node* parentNode, uint blockSize, Node* &node_pt, float skew);
     uint rank(uint character, uint index, uint alphabetMin, uint alphabetMax, uint blockSize, float skew);
     uint blockBinaryRank(uint pos, uint blockSize);
     ulong popcountBinaryRank(uint offset, uint pos);
