@@ -97,6 +97,9 @@ Roland L. Pedersen (20092817)
 \newpage
 \clearpage
 \part{Hardware, Implementation \& Test}
+In this part of the thesis we describe what hardware penalties we focus on optimizing and how and why they occur. 
+We discuss choices we have made in the implementation like which C++ data structures to use. 
+We also describe our test setup, what tools we have used for testing and discuss the effect of using uniform vs. non-uniform distributed data in our tests.
 
 \input{cacheBranchTLB}
 
@@ -109,7 +112,7 @@ Roland L. Pedersen (20092817)
 \newpage
 \clearpage
 \part{Algorithms \& Experiments}
-
+This part of the thesis deals with what we have implemented, what optimizations we have made to reduce cache misses, branch mispredictions and translation lookaside buffer misses, and how we have tested and analysed these optimizations and their effect on the resulting running time and memory usage.
 %\input{simplememorylayout}
 
 \input{naive}
