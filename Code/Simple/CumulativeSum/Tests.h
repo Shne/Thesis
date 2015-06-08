@@ -112,8 +112,8 @@ inline void testSelectQuery(uint amount, uint alphabetSize, string pathname,
 #endif
     uint charStep = alphabetSize/queries;
     uint occurrencePack = 10;
-    uint occurrenceStep = queries/occurrencePack;
     uint maxOccurrence = 1000;
+    uint occurrenceStep = maxOccurrence/occurrencePack;
     ulong results[queries]; //just to make sure nothing is optimized away
     for(uint index = 0; index < queries; index++) {
         uint occurrence = ((index+1)*occurrenceStep) % maxOccurrence + (index+1)/occurrencePack;
