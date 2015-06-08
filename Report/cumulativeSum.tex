@@ -31,14 +31,15 @@ The running time for select can also be written as $O(b \log \sigma + \log \frac
 The effect of this extra term is that the optimal block size is higher for select than for rank.
 
 \subsection{Disadvantages of Cumulative Sum}
-The precomputed values are no longer limited in value size by the block size but rather the bitmap size, as the last value in the precomputed rank value vector could potentially become as large as the bitmap is long.
+The O-notation memory analysis remains the same as before, at $O(n \log \sigma + \sigma + \frac{n}{b} \log \sigma)$, because it is still one number stored per block.
+However, in practical terms, the precomputed values are no longer limited in value size by the block size but rather the bitmap size, as the last value in the precomputed rank value vector could potentially become as large as the bitmap is long.
 Storing the cumulative sums will then require more bytes per value and thus use more space in the end.
-\textbf{[TODO: memory O-notation analysis]}
+
 The bitmap size is limited by the input string length and so for our choice of input string with length $10^8$ each precomputed value must be able to store a value up to $10^8$.
 It takes at least 28 bits to store $10^8$, because $2^{27} < 10^8 < 2^{28}$.
 Because the value types supported by x86 and C++ must be byte (8-bit) aligned and use a number of bytes that is a power of 2, the smallest type we can use is the 4-byte type \texttt{unsigned int} capable of storing values up to $2^{32}$.
 This means the vector, instead of holding 2-byte \texttt{unsigned short int}s, must hold 4-byte \texttt{unsigned int}s, doubling the space required to store the precomputed values.
-We expect this increase in memory usage to be tiny, as it is another 2 bytes per block, of which there are $\frac{n}{\mathit{blockSize}}$ per layer of the tree, of which there are $\log n$.
+We expect this increase in memory usage to be tiny, as it is another 2 bytes per block, of which there are $\frac{n}{b}$ per layer of the tree, of which there are $\log n$.
 So with our input string of length $n = 10^8$ and a blockSize of half a page, or 16384 bits, we expect an extra memory usage of about 317 kB:
 \[\text{Memory usage} = 2 \cdot \frac{10^8}{16384} \cdot \log 10^8 \approx 324407 \text{ bytes} \approx 317 \text{ kB} \]
 

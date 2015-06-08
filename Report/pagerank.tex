@@ -32,10 +32,9 @@ The one we believe has the greatest potential to improve the wavelet tree perfor
 It would be a challenge to implement, because the size of a bitmap of a node is unknown before the bitmap of the parent has been calculated, and so the position of each bitmap in the giant bitmap cannot be known before the parent of each has been calculated, meaning construct the tree must be constructed in vEB layout order.
 To support construction of the wavelet tree in vEB layout order our construction algorithm would have to be dramatically changed, possibly utilizing concurrency constructs such as a job queue and message passing, and so we skip this work for now and save it for future work in Section~\ref{sec:futurework_vebmemorylayout}.
 
-The sum of the size of all bitmaps on one layer of the tree can at most be $n$ and we can at most have $h$ layers, so the maximum size becomes
-\[n \cdot h\;,\]
-where $n$ is the number of characters in the string and $h$ is the max height of the binary wavelet tree which is
-\[ h = \log\sigma\;.\]
+The sum of the size of all bitmaps on one layer of the tree can at most be $n$ and we can at most have $\log \sigma$ layers, so the maximum size becomes
+\[n \log \sigma\;,\]
+where $n$ is the number of characters in the string and $\sigma$ is the alphabet size.
 Luckily for us, memory allocation in Linux does not actually take up space because Linux uses optimistic memory allocation which means that only when the memory is accessed will the actual physical memory be used \footnote{\url{http://man7.org/linux/man-pages/man3/malloc.3.html}}.
 This fact enables overcomitting which allows allocation of more memory than what is available which can be a problem for long running processes.
 As a result we can conclude that allocated memory is not present in physical memory before it is actually initialized.
@@ -150,6 +149,9 @@ We have considered doing tests to determine whether it is an improvement for the
 
 
 \subsection{Extra Space Used by Precomputed Values}
+Storing the precomputed values requires more memory: one number per block.
+There are $O(\frac{n}{b})$ blocks per level of the tree, and so an extra memory consumption of $O(\frac{n}{b} \log \sigma)$ making the total memory consumption $O(n \log \sigma + \sigma + \frac{n}{b} \log \sigma)$
+
 Since each precomputed value cannot exceed the block size in bits, assuming we do not use block sizes exceeding $2^{16} = 65536$ bits, or $\frac{2^{16}}{8} = 8192$ bytes, we can store them in 16-bit unsigned integers, called \texttt{unsigned short int} in C++ on our machine.
 Since the page size on our machine are 4096 bytes we should not use a block size larger than $\frac{8192}{4096} = 2$ pages if we want to use 16-bit unsigned integers.
 

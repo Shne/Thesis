@@ -33,9 +33,11 @@ This process continues recursively in each child node except where only one char
 That node is then considered a leaf node and needs not store a bitmap.
 Each node in a wavelet tree can be considered a full wavelet tree for the string $S_{\mathit{parent}}$ it was passed from its parent node.
 
-At each level in the tree at most \textit{n} bits are stored in the bitmaps in total, making $n \cdot h$ an upper bound to the total number of bits that a wavelet tree stores in its bitmaps.
+At each level in the tree at most \textit{n} bits are stored in the bitmaps in total, making $n \cdot h = n \cdot \log \sigma$ an upper bound to the total number of bits that a wavelet tree stores in its bitmaps.
+In addition to this, each node takes some constant amount of space, and there are $2 \sigma -1$ nodes in the tree.
+This makes the total memory consumption $O(n \log \sigma + \sigma)$.
 
-The Wavelet Tree can theoretically be constructed in $O(n \cdot h)$ time as the sum of the lengths of the strings being processed at any single layer of the tree is the length of the input string to the tree.
+The Wavelet Tree can theoretically be constructed in $O(n \cdot h) = O(n \log \sigma)$ time as the sum of the lengths of the strings being processed at any single layer of the tree is the length of the input string to the tree.
 
 The pseudo-code for the Wavelet Tree node construction algorithm is shown in Algorithm~\ref{alg:ConstructNode}. 
 It is recursively defined, calling itself to construct the left and right sub-tree from the root node and down. At each recursion the algorithm splits the given alphabet in two halves and traverses the given string putting each character into a left or right partition based on whether the character was in the left or right half of the alphabet.

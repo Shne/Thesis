@@ -21,9 +21,8 @@ Constructing a balanced wavelet tree takes  $O(n \cdot \log \sigma)$ time becaus
 When skewing the tree the height of the tree becomes as defined above and the construction time becomes $O(n \cdot h_{max})$.
 
 The query time for rank on a balanced wavelet tree is $O(b \log \sigma)$ and for select $O(b \log \sigma + \log \frac{n}{b} \log \sigma)$.
-In the skewed version of the tree the rank query time then becomes worst-case $O(b \cdot h_{max})$. The query time for select becomes $O(b \cdot h_{max} + \log \frac{n}{b} \cdot h_{max})$
-
-\textbf{[TODO: memory analysis]}
+In the skewed version of the tree the rank query time then becomes worst-case $O(b \cdot h_{max})$. The query time for select becomes $O(b \cdot h_{max} + \log \frac{n}{b} \cdot~h_{max})$.
+The memory usage becomes $O(n \cdot h_{max} + \sigma + \frac{n}{b} \cdot h_{max})$.
 
 
 From the theoretical analysis of construction time and query time of a skewed wavelet tree it is theoretically not an improvement to skew the tree.
