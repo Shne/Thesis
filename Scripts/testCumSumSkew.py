@@ -4,6 +4,7 @@ import subprocess
 import os.path
 from time import sleep
 import re, mmap
+import numpy as np
 
 amount = 8
 alphabetSize = 16
@@ -46,10 +47,39 @@ def writeMassifData(programName, skew):
 
 
 
-repeats = 1
 
-blockSizeRank = 1
-blockSizeSelect = 256
+blockSizeList = []
+walltimeList = []
+def WriteData(i, testsPerSize):
+	startIndex = i*testsPerSize
+	endIndex = startIndex + testsPerSize
+	blockSizeList.append(avg(ReadOutput.blockSizeList[startIndex:endIndex]))
+	walltimeList.append(avg(ReadOutput.wallTimeList[startIndex:endIndex]))
+
+bestBlockSizeFile = open("Output/bestCumSumQueryBlockSize.output", "w")
+
+#Get best rank block size
+ReadOutput.getData('Output/CumulativeSumBlockSizeZoomedRank_n8as16_10000Queries.output', "CumulativeSum", "rank")
+for i in range(0, 40):
+	WriteData(i, 5)
+ReadOutput.reset()
+index = np.argmax(np.array(walltimeList))
+blockSizeRank = int(blockSizeList[index])
+bestBlockSizeFile.write('Rank: ' + str(blockSizeRank) +', ' + str(walltimeList[index]) + '\n')
+
+
+#Get best select block size.
+ReadOutput.getData('Output/CumulativeSumBlockSize_n8as16_10000Queries.output', "CumulativeSum", "select")
+blockSizeList = []
+walltimeList = []
+for i in range(0, 40):
+	WriteData(i, 5)
+ReadOutput.reset()
+index = np.argmax(np.array(walltimeList))
+blockSizeSelect = int(blockSizeList[index])
+bestBlockSizeFile.write('Select: ' + str(blockSizeSelect) +', ' + str(walltimeList[index]) + '\n')
+
+repeats = 5
 skewStart = 2
 skewEnd = 6.1
 skewStep = 0.2

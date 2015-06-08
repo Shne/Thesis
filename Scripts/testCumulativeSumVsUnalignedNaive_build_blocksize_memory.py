@@ -10,14 +10,7 @@ import sys
 amount = 8
 alphabetSize = 16
 
-# naiveIntegerProgram = "dist/Release/GNU-Linux-x86/naiveinteger"
-# naiveIntegerCwd = 'Code/Simple/NaiveInteger'
-# preallocatedPrecomputedProgram = "dist/Release/GNU-Linux-x86/preallocatedprecomputed"
-# preallocatedPrecomputedCwd = 'Code/Simple/PreallocatedPrecomputed'
-# unalignedPreallocatedPrecomputedProgram = "dist/Release/GNU-Linux-x86/unalignedpreallocatedprecomputed"
-# unalignedPreallocatedPrecomputedCwd = 'Code/Simple/UnalignedPreallocatedPrecomputed'
-# naivePrecomputedProgram = "dist/Release/GNU-Linux-x86/naiveprecomputed"
-# naivePrecomputedCwd = 'Code/Simple/NaivePrecomputed'
+
 unalignedNaivePrecomputedProgram = "dist/Release/GNU-Linux-x86/unalignednaiveprecomputed"
 unalignedNaivePrecomputedCwd = 'Code/Simple/UnalignedNaivePrecomputed'
 cumulativeSumProgram = "dist/Release/GNU-Linux-x86/cumulativesum"

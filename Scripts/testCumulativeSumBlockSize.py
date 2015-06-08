@@ -32,15 +32,14 @@ blockSizes2 = [i*0.5 for i in range(1, 41)]
 
 
 
+# print("CumulativeSum: Rank \n")
+# test = 'rank'
+# for blockSize in blockSizes:
+# 	for _ in range(repeats):
+# 		args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize/8), outputFilename]
+# 		subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
 
-print("CumulativeSum: Rank \n")
-test = 'rank'
-for blockSize in blockSizes:
-	for _ in range(repeats):
-		args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize/8), outputFilename]
-		subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
-
-addNewline()
+# addNewline()
 
 print("CumulativeSum: Select Branching \n")
 test = 'select'
@@ -48,6 +47,7 @@ for blockSize in blockSizes:
 	for _ in range(repeats):
 		args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize/8), outputFilename]
 		subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
+
 
 print("CumulativeSum: Build \n")
 test = 'build'
