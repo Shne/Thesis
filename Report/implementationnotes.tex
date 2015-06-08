@@ -5,14 +5,14 @@
 The Wavelet Tree is a data structure for strings. 
 Using the C++ \texttt{char array} or C++11 \texttt{string} types would seem natural in this case, but they each have problems.
 The C and C++ \texttt{char} type is only of size 1 byte allowing us only to use an alphabet size of up to 256.
-This makes testing the dependency of the running times on alphabet size difficult, as we believe inaccuracies in the running time would exceed the difference in running time between the available sizes of the alphabet.
+This makes testing the dependency of the running times on alphabet size difficult, as we expect inaccuracies in the running time will exceed the difference in running time between the available sizes of the alphabet.
 
 The C++11 \texttt{string} and arrays of type \texttt{char32\_t} does not have this problem and supports character types up to 32-bit unsigned. 
 The problem then lies in output and readability as characters corresponding to byte values below 32 are special non-printable control characters such as carriage-return and backspace. 
 At higher byte values other non-printable control characters and otherwise unreadable characters appear again. This means we would have to be selective with the allowed byte values in our alphabets if we want it to be readable for output and debugging, thereby ending up with an alphabet that is non-continuous on the set of byte values as a result, which is inconvenient.
 Because of this, we have for convenience chosen to simply use vectors of integers as our strings in our implementations.
 E.g. we will use \texttt{uint} instead of \texttt{char32\_t}, which both take 4 bytes of memory.
-We believe this will have no impact on performance as both characters and integers are simply different representations of byte values.
+We expect that this will have no impact on performance as both characters and integers are simply different representations of byte values.
 
 In our implementation, we assume that the alphabet is always continuous on the sorted set of byte values, i.e. the alphabet spans all values possible between some minimum and maximum value, with no gaps.
 Thus, we store the alphabet as a minimum and maximum value, instead of storing each value in some data structure to pass around or point into.
@@ -60,7 +60,7 @@ There are several bitmap implementations available to us. In the Standard Templa
 \item[\texttt{std::bitset}] While it would technically be possible to use the \texttt{std::bitset}, it requires that the size of the bitset is known at compile time and passed as a template parameter. This means it would be necessary to recompile the program for each size $n$ of the input string. 
 It would also be necessary to allocate a bitmap with room for $n$ bits for each sub-node as that is the theoretically possible size required, making the size required for the bitmaps of the tree $O(n \cdot |nodes|) = O(n \cdot \sigma)$ instead of $O(n \cdot h) = O(n\log(\sigma))$.
 Another reason why we cannot use \texttt{std::bitset} is because it does not support pointer access, which means that it is impossible to do queries using \texttt{popcount}, which is a CPU instruction we utilize to improve the practical running time of \textproc{Rank} and \textproc{Select} queries and is described in Section~\ref{sec:simpleoptimizations}.
-We also believe that an actual usable practical implementation should be able to handle different sizes of input at run time instead of compile time. 
+We also expect that an actual usable practical implementation should be able to handle different sizes of input at run time instead of compile time. 
 
 \item[\texttt{std::vector<bool>}] is a specialised implementation for \texttt{bool} that packs the data so that each \texttt{bool} only takes up one bit and is not an actual C++ container, though it tries to mimic some of the behaviour. 
 It is basically the STL implementation of a dynamically allocated bitset. This is the implementation we decided to use for our bitmap because it allows dynamic allocation and pointer access.

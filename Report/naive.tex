@@ -125,7 +125,7 @@ We can see in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_plusSigma} that 
 Having not found an explanation we pull data for translation lookaside buffer misses from the experiment and plot it together with wall time, both divided by $\log \sigma$, in Figure~\ref{fig:naiveIntegerAlphabetSize_WallTime_TLB}
 
 We can see that the TLB Misses increase drastically from alphabet size about $2^{20}$ and up.
-Having found no other reasonable explanation for the discrepancy between the theoretical and our implementation's actual running time, we believe that TLB Misses is the culprit.
+Having found no other reasonable explanation for the discrepancy between the theoretical and our implementation's actual running time, we find it probable that the TLB Misses are the culprits here.
 
 In our further experimentation of the further optimization attempts we do, we will be using an alphabet size of $2^{16}$.
 It is a realistic use case to use a type such as \texttt{char}, \texttt{wchar16\_t} or \texttt{wchar32\_t} which are stored in 8, 16 and 32 bits respectively.

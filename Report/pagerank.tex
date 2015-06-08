@@ -28,7 +28,7 @@ The bitmaps are allocated as one giant bitmap the size of the maximum possible s
 They are stored in a Depth-First-right manner, that is, the bitmap of the right child of a node comes right after the bitmap of the node.
 
 There are many other alternative memory layouts that might provide better performance.
-The one we believe has the greatest potential to improve the wavelet tree performance, is the van Emde Boas memory layout~\citeA[Abstract]{Brodal02cacheoblivious} because of its cache-oblivious nature.
+The one we expect to have the greatest potential for improving the wavelet tree performance, is the van Emde Boas memory layout~\citeA[Abstract]{Brodal02cacheoblivious} because of its cache-oblivious nature.
 It would be a challenge to implement, because the size of a bitmap of a node is unknown before the bitmap of the parent has been calculated, and so the position of each bitmap in the giant bitmap cannot be known before the parent of each has been calculated, meaning construct the tree must be constructed in vEB layout order.
 To support construction of the wavelet tree in vEB layout order our construction algorithm would have to be dramatically changed, possibly utilizing concurrency constructs such as a job queue and message passing, and so we skip this work for now and save it for future work in Section~\ref{sec:futurework_vebmemorylayout}.
 
@@ -109,10 +109,10 @@ With an alphabet size of $2^{16}$ this amounts to saving up to 16 page loads per
 
 While we expect that this will save some expensive TLB misses it also has some drawbacks, especially when not using concatenated bitmaps.
 For a wavelet tree not using concatenated bitmaps, using page-aligned blocks will cause the first precomputed value of each non-page-aligned bitmap to not cover an entire block, increasing the number of precomputed values needed to cover the bitmap as well as additional computations to calculate exactly which part of the bitmap it covers.
-For the wavelet trees using concatenated bitmaps, these computations are needed regardless of block alignment, as the blocks are already not aligned with the individual bitmaps, and so we believe it can only be an improvement to page-align the blocks in this case.
+For the wavelet trees using concatenated bitmaps, these computations are needed regardless of block alignment, as the blocks are already not aligned with the individual bitmaps, and so we expect that it is an improvement to page-align the blocks in this case.
 We test this by implementing a variation of the wavelet tree using concatenated bitmaps that does not page-align the blocks.
 
-We will test whether it increases the performance of rank and select queries when not using concatenated bitmaps in Section~\ref{sec:queryRunTimePrecomputedBlockSizes}.
+We test whether it increases the performance of rank and select queries when not using concatenated bitmaps in Section~\ref{sec:queryRunTimePrecomputedBlockSizes}.
 
 
 \subsection{Select Queries with Precomputed Ranks}
@@ -143,7 +143,7 @@ That is, when considering the worst-case query time for both queries, if the occ
 
 This is giving the select query a disadvantage in the analysis, even when the partial block is close to a block in size and it might terminate early if the sought-after occurrence of the character if found early in the partial block.
 
-We believe it is an improvement, and will use it going forward, though it is not 100\,\% certain.
+We expect it is an improvement, and will use it going forward, though it is not 100\,\% certain.
 We have considered doing tests to determine whether it is an improvement for the running time or not, but as we are under time constraints and we feel we have other, far more interesting, things to implement and test we will not be testing this.
 
 
@@ -234,7 +234,7 @@ By examining Figure~\ref{fig:PrecomputedRankBlockSize_Rank_BranchMiss} and Figur
 
 In Figure~\ref{fig:PrecomputedRankBlockSize_Rank_BranchMissRate} we initially see a surprising increase in the branch misprediction rate of UnalignedNaive for smaller block sizes.
 When looking at Figure~\ref{fig:PrecomputedRankBlockSize_Rank_BranchMiss} we see that it follows somewhat the same increase in branch misprediction amount for smaller block sizes as the others, making us conclude that UnalignedNaive has a higher branch misprediction rate alone because it has fewer easily predicted branches but the same amount of branches difficult to predict compared to the others for smaller block sizes.
-We believe this is a result of UnalignedNaive not having to do any calculations to figure out which part and how much of the bitmap the first precomputed value covers, as it always covers an entire block of the bitmap and is perfectly aligned with the start of the bitmap instead of a memory page.
+We expect this is a result of UnalignedNaive where it is not necessary to do any calculations to figure out which part and how much of the bitmap the first precomputed value covers, as it always covers an entire block of the bitmap and is perfectly aligned with the start of the bitmap instead of a memory page.
 This means that a number of if-statements comparing the size of the bitmap with the block size to figure out whether the precomputed value can be used is not present in UnalignedNaive, where they are present in the others.
 
 Looking at Figure~\ref{fig:PrecomputedRankBlockSize_Rank_TLB} we can see that our expressed goal of reducing TLB misses when using page-aligned blocks is achieved when not using concatenated bitmaps, though only little but TLBs are not reduced when concatenated bitmaps are used which is in line with our expectation.
@@ -244,14 +244,14 @@ We also notice that the two trees using non-concatenated bitmaps, Naive and Unal
 
 
 Looking at the level 1 data cache misses we can see that there are fewest cache misses when a block size is equal to half a page size, with a sharp rise in cache misses again for smaller block sizes.
-We believe this is the main reason that UnalignedNaive exhibits the best running time at that block size instead of at lower values.
+We expect this is the main reason that UnalignedNaive exhibits the best running time at that block size instead of at lower values.
 The others also seems to have the best level 1 data cache performance for rank queries at half a page per block, while their wall times are best at a full page per block.
-This might be explained by total branch execution, as we saw in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_BranchExe}, they execute many more branches at lower block sizes, which we believe is because of the extra bookkeeping code needed.
+This might be explained by total branch execution, as we saw in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_BranchExe}, they execute many more branches at lower block sizes, which we expect to be because of the extra bookkeeping code needed.
 
 The level 2 data cache miss rate plotted in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_L2CacheMissRate} is generally worst for block size = 0.5 page size, but looking at the raw cache misses in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_L2CacheMiss} we generally see more cache misses for higher block sizes, meaning that the level 2 data cache miss rate cannot explain the better performance at block size = 1 page size for every tree other than UnalignedNaive.
 Looking at Level 2 data cache misses in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_L2CacheMiss} and the level 2 data cache miss rate in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_L2CacheMissRate}, we do not see much difference between the different tree implementations, except that the Naive tree has a noticeable drop in both the raw amount and the rate at block size = 1 page size, just like it had for TLB misses.
 It is interesting, though, that they all have a somewhat high, $0.35-0.4$, level 2 data cache miss rate around 0.5-0.75 page per block, where they all have good wall time performance.
-We believe this is because of the good level 1 data cache performance at those block sizes.
+This could be explained by the good level 1 data cache performance at those block sizes.
 To explain what we mean, let us assume there is a fixed amount of operations accessing memory that is hard for the cache to have prefetched or otherwise loaded beforehand, independent of the block size.
 E.g. when the queried-for position is reached in a bitmap and the rank algorithm jumps to a different node and a different bitmap.
 When the first cache level can handle more and more of the 'easy' memory operations, fewer of those are left to be handled by the second cache level, yet the same amount of 'hard' memory accesses are hitting the second cache level, and so the miss rate of the second cache level will increase for lower block sizes, but not because of more misses, but because of fewer hits, as can be seen in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_L2CacheHits}.
@@ -261,19 +261,19 @@ In Figure~\ref{fig:PrecomputedRankBlockSize_Select_L3CacheMiss} we have plotted 
 We notice that all four trees have fairly low level 3 cache misses at the lowest tested block size of 0.25 page size.
 The trees using concatenated bitmaps then rise to have the most level 3 cache misses at around 1 page per block then decreasing again at higher block sizes.
 What is perhaps most interesting in this graph is that the Naive tree again has a large dip at 1 page per block.
-We believe this dip, combined with the others, is what causes Naive to have its fastest rank query wall time at 1 page per block.
+We expect this dip, combined with the others, is what causes Naive to have its fastest rank query wall time at 1 page per block.
 
 
 \paragraph{Select Queries}~\\\\
 In Figure~\ref{fig:PrecomputedRankBlockSize_Select_WallTime} we see the wall time of 1000 Select queries for the different wavelet trees using precomputed rank values.
 We can see that all have the best running time at half a page per block, though some of them have about the same speed at 0.75 page per block.
-We believe the main reason for this is to be found in the level 1 data cache performance data, which is shown in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L1CacheMiss} as we can see that they have better level 1 data cache performance at lower values, except for Naive, which has its best performance at 0.5 page per blockand for decreasing block sizes the cache misses increase again.
+We expect the main reason for this is to be found in the level 1 data cache performance data, which is shown in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L1CacheMiss} as we can see that they have better level 1 data cache performance at lower values, except for Naive, which has its best performance at 0.5 page per blockand for decreasing block sizes the cache misses increase again.
 
 In much the same way as for rank queries, the branch mispredictions, as plotted in Figure~\ref{fig:PrecomputedRankBlockSize_Select_BranchMiss}, decrease as block size increases, but looking at Figure~\ref{fig:PrecomputedRankBlockSize_Select_BranchMissRate} we can see that the branch misprediction rate is highest at about 0.75 page per block and much smaller at smaller block sizes, this is because much more branching code, correctly predicted, is executed at block sizes below 0.75 pages per block, as can be seen in Figure~\ref{fig:PrecomputedRankBlockSize_Select_BranchExe}.
 
 The amount of TLB misses across block sizes seen in Figure~\ref{fig:PrecomputedRankBlockSize_Select_TLB} is similar to the TLB misses for rank queries in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_TLB} as we again see that the biggest reduction in TLB misses comes from using concatenated bitmaps and that page-aligning the blocks does make a difference when using non-concatenated bitmaps but no difference when using concatenated bitmaps.
 
-Just as with rank queries, we see higher level 2 data cache miss rate at lower block sizes in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L2CacheMissRate}, and again we believe the level 1 data cache misses are the cause as we see level 1 misses matches up with level 2 hits in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L1CacheMiss} and Figure~\ref{fig:PrecomputedRankBlockSize_Select_L2CacheHits}.
+Just as with rank queries, we see higher level 2 data cache miss rate at lower block sizes in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L2CacheMissRate}, and again we expect the level 1 data cache misses are the cause as we see level 1 misses matches up with level 2 hits in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L1CacheMiss} and Figure~\ref{fig:PrecomputedRankBlockSize_Select_L2CacheHits}.
 
 However, unlike for the rank queries, the amount of level 2 data cache misses are not lower for smaller block sizes, in fact they are higher than at 1 page per block, where each type of wavelet tree has its minimum, with Naive having the largest drop there.
 We see this drop again in level 3 total cache misses in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L3CacheMiss}.

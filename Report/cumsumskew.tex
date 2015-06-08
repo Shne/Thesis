@@ -33,7 +33,7 @@ Skewing the tree can also reduce cache misses by increasing the probability that
 The algorithms for construction and queries in this implementation remain mostly the same as before in CumulativeSum, but with modifications to handle a controlled memory layout and a skew of the tree.
 
 \subsection{Prefetching}
-Prefetching is a feature of the CPU whereby it can fetch other parts of the memory into cachelines even though it was not requested yet, if it believes it will be requested soon, to avoid having the program waiting for this fetching.
+Prefetching is a feature of the CPU whereby it can fetch other parts of the memory into cachelines even though it was not requested yet, if it expects it will be requested soon, to avoid having the program waiting for this fetching.
 In more advanced versions, it can even look at the access into memory of the running program and try to determine a pattern and prefetch memory according to this pattern.
 Looking at the Intel Optimization Manual~\citeB{intel-optimization-manual} for our architecture\footnote{Our architecture is Ivy Bridge, but the optimization manual sections for Sandy Bridge holds true for Ivy Bridge as well, as stated in section 2.2.7 in~\citeB{intel-optimization-manual}.} we find that it has streaming prefetchers loading into L1, L2, and last level cache. The streaming prefetchers detect accesses to ascending or descending addresses and can prefetch up to 20 lines ahead or behind. 
 Our architecture also has a prefetcher that can detect strides in memory access, as well as a “Next Page Prefetcher” that can load another memory page when detecting memory accesses near the page boundary~\footnote{See section 2.2.7 of~\citeB{intel-optimization-manual}}.

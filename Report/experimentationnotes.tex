@@ -30,7 +30,7 @@ If one appears not to have any errorbars that means the standard deviation is so
 \label{sec:choiceOfInputString}
 We have chosen to construct the input strings used in our experiments so that each character occurs with the same probability at each position.
 This means the string has a uniform distribution of characters from the alphabet.
-We have chosen to do so for several reasons, among them being that we believe it to be a realistic use case, e.g. for Range Quantile Queries or Geometry Processing, as well as making the choice of character to query for in our experiments make less difference.
+We have chosen to do so for several reasons, among them being that we think it is a realistic use case, e.g. for Range Quantile Queries or Geometry Processing, as well as making the choice of character to query for in our experiments make less difference.
 The even amount of occurrences of each character also means there will be little difference in the size of bitmaps between the nodes in a single layer of the tree.
 
 \subsubsection{Uniform vs. Non-Uniform data}
@@ -70,7 +70,7 @@ This is also a conclusion that Piantadosi~\citeB[abstract]{ZipfsLawOnText} arriv
 It is possible to estimate \textit{s} for a given text but doing so then creates the problem of choosing a representative text to estimate \textit{s} from.
 We tried using the word frequencies in the NGSL~\citeB{NGSL} wordlist which contain the 31,241 most used words in the English language and the frequency with which they appear, to estimate \textit{s}.
 NGSL is based on data from the Cambridge English Corpus which is a multi-billion word collection of written, spoken and learner texts and is the largest of its kind.
-This fact combined with the fact that NGSL is fairly new (2013) makes us believe that the frequencies in the NGSL wordlist are accurate enough for our purpose.
+This fact combined with the fact that NGSL is fairly new (2013) makes us assume that the frequencies in the NGSL wordlist are accurate enough for our purpose.
 
 Estimating \textit{s} using a subsequence of words from NGSL gave us a value close to 1 and it only grew closer to 1 the more words we used from the list.
 This is a problem because with an $s$ parameter of 1, a Zipf's Law distribution is uniform.

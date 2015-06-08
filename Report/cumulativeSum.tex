@@ -52,7 +52,7 @@ We anticipated that we might improve upon the query by eliminating as much branc
 That is, reduce the number of \texttt{if/else} statements, \texttt{while}-, and \texttt{for}-loops in the code and instead replace them with “clever” arithmetic operations achieving much of the same.
 
 One large disadvantage of this approach was that it resulted in a binary search that did not terminate early if the correct block was reached, but would instead always jump and do a lookup $\log \mathit{blocksInNode}$ times for each node.
-We believed that the fewer branch mispredictions and the fact that many of the later jumps that would be skipped by terminating early should with high probability exist in the same cacheline and thus fast be to lookup.
+We expected that the fewer branch mispredictions and the fact that many of the later jumps that would be skipped by terminating early, should with high probability exist in the same cacheline and thus be fast to lookup.
 
 Based on experiments we found that \textproc(Select) was slower when using the “branchless” approach than just using the simple approach (see Section~\ref{sec:cumulativeSumExperimentSelectQueries}).
 When we realized this we attempted to combine the two approaches to get the best from both: early termination from the simple approach and less branching code meaning fewer branch mispredictions from the “branchless” approach.
@@ -131,7 +131,7 @@ In Figure~\ref{fig:CumulativeSumRankTLBMiss} we see that the CumulativeSum tree 
 In Figure~\ref{fig:CumulativeSumRankL1CM}, Figure~\ref{fig:CumulativeSumRankL2CM}, and Figure~\ref{fig:CumulativeSumRankL3CM} we can see that rank queries on the CumulativeSum wavelet tree has a much better level 1 cache performance, and only slightly worse level 2 and 3 cache performance.
 
 In Figure~\ref{fig:CumulativeSumRankL2CHits} we can see that the amount of level 2 cache hits decrease significantly when using cumulative sums of the precomputed values.
-We believe the explanation for the decrease in level 2 cache hits lies in the reduction of level 1 cache misses (Figure~\ref{fig:CumulativeSumRankL1CM}), like results from previous experiments.
+The explanation for the decrease in level 2 cache hits might lie in the reduction of level 1 cache misses (Figure~\ref{fig:CumulativeSumRankL1CM}), like results from previous experiments.
 The reduction in level 2 cache hits is simply the amount of cache lookups that the level 1 cache instead was able to handle.
 The reduction of level 1 cache misses is on average $\num{135394.4}$ and the reduction in level 2 cache hits is on average $\num{133885.2}$ making them near-identical.
 The level 2 cache miss rate (not shown) is therefore somewhat misleading as it would suggest a worse cache performance where the truth is that CumulativeSum has a much better cache performance, having much fewer level 1 cache misses, which helps to explain why the rank queries are faster.
@@ -145,8 +145,8 @@ In Figure~\ref{fig:CumulativeSumSelect} we have plotted the same measurements as
 In Figure~\ref{fig:CumulativeSumSelectWalltime} we can see that storing and using the cumulative sum of precomputed rank values is also an improvement for select queries, with a reduction in wall time of 22.07\,\%.
 Our “branchless” approach is also faster than not using the cumulative sum, but much slower than the simpler approach.
 
-Looking at Figure!\ref{fig:CumulativeSumSelectBranchExe} we can see that both approaches using the cumulative sum executes much fewer conditional branches, which we believe is caused by using the binary search instead of having to iterate through every precomputed value from the beginning of the bitmap to the position where the sought-after occurrence lies.
-Ironically, the “branchless” approach executes more conditional branches than the simple approach, which we believe is because it can not terminate the binary search early, leading to more branching code executed in the extra jumps in the binary search.
+Looking at Figure!\ref{fig:CumulativeSumSelectBranchExe} we can see that both approaches using the cumulative sum executes much fewer conditional branches, which could be caused by using the binary search instead of having to iterate through every precomputed value from the beginning of the bitmap to the position where the sought-after occurrence lies.
+Ironically, the “branchless” approach executes more conditional branches than the simple approach, which could be because it can not terminate the binary search early, resulting in execution of more branching code in the extra jumps in the binary search.
 
 In Figure~\ref{fig:CumulativeSumSelectBranchMiss} and Figure!\ref{fig:CumulativeSumSelectBranchMissRate} we can see that the simple approach using cumulative sum has, as expected, more branch mispredictions and a higher branch misprediction rate than both the others.
 The additional number of branch mispredictions contribute about $\num{508704}$ extra clock cycles, assuming 15 clock cycles per misprediction, which is only 1.87\,\% of the total number of clock cycles used in the simple approach using cumulative sum.

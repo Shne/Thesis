@@ -21,14 +21,14 @@ Callgrind outputs a .callgrind file which can then be viewed in the kCacheGrind 
 We use it for finding hotspots in our code; which parts our program is spending most of its time in and therefore which parts we should try to optimize.
 \end{description}
 We calculate the CPU clock cycles using the \texttt{PAPI\_TOT\_CYC} papi event which returns the total number of unhalted CPU clock cycles, including when the CPU clock changes to a higher frequency in what Intel calls “Turbo Boost” or more generally “dynamic overclocking”.
-We believe this value to be more accurate than calculating cycles using \texttt{PAPI\_get\_real\_cyc()} which estimates the cycles based on wall time\footnote{\url{icl.cs.utk.edu/projects/papi/wiki/PAPIC:PAPI_get_real_cyc.3}} and this means that \texttt{PAPI\_get\_real\_cyc()} depends on the Time Stamp Counter (TSC) frequency which is constant. 
+We expect this value to be more accurate than calculating cycles using \texttt{PAPI\_get\_real\_cyc()} which estimates the cycles based on wall time\footnote{\url{icl.cs.utk.edu/projects/papi/wiki/PAPIC:PAPI_get_real_cyc.3}} and this means that \texttt{PAPI\_get\_real\_cyc()} depends on the Time Stamp Counter (TSC) frequency which is constant. 
 Because of this the TSC frequency is not based on CPU frequency in any way and because work gets done at CPU frequency and not TSC frequency, \texttt{PAPI\_TOT\_CYC} seems like the best choice. 
 This is also recommended by Intel\footnote{\url{software.intel.com/en-us/articles/measuring-the-average-unhalted-frequency}}.
 
 In Table~\ref{papievents} we have listed the various counters and values we have read using PAPI and their description. Not every test uses every one of these.
 
 Because PAPI does not support gathering all combinations of hardware at the same time, we had to gather Translation lookaside buffer misses, level 2 cache misses, and level 3 cache misses in a separate run of the program with the same parameters.
-We do not believe this will have any significant influence on the results of our experiments.
+We do not expect that this will have any significant influence on the results of our experiments.
 
 \begin{table}
 \caption{PAPI counters and data sources and their description}
