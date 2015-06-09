@@ -80,7 +80,7 @@ The amount of branch mispredictions was reduced. Just not enough to make up for 
 
 \subsection{Experiments}
 
-\subsubsection{Build Time and Memory Usage}
+\subsubsection{Build Time And Memory Usage For Various Block Sizes}
 In Figure~\ref{fig:CumulativeSumBuild} we have plotted the wall time and memory usage of building the UnalignedNaive and CumulativeSum Wavelet Trees.
 In Figure~\ref{fig:CumulativeSumBuildWalltime} we can see that it takes slightly longer to build the tree when we have to calculate the cumulative sum across the precomputed values we store.
 It is only a difference of 151 milliseconds or an increase from UnalignedNaive to CumulativeSum of 1.00\,\%.
@@ -106,7 +106,7 @@ When taking the performance gain on queries into account then the small increase
 \end{figure}
 
 
-\subsubsection{Optimal Block Size for Rank and Select}
+\subsubsection{Optimal Block Size For Rank And Select}
 \label{sec:OptimalBlockSizeForRankAndSelect}
 We have made a test for Rank, Select, SelectBranchless and construction of the tree, that shows their running times for varying block sizes.
 The test results are shown in Figure~\ref{fig:CumulativeSumBlockSize}.
@@ -125,7 +125,7 @@ Rank is best with a small block size and select is also better with a relatively
 \begin{figure}\tiny
 \begin{subfigure}{0.45\textwidth}
 	\input{CumulativeSumBlockSizeWallTimeRank}
-	\caption{Rank: Varying Blocksize for $n=10^8$ characters}
+	\caption{Rank: Varying Blocksize for $n=10^8$ characters. The blue line marks expected best block size.}
 	\label{fig:CumulativeSumBlockSizeWallTimeRank}
 \end{subfigure}
 \hfill
@@ -152,7 +152,7 @@ Rank is best with a small block size and select is also better with a relatively
 
 
 
-\caption{Running times of rank and select for varying block sizes. The Block size range for rank is different from Select and SelectBranchless}
+\caption{Running times of rank and select for varying block sizes. Notice the x-axis (block size) is logarithmic.}
 \label{fig:CumulativeSumBlockSize}
 \end{figure}
 
