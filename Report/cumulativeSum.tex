@@ -54,7 +54,8 @@ This is also reflected in the running times of $O(\frac{n}{b} + b)$ for non-cumu
 
 From the theoretical running time of $O(b)$, we expect the optimal block size to be small.
 However, any block size below the size of word \texttt{popcount} operates on, 64 bit for our machine, will likely not be any improvement, as using \texttt{popcount} to calculate the rank within that word takes constant time.
-The only exception, we expect, is if a block size of 1 bit was used, which corresponds to precomputing the answer to every possible rank query, and using a lot of memory in the process.
+The only exception, we expect, is if a block size of 1 bit was used and the algorithm modified to just use that precomputed value and not use \texttt{popcount}, which corresponds to precomputing the answer to every possible rank query, and using a lot of memory in the process.
+We will not be testing this.
 
 For select queries, there is still a dependence on $n$, as it has to perform a binary search over the precomputed rank values, and that is reflected in the theoretical running time of $O((\log \frac{n}{b} + b) \log \sigma)$.
 
