@@ -59,7 +59,9 @@ for i in range(len(printList)):
 	RankGnuplotFile.write(str(number+1) + '\t' + str(printList[i]) + '\n')
 	RankGnuplotFile.write(str(number+2) + '\t' + '\n')
 
-value = "{:,.2f}"
+# value = "{:,.0f}"
+value = "{:.2e}"
+percentValue = "{:,.2f}"
 percent = "{:.3f}"
 
 # Values file
@@ -73,7 +75,7 @@ ValuesFile.write('\\textbf{TLBM} & '+value.format(RankTLBNoPop)+' & '+value.form
 ValuesFile.write('\\textbf{L1 CM} & '+value.format(Rank1CMNoPop)+' & '+value.format(Rank1CMPop)+' & '+percent.format(printList[4])+'\\,\\% \\\\ \hline\n')
 ValuesFile.write('\\textbf{L2 CM} & '+value.format(Rank2CMNoPop)+' & '+value.format(Rank2CMPop)+' & '+percent.format(printList[5])+'\\,\\% \\\\ \hline\n')
 ValuesFile.write('\\textbf{L2 CHits} & '+value.format(Rank2CHitsNoPop)+' & '+value.format(Rank2CHitsPop)+' & '+percent.format(printList[6])+'\\,\\% \\\\ \hline\n')
-ValuesFile.write('\\textbf{L2 CM Rate} & '+value.format(Rank2CMRateNoPop)+' & '+value.format(Rank2CMRatePop)+' & '+percent.format(printList[7])+'\\,\\% \\\\ \hline\n')
+ValuesFile.write('\\textbf{L2 CM Rate} & '+percentValue.format(Rank2CMRateNoPop)+' & '+percentValue.format(Rank2CMRatePop)+' & '+percent.format(printList[7])+'\\,\\% \\\\ \hline\n')
 ValuesFile.write('\\textbf{L3 CM} & '+value.format(Rank3CMNoPop)+' & '+value.format(Rank3CMPop)+' & '+percent.format(printList[8])+'\\,\\% \\\\ \hline\n')
 ValuesFile.write('\\end{tabular}\\\\[5pt]\n')
 
@@ -132,7 +134,7 @@ ValuesFile.write('\\textbf{TLBM} & '+value.format(SelectTLBNoPop)+' & '+value.fo
 ValuesFile.write('\\textbf{L1 CM} & '+value.format(Select1CMNoPop)+' & '+value.format(Select1CMPop)+' & '+percent.format(printList[4])+'\\,\\% \\\\ \hline\n')
 ValuesFile.write('\\textbf{L2 CM} & '+value.format(Select2CMNoPop)+' & '+value.format(Select2CMPop)+' & '+percent.format(printList[5])+'\\,\\% \\\\ \hline\n')
 ValuesFile.write('\\textbf{L2 CM} & '+value.format(Select2CHitsNoPop)+' & '+value.format(Select2CHitsPop)+' & '+percent.format(printList[6])+'\\,\\% \\\\ \hline\n')
-ValuesFile.write('\\textbf{L2 CM Rate} & '+value.format(Select2CMRateNoPop)+' & '+value.format(Select2CMRatePop)+' & '+percent.format(printList[7])+'\\,\\% \\\\ \hline\n')
+ValuesFile.write('\\textbf{L2 CM Rate} & '+percentValue.format(Select2CMRateNoPop)+' & '+percentValue.format(Select2CMRatePop)+' & '+percent.format(printList[7])+'\\,\\% \\\\ \hline\n')
 ValuesFile.write('\\textbf{L3 CM} & '+value.format(Select3CMNoPop)+' & '+value.format(Select3CMPop)+' & '+percent.format(printList[8])+'\\,\\% \\\\ \hline\n')
 ValuesFile.write('\\end{tabular}\\\\[5pt]\n')
 
