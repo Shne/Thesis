@@ -53,17 +53,17 @@ for _ in range(repeats):
 
 addNewline()
 
-print("NaiveInteger Select")
-test = 'select'
-for _ in range(repeats):
-	args = [naiveIntegerProgram, str(amount), str(alphabetSize), str(skew), test, str(0), outputFilename]
-	subprocess.Popen(args, cwd=naiveIntegerCwd).wait()
-	args = [naiveIntegerProgram, str(amount), str(alphabetSize), str(skew), test, str(1), outputFilename]
-	subprocess.Popen(args, cwd=naiveIntegerCwd).wait()
-	args = [naiveIntegerProgram, str(amount), str(alphabetSize), str(skew), test, str(2), outputFilename]
-	subprocess.Popen(args, cwd=naiveIntegerCwd).wait()
+# print("NaiveInteger Select")
+# test = 'select'
+# for _ in range(repeats):
+# 	args = [naiveIntegerProgram, str(amount), str(alphabetSize), str(skew), test, str(0), outputFilename]
+# 	subprocess.Popen(args, cwd=naiveIntegerCwd).wait()
+# 	args = [naiveIntegerProgram, str(amount), str(alphabetSize), str(skew), test, str(1), outputFilename]
+# 	subprocess.Popen(args, cwd=naiveIntegerCwd).wait()
+# 	args = [naiveIntegerProgram, str(amount), str(alphabetSize), str(skew), test, str(2), outputFilename]
+# 	subprocess.Popen(args, cwd=naiveIntegerCwd).wait()
 
-addNewline()
+# addNewline()
 
 print("PreallocatedPrecomputed: Rank \n")
 for blockSize in blockSizeRange:
@@ -130,18 +130,18 @@ for blockSize in blockSizeRange:
 
 addNewline()
 
-print("NaivePrecomputed: Select \n")
-for blockSize in blockSizeRange:
-	test = 'select'
-	for _ in range(repeats):
-		args = [naivePrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
-		subprocess.Popen(args, cwd=naivePrecomputedCwd).wait()
-		args = [naivePrecomputedProgram, str(amount), str(alphabetSize), test, str(1), str(blockSize), outputFilename]
-		subprocess.Popen(args, cwd=naivePrecomputedCwd).wait()
-		args = [naivePrecomputedProgram, str(amount), str(alphabetSize), test, str(2), str(blockSize), outputFilename]
-		subprocess.Popen(args, cwd=naivePrecomputedCwd).wait()
+# print("NaivePrecomputed: Select \n")
+# for blockSize in blockSizeRange:
+# 	test = 'select'
+# 	for _ in range(repeats):
+# 		args = [naivePrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
+# 		subprocess.Popen(args, cwd=naivePrecomputedCwd).wait()
+# 		args = [naivePrecomputedProgram, str(amount), str(alphabetSize), test, str(1), str(blockSize), outputFilename]
+# 		subprocess.Popen(args, cwd=naivePrecomputedCwd).wait()
+# 		args = [naivePrecomputedProgram, str(amount), str(alphabetSize), test, str(2), str(blockSize), outputFilename]
+# 		subprocess.Popen(args, cwd=naivePrecomputedCwd).wait()
 
-addNewline()
+# addNewline()
 
 print("UnalignedNaivePrecomputed: Rank \n")
 for blockSize in blockSizeRange:
@@ -156,17 +156,17 @@ for blockSize in blockSizeRange:
 
 addNewline()
 
-print("UnalignedNaivePrecomputed: Select \n")
-for blockSize in blockSizeRange:
-	test = 'select'
-	for _ in range(repeats):
-		args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
-		subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
-		args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(1), str(blockSize), outputFilename]
-		subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
-		args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(2), str(blockSize), outputFilename]
-		subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
+# print("UnalignedNaivePrecomputed: Select \n")
+# for blockSize in blockSizeRange:
+# 	test = 'select'
+# 	for _ in range(repeats):
+# 		args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
+# 		subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
+# 		args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(1), str(blockSize), outputFilename]
+# 		subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
+# 		args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(2), str(blockSize), outputFilename]
+# 		subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
 
 
-addNewline()
+# addNewline()
 addNewline()

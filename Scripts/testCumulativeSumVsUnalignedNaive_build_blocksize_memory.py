@@ -47,7 +47,7 @@ subprocess.Popen(['make','CONF=Release', 'clean'], cwd=cumulativeSumCwd).wait()
 subprocess.Popen(['make','CONF=Release'], cwd=cumulativeSumCwd).wait()
 
 
-blockSizeRange = [i*128 for i in range(1, 41)]
+blockSizeRange = [2**i for i in range(0, 14)]
 
 
 test = 'buildmemory'

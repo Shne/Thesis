@@ -23,7 +23,7 @@ def getTotalMemoryForSpecificTest(dataFile, algorithm, blockSize):
 	err = numpy.std(values)
 	return (avgValue, err)
 
-blockSizeRange = [i*128 for i in range(1,41)]
+blockSizeRange = [2**i for i in range(0, 14)]
 
 testDataFile = open(testDataFileName, 'r')
 
