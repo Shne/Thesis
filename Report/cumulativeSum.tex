@@ -88,6 +88,23 @@ If we look closer at the raw data, there is a slight (124 KB) increase in memory
 When taking the performance gain on queries into account then the small increased time and memory usage when building the tree is negligible.
 
 
+\begin{figure}\tiny
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumBuildWalltime}
+	\caption{Wall Time}
+	\label{fig:CumulativeSumBuildWalltime}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumVsUnalignedNaiveBlockSizeBuildMemory}
+	\caption{Memory Usage}
+	\label{fig:CumulativeSumBuildMemoryUsage}
+\end{subfigure}
+\caption{Measurements on Building the UnalignedNaive and CumulativeSum wavelet trees. Notice that the y-axis does not start at 0.}
+\label{fig:CumulativeSumBuild}
+\end{figure}
+
+
 \subsubsection{Optimal Block Size for Rank and Select}
 \label{sec:OptimalBlockSizeForRankAndSelect}
 We have made a test for Rank, Select and SelectBranchless that shows their running times for varying block sizes.
@@ -177,22 +194,6 @@ In the end we can confirm based on our measurements that it makes sense why Rank
 
 
 
-
-\begin{figure}\tiny
-\begin{subfigure}{0.48\textwidth}
-	\input{CumulativeSumBuildWalltime}
-	\caption{Wall Time}
-	\label{fig:CumulativeSumBuildWalltime}
-\end{subfigure}
-\hfill
-\begin{subfigure}{0.48\textwidth}
-	\input{CumulativeSumBuildMemory}
-	\caption{Memory Usage}
-	\label{fig:CumulativeSumBuildMemoryUsage}
-\end{subfigure}
-\caption{Measurements on Building the UnalignedNaive and CumulativeSum wavelet trees}
-\label{fig:CumulativeSumBuild}
-\end{figure}
 
 
 \newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}

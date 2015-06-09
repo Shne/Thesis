@@ -23,9 +23,7 @@ def getTotalMemoryForSpecificTest(dataFile, algorithm, blockSize):
 	err = numpy.std(values)
 	return (avgValue, err)
 
-blockSizeRange = []  
-for i in range(1, 41):
-	blockSizeRange.append(i*128)
+blockSizeRange = [i*128 for i in range(1,41)]
 
 testDataFile = open(testDataFileName, 'r')
 
@@ -50,7 +48,7 @@ gnuplotFile = open("Report/Gnuplot/Data/CumulativeSum_build_blocksize_memory.dat
 gnuplotFile.write("#[blockSize]  [Memory]  [MemoryErr]\n")
 
 for blockSize in blockSizeRange:
-	CumulativeSumMem, CumulativeSumErr = getTotalMemoryForSpecificTest(testDataFile, 'CumulativeSun', blockSize)
+	CumulativeSumMem, CumulativeSumErr = getTotalMemoryForSpecificTest(testDataFile, 'CumulativeSum', blockSize)
 	gnuplotFile.write(
 		str(blockSize)+" "+
 		str(CumulativeSumMem)+" "+
@@ -60,6 +58,6 @@ for blockSize in blockSizeRange:
 
 gnuplotFile.close()
 
-GnuScriptFileName = '../PrecomputedRankBlockSize_memory_massif.gnu'
+GnuScriptFileName = '../CumulativeSumVsUnalignedNaiveBlockSizeBuildMemory.gnu'
 cwd = 'Report/Gnuplot/Graphs'
 subprocess.Popen(['gnuplot', GnuScriptFileName], cwd=cwd).wait()
