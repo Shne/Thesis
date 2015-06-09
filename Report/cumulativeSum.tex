@@ -16,7 +16,7 @@ Calculating the cumulative rank sums during the construction will not require mu
 It could e.g. be done by a single sweep through the precomputed values vector after having computed the entire bitmap, adding each precomputed value to the next in the vector.
 
 Rank queries will benefit from the precomputed values being cumulative sums because they can do a single lookup of the precomputed value corresponding to the block covering the queried-for position.
-The need to calculate rank by \texttt{popcount}ing within a single block remains unchanged.
+The need to calculate rank by using \texttt{popcount} within a single block remains unchanged.
 This means that the required work per level of the tree changes from $O(\frac{n}{b}+b)$ to $O(b)$, making the total work required for a rank query $O(b \log \sigma)$.
 
 Select queries should also see some benefit.
@@ -27,8 +27,8 @@ This makes the previously required work per level change from $O(\frac{n}{b} + b
 
 In Section~\ref{sec:OptimalBlockSizeForRankAndSelect} we test what block size achieves the best running time for rank, select and branchless select.
 We test rank for low block sizes since $O(b \log \sigma)$ indicates that the lower \textit{b} is, the faster the running time is.
-The running time for select can also be written as $O(b \log \sigma + \log \frac{n}{b}) \log \sigma)$ and comparing it to the running time of rank we can see that select has an extra term: $\log \frac{n}{b}) \log \sigma)$.
-The effect of this extra term is that the optimal block size is higher for select than for rank.
+The running time for select can also be written as $O(b \log \sigma + \log \frac{n}{b} \log \sigma)$ and comparing it to the running time of rank we can see that select has an extra term: $\log \frac{n}{b} \log \sigma$.
+The effect of this extra term is that our expected optimal block size is higher for select than for rank.
 
 \subsection{Disadvantages of Cumulative Sum}
 The O-notation memory analysis remains the same as before, at $O(n \log \sigma + \sigma + \frac{n}{b} \log \sigma)$, because it is still one number stored per block.
@@ -49,12 +49,12 @@ We will see in our experiments how much actual memory is used and whether the di
 \subsection{Optimal Block Size}
 Like when using non-cumulative precomputed rank values, the block size can affect the performance.
 But unlike when using non-cumulative precomputed rank values, when using cumulative precomputed rank values the optimal block size $b$ for rank queries is not affected by the input size $n$.
-This is because the rank algorithm no longer has to linearly scan through the precomputed rank values, but can perform a single lookup before doing popcount counting.
+This is because the rank algorithm no longer has to linearly scan through the precomputed rank values, but can perform a single lookup before using popcount.
 This is also reflected in the running times of $O(\frac{n}{b} + b)$ for non-cumulative and $O(b)$ for cumulative, as there is no $n$ term in the cumulative running time.
 
 From the theoretical running time of $O(b)$, we expect the optimal block size to be small.
-However, any block size below the size of word \texttt{popcount} operates on, 64 bit for our machine, will make using \texttt{popcount} pointless.
-Block sizes near this word size of 64 bit will be less useful.
+However, any block size below the size of word \texttt{popcount} operates on, 64 bit for our machine, will likely not be any improvement, as using \texttt{popcount} to calculate the rank within that word takes constant time.
+The only exception, we expect, is if a block size of 1 bit was used, which corresponds to precomputing the answer to every possible rank query, and using a lot of memory in the process.
 
 For select queries, there is still a dependence on $n$, as it has to perform a binary search over the precomputed rank values, and that is reflected in the theoretical running time of $O((\log \frac{n}{b} + b) \log \sigma)$.
 

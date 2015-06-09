@@ -177,16 +177,17 @@ Whether or not using precomputed values in blocks is an improvement in running t
 If the block size is only 1 bit, then there is nothing to be gained from looking up the value via the precomputed rank instead of looking at the bit in the bitmap.
 If the block size is the same size as the entire bitmap, then it can only be useful when the positional parameter $p$ for the rank query is above half the size of the bitmap, as the rank of a smaller part of the bitmap beyond the halfway point can then be calculated and subtracted.
 
-The work needed to compute the binary rank of a bitmap of size $n$ without using a precomputed value, but using popcount on pieces (machine words) of the bitmap of size \textit{ws} is $O(\frac{n}{\mathit{ws}})$ to scan the bitmap using popcount up to the word spanning position $p$ and $O(\mathit{ws})$ to calculate the rank up to position $p$ within that word, making it in total $O(\frac{n}{\mathit{ws}} + \mathit{ws})$.
+The work needed to compute the binary rank of a bitmap of size $n$ without using a precomputed value, but using popcount on pieces (machine words) of the bitmap of size \textit{ws} is $O(\frac{n}{\mathit{ws}})$ to scan the bitmap using popcount up to the word spanning position $p$ and $O(1)$ to calculate the rank up to position $p$ within that word using popcount, making it in total $O(\frac{n}{\mathit{ws}})$.
 
 When using lookups of precomputed values, the analysis is similar.
-It costs $O(\frac{n}{b} + b)$ to calculate the binary rank when using precomputed values.
+It costs $O(\frac{n}{b} + b)$ to calculate the binary rank when using precomputed values, as it costs $O(\frac{n}{b})$ to scan the blocks, and $O(b)$ to calculate the rank within a single block using popcount.
 The optimal block size should be one that minimizes this.
 The derivative of $\frac{n}{b}+b$ is $1-\frac{n}{b^2}$ and its root is $n = b^2$ making the optimal block size $b = \sqrt{n}$.
 This is only the optimal block size for a single bitmap, and a wavelet tree has many bitmaps of varying sizes $n$ that are lower near the leaves.
 This means that the best block size in a wavelet tree is either one that varies for each bitmap or, if using a fixed block size, some value below the theoretically optimal block size for the root bitmap.
 
-Later, in Section~\ref{sec:expOptimalBlockSizeDependsOnInputSize}, we show using a fixed block size $b$ for each bitmap, that the optimal $b$ does indeed depend on $n$ and the practically optimal value of $b$ is below the theoretically optimal size of $b$ for the root bitmap.
+Later, in Section~\ref{sec:expOptimalBlockSizeDependsOnInputSize}, we show using a fixed block size $b$ for all bitmaps in a wavelet tree, that the optimal $b$ does indeed depend on $n$ and that the practically optimal value of $b$ is below the theoretically optimal size of $b$ for the root bitmap.
+\textbf{[TODO: verify this]}
 
 
 
