@@ -6,7 +6,7 @@ It is still however necessary to iterate through the precomputed values.
 Most of the time the algorithms are interested in the rank value at some position inside a bitmap and it is the rank from the beginning of the bitmap to the position and rarely just the rank of that particular block.
 Therefore it might be possible to save a number of instructions by not iterating through the precomputed values if the precomputed values were already this cumulative sum of rank values through the bitmap.
 
-We will implement this based on UnalignedNaive and test the performance compared to the UnalignedNaive wavelet tree from Section~\ref{sec:queryRunTimePrecomputedBlockSizes}, using half a page size as the block size, as we found that to be the fastest configuration.
+We implement this based on UnalignedNaive, again testing the performance for various block sizes to fin the optimal block size and then compare that performance to the UnalignedNaive wavelet tree from Section~\ref{sec:queryRunTimePrecomputedBlockSizes}.
 
 \subsection{Advantages of Cumulative Sum}
 As previously mentioned, the rank and select query algorithms do not actually need the rank values of individual blocks, but rather the cumulative sum rank value from the beginning of the bitmap to some position.
@@ -16,7 +16,7 @@ Calculating the cumulative rank sums during the construction will not require mu
 It could e.g. be done by a single sweep through the precomputed values vector after having computed the entire bitmap, adding each precomputed value to the next in the vector.
 
 Rank queries will benefit from the precomputed values being cumulative sums because they can do a single lookup of the precomputed value corresponding to the block covering the queried-for position.
-The need to calculate rank by \texttt{popcount}ing within a single block and manually counting the bits within a single word remains unchanged.
+The need to calculate rank by \texttt{popcount}ing within a single block remains unchanged.
 This means that the required work per level of the tree changes from $O(\frac{n}{b}+b)$ to $O(b)$, making the total work required for a rank query $O(b \log \sigma)$.
 
 Select queries should also see some benefit.
@@ -45,6 +45,18 @@ So with our input string of length $n = 10^8$ and a blockSize of half a page, or
 
 We have already seen that the UnalignedNaive wavelet tree for this input size and alphabet size of $2^{16}$ uses about 721 MB of memory, so another few hundred kilobytes is barely worth mentioning.
 We will see in our experiments how much actual memory is used and whether the difference in running time can make up for the increase in storage space required.
+
+\subsection{Optimal Block Size}
+Like when using non-cumulative precomputed rank values, the block size can affect the performance.
+But unlike when using non-cumulative precomputed rank values, when using cumulative precomputed rank values the optimal block size $b$ for rank queries is not affected by the input size $n$.
+This is because the rank algorithm no longer has to linearly scan through the precomputed rank values, but can perform a single lookup before doing popcount counting.
+This is also reflected in the running times of $O(\frac{n}{b} + b)$ for non-cumulative and $O(b)$ for cumulative, as there is no $n$ term in the cumulative running time.
+
+From the theoretical running time of $O(b)$, we expect the optimal block size to be small.
+However, any block size below the size of word \texttt{popcount} operates on, 64 bit for our machine, will make using \texttt{popcount} pointless.
+Block sizes near this word size of 64 bit will be less useful.
+
+For select queries, there is still a dependence on $n$, as it has to perform a binary search over the precomputed rank values, and that is reflected in the theoretical running time of $O((\log \frac{n}{b} + b) \log \sigma)$.
 
 \subsection{Select Queries with less branching code}
 When implementing the select query for the cumulativeSum wavelet tree, we realized it included a lot of \texttt{if/else} branches that could be difficult to predict by the branch prediction unit.

@@ -216,7 +216,7 @@ This means that the branch mispredictions do have an effect, but it is only a sm
 
 
 
-By similar calculations the saved cpu cycles from branch mispredictions for \textproc{select} is at least 48,84\,\% of the total saved. We expect this is because of the much higher number of branch mispredictions and the lower number of cycles for the original select algorithm, as well as the fact that we cannot use \texttt{popcount} for every word of the bitmap but must go back to doing manual counting of the bits when we find the word the sought-after occurrence is in.
+By similar calculations the saved cpu cycles from branch mispredictions for \textproc{select} is at least 48,84\,\% of the total saved. We expect this is because of the much higher number of branch mispredictions and the lower number of cycles for the original select algorithm.
 
 Looking at the values in Figure~\ref{fig:valuesForPopcountDiff} we find that, of the measurements we collect, cache misses are among the highest and were not reduced significantly by using the \texttt{popcount} instruction.
 Cache misses are expensive and reducing them could greatly increase the speed of queries on the wavelet tree.
