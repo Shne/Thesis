@@ -36,7 +36,7 @@ public:
         Node* &node_pt, bitmap_t* in_bitmap, unsigned long &in_bitmapOffset, float skew);
     uint rank(int character, unsigned long index, bitmap_t* bitmap, int alphabetMin, int alphabetMax, float skew);
     ulong popcountBinaryRank(unsigned long pos, bitmap_t* bitmap);
-    ulong binaryRank(ulong index, bitmap_t* bitmap);
+    ulong binaryRank(vector<bool>::reference ref, ulong length);
     uint select(int character, bool charBit, unsigned long occurance, bitmap_t* bitmap);
     uint binarySelect(bool charBit, unsigned long occurance, bitmap_t* bitmap);
     uint popcountBinarySelect(bool charBit, unsigned long occurance, bitmap_t* bitmap);

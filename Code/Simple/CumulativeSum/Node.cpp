@@ -129,7 +129,7 @@ ulong Node::popcountBinaryRank(uint offset, uint length) {
     uint initialOffset = 0;
     
     if(length < wordsize) {
-        return binaryRank(offset, length);
+        return binaryRank(ref, length);
     }
     
     //MISALIGNED FIRST PART
@@ -158,13 +158,11 @@ ulong Node::popcountBinaryRank(uint offset, uint length) {
     return rank;
 }
 
-uint Node::binaryRank(uint offset, uint length) {
-    int rank = 0;
-    for(uint i = offset; i < offset + length; i++) {
-        bool currentBit = bitmap[i];
-        if(currentBit) rank++;
-    }
-    return rank;
+uint Node::binaryRank(vector<bool>::reference ref, uint length) {
+    ulong startMask = ~(ref._M_mask - 1UL); //the bit of _M_mask and up
+    ulong endMask = (1UL << length)-1UL; //bit at 0-indexed position length-1 and down
+    ulong maskedWord = ((*ref._M_p) & startMask) & endMask;
+    return __builtin_popcountl(maskedWord);
 }
 
 uint Node::leafSelect(uint character, ulong occurrence, uint blockSize) {

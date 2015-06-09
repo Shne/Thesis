@@ -114,7 +114,7 @@ ulong Node::popcountBinaryRank(ulong startOffset, ulong length, bitmap_t* bitmap
     uint wordSize = sizeof(*bitmap->begin()._M_p) * CHAR_BIT;
     
     if(length < wordSize) {
-        return binaryRank(startOffset, length, bitmap);
+        return binaryRank(ref, length);
     }
     
     //PART OF FIRST WORD if unaligned
@@ -144,13 +144,11 @@ ulong Node::popcountBinaryRank(ulong startOffset, ulong length, bitmap_t* bitmap
     return rank;
 }
 
-ulong Node::binaryRank(ulong startOffset, ulong length, bitmap_t* bitmap) {
-    int rank = 0;
-    for(uint i = startOffset; i < startOffset + length; i++) {
-        bool currentBit = (*bitmap)[i];
-        if(currentBit) rank++;
-    }
-    return rank;
+ulong Node::binaryRank(vector<bool>::reference ref, uint length) {
+    ulong startMask = ~(ref._M_mask - 1UL); //the bit of _M_mask and up
+    ulong endMask = (1UL << length)-1UL; //bit at 0-indexed position length-1 and down
+    ulong maskedWord = ((*ref._M_p) & startMask) & endMask;
+    return __builtin_popcountl(maskedWord);
 }
 
 ulong Node::blockBinaryRank(ulong pos, bitmap_t* bitmap, blockRanksVector &blockRanks, uint blockSize) {

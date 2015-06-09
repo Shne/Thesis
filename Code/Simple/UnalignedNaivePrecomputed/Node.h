@@ -40,7 +40,7 @@ public:
     uint rank(uint character, uint index, uint alphabetMin, uint alphabetMax, uint blockSize);
     uint blockBinaryRank(uint pos, uint blockSize);
     ulong popcountBinaryRank(uint offset, uint pos);
-    uint binaryRank(uint offset, uint length);
+    uint binaryRank(vector<bool>::reference ref, uint length);
     Node* getLeaf(uint character, uint alphabetMin, uint alphabetMax);
     uint leafSelect(uint character, ulong occurance, uint blockSize);
     uint select(bool charBit, ulong occurance, uint blockSize);

@@ -125,14 +125,14 @@ ulong Node::popcountBinaryRank(unsigned long pos, bitmap_t* bitmap) {
     unsigned long i;
     unsigned long wordsize = sizeof(*bitmap->begin()._M_p) * CHAR_BIT; //vector<bool> src uses CHAR_BIT too
     
-    //SMALL POS
-    if(pos < wordsize) {
-        return binaryRank(pos, bitmap);
-    }
-    
     vector<bool>::reference ref = (*bitmap)[bitmapOffset];
     unsigned long initialOffset = 0;
     unsigned long* firstFullWord = ref._M_p;
+    
+    //SMALL POS
+    if(pos < wordsize) {
+        return binaryRank(ref, pos);
+    }
     
     //PART OF FIRST WORD if unaligned
     if(ref._M_mask > 1) { //mask = 1 means first part of first word is part of our bitmap, and we can just use the fullword iteration code below
@@ -162,16 +162,11 @@ ulong Node::popcountBinaryRank(unsigned long pos, bitmap_t* bitmap) {
     return bitmapwordRank;
 }
 
-ulong Node::binaryRank(ulong pos, bitmap_t* bitmap) {
-    int i = 0;
-    int rank = 0;
-    for(i = 0; i < bitmap->size(); i++) {
-        if(i > pos) break;
-        bool currentBit = (*bitmap)[i];
-        if(currentBit) rank++;
-        i++;
-    }
-    return rank;
+ulong Node::binaryRank(vector<bool>::reference ref, ulong length) {
+    ulong startMask = ~(ref._M_mask - 1UL); //the bit of _M_mask and up
+    ulong endMask = (1UL << length)-1UL; //bit at 0-indexed position length-1 and down
+    ulong maskedWord = ((*ref._M_p) & startMask) & endMask;
+    return __builtin_popcountl(maskedWord);
 }
 
 
