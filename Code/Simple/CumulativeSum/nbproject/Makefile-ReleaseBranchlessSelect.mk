@@ -44,8 +44,8 @@ OBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=-m64 -g -march=native -DBRANCHLESSSELECT -DTenthousandQueries
-CXXFLAGS=-m64 -g -march=native -DBRANCHLESSSELECT -DTenthousandQueries
+CCFLAGS=-m64 -g -march=native -DBRANCHLESSSELECT
+CXXFLAGS=-m64 -g -march=native -DBRANCHLESSSELECT
 
 # Fortran Compiler Flags
 FFLAGS=

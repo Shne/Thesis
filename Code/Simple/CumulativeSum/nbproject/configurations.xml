@@ -128,7 +128,7 @@
           <developmentMode>6</developmentMode>
           <architecture>2</architecture>
           <standard>8</standard>
-          <commandLine>-g -march=native -DBRANCHLESSSELECT -DTenthousandQueries</commandLine>
+          <commandLine>-g -march=native -DBRANCHLESSSELECT</commandLine>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
