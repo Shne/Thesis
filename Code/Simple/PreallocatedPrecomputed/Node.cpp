@@ -147,8 +147,8 @@ ulong Node::popcountBinaryRank(ulong startOffset, ulong length, bitmap_t* bitmap
 }
 
 ulong Node::binaryRank(vector<bool>::reference ref, uint length) {
-    ulong startMask = ~(ref._M_mask - 1UL); //the bit of _M_mask and up
-    ulong endMask = (1UL << length)-1UL; //bit at 0-indexed position length-1 and down
+    ulong startMask = ~(ref._M_mask - 1UL); //the bit of _M_mask and up are 1
+    ulong endMask = (ref._M_mask << length)-1UL; //bit at 0-indexed position offset+length-1 and down are 1
     ulong maskedWord = ((*ref._M_p) & startMask) & endMask;
     return __builtin_popcountl(maskedWord);
 }
