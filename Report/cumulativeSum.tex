@@ -89,21 +89,7 @@ If we look closer at the raw data, there is a slight (124 KB) increase in memory
 When taking the performance gain on queries into account then the small increased time and memory usage when building the tree is negligible.
 
 
-\begin{figure}\tiny
-\begin{subfigure}{0.48\textwidth}
-	\input{CumulativeSumBuildWalltime}
-	\caption{Wall Time}
-	\label{fig:CumulativeSumBuildWalltime}
-\end{subfigure}
-\hfill
-\begin{subfigure}{0.48\textwidth}
-	\input{CumulativeSumVsUnalignedNaiveBlockSizeBuildMemory}
-	\caption{Memory Usage}
-	\label{fig:CumulativeSumBuildMemoryUsage}
-\end{subfigure}
-\caption{Measurements on Building the UnalignedNaive and CumulativeSum wavelet trees. Notice that the y-axis does not start at 0.}
-\label{fig:CumulativeSumBuild}
-\end{figure}
+
 
 
 \subsubsection{Optimal Block Size For Rank And Select}
@@ -122,36 +108,39 @@ Rank is best with a small block size and select is also better with a relatively
 
 \newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
 \begin{figure}\tiny
-\begin{subfigure}{0.45\textwidth}
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumBlockSizeWallTimeBuild}
+	\caption{Wall Time}
+	\label{fig:CumulativeSumBuildWalltime}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumVsUnalignedNaiveBlockSizeBuildMemory}
+	\caption{Memory Usage}
+	\label{fig:CumulativeSumBuildMemoryUsage}
+\end{subfigure}
+\caption{Measurements on Building the UnalignedNaive and CumulativeSum wavelet trees. Notice that the y-axis does not start at 0.}
+\label{fig:CumulativeSumBuild}
+\vspace{5mm}
+\begin{subfigure}{0.48\textwidth}
 	\input{CumulativeSumBlockSizeWallTimeRank}
-	\caption{Rank: Varying Blocksize for $n=10^8$ characters. The blue line marks expected best block size.}
+	\caption{Rank. Blue line marks expected best block size.}
 	\label{fig:CumulativeSumBlockSizeWallTimeRank}
 \end{subfigure}
 \hfill
-\begin{subfigure}{0.45\textwidth}
+\begin{subfigure}{0.48\textwidth}
 	\input{CumulativeSumBlockSizeWallTimeSelect}
-	\caption{Select: Varying Blocksize for $n=10^8$ characters}
+	\caption{Select.}
 	\label{fig:CumulativeSumBlockSizeWallTimeSelect}
 \end{subfigure}
 
-
-
-\begin{subfigure}{0.45\textwidth}
+\begin{subfigure}{0.48\textwidth}
 	\input{CumulativeSumBlockSizeWallTimeSelectBranchless}
-	\caption{Branchless Select: Varying Blocksize for $n=10^8$ characters}
+	\caption{Branchless Select.}
 	\label{fig:CumulativeSumBlockSizeWallTimeSelectBranchless}
 \end{subfigure}
-\hfill
-\begin{subfigure}{0.45\textwidth}
-	\input{CumulativeSumBlockSizeWallTimeBuild}
-	\caption{Build: Varying Blocksize for $n=10^8$ characters}
-	\label{fig:CumulativeSumBlockSizeWallTimeBuild}
-\end{subfigure}
 
-
-
-
-\caption{Running times of CumulativeSum rank and select for varying block sizes. Notice the x-axis (block size) is logarithmic.}
+\caption{Running times of CumulativeSum rank and select for varying block sizes with $n=10^8$ characters. Notice the x-axis (block size) is logarithmic.}
 \label{fig:CumulativeSumBlockSize}
 \end{figure}
 

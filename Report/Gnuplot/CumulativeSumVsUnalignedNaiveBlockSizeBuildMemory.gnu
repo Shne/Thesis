@@ -1,9 +1,11 @@
 #!/usr/bin/gnuplot
 
 set key top right vertical
-set term epslatex size 2.8,2.5 color font "" 6
+set term epslatex size 3.2,2.5 color font "" 6
 set border
-	
+
+set format x "$2^{%L}$"
+set logscale x 2
 set ylabel "Memory usage (MB)"
 set xlabel "Blocksize (bits)"
 
