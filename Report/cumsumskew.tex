@@ -90,6 +90,7 @@ The results can be seen in Figure~\ref{fig:CumulativeSumSkew_n8as16_Build}, Figu
 We skew the wavelet tree as described in Section~\ref{sec:SkewingTheTree}).
 The block size used for testing the build time and memory usage is 1024, as we found that to be the overall best when weighing both rank and select time and memory usage.
 The block size used for rank is 64 bit and 2048 bit for select, as that gave the best performance for each, and we wanted to give each the best possibility to perform well when skewed.
+The less time that is spent in binary rank and binary select, the greater the influence on running time of branch mispredictions and cache misses from navigation nodes in the tree, and therefore the better opportunity for reducing these has to improve running time.
 
 \paragraph{Results}~\\
 Looking at Figure~\ref{fig:CumulativeSumSkew_n8as16_Build_WallTime}, we can see that it takes more time to build a skewed tree, with increasing time spent as the skew increases.
