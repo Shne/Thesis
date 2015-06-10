@@ -52,6 +52,7 @@ ReadOutput.reset()
 gnuplotFile.close()
 
 
+testDataFile = 'Output/CumulativeSumVsUnalignedNaiveBlockSize_Build_RunningTime.output'
 #BUILD
 gnuplotFile = open("Report/Gnuplot/Data/CumulativeSumBlockSize_Build.data", "w")
 gnuplotFile.write(columns)

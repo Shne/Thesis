@@ -36,7 +36,7 @@ repeats = 5
 blockSizes = [i*128 for i in range(1, 41)]
 blockSizes2 = [i*0.5 for i in range(1, 33)]
 blockSizes3 = [2**i for i in range(3, 17)]
-
+blockSizes4 = [64, 512, 4096, 32768]
 
 # print("CumulativeSum: Select Branching \n")
 # test = 'select'
@@ -54,8 +54,10 @@ blockSizes3 = [2**i for i in range(3, 17)]
 # 		args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize/8), outputFilename]
 # 		subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
 
-addNewline()
 
+outputFilename = 'CumulativeSumVsUnalignedNaiveBlockSize_Build_RunningTime.output'
+
+addNewline()
 
 print("UnalignedNaive: Build \n")
 test = 'build'
@@ -75,12 +77,12 @@ for blockSize in blockSizes3:
 
 addNewline()
 
-print("CumulativeSum: Select Branchless \n")
-test = 'select'
-for blockSize in blockSizes3:
-	for _ in range(repeats):
-		args = [cumulativeSumBranchlessProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize/8), outputFilename]
-		subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
+# print("CumulativeSum: Select Branchless \n")
+# test = 'select'
+# for blockSize in blockSizes3:
+# 	for _ in range(repeats):
+# 		args = [cumulativeSumBranchlessProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize/8), outputFilename]
+# 		subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
 
-addNewline()
+# addNewline()
 
