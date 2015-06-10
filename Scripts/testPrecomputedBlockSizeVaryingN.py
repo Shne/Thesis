@@ -34,15 +34,15 @@ for amount in amounts:
 addNewline()
 addNewline()
 
-# print("UnalignedNaivePrecomputed: Select \n")
-# for amount in amounts:
-# 	addNewline()
-# 	for blockSize in blockSizeRange:
-# 		test = 'select'
-# 		for _ in range(repeats):
-# 			args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
-# 			subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
+print("UnalignedNaivePrecomputed: Select \n")
+for amount in amounts:
+	addNewline()
+	for blockSize in blockSizeRange:
+		test = 'select'
+		for _ in range(repeats):
+			args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
+			subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
 
 
-# addNewline()
-# addNewline()
+addNewline()
+addNewline()
