@@ -114,6 +114,8 @@ Select achieves the best running time with a block size of 2048 bits which can b
 The found block sizes fits with the theoretical Big-O analysis.
 Rank is best with a small block size and select is also better with a relatively small block size that is larger than the one for rank.
 
+In a realistic use case one would want to build a tree for one block size and do rank and select on that tree and not have two different trees: one thee for the best block size of rank and one for the best block size of select.
+A block size 1024 bits seems to be the best choice since it is close to the best running time of both rank and select.
 
 \newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
 \begin{figure}\tiny
