@@ -70,7 +70,7 @@ plot '../Data/CumulativeSum.data' every 9::1 using ($5):($16) title "UnalignedNa
 
 
 # Rank TLB Miss
-set yrange [0:6500]
+set yrange [0:7000]
 set ylabel 'TLB Misses'
 set output 'CumulativeSumRankTLBMiss.tex'
 plot '../Data/CumulativeSum.data' every 9::1 using ($6):($17) title "UnalignedNaive" ls 1,\
