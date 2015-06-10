@@ -19,7 +19,7 @@ The optimizations are their results can be summed up as follows:
 \item[Align bitmaps with memory pages] to reduce TLB misses. Slightly worse running time.
 \item[Store cumulative sum of precomputed values] instead of raw binary rank values to further reduce CPU cycles and memory accesses needed. Fastest improvement of running time out of all our optimizations but uses more memory than the others but only $0.5\;\%$ more than a wavelet tree with concatenated bitmaps, which is the one that uses the smallest amount of memory.
 \item[Replace branching code with arithmetic operations] in select queries to reduce number of branches and thereby branch mispredictions. This resulted in a worse running time.
-\item[Skewing the tree] with a controlled memory layout to reduce branch mispredictions. The result was \textbf{[TODO]}.
+\item[Skewing the tree] with a controlled memory layout to reduce branch mispredictions. The result was worse query running time as well as more time spent building the tree and more memory used.
 \end{description*}
 
 In general, improvements that reduced the raw amount of computations and memory accesses needed were a big improvement, whereas improvements focusing on reducing a single type of penalty, such as BM or TLB misses, were either barely an improvement or no improvement at all.
