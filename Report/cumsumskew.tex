@@ -70,12 +70,11 @@ The exceptions to this are when either the entire bitmap is used for the query, 
 The first case is not a common query in most use cases, and the second case is rare when the input string is much bigger than the alphabet, and would only happen near the leaf nodes.
 Neither scenario happens often enough to warrant controlling the bitmap memory layouts.
 
-\figureBegin
-
+\begin{figure}\tiny
 \includegraphics[width=\textwidth]{QueryPrefetchFigure.pdf}
 \caption{How access patterns in a concatenated bitmap can defeat cache prefetching}
 \label{fig:QueryPrefetchFigure}
-\figureEnd
+\end{figure}
 
 
 

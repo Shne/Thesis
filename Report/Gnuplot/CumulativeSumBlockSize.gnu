@@ -6,6 +6,7 @@ set border
 	
 set ylabel "Walltime"
 set xlabel "Block size (bits)"
+set format x "$2^{%L}$"
 set yrange [0:*]
 set logscale x 2
 
