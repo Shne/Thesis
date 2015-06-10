@@ -86,21 +86,32 @@ In this experiment we want to test whether queries on a skewed tree using contro
 \paragraph{Test Setup}~\\
 The general setup is as described in Section~\ref{sec:ExpNotesGeneralSetup}.
 The query parameters were chosen as described in Section~\ref{sec:choiceOfQueryParameters}.
-The results can be seen in Figure~\ref{fig:NaiveRankSkewRunningTime} and Figure~\ref{fig:NaiveSelectSkewRunningTime}.
+The results can be seen in Figure~\ref{fig:CumulativeSumSkew_n8as16_Build}, Figure~\ref{fig:CumulativeSumSkew_n8as16_Rank} and Figure~\ref{fig:CumulativeSumSkew_n8as16_Select}.
 We skew the wavelet tree as described in Section~\ref{sec:SkewingTheTree}).
 The block size used for testing the build time and memory usage is 1024, as we found that to be the overall best when weighing both rank and select time and memory usage.
 The block size used for rank is 64 bit and 2048 bit for select, as that gave the best performance for each, and we wanted to give each the best possibility to perform well when skewed.
 
 \paragraph{Results}~\\
-Looking at Figure~\ref{fig:CumulativeSumSkew_n8as16_Build}, we can see that it takes more time to build a skewed tree, with increasing time spent as the skew increases.
-It appears to be a linear increase in running time as skew increases.
-If we look at Figure~\ref{fig:CumulativeSumSkew_n8as16_Rank} and Figure~\ref{fig:CumulativeSumSkew_n8as16_Select} we can see that query times also increase linearly with increasing skew.
+Looking at Figure~\ref{fig:CumulativeSumSkew_n8as16_Build_WallTime}, we can see that it takes more time to build a skewed tree, with increasing time spent as the skew increases.
+It appears to be a linear increase in running time as skew increases, especially from skew parameter 3 and higher.
+Looking at Figure~\ref{fig:CumulativeSumSkew_n8as16_build_memory} we can see that it also takes more memory the more we skew the tree.
+If we look at Figure~\ref{fig:CumulativeSumSkew_n8as16_Rank} and Figure~\ref{fig:CumulativeSumSkew_n8as16_Select} we can see that query times for both rank and select also increase linearly with increasing skew.
 
+We can already conclude that skewing the tree is not worth it in terms of build time, memory usage \textit{or} query times.
+We still look closer at our measurements and try to explain why it is not worth it.
 
+Looking at Figure~\ref{fig:CumulativeSumSkew_n8as16_Rank_CM} and Figure~\ref{fig:CumulativeSumSkew_n8as16_Select_CM} we can see the amount of cache misses increases as skew increases for both rank and select queries and for all three levels of cache.
+If we instead look at level 2 data cache \textit{hits} in Figure~\ref{fig:CumulativeSumSkew_n8as16_Rank_L2CH} and Figure~\ref{fig:CumulativeSumSkew_n8as16_Select_L2CH}, we can see that they in fact increase as well, and at a higher rate than the cache misses, which is also what the rising cache hit rate signifies.
+The high increase in level 2 data cache hits is no benefit, however, when level 2 data cache misses still increase, as it is the misses that cause a penalty and no increased amount of cache hits can make up for that penalty.
 
+In Figure~\ref{fig:CumulativeSumSkew_n8as16_Rank_BMExe} and Figure~\ref{fig:CumulativeSumSkew_n8as16_Select_BMExe} we see an increase branches executed, which is to be expected, as the depth of the tree increases, more nodes must be traversed using branching code.
+While more branches are taken overall, we also see in Figure~\ref{fig:CumulativeSumSkew_n8as16_Rank_BM} and Figure~\ref{fig:CumulativeSumSkew_n8as16_Select_BM} a reduction in both the amount of branch mispredictions and the branch misprediction rate as the tree is skewed further.
+The reduction in the raw amount of branch mispredictions leads directly to a reduction in performance penalties incurred, but the increase in total number of conditional branches executed might not be worth it.
+The amount of branches executed at skew factor 6 compared to skew factor 2 (balanced) increases by 37,149 for rank and 1,365,427 for select, whereas the amount of branch mispredictions are only reduced by 1,377 for rank and 63,116 for select, meaning that there is 21 additional branches per branch misprediction saved for rank and 27 for select.
+A branch misprediction penalty must then be at least either 21 or 27 cpu cycles before it would be worth it in terms branch mispredictions, assuming a single branch instruction takes one cpu cycle.
 
-\textbf{[TODO: complete rewrite with new graphs, results, etc. from this]}
-\textbf{[TODO: new graphs]}
+Figure~\ref{fig:CumulativeSumSkew_n8as16_Rank_TLBM} and Figure~\ref{fig:CumulativeSumSkew_n8as16_Select_TLBM} show the amount of Translation Lookaside Buffer Misses encountered as the tree is skewed.
+While it has higher variation and both dips and rises the more the tree is skewed, it does still show a general increase at higher skew parameter values.
 
 \begin{figure}\tiny
 \begin{subfigure}{0.48\textwidth}
@@ -111,7 +122,7 @@ If we look at Figure~\ref{fig:CumulativeSumSkew_n8as16_Rank} and Figure~\ref{fig
 \hfill
 \begin{subfigure}{0.48\textwidth}
 	\input{CumulativeSumSkew_n8as16_build_memory}
-	\caption{Memory Usage}
+	\caption{Memory Usage. Notice x-axis not starting at 0.}
 	\label{fig:CumulativeSumSkew_n8as16_build_memory}
 \end{subfigure}
 
