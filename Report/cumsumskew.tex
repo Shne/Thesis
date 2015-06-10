@@ -88,37 +88,122 @@ The general setup is as described in Section~\ref{sec:ExpNotesGeneralSetup}.
 The query parameters were chosen as described in Section~\ref{sec:choiceOfQueryParameters}.
 The results can be seen in Figure~\ref{fig:NaiveRankSkewRunningTime} and Figure~\ref{fig:NaiveSelectSkewRunningTime}.
 We skew the wavelet tree as described in Section~\ref{sec:SkewingTheTree}).
+The block size used for testing the build time and memory usage is 1024, as we found that to be the overall best when weighing both rank and select time and memory usage.
+The block size used for rank is 64 bit and 2048 bit for select, as that gave the best performance for each, and we wanted to give each the best possibility to perform well when skewed.
 
 \paragraph{Results}~\\
+Looking at Figure~\ref{fig:CumulativeSumSkew_n8as16_Build}, we can see that it takes more time to build a skewed tree, with increasing time spent as the skew increases.
+It appears to be a linear increase in running time as skew increases.
+If we look at Figure~\ref{fig:CumulativeSumSkew_n8as16_Rank} and Figure~\ref{fig:CumulativeSumSkew_n8as16_Select} we can see that query times also increase linearly with increasing skew.
+
+
+
+
 \textbf{[TODO: complete rewrite with new graphs, results, etc. from this]}
 \textbf{[TODO: new graphs]}
 
-\newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
 \begin{figure}\tiny
 \begin{subfigure}{0.48\textwidth}
-	\input{CumulativeSumSkew_n8as16_Build}
-	\caption{Build: Wall Time. $b=1024$ bit.}
-	\label{fig:CumulativeSumSkew_n8as16_Build}
+	\input{CumulativeSumSkew_n8as16_Build_WallTime}
+	\caption{Wall Time}
+	\label{fig:CumulativeSumSkew_n8as16_Build_WallTime}
+\end{subfigure}
+\hfill
+
+\caption{Build Wall Time and Memory Usage of CumulativeSum for various skew.}
+\label{fig:CumulativeSumSkew_n8as16_Build}
+\end{figure}
+
+\newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
+\begin{figure}\tiny
+
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumSkew_n8as16_Rank}
+	\caption{Wall Time}
+	\label{fig:CumulativeSumSkew_n8as16_Rank}
 \end{subfigure}
 \hfill
 \begin{subfigure}{0.48\textwidth}
-	\input{CumulativeSumSkew_n8as16_Rank}
-	\caption{Rank: Wall Time. $b=64$ bit.}
-	\label{fig:CumulativeSumSkew_n8as16_Rank}
+	\input{CumulativeSumSkew_n8as16_Rank_CM}
+	\caption{Cache Misses}
+	\label{fig:CumulativeSumSkew_n8as16_Rank_CM}
 \end{subfigure}
 
 \begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumSkew_n8as16_Rank_L2CH}
+	\caption{Level 2 Data Cache Hits \& Hit Rate}
+	\label{fig:CumulativeSumSkew_n8as16_Rank_L2CH}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumSkew_n8as16_Rank_BMExe}
+	\caption{Branches Executed}
+	\label{fig:CumulativeSumSkew_n8as16_Rank_BMExe}
+\end{subfigure}
+
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumSkew_n8as16_Rank_BM}
+	\caption{Branch Mispredictions}
+	\label{fig:CumulativeSumSkew_n8as16_Rank_BM}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumSkew_n8as16_Rank_TLBM}
+	\caption{Translation Lookaside Buffer Misses}
+	\label{fig:CumulativeSumSkew_n8as16_Rank_TLBM}
+\end{subfigure}
+
+\caption{Measurements for Rank Queries on CumulativeSum for various skew.}
+\label{fig:CumulativeSumSkew_n8as16_Rank}
+\end{figure}
+
+
+
+
+
+
+\begin{figure}\tiny
+
+\begin{subfigure}{0.48\textwidth}
 	\input{CumulativeSumSkew_n8as16_Select}
-	\caption{Select: Wall Time. $b=2048$ bit.}
+	\caption{Wall Time}
 	\label{fig:CumulativeSumSkew_n8as16_Select}
 \end{subfigure}
 \hfill
 \begin{subfigure}{0.48\textwidth}
-	\input{CumulativeSumSkew_n8as16_Rank_L1CM}
-	\caption{Rank: Level 1 Cache Misses. $b=64$ bit.}
-	\label{fig:CumulativeSumSkew_n8as16_Rank_L1CM}
+	\input{CumulativeSumSkew_n8as16_Select_CM}
+	\caption{Cache Misses}
+	\label{fig:CumulativeSumSkew_n8as16_Select_CM}
 \end{subfigure}
+
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumSkew_n8as16_Select_L2CH}
+	\caption{Level 2 Data Cache Hits \& Hit Rate}
+	\label{fig:CumulativeSumSkew_n8as16_Select_L2CH}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumSkew_n8as16_Select_BMExe}
+	\caption{Branches Executed}
+	\label{fig:CumulativeSumSkew_n8as16_Select_BMExe}
+\end{subfigure}
+
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumSkew_n8as16_Select_BM}
+	\caption{Branch Mispredictions}
+	\label{fig:CumulativeSumSkew_n8as16_Select_BM}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumSkew_n8as16_Select_TLBM}
+	\caption{Translation Lookaside Buffer Misses}
+	\label{fig:CumulativeSumSkew_n8as16_Select_TLBM}
+\end{subfigure}
+
+\caption{Measurements for Select Queries on CumulativeSum for various skew.}
+\label{fig:CumulativeSumSkew_n8as16_Select}
 \end{figure}
+
 \restoregeometry
 
 \iffalse

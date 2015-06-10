@@ -92,12 +92,16 @@
       \put(3433,264){\makebox(0,0){\strut{} 5}}%
       \put(3868,264){\makebox(0,0){\strut{} 5.5}}%
       \put(4304,264){\makebox(0,0){\strut{} 6}}%
-      \put(96,1919){\rotatebox{-270}{\makebox(0,0){\strut{}Wall Time ($\mu s$)}}}%
+      \put(96,1919){\rotatebox{-270}{\makebox(0,0){\strut{}Cache Misses}}}%
       \put(2561,84){\makebox(0,0){\strut{}Skew Parameter}}%
     }%
     \gplgaddtomacro\gplfronttext{%
       \csname LTb\endcsname%
-      \put(1740,3332){\makebox(0,0)[r]{\strut{}CumulativeSum}}%
+      \put(1308,3332){\makebox(0,0)[r]{\strut{}Level 1}}%
+      \csname LTb\endcsname%
+      \put(2307,3332){\makebox(0,0)[r]{\strut{}Level 2}}%
+      \csname LTb\endcsname%
+      \put(3306,3332){\makebox(0,0)[r]{\strut{}Level 3}}%
     }%
     \gplbacktext
     \put(0,0){\includegraphics{CumulativeSumSkew_n8as16_Rank_L1CM}}%
