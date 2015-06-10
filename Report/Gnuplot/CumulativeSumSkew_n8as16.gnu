@@ -5,7 +5,7 @@ set key top horizontal
 
 set term epslatex size 3.2,2.5 color font "" 6
 set border
-set logscale x 2
+# set logscale x 2
 
 # WALL TIME
 set xlabel "Skew Parameter"

@@ -7,7 +7,7 @@ import numpy
 
 
 testDataFile = 'Output/CumulativeSumSkew_n8as16.output'
-testsPerSize = 1
+testsPerSize = 5
 
 
 def avg(list):
@@ -29,6 +29,7 @@ def formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize):
 		skew = avg(ReadOutput.skewList[startIndex:endIndex])
 		Walltime = avg(ReadOutput.wallTimeList[startIndex:endIndex])
 		WalltimeErr = numpy.std(ReadOutput.wallTimeList[startIndex:endIndex])
+		
 
 		gnuplotFile.write(str(skew)+" "+
 			str(Walltime)+" "+
