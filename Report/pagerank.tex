@@ -186,8 +186,7 @@ The derivative of $\frac{n}{b}+b$ is $1-\frac{n}{b^2}$ and its root is $n = b^2$
 This is only the optimal block size for a single bitmap, and a wavelet tree has many bitmaps of varying sizes $n$ that are lower near the leaves.
 This means that the best block size in a wavelet tree is either one that varies for each bitmap or, if using a fixed block size, some value below the theoretically optimal block size for the root bitmap.
 
-Later, in Section~\ref{sec:expOptimalBlockSizeDependsOnInputSize}, we show using a fixed block size $b$ for all bitmaps in a wavelet tree, that the optimal $b$ does indeed depend on $n$ and that the practically optimal value of $b$ is below the theoretically optimal size of $b$ for the root bitmap.
-\textbf{[TODO: verify this]}
+Later, in Section~\ref{sec:expOptimalBlockSizeDependsOnInputSize}, we show using a fixed block size $b$ for all bitmaps in a wavelet tree, whether the optimal $b$ does indeed depend on $n$ and whether the practically optimal value of $b$ is below the theoretically optimal size of $b$ for the root bitmap.
 
 
 
@@ -515,7 +514,9 @@ In Figure~\ref{fig:PrecomputedRankBlockSizeVaryN_Rank_WallTime} we have plotted 
 The x-axis is logarithmic as we tested for block size values as powers of 2, to reach a wide range of block sizes without having to run hundreds of tests yet still have several tests at low values.
 
 For all four graphs in Figure~\ref{fig:PrecomputedRankBlockSizeVaryN_Rank_WallTime} we can see that the performance at the theoretical optimal block size for the root bitmap  at $\sqrt{n}$ is good, and close to the minimum in wall time.
-Therefore, the optimal block size for a wavelet tree using precomputed rank values in blocks should compute its block size based in the size of the input for better performance.
+Therefore, the wavelet tree using precomputed rank values in blocks should compute its block size based in the size of the input for better performance.
+A further improvement might be to compute the block size for each node of the tree individually.
+We have, however, not done this in our implementation, because of some problems with the implementation and time constraints.
 
 Surprisingly, we find that the minimum in wall time is at a block size not below the theoretical optimal block size, but instead slightly above it if anything at all.
 We had expected that the other bitmaps, smaller than the root bitmap and therefore having smaller optimal block sizes, would have skewed the optimal block size downward.
