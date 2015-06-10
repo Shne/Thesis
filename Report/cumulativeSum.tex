@@ -98,8 +98,7 @@ In Figure~\ref{fig:CumulativeSumBuildMemoryUsage} we can see that, as expected, 
 At the lowest block size we tested for, $2^3$ bits, we see a massive increase in memory usage.
 For CumulativeSum, the memory usage at a block size of $2^3$ bits is about double that at a block size of $2^8$ bits.
 
-If we look closer at the raw data at block size $2^{10}$ for which we calculated an expected extra memory usage of 634\,KB., there is an increase of 350\,KB in memory usage when storing the cumulative sum, which constitutes an increase of about 0.38\,\%, and is even less than what we expected.
-When taking the performance gain on queries into account then the small increased time and memory usage when building the tree is negligible.
+If we look closer at the raw data at block size $2^{10}$ for which we calculated an expected extra memory usage of 634\,KB., there is an increase of 350\,KB in memory usage when storing the cumulative sum, which constitutes an increase of about 0.38\,\%, and is even less than what we expected and is negligible compared to the expected increase in running time.
 
 
 
@@ -201,8 +200,9 @@ This can again additionally be explained by the reduction in level 1 cache misse
 Level 2 cache misses are a little higher for CumulativeSum than for UnalignedNaive
 Branchless select reduces the hardware penalties more that branching select but it is still slower because requires more cycles to achieve branchless select and the hardware penalty reduction does not make up for this increase.
 
-In the end we can confirm based on our measurements that it makes sense why Rank and Select is faster for CumulativeSum than for UnalignedNaive.
-Cumulative sum is theoretically better than Unaligned naive (see Section~\ref{sec:AdvantagesOfCumulativeSum}) because of the cumulative sums allowing binary rank to be computed in $O(1)$ time.
+In the end we can confirm based on our measurements that it makes sense why Rank and Select is faster for CumulativeSum than for UnalignedNaive and also when taking the performance gain on queries into account then the small increased time and memory usage when building the tree is negligible.
+
+The improvement that CumulativeSum achieves is also theoretically better than Unaligned naive (see Section~\ref{sec:AdvantagesOfCumulativeSum}) because of the cumulative sums allowing binary rank to be computed in $O(1)$ time.
 The tests show the practical effect of this theoretical improvement and confirms that the theoretical improvement also works in practice.
 
 
