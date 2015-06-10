@@ -7,17 +7,16 @@ set key top left horizontal
 # set border
 # set logscale x 2
 
-# WALL TIME
 set xlabel "Skew Parameter"
-set ylabel "Wall Time ($\\mu s$)"
-set yrange [0:*]
 set xrange [1.9:6.1]
+set yrange [0:*]
 
 #BUILD
 set term epslatex size 2.8,2.5 color font "" 6
+set ylabel "Wall Time (seconds)"
 set output 'CumulativeSumSkew_n8as16_Build_WallTime.tex'
-plot '../Data/CumulativeSumSkew_n8as16_Build.data' every ::2 using 1:2 with linespoints linetype 1 notitle,\
-	'' every ::2 using 1:2:3 with yerrorbars linetype 1 notitle
+plot '../Data/CumulativeSumSkew_n8as16_Build.data' every ::2 using 1:($2/1000000) with linespoints linetype 1 notitle,\
+	'' every ::2 using 1:($2/1000000):($3/1000000) with yerrorbars linetype 1 notitle
 
 
 #RANK
