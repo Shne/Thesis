@@ -81,15 +81,16 @@ The amount of branch mispredictions was reduced. Just not enough to make up for 
 \subsection{Experiments}
 
 \subsubsection{Build Time And Memory Usage For Various Block Sizes}
-In Figure~\ref{fig:CumulativeSumBuild} we have plotted the wall time and memory usage of building the UnalignedNaive and CumulativeSum Wavelet Trees.
+\textbf{[TODO: redo this paragraph]}In Figure~\ref{fig:CumulativeSumBuild} we have plotted the wall time and memory usage of building the UnalignedNaive and CumulativeSum Wavelet Trees.
 In Figure~\ref{fig:CumulativeSumBuildWalltime} we can see that it takes slightly longer to build the tree when we have to calculate the cumulative sum across the precomputed values we store.
 It is only a difference of 151 milliseconds or an increase from UnalignedNaive to CumulativeSum of 1.00\,\%.
+
 In Figure~\ref{fig:CumulativeSumBuildMemoryUsage} we can see that, as expected, CumulativeSum takes more memory, but only significantly so when using block sizes less than $2^8$ bits (8 bytes).
 At the lowest block size we tested for, $2^3$ bits, we see a massive increase in memory usage.
 For CumulativeSum, the memory usage at a block size of $2^3$ bits is about double that at a block size of $2^8$ bits.
 
 If we look closer at the raw data at block size $2^{14}$ for which we calculated an expected extra memory usage of 317\,KB., there is a slight (124\,KB) increase in memory usage when storing the cumulative sum, which constitutes an increase of about 0.0168\,\%, and is even less than what we expected.
-When taking the performance gain on queries into account then the small  \textbf{[TODO: which is actually faster?]}increased time andmemory usage when building the tree is negligible.
+When taking the performance gain on queries into account then the small  \textbf{[TODO: which is actually faster?]}increased time and memory usage when building the tree is negligible.
 
 
 
@@ -97,11 +98,9 @@ When taking the performance gain on queries into account then the small  \textbf
 
 \subsubsection{Optimal Block Size For Rank And Select}
 \label{sec:OptimalBlockSizeForRankAndSelect}
-We have made a test for Rank, Select, SelectBranchless and construction of the tree, that shows their running times for varying block sizes.
+We have made tests of the running time of Rank, Select, and SelectBranchless queries on wavelet trees of varying block sizes from $2^2$ to $2^{16}$ bits.
 The test results are shown in Figure~\ref{fig:CumulativeSumBlockSize}.
 
-
-The block sizes used in the experiments vary using the values from sequence: $(2^1, 2^2, ..., 2^{16})$ bits.
 From Figure~\ref{fig:CumulativeSumBlockSizeWallTimeRank} we observe that the best running time of rank is achieved using a block size of 64 bits. 
 
 Select achieves the best running time with a block size of 2048 bits which can be observed in Figure~\ref{fig:CumulativeSumBlockSizeWallTimeSelect} and the branchless version achieves the best running time using a block size of \textbf{TODO} bits as seen in Figure~\ref{fig:CumulativeSumBlockSizeWallTimeSelectBranchless}
