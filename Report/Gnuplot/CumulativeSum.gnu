@@ -62,7 +62,7 @@ plot '../Data/CumulativeSum.data' every 9::1 using ($4):($15) title "UnalignedNa
      '../Data/CumulativeSum.data' every 9::4 using ($4):($15) title "CumulativeSum" ls 2
 
 # Rank BranchMissRate
-set yrange [0:0.019]
+set yrange [0:0.13]
 set ylabel 'Branch Misprediction Rate'
 set output 'CumulativeSumRankBranchMissRate.tex'
 plot '../Data/CumulativeSum.data' every 9::1 using ($5):($16) title "UnalignedNaive" ls 1,\
@@ -109,7 +109,7 @@ plot '../Data/CumulativeSum.data' every 9::1 using ($10):($21) title "UnalignedN
 
 
 # Rank Lvl 3 CM
-set yrange [0:*]
+set yrange [0:150000]
 set ylabel 'Cache Misses'
 set output 'CumulativeSumRankL3CM.tex'
 plot '../Data/CumulativeSum.data' every 9::1 using ($11):($22) title "UnalignedNaive" ls 1,\
@@ -141,7 +141,7 @@ plot '../Data/CumulativeSum.data' every 9::2 using ($2/1000):($13/1000) title "U
      '../Data/CumulativeSum.data' every 9::6 using ($2/1000):($13/1000) title "CumSumBranchless" ls 3
 
 # Select BranchMiss
-set yrange [0:410000]
+set yrange [0:450000]
 set ylabel 'Branch Mispredictions'
 set output 'CumulativeSumSelectBranchMiss.tex'
 plot '../Data/CumulativeSum.data' every 9::2 using ($3):($14) title "UnalignedNaive" ls 1,\
@@ -158,7 +158,7 @@ plot '../Data/CumulativeSum.data' every 9::2 using ($4):($15) title "UnalignedNa
      '../Data/CumulativeSum.data' every 9::6 using ($4):($15) title "CumSumBranchless" ls 3
 
 # Select BranchMissRate
-set yrange [0:0.08]
+set yrange [0:0.2]
 set ylabel 'Branch Misprediction Rate'
 set output 'CumulativeSumSelectBranchMissRate.tex'
 plot '../Data/CumulativeSum.data' every 9::2 using ($5):($16) title "UnalignedNaive" ls 1,\
@@ -167,7 +167,7 @@ plot '../Data/CumulativeSum.data' every 9::2 using ($5):($16) title "UnalignedNa
 
 
 # Select TLB Miss
-set yrange [0:9500]
+set yrange [0:10800]
 set ylabel 'TLB Misses'
 set output 'CumulativeSumSelectTLBMiss.tex'
 plot '../Data/CumulativeSum.data' every 9::2 using ($6):($17) title "UnalignedNaive" ls 1,\
@@ -176,7 +176,7 @@ plot '../Data/CumulativeSum.data' every 9::2 using ($6):($17) title "UnalignedNa
 
 
 # Select Lvl 1 CM
-set yrange [0:*]
+set yrange [0:480000]
 set ylabel 'Cache Misses'
 set output 'CumulativeSumSelectL1CM.tex'
 plot '../Data/CumulativeSum.data' every 9::2 using ($7):($18) title "UnalignedNaive" ls 1,\
