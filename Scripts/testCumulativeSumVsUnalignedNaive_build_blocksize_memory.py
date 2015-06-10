@@ -47,13 +47,10 @@ subprocess.Popen(['make','CONF=Release', 'clean'], cwd=cumulativeSumCwd).wait()
 subprocess.Popen(['make','CONF=Release'], cwd=cumulativeSumCwd).wait()
 
 
-blockSizeRange = [2**i for i in range(0, 14)]
-
+blockSizeRange = [2**i for i in range(3, 17)]
 
 test = 'buildmemory'
 repeats = 5
-
-
 
 regex = b"mem_heap_B=(?P<heap>\d+)\nmem_heap_extra_B=(?P<extra>\d+)\nmem_stacks_B=(?P<stacks>\d+)\nheap_tree=empty$"
 compiledRegex = re.compile(regex)

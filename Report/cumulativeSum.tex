@@ -112,11 +112,10 @@ We have made a test for Rank, Select, SelectBranchless and construction of the t
 The test results are shown in Figure~\ref{fig:CumulativeSumBlockSize}.
 
 
-The block sizes vary for rank in a range from 4 to 96 bits increasing by 4 bits.
-From Figure~\ref{fig:CumulativeSumBlockSizeWallTimeRank} we observe that the best running time is achieved using a block size of 8 bits. 
+The block sizes used in the experiments vary using the values from sequence: $(2^1, 2^2, ..., 2^{16})$ bits.
+From Figure~\ref{fig:CumulativeSumBlockSizeWallTimeRank} we observe that the best running time of rank is achieved using a block size of 64 bits. 
 
-Block sizes for select and the branchless version of select vary in a range from 128 to 5120 bits with a difference of 128 bits between each block size. 
-Select achieves the best running time with a block size of [\textbf{TODO}] and the branchless version achieves the best running time using a block size of 2048 bits.
+Select achieves the best running time with a block size of 2048 bits which can be observed in Figure~\ref{fig:CumulativeSumBlockSizeWallTimeSelect} and the branchless version achieves the best running time using a block size of \textbf{TODO} bits as seen in Figure~\ref{fig:CumulativeSumBlockSizeWallTimeSelectBranchless}
 The found block sizes fits with the theoretical Big-O analysis.
 Rank is best with a small block size and select is also better with a relatively small block size that is larger than the one for rank.
 

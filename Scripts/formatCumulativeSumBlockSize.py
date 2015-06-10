@@ -29,12 +29,12 @@ columns = "[blockSize]  [Walltime]  [WalltimeErr]" + "\n"
 gnuplotFile = open("Report/Gnuplot/Data/CumulativeSumBlockSize_Rank.data", "w")
 gnuplotFile.write(columns)
 ReadOutput.getData(testDataFile, "CumulativeSum", "rank")
+
 for i in range(0, 14):
 	WriteData(i, testsPerSize)
 
 ReadOutput.reset()
 gnuplotFile.close()
-
 
 
 gnuplotFile = open("Report/Gnuplot/Data/CumulativeSumBlockSize_Select.data", "w")
@@ -48,16 +48,15 @@ ReadOutput.reset()
 gnuplotFile.close()
 
 
+gnuplotFile = open("Report/Gnuplot/Data/CumulativeSumBlockSize_SelectBranchless.data", "w")
+gnuplotFile.write(columns)
+ReadOutput.getData(testDataFile, "CumulativeSum", "selectBranchless")
 
-# gnuplotFile = open("Report/Gnuplot/Data/CumulativeSumBlockSize_SelectBranchless.data", "w")
-# gnuplotFile.write(columns)
-# ReadOutput.getData(testDataFile, "CumulativeSum", "selectBranchless")
+for i in range(0, 14):
+	WriteData(i, testsPerSize)
 
-# for i in range(0, 14):
-# 	WriteData(i, testsPerSize)
-
-# ReadOutput.reset()
-# gnuplotFile.close()
+ReadOutput.reset()
+gnuplotFile.close()
 
 
 
@@ -72,27 +71,16 @@ ReadOutput.reset()
 gnuplotFile.close()
 
 
-# gnuplotFile = open("Report/Gnuplot/Data/UnalignedNaivePrecomputedBlockSize_Build.data", "w")
-# gnuplotFile.write(columns)
-# ReadOutput.getData(testDataFile, "UnalignedNaivePrecomputed", "build")
+gnuplotFile = open("Report/Gnuplot/Data/UnalignedNaivePrecomputedBlockSize_Build.data", "w")
+gnuplotFile.write(columns)
+ReadOutput.getData(testDataFile, "UnalignedNaivePrecomputed", "build")
 
-# for i in range(0, 14):
-# 	WriteData(i, testsPerSize)
+for i in range(0, 14):
+	WriteData(i, testsPerSize)
 
-# ReadOutput.reset()
-# gnuplotFile.close()
+ReadOutput.reset()
+gnuplotFile.close()
 
-
-# testDataFile = 'Output/CumulativeSumBlockSizeZoomedRank_n8as16_1000Queries.output'
-# gnuplotFile = open("Report/Gnuplot/Data/CumulativeSumBlockSize_ZoomedRank.data", "w")
-# gnuplotFile.write(columns)
-# ReadOutput.getData(testDataFile, "CumulativeSum", "rank")
-
-# for i in range(0, 32):
-# 	WriteData(i, testsPerSize)
-
-# ReadOutput.reset()
-# gnuplotFile.close()
 
 
 GnuScriptFileName = '../CumulativeSumBlockSize.gnu'

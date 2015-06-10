@@ -80,9 +80,9 @@ def writeMassifData(programName, skew):
 # blockSizeSelect = int(blockSizeList[index])
 # bestBlockSizeFile.write('Select: ' + str(blockSizeSelect) +', ' + str(walltimeList[index]) + '\n')
 
-blockSizeRank = 64
-blockSizeSelect = 2048
-blockSizeBuild = 1024
+blockSizeRank = 64/8
+blockSizeSelect = 2048/8
+blockSizeBuild = 1024/8
 
 repeats = 5
 skewStart = 2
