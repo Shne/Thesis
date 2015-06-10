@@ -97,20 +97,26 @@ We skew the wavelet tree as described in Section~\ref{sec:SkewingTheTree}).
 \begin{figure}\tiny
 \begin{subfigure}{0.48\textwidth}
 	\input{CumulativeSumSkew_n8as16_Build}
-	\caption{Build: Wall Time}
+	\caption{Build: Wall Time. $b=1024$ bit.}
 	\label{fig:CumulativeSumSkew_n8as16_Build}
 \end{subfigure}
 \hfill
 \begin{subfigure}{0.48\textwidth}
 	\input{CumulativeSumSkew_n8as16_Rank}
-	\caption{Rank: Wall Time}
+	\caption{Rank: Wall Time. $b=64$ bit.}
 	\label{fig:CumulativeSumSkew_n8as16_Rank}
 \end{subfigure}
 
 \begin{subfigure}{0.48\textwidth}
 	\input{CumulativeSumSkew_n8as16_Select}
-	\caption{Select: Wall Time}
+	\caption{Select: Wall Time. $b=2048$ bit.}
 	\label{fig:CumulativeSumSkew_n8as16_Select}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\input{CumulativeSumSkew_n8as16_Rank_L1CM}
+	\caption{Rank: Level 1 Cache Misses. $b=64$ bit.}
+	\label{fig:CumulativeSumSkew_n8as16_Rank_L1CM}
 \end{subfigure}
 \end{figure}
 \restoregeometry
