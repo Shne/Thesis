@@ -1,7 +1,7 @@
 \section{Cumulative Sum with Controlled Memory Layout and Skew}
 \label{sec:memorylayout}
 In this section, we describe our attempt to improve the query times for the wavelet tree by controlling the memory layout and skewing the tree.
-Skewing the tree means that we force the it to be unbalanced with a bias to one side. 
+Skewing the tree means that we force it to be unbalanced with a bias to one side. 
 Brodal et al.~\citeA{gerthSkewedBinarySearchTrees} showed that skewing a binary search tree could reduce the amount of cache misses and branch mispredictions considerately. Enough, in fact, to increase the speed of searching the tree manyfold, even though the skewing increased the depth of the tree structure.
 
 To reduce cache misses by skewing the tree we must control the memory layout, because by skewing the tree to the right, we increase the likelihood of a traversal similar to a depth-first-search going down the right side first (DFSr). So we want to place the data in memory so that a DFSr traversal through the tree would result in sequential address accesses.
