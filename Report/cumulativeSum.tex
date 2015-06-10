@@ -40,8 +40,8 @@ It takes at least 28 bits to store $10^8$, because $2^{27} < 10^8 < 2^{28}$.
 Because the value types supported by x86 and C++ must be byte (8-bit) aligned and use a number of bytes that is a power of 2, the smallest type we can use is the 4-byte type \texttt{unsigned int} capable of storing values up to $2^{32}$.
 This means the vector, instead of holding 2-byte \texttt{unsigned short int}s, must hold 4-byte \texttt{unsigned int}s, doubling the space required to store the precomputed values.
 We expect this increase in memory usage to be tiny, as it is another 2 bytes per block, of which there are $\frac{n}{b}$ per layer of the tree, of which there are $\log n$.
-So with our input string of length $n = 10^8$ and a blockSize of half a page, or $2^{14} = 16384$ bits, we expect an extra memory usage of about 317 kB:
-\[\text{Memory usage} = 2 \cdot \frac{10^8}{16384} \cdot \log 10^8 \approx 324407 \text{ bytes} \approx 317 \text{ kB} \]
+So with our input string of length $n = 10^8$ and a blockSize of $2^{10} = 1024$ bits, we expect an extra memory usage of about 634 kB:
+\[\text{Memory usage} = 2 \cdot \frac{10^8}{1024} \cdot \log 10^8 \approx 648,814 \text{ bytes} \approx 634 \text{ kB} \]
 
 We have already seen that the UnalignedNaive wavelet tree for this input size and block size and an alphabet size of $2^{16}$ uses about 721 MB of memory, so another few hundred kilobytes is barely worth mentioning.
 We will see in our experiments how much actual memory is used and whether the difference in running time can make up for the increase in storage space required.
@@ -81,16 +81,16 @@ The amount of branch mispredictions was reduced. Just not enough to make up for 
 \subsection{Experiments}
 
 \subsubsection{Build Time And Memory Usage For Various Block Sizes}
-\textbf{[TODO: redo this paragraph]}In Figure~\ref{fig:CumulativeSumBuild} we have plotted the wall time and memory usage of building the UnalignedNaive and CumulativeSum Wavelet Trees.
+In Figure~\ref{fig:CumulativeSumBuild} we have plotted the wall time and memory usage of building the UnalignedNaive and CumulativeSum Wavelet Trees.
 In Figure~\ref{fig:CumulativeSumBuildWalltime} we can see that it takes slightly longer to build the tree when we have to calculate the cumulative sum across the precomputed values we store.
-It is only a difference of 151 milliseconds or an increase from UnalignedNaive to CumulativeSum of 1.00\,\%.
+The difference at $2^{10}$ is 0.49 seconds, which is a $3.33\,\%$ increase from UnalignedNaive to CumulativeSum, and for other block sizes similar differences are found.
 
 In Figure~\ref{fig:CumulativeSumBuildMemoryUsage} we can see that, as expected, CumulativeSum takes more memory, but only significantly so when using block sizes less than $2^8$ bits (8 bytes).
 At the lowest block size we tested for, $2^3$ bits, we see a massive increase in memory usage.
 For CumulativeSum, the memory usage at a block size of $2^3$ bits is about double that at a block size of $2^8$ bits.
 
-If we look closer at the raw data at block size $2^{14}$ for which we calculated an expected extra memory usage of 317\,KB., there is a slight (124\,KB) increase in memory usage when storing the cumulative sum, which constitutes an increase of about 0.0168\,\%, and is even less than what we expected.
-When taking the performance gain on queries into account then the small  \textbf{[TODO: which is actually faster?]}increased time and memory usage when building the tree is negligible.
+If we look closer at the raw data at block size $2^{10}$ for which we calculated an expected extra memory usage of 634\,KB., there is an increase of 350\,KB in memory usage when storing the cumulative sum, which constitutes an increase of about 0.38\,\%, and is even less than what we expected.
+When taking the performance gain on queries into account then the small increased time and memory usage when building the tree is negligible.
 
 
 
