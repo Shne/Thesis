@@ -22,6 +22,7 @@ plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Rank.data' every ::2 usi
 	'' every ::2 using ($3/32768):2:13 with yerrorbars linetype 4 notitle,\
 	
 	# '../Data/PrecomputedRankBlockSize_NaiveInteger_Rank.data' every ::2 using ($3/32768):($2/100) with linespoints title "NaiveInteger, $mr\\hat{\\sigma}=$ ".naiveinteger_max_stddev_rank." $avg\\hat{\\sigma}=$ ".naiveinteger_avg_stddev_rank
+set yrange [0:19000]
 set output 'PrecomputedRankBlockSize_Select_WallTime.tex'
 plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Select.data' every ::2 using ($3/32768):2 with linespoints linetype 1 title "Naive",\
 	'' every ::2 using ($3/32768):2:13 with yerrorbars linetype 1 notitle,\
@@ -61,7 +62,7 @@ plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Select.data' every ::2 u
 # BRANCH MISPREDICTIONS
 set xlabel "Block Size (number of pages)"
 set ylabel "Branch Mispredictions"
-set yrange [0:*]
+set yrange [0:70000]
 set output 'PrecomputedRankBlockSize_Rank_BranchMiss.tex'
 plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Rank.data' every ::2 using ($3/32768):5 with linespoints linetype 1 title "Naive",\
 	'' every ::2 using ($3/32768):5:15 with yerrorbars linetype 1 notitle,\
@@ -120,7 +121,7 @@ plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Select.data' every ::2 u
 # BRANCH MISPREDICTION RATE
 set xlabel "Block Size (number of pages)"
 set ylabel "Branch Misprediction Rate"
-set yrange [0:*]
+set yrange [0:0.02]
 set output 'PrecomputedRankBlockSize_Rank_BranchMissRate.tex'
 plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Rank.data' every ::2 using ($3/32768):4 with linespoints linetype 1 title "Naive",\
 	'' every ::2 using ($3/32768):4:14 with yerrorbars linetype 1 notitle,\
@@ -131,6 +132,7 @@ plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Rank.data' every ::2 usi
 	'../Data/PrecomputedRankBlockSize_UnalignedPreallocatedPrecomputed_Rank.data' every ::2 using ($3/32768):4 with linespoints linetype 4 title "UnalignedPreallocated",\
 	'' every ::2 using ($3/32768):4:14 with yerrorbars linetype 4 notitle,\
 	# '../Data/PrecomputedRankBlockSize_NaiveInteger_Rank.data' every ::2 using ($3/32768):4 with linespoints title "NaiveInteger, $mr\\hat{\\sigma}=$ ".naiveinteger_max_stddev_rank." $avg\\hat{\\sigma}=$ ".naiveinteger_avg_stddev_rank
+set yrange [0:0.031]
 set output 'PrecomputedRankBlockSize_Select_BranchMissRate.tex'
 plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Select.data' every ::2 using ($3/32768):4 with linespoints linetype 1 title "Naive",\
 	'' every ::2 using ($3/32768):4:14 with yerrorbars linetype 1 notitle,\
@@ -157,6 +159,7 @@ plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Rank.data' every ::2 usi
 	'../Data/PrecomputedRankBlockSize_UnalignedPreallocatedPrecomputed_Rank.data' every ::2 using ($3/32768):7 with linespoints linetype 4 title "UnalignedPreallocated",\
 	'' every ::2 using ($3/32768):7:17 with yerrorbars linetype 4 notitle,\
 	# '../Data/PrecomputedRankBlockSize_NaiveInteger_Rank.data' every ::2 using ($3/32768):7 with linespoints title "NaiveInteger, $mr\\hat{\\sigma}=$ ".naiveinteger_max_stddev_rank." $avg\\hat{\\sigma}=$ ".naiveinteger_avg_stddev_rank
+set yrange [0:9000]
 set output 'PrecomputedRankBlockSize_Select_TLB.tex'
 plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Select.data' every ::2 using ($3/32768):7 with linespoints linetype 1 title "Naive",\
 	'' every ::2 using ($3/32768):7:17 with yerrorbars linetype 1 notitle,\
@@ -183,6 +186,7 @@ plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Rank.data' every ::2 usi
 	'../Data/PrecomputedRankBlockSize_UnalignedPreallocatedPrecomputed_Rank.data' every ::2 using ($3/32768):8 with linespoints linetype 4 title "UnalignedPreallocated",\
 	'' every ::2 using ($3/32768):8:18 with yerrorbars linetype 4 notitle,\
 	# '../Data/PrecomputedRankBlockSize_NaiveInteger_Rank.data' every ::2 using ($3/32768):8 with linespoints title "NaiveInteger, $mr\\hat{\\sigma}=$ ".naiveinteger_max_stddev_rank." $avg\\hat{\\sigma}=$ ".naiveinteger_avg_stddev_rank
+set yrange [0:1.45e6]
 set output 'PrecomputedRankBlockSize_Select_L1CacheMiss.tex'
 plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Select.data' every ::2 using ($3/32768):8 with linespoints linetype 1 title "Naive",\
 	'' every ::2 using ($3/32768):8:18 with yerrorbars linetype 1 notitle,\
@@ -198,7 +202,7 @@ plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Select.data' every ::2 u
 # LEVEL 2 CACHE MISS RATE
 set xlabel "Block Size (number of pages)"
 set ylabel "Cache Miss Rate"
-set yrange [0:*]
+set yrange [0:0.5]
 set output 'PrecomputedRankBlockSize_Rank_L2CacheMissRate.tex'
 plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Rank.data' every ::2 using ($3/32768):($9/($9+$10)) with linespoints linetype 1 title "Naive",\
 	'' every ::2 using ($3/32768):($9/($9+$10)):($19/($9+$10)) with yerrorbars linetype 1 notitle,\
@@ -209,6 +213,7 @@ plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Rank.data' every ::2 usi
 	'../Data/PrecomputedRankBlockSize_UnalignedPreallocatedPrecomputed_Rank.data' every ::2 using ($3/32768):($9/($9+$10)) with linespoints linetype 4 title "UnalignedPreallocated",\
 	'' every ::2 using ($3/32768):($9/($9+$10)):($19/($9+$10)) with yerrorbars linetype 4 notitle,\
 	# '../Data/PrecomputedRankBlockSize_NaiveInteger_Rank.data' every ::2 using ($3/32768):($9/($9+$10)) with linespoints title "NaiveInteger, $mr\\hat{\\sigma}=$ ".naiveinteger_max_stddev_rank." $avg\\hat{\\sigma}=$ ".naiveinteger_avg_stddev_rank
+set yrange [0:*]
 set output 'PrecomputedRankBlockSize_Select_L2CacheMissRate.tex'
 plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Select.data' every ::2 using ($3/32768):($9/($9+$10)) with linespoints linetype 1 title "Naive",\
 	'' every ::2 using ($3/32768):($9/($9+$10)):($19/($9+$10)) with yerrorbars linetype 1 notitle,\
@@ -225,7 +230,7 @@ plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Select.data' every ::2 u
 # LEVEL 2 CACHE MISSES
 set xlabel "Block Size (number of pages)"
 set ylabel "Cache Misses"
-set yrange [0:*]
+set yrange [0:260000]
 set output 'PrecomputedRankBlockSize_Rank_L2CacheMiss.tex'
 plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Rank.data' every ::2 using ($3/32768):9 with linespoints linetype 1 title "Naive",\
 	'' every ::2 using ($3/32768):9:19 with yerrorbars linetype 1 notitle,\
@@ -236,6 +241,7 @@ plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Rank.data' every ::2 usi
 	'../Data/PrecomputedRankBlockSize_UnalignedPreallocatedPrecomputed_Rank.data' every ::2 using ($3/32768):9 with linespoints linetype 4 title "UnalignedPreallocated",\
 	'' every ::2 using ($3/32768):9:19 with yerrorbars linetype 4 notitle,\
 	# '../Data/PrecomputedRankBlockSize_NaiveInteger_Rank.data' every ::2 using ($3/32768):9 with linespoints title "NaiveInteger, $mr\\hat{\\sigma}=$ ".naiveinteger_max_stddev_rank." $avg\\hat{\\sigma}=$ ".naiveinteger_avg_stddev_rank
+set yrange [0:*]
 set output 'PrecomputedRankBlockSize_Select_L2CacheMiss.tex'
 plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Select.data' every ::2 using ($3/32768):9 with linespoints linetype 1 title "Naive",\
 	'' every ::2 using ($3/32768):9:19 with yerrorbars linetype 1 notitle,\
@@ -262,6 +268,7 @@ plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Rank.data' every ::2 usi
 	'../Data/PrecomputedRankBlockSize_UnalignedPreallocatedPrecomputed_Rank.data' every ::2 using ($3/32768):10 with linespoints linetype 4 title "UnalignedPreallocated",\
 	'' every ::2 using ($3/32768):10:20 with yerrorbars linetype 4 notitle,\
 	# '../Data/PrecomputedRankBlockSize_NaiveInteger_Rank.data' every ::2 using ($3/32768):10 with linespoints title "NaiveInteger, $mr\\hat{\\sigma}=$ ".naiveinteger_max_stddev_rank." $avg\\hat{\\sigma}=$ ".naiveinteger_avg_stddev_rank
+set yrange [0:1.25e6]
 set output 'PrecomputedRankBlockSize_Select_L2CacheHits.tex'
 plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Select.data' every ::2 using ($3/32768):10 with linespoints linetype 1 title "Naive",\
 	'' every ::2 using ($3/32768):10:20 with yerrorbars linetype 1 notitle,\
@@ -277,7 +284,7 @@ plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Select.data' every ::2 u
 # LEVEL 3 CACHE MISSES
 set xlabel "Block Size (number of pages)"
 set ylabel "Cache Misses"
-set yrange [0:*]
+set yrange [0:165000]
 set output 'PrecomputedRankBlockSize_Rank_L3CacheMiss.tex'
 plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Rank.data' every ::2 using ($3/32768):11 with linespoints linetype 1 title "Naive",\
 	'' every ::2 using ($3/32768):11:21 with yerrorbars linetype 1 notitle,\
@@ -288,6 +295,7 @@ plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Rank.data' every ::2 usi
 	'../Data/PrecomputedRankBlockSize_UnalignedPreallocatedPrecomputed_Rank.data' every ::2 using ($3/32768):11 with linespoints linetype 4 title "UnalignedPreallocated",\
 	'' every ::2 using ($3/32768):11:21 with yerrorbars linetype 4 notitle,\
 	# '../Data/PrecomputedRankBlockSize_NaiveInteger_Rank.data' every ::2 using ($3/32768):11 with linespoints title "NaiveInteger, $mr\\hat{\\sigma}=$ ".naiveinteger_max_stddev_rank." $avg\\hat{\\sigma}=$ ".naiveinteger_avg_stddev_rank
+set yrange [0:200000]
 set output 'PrecomputedRankBlockSize_Select_L3CacheMiss.tex'
 plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Select.data' every ::2 using ($3/32768):11 with linespoints linetype 1 title "Naive",\
 	'' every ::2 using ($3/32768):11:21 with yerrorbars linetype 1 notitle,\
@@ -303,7 +311,7 @@ plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Select.data' every ::2 u
 #COMPARING WITH NAIVEINTEGER
 # set xtics ("Rank" 0, "Select" 3)
 # set ytics auto
-
+set yrange [0:*]
 set boxwidth 2.0
 set style fill solid
 unset xlabel
