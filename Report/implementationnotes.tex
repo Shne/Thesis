@@ -80,7 +80,7 @@ But, their test case does not at all resemble the way we use it.
 We do not utilize any of the extra functions or features they have tested such as the reset operation and bitwise operations on entire arrays.
 
 In terms of memory, \texttt{std::vector<bool>} performed the best by using the least amount of memory, owing to its simple implementation storing no additional meta information and using only a single raw array as its backing data format.
-This is a characteristic we like for our purposes as we basically use it as an array with easier access to single bit values.
+This is a characteristic we like for our purposes as we basically use it as an array supporting access to single bit values.
 
 \subsection{Challenges in Implementation}
 The wavelet tree is a somewhat simple data structure as a tree structure of bitmaps implemented using pointers and dynamic bitsets.

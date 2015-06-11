@@ -25,7 +25,7 @@ We will test and compare the Rank and Select running times and memory usage of f
 
 \subsection{Concatenating the Bitmaps}
 The bitmaps are allocated as one giant bitmap the size of the maximum possible size required to store all the bitmaps for all the nodes.
-They are stored in a Depth-First-right manner, that is, the bitmap of the right child of a node comes right after the bitmap of the node.
+They are stored in a Depth-First-Search-right (DFSr) manner, that is, the bitmap of the right child of a node comes right after the bitmap of the node.
 
 There are many other alternative memory layouts that might provide better performance.
 The one we expect to have the greatest potential for improving the wavelet tree performance, is the van Emde Boas memory layout~\citeA[Abstract]{Brodal02cacheoblivious} because of its cache-oblivious nature.
