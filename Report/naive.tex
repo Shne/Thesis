@@ -21,7 +21,7 @@ Unlike González et al., we do not use a popcount function implemented in softwa
 The built-in \texttt{popcount} cpu instruction takes as argument an \texttt{unsigned int} or an \texttt{unsigned long}.
 The \texttt{vector<bool>} stores the bits in a backing array of \texttt{unsigned long}s and a pointer to the desired position in this array can be retrieved from the \texttt{vector<bool>}.
 The implementation will therefore be working on \texttt{unsigned long}s and we will call their size (64 bits on machine 1) our \textit{wordsize}.
-When using \texttt{popcount}, \textproc{BinaryRank} remains in theory an $O(\frac{N}{\mathit{wordsize}}) = O(N)$ operation, as \textit{wordsize} is a constant factor, but it has a large practical effect on performance as can be seen in Section~\ref{sec:experimentPopcountRankSelect}.
+When using \texttt{popcount}, \textproc{BinaryRank} remains in theory an $O(\frac{n}{\mathit{wordsize}}) = O(n)$ operation, as \textit{wordsize} is a constant factor, but it has a large practical effect on performance as can be seen in Section~\ref{sec:experimentPopcountRankSelect}.
 
 To use \texttt{popcount} we call \texttt{\_\_builtin\_popcountl} which is a function built into the GCC compiler\footnote{\url{gcc.gnu.org/onlinedocs/gcc-4.1.2/gcc/Other-Builtins.html}}. 
 It takes an \texttt{unsigned long} as a parameter and returns the number of 1s in it. \texttt{\_\_builtin\_popcountl} will automatically figure out how to do popcount based on what CPU you are using. Popcount as an intrinsic cpu instruction is supported on both AMD\footnote{\url{support.amd.com/TechDocs/24594.pdf}} and Intel arhitectures\footnote{\url{software.intel.com/sites/landingpage/IntrinsicsGuide}}.

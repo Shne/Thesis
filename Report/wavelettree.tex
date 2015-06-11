@@ -35,7 +35,8 @@ Each node in a wavelet tree can be considered a full wavelet tree for the string
 
 At each level in the tree at most \textit{n} bits are stored in the bitmaps in total, making $n \cdot h = n \cdot \log \sigma$ an upper bound to the total number of bits that a wavelet tree stores in its bitmaps.
 In addition to this, each node takes some constant amount of space, and there are $2 \sigma -1$ nodes in the tree.
-This makes the total memory consumption $O(n \log \sigma + \sigma)$.
+\textit{ws} is the size of our machine words.
+This makes the total memory consumption $O(n \log \sigma + \sigma \cdot \mathit{ws})$ bits.
 
 The Wavelet Tree can theoretically be constructed in $O(n \cdot h) = O(n \log \sigma)$ time as the sum of the lengths of the strings being processed at any single layer of the tree is the length of the input string to the tree.
 
@@ -96,7 +97,7 @@ Before the algorithm can continue down into the child node, it must know what po
 If $b$ is 0, the position of $c$ in $S_{\mathit{left}}$ is the number of occurrences of 0 in the bitmap up to position $p$.
 If $b$ is 1, the position of $c$ in $S_{\mathit{right}}$ is the number of occurrences of 1 in the bitmap up to position $p$.
 This is also called rank$_0(p)$ or rank$_1(p)$ or the \textit{binary rank} of 0 or 1 in the bitmap up to position $p$.
-In the most basic way \textit{binary rank} can be calculated using a linear scan of the bitmap in $O(n)$ time, and since it is calculated one per level of the tree, the access query time becomes $O(n \cdot h) = O(n \lceil \log \sigma \rceil)$.
+In the most basic way \textit{binary rank} can be calculated using a linear scan of the bitmap in $O(n)$ time, and since it is calculated one per level of the tree, the access query time becomes $O(n \cdot h) = O(n \log \sigma )$.
 The result of the binary rank is used as the position $p$ in the child node we traverse into. 
 The traversal continues  until it reaches a leaf node which then corresponds to the character at the original position $p$ parameter of the query.
 The character is then returned.

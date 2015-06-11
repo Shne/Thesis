@@ -16,12 +16,13 @@ Together this makes the height at most
 Which, when the tree is balanced ($\mathit{skew} = 2$), makes the height at most $h_{max} = \log \sigma + 1$ which agrees with our definition of the height $h = \lceil \log \sigma \rceil$.
 
 Let us analyse the theoretical worst case running time of constructing and querying a balanced wavelet tree vs. a skewed wavelet tree.
-Constructing a balanced wavelet tree takes  $O(n \cdot \log \sigma)$ time because the height of the tree is $\lceil \log \sigma \rceil$ and there are $n$ elements in each level.
+Constructing a balanced wavelet tree takes  $O(n \log \sigma)$ time because the height of the tree is $\lceil \log \sigma \rceil$ and there are $n$ elements in each level.
 When skewing the tree the height of the tree becomes as defined above and the construction time becomes $O(n \cdot h_{max})$.
 
 The query time for rank on a balanced wavelet tree is $O(b \log \sigma)$ and for select $O(b \log \sigma + \log \frac{n}{b} \log \sigma)$.
 In the skewed version of the tree the rank query time then becomes worst-case $O(b \cdot h_{max})$. The query time for select becomes $O(b \cdot h_{max} + \log \frac{n}{b} \cdot~h_{max})$.
-The memory usage becomes $O(n \cdot h_{max} + \sigma + \frac{n}{b} \cdot h_{max})$.
+The memory usage becomes 
+$O(n \cdot h_{max} + (\sigma + \frac{n}{b} \cdot h_{max}) \cdot \mathit{ws})$ bits.
 
 
 From the theoretical analysis of construction time and query time of a skewed wavelet tree it is theoretically not an improvement to skew the tree.

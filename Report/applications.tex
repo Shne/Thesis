@@ -344,7 +344,7 @@ Quantiles are important values within such fields as statistics and economics.
 
 Range Quantile queries especially are interesting to us because they do not require any changes to the wavelet tree and uses it in its simple form. Our optimizations can therefore be applied directly without modification.
 
-Gagie et al.~\citeA{RangeQuantileQueries} show how the wavelet tree can be used to support efficient range quantile queries on a sequence \textit{S} of \textit{n} numbers in $O(\log(\sigma))$ time if $rank_b$ is supported in $O(1)$ time~\citeA[Section 3]{RangeQuantileQueries}. 
+Gagie et al.~\citeA{RangeQuantileQueries} show how the wavelet tree can be used to support efficient range quantile queries on a sequence \textit{S} of \textit{n} numbers in $O(\log \sigma)$ time if $rank_b$ is supported in $O(1)$ time~\citeA[Section 3]{RangeQuantileQueries}. 
 The range is denoted as $S[l .. r]$.
 A range quantile query based on a wavelet tree works by computing two rank queries on the bitmap of each node in a traversal from the root to a leaf node. 
 

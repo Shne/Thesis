@@ -58,7 +58,7 @@ Doing this reduced the memory usage so much that we could run it for input strin
 There are several bitmap implementations available to us. In the Standard Templating Libary (STL) of C++ there is \texttt{std::bitset<size\_t N>} and \texttt{std::vector<bool>}. From the Boost library there is \texttt{boost::dynamic\_bitset<>}.
 \begin{description}
 \item[\texttt{std::bitset}] While it would technically be possible to use the \texttt{std::bitset}, it requires that the size of the bitset is known at compile time and passed as a template parameter. This means it would be necessary to recompile the program for each size $n$ of the input string. 
-It would also be necessary to allocate a bitmap with room for $n$ bits for each sub-node as that is the theoretically possible size required, making the size required for the bitmaps of the tree $O(n \cdot |nodes|) = O(n \cdot \sigma)$ instead of $O(n \cdot h) = O(n\log(\sigma))$.
+It would also be necessary to allocate a bitmap with room for $n$ bits for each sub-node as that is the theoretically possible size required, making the size required for the bitmaps of the tree $O(n \cdot |nodes|) = O(n \cdot \sigma)$ instead of $O(n \cdot h) = O(n\log \sigma)$.
 Another reason why we cannot use \texttt{std::bitset} is because it does not support pointer access, which means that it is impossible to do queries using \texttt{popcount}, which is a CPU instruction we utilize to improve the practical running time of \textproc{Rank} and \textproc{Select} queries and is described in Section~\ref{sec:simpleoptimizations}.
 We also expect that an actual usable practical implementation should be able to handle different sizes of input at run time instead of compile time. 
 

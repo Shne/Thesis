@@ -32,7 +32,7 @@ The running time for select can also be written as $O(b \log \sigma + \log \frac
 The effect of this extra term is that our expected optimal block size is higher for select than for rank, because this term decreases as $b$ increases.
 
 \subsection{Disadvantages of Cumulative Sum}
-The O-notation memory analysis remains the same as before, at $O(n \log \sigma + \sigma + \frac{n}{b} \log \sigma)$, because it is still one number stored per block.
+The memory analysis remains the same as before, at $O(n \log \sigma + (\sigma + \frac{n}{b} \log \sigma) \cdot \mathit{ws})$ bits, because it is still one number stored per block.
 However, in practical terms, the precomputed values are no longer limited in value size by the block size but rather the bitmap size, as the last value in the precomputed rank value vector could potentially become as large as the bitmap is long.
 Storing the cumulative sums will then require more bytes per value and thus use more space in the end.
 

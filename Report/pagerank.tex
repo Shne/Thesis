@@ -150,7 +150,7 @@ We have considered doing tests to determine whether it is an improvement for the
 
 \subsection{Extra Space Used by Precomputed Values}
 Storing the precomputed values requires more memory: one number per block.
-There are $O(\frac{n}{b})$ blocks per level of the tree, and so an extra memory consumption of $O(\frac{n}{b} \log \sigma)$ making the total memory consumption $O(n \log \sigma + \sigma + \frac{n}{b} \log \sigma)$
+There are $O(\frac{n}{b})$ blocks per level of the tree, and so an extra memory consumption of $O(\frac{n}{b} \log \sigma)$ words making the total memory consumption $O(n \log \sigma + (\sigma + \frac{n}{b} \log \sigma) \cdot \mathit{ws})$ bits.
 
 Since each precomputed value cannot exceed the block size in bits, assuming we do not use block sizes exceeding $2^{16} = 65536$ bits, or $\frac{2^{16}}{8} = 8192$ bytes, we can store them in 16-bit unsigned integers, called \texttt{unsigned short int} in C++ on our machine.
 Since the page size on our machine are 4096 bytes we should not use a block size larger than $\frac{8192}{4096} = 2$ pages if we want to use 16-bit unsigned integers.
