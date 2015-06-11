@@ -149,7 +149,6 @@ gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSizeLarger_Unaligned
 Utils.writeGnuplotHeader(gnuplotFile)
 ReadOutput.getData(testDataFile, "UnalignedNaivePrecomputed", "rank")
 Utils.formatAndWriteValues(ReadOutput, gnuplotFile, testsPerSize)
-outputForPrecomputedVsNot(2) #for precomputed vs non-precomputed
 gnuplotFile = open("Report/Gnuplot/Data/PrecomputedRankBlockSizeLarger_UnalignedNaivePrecomputed_Select.data", "w")
 Utils.writeGnuplotHeader(gnuplotFile)
 ReadOutput.getData(testDataFile, "UnalignedNaivePrecomputed", "select")

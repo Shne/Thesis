@@ -605,16 +605,3 @@ algorithm=UnalignedNaivePrecomputed	test=select	amount=100000000	alphabetSize=65
 algorithm=UnalignedNaivePrecomputed	test=select	amount=100000000	alphabetSize=65536	blockSize=1048576	real_cycles=278257244	wall_time=107264	virt_cycles=278720559	mem_size=834104	mem_resident=818440	mem_highwatermark=835372	PAPI_TOT_CYC=338501341	PAPI_L1_DCM=8140047	PAPI_BR_MSP=310070	
 algorithm=UnalignedNaivePrecomputed	test=select	amount=100000000	alphabetSize=65536	blockSize=1048576	real_cycles=277423941	wall_time=106943	virt_cycles=277945461	mem_size=834104	mem_resident=818440	mem_highwatermark=832600	PAPI_TOT_CYC=337417228	PAPI_L1_DCM=8140682	PAPI_BR_MSP=309774	
 algorithm=UnalignedNaivePrecomputed	test=select	amount=100000000	alphabetSize=65536	blockSize=1048576	real_cycles=275740344	wall_time=106294	virt_cycles=276283422	mem_size=834104	mem_resident=818440	mem_highwatermark=834140	PAPI_TOT_CYC=335751806	PAPI_L1_DCM=8147176	PAPI_BR_MSP=309568	
-
-
-
-
-
-
-
-
-
-
-
-
-
