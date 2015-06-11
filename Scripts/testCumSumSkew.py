@@ -65,7 +65,7 @@ addNewline()
 addNewline()
 
 
-skewRange = [2.0, 2.4, 6.0]
+skewRange = [2.4]
 print("CumulativeSum: Rank \n")
 test = 'rank'
 # for skew in frange(skewStart, skewEnd, skewStep):
