@@ -202,7 +202,7 @@ The “branchless” approach has the best level 1 cache, level 2 and 3 cache pe
 We see a reduction in level 2 cache hits as for rank in Figure~\ref{fig:CumulativeSumSelectL2CHits} from UnalignedNaive to the two CumulativeSum approaches.
 This rediction can again be explained mainly by the reduction in level 1 cache misses as seen in Figure~\ref{fig:CumulativeSumSelectL1CM}.
 Level 2 cache misses are a little higher for branching CumulativeSum than for UnalignedNaive.
-The “branchless” select reduces the hardware penalties more that branching select but it is still slower because requires more cycles to achieve “branchless” select and the hardware penalty reduction does not make up for this increase.
+The “branchless” select reduces the hardware penalties more that branching select but it is still slower because requires more cycles to achieve “branchless” select and the hardware penalty reduction does not make up for this increase. 
 
 In the end we can confirm based on our measurements that it can be explained why Rank and Select is faster for CumulativeSum than for UnalignedNaive.
 We feel the performance gain for queries by far make up for the small increase in time and memory usage when building the tree.
