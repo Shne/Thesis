@@ -51,7 +51,7 @@ Data/
 !/Articles/*
 callgrind.out.*
 cachegrind.out.*
-Output/*.output
+Output/default.output
 
 #link to boost library
 /Code/boost

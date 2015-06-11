@@ -31,8 +31,8 @@ plot '../Data/PrecomputedRankBlockSize_NaivePrecomputed_Select.data' every ::2 u
 	'' every ::2 using ($3/32768):2:13 with yerrorbars linetype 3 notitle,\
 	'../Data/PrecomputedRankBlockSize_UnalignedPreallocatedPrecomputed_Select.data' every ::2 using ($3/32768):2 with linespoints linetype 4 title "UnalignedPreallocated",\
 	'' every ::2 using ($3/32768):2:13 with yerrorbars linetype 4 notitle,\
-	
 
+	
 
 set term epslatex size 3.2,2.5 color font "" 6
 
@@ -317,3 +317,34 @@ plot '../Data/PrecomputedRankBlockSize_vsNaiveInteger.data' every 4::0 using 1:(
 set output 'PrecomputedRankBlockSize_vsNaiveInteger_Select.tex'
 plot '../Data/PrecomputedRankBlockSize_vsNaiveInteger.data' every 4::1 using 1:($2/1000000) title "NaiveInteger" with boxes,\
      '../Data/PrecomputedRankBlockSize_vsNaiveInteger.data' every 4::3 using 1:($2/1000000) title "UnalignedNaive" with boxes
+
+
+
+# WALL TIME for larger block size range
+set xtics
+set xlabel "Block Size (bits)"
+set ylabel "Wall Time ($\\mu s$)"
+set yrange [*:*]
+set logscale x 2
+set logscale y 10
+set format x "$2^{%L}$"
+set output 'PrecomputedRankBlockSizeLarger_Rank_WallTime.tex'
+plot '../Data/PrecomputedRankBlockSizeLarger_NaivePrecomputed_Rank.data' every ::2 using 3:2 with linespoints linetype 1 title "Naive",\
+	'' every ::2 using 3:2:13 with yerrorbars linetype 1 notitle,\
+	'../Data/PrecomputedRankBlockSizeLarger_PreallocatedPrecomputed_Rank.data' every ::2 using 3:2 with linespoints linetype 2 title "Preallocated",\
+	'' every ::2 using 3:2:13 with yerrorbars linetype 2 notitle,\
+	'../Data/PrecomputedRankBlockSizeLarger_UnalignedNaivePrecomputed_Rank.data' every ::2 using 3:2 with linespoints linetype 3 title "UnalignedNaive",\
+	'' every ::2 using 3:2:13 with yerrorbars linetype 3 notitle,\
+	'../Data/PrecomputedRankBlockSizeLarger_UnalignedPreallocatedPrecomputed_Rank.data' every ::2 using 3:2 with linespoints linetype 4 title "UnalignedPreallocated",\
+	'' every ::2 using 3:2:13 with yerrorbars linetype 4 notitle,\
+	
+	# '../Data/PrecomputedRankBlockSizeLarger_NaiveInteger_Rank.data' every ::2 using 3:($2/100) with linespoints title "NaiveInteger, $mr\\hat{\\sigma}=$ ".naiveinteger_max_stddev_rank." $avg\\hat{\\sigma}=$ ".naiveinteger_avg_stddev_rank
+set output 'PrecomputedRankBlockSizeLarger_Select_WallTime.tex'
+plot '../Data/PrecomputedRankBlockSizeLarger_NaivePrecomputed_Select.data' every ::2 using 3:2 with linespoints linetype 1 title "Naive",\
+	'' every ::2 using 3:2:13 with yerrorbars linetype 1 notitle,\
+	'../Data/PrecomputedRankBlockSizeLarger_PreallocatedPrecomputed_Select.data' every ::2 using 3:2 with linespoints linetype 2 title "Preallocated",\
+	'' every ::2 using 3:2:13 with yerrorbars linetype 2 notitle,\
+	'../Data/PrecomputedRankBlockSizeLarger_UnalignedNaivePrecomputed_Select.data' every ::2 using 3:2 with linespoints linetype 3 title "UnalignedNaive",\
+	'' every ::2 using 3:2:13 with yerrorbars linetype 3 notitle,\
+	'../Data/PrecomputedRankBlockSizeLarger_UnalignedPreallocatedPrecomputed_Select.data' every ::2 using 3:2 with linespoints linetype 4 title "UnalignedPreallocated",\
+	'' every ::2 using 3:2:13 with yerrorbars linetype 4 notitle,\
