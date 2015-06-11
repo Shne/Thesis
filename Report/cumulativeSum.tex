@@ -77,8 +77,8 @@ However, whatever we tried, it always seemed to be slower than the simple approa
 It makes sense that the branchless select is slower than the branching version of select with mispredictions.
 According to Agner Fog\footnote{Section 3.7 in \url{http://www.agner.org/optimize/microarchitecture.pdf}} the branch misprediction penalty in the Ivy Bridge Architecture is at least 15 clock cycles.
 If a branch is very hard to predict by going one way half the time and the other way the other half, it would be mispredicted about 50\,\% of the time, making it cost on average $1+\frac{15}{2}=8.5$ clock cycles if we assume that a correctly predicted branch costs 1 clock cycle.
-This means that our alternative method of computing something without using branches must cost less than 8 clock cycles to be an improvement.
-Looking at our code, the alternative method where we have attempted to reduce branches could easily cost much more than 8 clock cycles.
+This means that our alternative method of computing something without using branches must cost less than 8.5 clock cycles to be an improvement.
+Looking at our code, the alternative method where we have attempted to reduce branches could easily cost much more than 8.5 clock cycles.
 This also fits with our experimental data (see Section~\ref{sec:cumulativeSumExperimentSelectQueries} and Figure~\ref{fig:CumulativeSumSelect}) because both cache misses, branch mispredictions and TLB misses are smaller for “branchless” select than for the branching version of select, yet the wall time is higher.
 An increased amount of cycles can explain why this method results in a slowdown while reducing hardware based penalties.
 
