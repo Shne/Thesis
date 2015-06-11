@@ -18,7 +18,7 @@ It can e.g. be done by a single sweep through the precomputed values vector afte
 
 Rank queries will benefit from the precomputed values being cumulative sums because they can do a single lookup of the precomputed value corresponding to the block covering the queried-for position.
 The need to calculate rank by using \texttt{popcount} within a single block remains unchanged.
-This means that the required work per level of the tree changes from $O(\frac{n}{b}+b)$ to $O(b)$ because binary rank becomes an $O(1)$ operation, making the total work required for a rank query $O(b \log \sigma)$.
+This means that the required work per level of the tree changes from $O(\frac{n}{b}+b)$ to $O(b)$ because binary rank becomes an $O(b)$ operation, making the total work required for a rank query $O(b \log \sigma)$.
 
 Select queries should also see some benefit.
 Previously, the select query would iterate through the precomputed values and sum them up, looking for when it surpasses the sought-after occurrence, and then calculate the position within a single block using \texttt{popcount} and manual counting of bits within a single word.
@@ -29,15 +29,15 @@ This makes the previously required work per level change from $O(\frac{n}{b} + b
 In Section~\ref{sec:OptimalBlockSizeForRankAndSelect} we test what block size achieves the best running time for rank, select and branchless select.
 We test rank for low block sizes since $O(b \log \sigma)$ indicates that the lower \textit{b} is, the faster the running time is.
 The running time for select can also be written as $O(b \log \sigma + \log \frac{n}{b} \log \sigma)$ and comparing it to the running time of rank we can see that select has an extra term: $\log \frac{n}{b} \log \sigma$.
-The effect of this extra term is that our expected optimal block size is higher for select than for rank.
+The effect of this extra term is that our expected optimal block size is higher for select than for rank, because this term decreases as $b$ increases.
 
 \subsection{Disadvantages of Cumulative Sum}
 The O-notation memory analysis remains the same as before, at $O(n \log \sigma + \sigma + \frac{n}{b} \log \sigma)$, because it is still one number stored per block.
 However, in practical terms, the precomputed values are no longer limited in value size by the block size but rather the bitmap size, as the last value in the precomputed rank value vector could potentially become as large as the bitmap is long.
 Storing the cumulative sums will then require more bytes per value and thus use more space in the end.
 
-The bitmap size is limited by the input string length and so for our choice of input string with length $10^8$ each precomputed value must be able to store a value up to $10^8$.
-It takes at least 28 bits to store $10^8$, because $2^{27} < 10^8 < 2^{28}$.
+The bitmap size is limited by the input string length and so, for our choice of input string with length $10^8$ characters, each precomputed value must be able to store a value up to $10^8$.
+It takes at least 28 bits to store the value $10^8$, because $2^{27} < 10^8 < 2^{28}$.
 Because the value types supported by x86 and C++ must be byte (8-bit) aligned and use a number of bytes that is a power of 2, the smallest type we can use is the 4-byte type \texttt{unsigned int} capable of storing values up to $2^{32}$.
 This means the vector, instead of holding 2-byte \texttt{unsigned short int}s, must hold 4-byte \texttt{unsigned int}s, doubling the space required to store the precomputed values.
 We expect this increase in memory usage to be tiny, as it is another 2 bytes per block, of which there are $\frac{n}{b}$ per layer of the tree, of which there are $\log n$.
@@ -57,7 +57,7 @@ This is also reflected in the running times of $O(\frac{n}{b} + b)$ for non-cumu
 From the theoretical running time of $O(b)$, we expect the optimal block size to be small.
 However, any block size below the size of word \texttt{popcount} operates on, 64 bit for our machine, will likely not be any improvement, as using \texttt{popcount} to calculate the rank within that word takes constant time.
 The only exception, we expect, is if a block size of 1 bit was used and the algorithm modified to just use that precomputed value and not use \texttt{popcount}, which corresponds to precomputing the answer to every possible rank query, and using a lot of memory in the process.
-We will not be testing this.
+We will not be testing this, though we will do experiments for block sizes smaller than 64 bit.
 
 For select queries, there is still a dependence on $n$, as it has to perform a binary search over the precomputed rank values, and that is reflected in the theoretical running time of $O((\log \frac{n}{b} + b) \log \sigma)$.
 
@@ -66,26 +66,27 @@ When implementing the select query for the cumulativeSum wavelet tree, we realiz
 We anticipated that we might improve upon the query by eliminating as much branching code as possible.
 That is, reduce the number of \texttt{if/else} statements, \texttt{while}-, and \texttt{for}-loops in the code and instead replace them with “clever” arithmetic operations achieving much of the same.
 
-One large disadvantage of this approach was that it resulted in a binary search that did not terminate early if the correct block was reached, but would instead always jump and do a lookup $\log \mathit{blocksInNode}$ times for each node.
-We expected that the fewer branch mispredictions and the fact that many of the later jumps that would be skipped by terminating early, should with high probability exist in the same cacheline and thus be fast to lookup.
+One large disadvantage of this approach was that it resulted in a binary search that did not terminate early if the correct block was reached, but would instead always jump and do a lookup $\log (\mathit{blocksInNode})$ times for each node.
+Many of the later jumps that would be skipped by terminating early lie close in memory and with high probability exist in the same cacheline and thus be fast to lookup.
+This fact, combined with a reduction in branch mispredictions could make this “branchless” version faster.
 
 Based on experiments we found that \textproc(Select) was slower when using the “branchless” approach than just using the simple approach (see Section~\ref{sec:cumulativeSumExperimentSelectQueries}).
 When we realized this we attempted to combine the two approaches to get the best from both: early termination from the simple approach and less branching code meaning fewer branch mispredictions from the “branchless” approach.
-However, whatever we tried, it always seemed to be slower than the simple approach, and so we stopped trying to combine the two.
+However, whatever we tried, it always seemed to be slower than the simple approach, and so we stopped trying to combine the two and there a no experiments for a combined approach.
 
 It makes sense that the branchless select is slower than the branching version of select with mispredictions.
 According to Agner Fog\footnote{Section 3.7 in \url{http://www.agner.org/optimize/microarchitecture.pdf}} the branch misprediction penalty in the Ivy Bridge Architecture is at least 15 clock cycles.
-If a branch is very hard to predict by going one way half the time and the other way the other half, it would be mispredicted about 50\,\% of the time, making it cost on average $1+\frac{15}{2}=8$ clock cycles.
+If a branch is very hard to predict by going one way half the time and the other way the other half, it would be mispredicted about 50\,\% of the time, making it cost on average $1+\frac{15}{2}=8.5$ clock cycles if we assume that a correctly predicted branch costs 1 clock cycle.
 This means that our alternative method of computing something without using branches must cost less than 8 clock cycles to be an improvement.
-Looking at our code, the alternative method where we have attempted to reduce branches seems to cost much more than 8 clock cycles because both cache misses, branch mispredictions and TLB misses are smaller for branchless select than for the rbanching version of select.
-The increased amount of cycles explains why this method results in a slowdown.
-The amount of branch mispredictions is reduced. Just not enough to make up for the increased amount of work required.
+Looking at our code, the alternative method where we have attempted to reduce branches could easily cost much more than 8 clock cycles.
+This also fits with our experimental data (see Section~\ref{sec:cumulativeSumExperimentSelectQueries} and Figure~\ref{fig:CumulativeSumSelect}) because both cache misses, branch mispredictions and TLB misses are smaller for “branchless” select than for the branching version of select, yet the wall time is higher.
+An increased amount of cycles can explain why this method results in a slowdown while reducing hardware based penalties.
 
 \subsection{Experiments}
-With the following experiments we want to test whether the optimizations described in the previous section achieves any improvements in practice.
-We want to know what effect the optimizations have on hardware penalties and try to explain why.
-We show the trade-off between build memory usage and running time.
-We test tree construction, rank and select for different block sizes of cumulative sums of precomputed rank values to find the one achieving the best running time.
+With the following experiments we want to test whether the changes described in the previous section achieves any improvements in practice.
+We want to know what effect the changes have on the amount of hardware penalties incurred and try to explain why.
+We show the trade-off between build time, memory usage and running time of queries.
+We test tree construction and rank and select queries for different block sizes of cumulative sums of precomputed rank values to find the one achieving the best running time.
 We compare rank and select for UnalignedNaive vs. using cumulative sum and show how their running time and hardware penalties differ.
 
 
@@ -107,15 +108,16 @@ If we look closer at the raw data at block size $2^{10}$ for which we calculated
 We have made tests of the running time of Rank, Select, and SelectBranchless queries on wavelet trees of varying block sizes from $2^2$ to $2^{16}$ bits.
 The test results are shown in Figure~\ref{fig:CumulativeSumBlockSize}.
 
-From Figure~\ref{fig:CumulativeSumBlockSizeWallTimeRank} we observe that the best running time of rank is achieved using a block size of 64 bits.
+From Figure~\ref{fig:CumulativeSumBlockSizeWallTimeRank} we observe that the best running time of rank queries is achieved using a block size of $2^6=64$ bits.
 The blue line indicates the theoretically best block size of 64 bit as explained in Section~\ref{sec:OptimalBlockSize} and now confirmed by this test.
 
-Select achieves the best running time with a block size of 2048 bits which can be observed in Figure~\ref{fig:CumulativeSumBlockSizeWallTimeSelect} and the branchless version achieves the best running time using a block size of 1024 bits as seen in Figure~\ref{fig:CumulativeSumBlockSizeWallTimeSelectBranchless}
+Select achieves the best running time with a block size of $2^{11}=2048$ bits which can be observed in Figure~\ref{fig:CumulativeSumBlockSizeWallTimeSelect} and the branchless version achieves the best running time using a block size of $2^{10}=1024$ bits as seen in Figure~\ref{fig:CumulativeSumBlockSizeWallTimeSelectBranchless}
 The found block sizes fits with the theoretical Big-O analysis.
-Rank is best with a small block size and select is also better with a relatively small block size that is larger than the one for rank.
+Rank is best with a small block size and select is also better with a relatively small block size that is larger than for rank.
 
-In a realistic use case one would want to build a tree for one block size and do rank and select on that tree and not have two different trees: one thee for the best block size of rank and one for the best block size of select.
-A block size 1024 bits seems to be the best choice since it is close to the best running time of both rank and select.
+In a realistic use case one would want to build a single tree using one block size and do rank and select on that tree and not have two trees with different block size, one for rank and one for select.
+From our experiments, a block size of $10^{10}=1024$ bits seem to be the best choice when using an input string of $10^8$ characters.
+It has close to optimal query running time for both rank and select, and only uses about 0.38\,\% more memory.
 
 \newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
 \begin{figure}\tiny
@@ -127,10 +129,10 @@ A block size 1024 bits seems to be the best choice since it is close to the best
 \hfill
 \begin{subfigure}{0.48\textwidth}
 	\input{CumulativeSumVsUnalignedNaiveBlockSizeBuildMemory}
-	\caption{Memory Usage}
+	\caption{Memory Usage. Note that the y-axis does not start at 0.}
 	\label{fig:CumulativeSumBuildMemoryUsage}
 \end{subfigure}
-\caption{Measurements on Building the UnalignedNaive and CumulativeSum wavelet trees. Notice that the y-axis does not start at 0.}
+\caption{Measurements on Building the UnalignedNaive and CumulativeSum wavelet trees. The x-axis (block size) is logarithmic.}
 \label{fig:CumulativeSumBuild}
 \vspace{5mm}
 \begin{subfigure}{0.48\textwidth}
@@ -151,7 +153,7 @@ A block size 1024 bits seems to be the best choice since it is close to the best
 	\label{fig:CumulativeSumBlockSizeWallTimeSelectBranchless}
 \end{subfigure}
 
-\caption{Running times of CumulativeSum rank and select for varying block sizes with $n=10^8$ characters. Notice the x-axis (block size) is logarithmic.}
+\caption{Running times of CumulativeSum rank and select for varying block sizes with $n=10^8$ characters. The x-axis (block size) is logarithmic.}
 \label{fig:CumulativeSumBlockSize}
 \end{figure}
 
@@ -160,9 +162,9 @@ A block size 1024 bits seems to be the best choice since it is close to the best
 \subsubsection{Rank Queries}
 In Figure~\ref{fig:CumulativeSumRank} we have plotted various measurements for Rank queries on the UnalignedNaive and CumulativeSum trees.
 In Figure~\ref{fig:CumulativeSumRankWalltime} we can see that storing and using the cumulative sum of rank values instead of the rank values for each block improves the running time of rank queries.
-UnalignedNaive spends 4.05 milliseconds on 1000 queries, where CumulativeSum spends 1.43 milliseconds, an improvement of 64.7\,\%.
+UnalignedNaive spends 4.05 milliseconds on 1000 queries, where CumulativeSum spends 1.43 milliseconds, a reduction in running time of 64.7\,\%.
 
-Looking at Figure~\ref{fig:CumulativeSumRankBranchMiss}, Figure~\ref{fig:CumulativeSumRankBranchMissRate}, and Figure~\ref{fig:CumulativeSumRankBranchExe} we can see that the tree using cumulative sums has much fewer branch mispredictions but a higher misprediction rate, which can be explained by the fact that fewer conditional branches are executed overall during rank queries.
+Looking at Figure~\ref{fig:CumulativeSumRankBranchMiss}, Figure~\ref{fig:CumulativeSumRankBranchMissRate} we can see that the tree using cumulative sums has much fewer branch mispredictions but a higher misprediction rate, which can be explained by the fact that fewer conditional branches are executed overall during rank queries as seen in Figure~\ref{fig:CumulativeSumRankBranchExe}.
 The decreased amount of branch mispredictions can be explained by the removal of a for-loop in CumulativeSum that iterated over the precomputed values, summing them up to calculate the rank, instead replacing it with a single lookup of a precomputed value.
 
 In Figure~\ref{fig:CumulativeSumRankTLBMiss} we see that the CumulativeSum tree has slightly more Translation Lookaside Buffer Misses than UnalignedNaive but not lot, so the amount of TLB misses are not reduced when using a cumulative sum.
@@ -171,8 +173,8 @@ In Figure~\ref{fig:CumulativeSumRankL1CM}, Figure~\ref{fig:CumulativeSumRankL2CM
 Cache misses are reduced and this helps to improve the CumulativeSum rank running time because fewer cache lookups are needed.
 
 In Figure~\ref{fig:CumulativeSumRankL2CHits} we can see that the amount of level 2 cache hits decrease significantly when using cumulative sums of the precomputed values.
-The explanation for the decrease in level 2 cache hits might lie in the reduction of level 1 cache misses (Figure~\ref{fig:CumulativeSumRankL1CM}), like results from previous experiments.
-The reduction in level 2 cache hits is simply the amount of cache lookups that the level 1 cache instead was able to handle.
+The explanation for the decrease in level 2 cache hits might lie in the reduction of level 1 cache misses as seen in Figure~\ref{fig:CumulativeSumRankL1CM}, like results from previous experiments.
+The reduction in level 2 cache hits is mainly the amount of cache lookups that the level 1 cache instead was able to handle.
 The reduction of level 1 cache misses is on average $\num{319996}$ and the reduction in level 2 cache hits is on average $\num{213818}$ which seems to support this.
 The level 2 cache miss rate (not shown) is therefore somewhat misleading as it would suggest a worse cache performance where the truth is that CumulativeSum has a much better cache performance, having much fewer level 1 cache misses, which helps to explain why the rank queries are faster.
 
@@ -183,29 +185,30 @@ The level 2 cache miss rate (not shown) is therefore somewhat misleading as it w
 In Figure~\ref{fig:CumulativeSumSelect} we have plotted the same measurements as in Figure~\ref{fig:CumulativeSumRank}, but for Select queries, including our “branchless” variant of the cumulativeSum select query.
 
 In Figure~\ref{fig:CumulativeSumSelectWalltime} we can see that storing and using the cumulative sum of precomputed rank values is also an improvement for select queries, with a reduction in wall time of 40\,\%.
-Our “branchless” approach is also faster than not using the cumulative sum, but much slower than the simpler approach only achieving wall time reduction of 18\,\%.
+Our “branchless” approach is also faster than not using the cumulative sum, but much slower than the simpler approach only achieving a wall time reduction of 18\,\%.
 
-Looking at Figure!\ref{fig:CumulativeSumSelectBranchExe} we can see that both approaches using the cumulative sum executes much fewer conditional branches, which could be caused by using the binary search instead of having to iterate through every precomputed value from the beginning of the bitmap to the position where the sought-after occurrence lies.
-Branchless select does also execute fever branches than the branching version of select.
-The difference is not large though, which can be explained by most branches are present when moving down the tree.
+Looking at Figure~\ref{fig:CumulativeSumSelectBranchExe} we can see that both approaches using the cumulative sum executes much fewer conditional branches, which could be caused by using the binary search instead of having to iterate through every precomputed value from the beginning of the bitmap to the position where the sought-after occurrence lies.
+The “branchless” select also executes fever branches than the branching version of select.
+The difference is not large though, which could mean that most of the branches are from traversing the tree rather than computing the binary select on the bitmap.
 
 
-In Figure~\ref{fig:CumulativeSumSelectBranchMiss} and Figure~\ref{fig:CumulativeSumSelectBranchMissRate} we can see that the simple approach using cumulative sum has, as expected, more branch mispredictions and a higher branch misprediction rate than both of the others.
-The additional number of branch mispredictions contribute about $\num{936255}$ extra clock cycles, assuming 15 clock cycles per misprediction, which is only 4.5\,\% of the total number of clock cycles, which is $\num{20954197}$, used in the cumulative sum branching select query.
+In Figure~\ref{fig:CumulativeSumSelectBranchMiss} and Figure~\ref{fig:CumulativeSumSelectBranchMissRate} we can see that the branching approach using cumulative sum has, as expected, more branch mispredictions and a higher branch misprediction rate than both of the others.
+The additional number of branch mispredictions contribute about $\num{936255}$ extra clock cycles compared to UnalignedNaive which, assuming 15 clock cycles per misprediction, is only 4.5\,\% of the total number of clock cycles, which is $\num{20954197}$, used in the cumulative sum branching select query.
 
-In Figure~\ref{fig:CumulativeSumRankTLBMiss} we can see that the simple approach also has more TLB misses than the others, yet this still has not made it slower than the others.
+In Figure~\ref{fig:CumulativeSumRankTLBMiss} we can see that the branching approach also has more TLB misses than the others, yet this still has not made it slower than the others.
 
-In Figure~\ref{fig:CumulativeSumSelectL1CM}, Figure~\ref{fig:CumulativeSumSelectL2CM}, and Figure~\ref{fig:CumulativeSumSelectL3CM} we can see that using a tree with cumulative sum, again has better level 1, level 2 and 3 cache performances.
+In Figure~\ref{fig:CumulativeSumSelectL1CM}, Figure~\ref{fig:CumulativeSumSelectL2CM}, and Figure~\ref{fig:CumulativeSumSelectL3CM} we can see that using a tree with cumulative sum again has better level 1, level 2 and 3 cache performances than UnalignedNaive.
 The “branchless” approach has the best level 1 cache, level 2 and 3 cache performances as was also the case for rank.
-We see a reduction in level 2 cache hits as for rank in Figure~\ref{fig:CumulativeSumSelectL2CHits} which comes from not using cumulative sum to using it. 
-This rediction can additionally be explained by the reduction in level 1 cache misses as seen in Figure~\ref{fig:CumulativeSumSelectL1CM}.
-Level 2 cache misses are a little higher for CumulativeSum than for UnalignedNaive
-Branchless select reduces the hardware penalties more that branching select but it is still slower because requires more cycles to achieve branchless select and the hardware penalty reduction does not make up for this increase.
+We see a reduction in level 2 cache hits as for rank in Figure~\ref{fig:CumulativeSumSelectL2CHits} from UnalignedNaive to the two CumulativeSum approaches.
+This rediction can again be explained mainly by the reduction in level 1 cache misses as seen in Figure~\ref{fig:CumulativeSumSelectL1CM}.
+Level 2 cache misses are a little higher for branching CumulativeSum than for UnalignedNaive.
+The “branchless” select reduces the hardware penalties more that branching select but it is still slower because requires more cycles to achieve “branchless” select and the hardware penalty reduction does not make up for this increase.
 
-In the end we can confirm based on our measurements that it makes sense why Rank and Select is faster for CumulativeSum than for UnalignedNaive and also when taking the performance gain on queries into account then the small increased time and memory usage when building the tree is negligible.
+In the end we can confirm based on our measurements that it can be explained why Rank and Select is faster for CumulativeSum than for UnalignedNaive.
+We feel the performance gain for queries by far make up for the small increase in time and memory usage when building the tree.
 
-The improvement that CumulativeSum achieves is also theoretically better than Unaligned naive (see Section~\ref{sec:AdvantagesOfCumulativeSum}) because of the cumulative sums allowing binary rank to be computed in $O(1)$ time.
-The tests show the practical effect of this theoretical improvement and confirms that the theoretical improvement also works in practice.
+CumulativeSum is already theoretically better than UnalignedNaive (see Section~\ref{sec:AdvantagesOfCumulativeSum}) because of the cumulative sums allowing binary rank to be computed in $O(b)$ time.
+The tests show the practical effect of this theoretical improvement and confirms that the improvement also works in practice.
 
 
 
