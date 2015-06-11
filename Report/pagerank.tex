@@ -214,6 +214,7 @@ The query parameters were chosen as described in Section~\ref{sec:choiceOfQueryP
 
 \paragraph{Rank Queries}~\\\\
 In Figure~\ref{fig:PrecomputedRankBlockSize_Rank_WallTime} we have plotted the rank query wall time in $\mu s$ for the wavelet trees using precomputed rank values.
+See Figure~\ref{fig:PrecomputedRankBlockSize_Rank_WallTime} in Appendix A for a graph of the same, covering a wider range of block sizes, from $2^{6}$ to $2^{20}$ bits, showing that the wall time is worse for both smaller and larger block sizes than the ones in Figure~\ref{fig:PrecomputedRankBlockSize_Rank_WallTime}.
 
 We see that both concatenating the bitmaps and page-aligning the blocks is consistently slower, which was expected for concatenating the bitmaps, but not entirely so for page-aligning the blocks.
 Preallocated is on average about 6.22\,\% slower than UnalignedPreallocated, so page-aligning the blocks when using concatenated bitmaps is a 6.22\,\% performance hit.
@@ -266,6 +267,7 @@ We expect this dip, combined with the others, is what causes Naive to have its f
 
 \paragraph{Select Queries}~\\\\
 In Figure~\ref{fig:PrecomputedRankBlockSize_Select_WallTime} we see the wall time of 1000 Select queries for the different wavelet trees using precomputed rank values.
+Again, see Figure~\ref{fig:PrecomputedRankBlockSize_Select_WallTime} in Appendix A for a graph of the same, covering a wider range of block sizes, from $2^{6}$ to $2^{20}$ bits, showing that the wall time is worse for both smaller and larger block sizes than the ones in Figure~\ref{fig:PrecomputedRankBlockSize_Select_WallTime}.
 We can see that all have the best running time at half a page per block, though some of them have about the same speed at 0.75 page per block.
 We expect the main reason for this is to be found in the level 1 data cache performance data, which is shown in Figure~\ref{fig:PrecomputedRankBlockSize_Select_L1CacheMiss} as we can see that they have better level 1 data cache performance at lower values, except for Naive, which has its best performance at 0.5 page per blockand for decreasing block sizes the cache misses increase again.
 
