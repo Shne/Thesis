@@ -8,7 +8,7 @@ We have described some characteristics of modern CPUs that result in penalties i
 We have described how these penalties are incurred and why they result in performance loss.
 
 We have implemented and tested the construction of a wavelet tree, comparing it to the theoretical running and found the theoretical running time only holds up to a certain alphabet size whereafter an exponentially rising amount of TLB misses reduces performance significantly.
-We have implemented the rank and select queries and performed a number of modifications attempting to reduce the amount of hardware penalties they encounter by changing how they are calculated, changing the shape of the tree, changing what is stored and how it is stored.
+We have implemented the rank and select queries and performed a number of modifications, attempting to reduce the amount of hardware penalties they encounter by changing how they are calculated, changing the shape of the tree, changing what is stored and how it is stored.
 We have performed a number of experiments to measure and document the change in amount of hardware penalties encountered as well as running times and memory usage to see if our modifications were any improvement.
 The modifications and the results of the experiments are summed up below.
 

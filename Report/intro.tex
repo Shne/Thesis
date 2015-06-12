@@ -6,7 +6,7 @@ In this thesis we have made a short survey of some of the various applications o
 We include descriptions of how the construction of a wavelet tree and its supported queries work in practice.
 
 The practical implementation of a wavelet tree is susceptible, like all other algorithms, to the characteristics and imperfections of modern computer architectures that can degrade the performance by various penalties.
-We describe and analyse how and why these characteristics give rise to these penalties.
+We describe and analyse why these characteristics give rise to these penalties and how they impact performance.
 
 Our focus has been to implement various variations of the wavelet tree and its queries, measuring the running times and the hardware-based penalties, and implement new variations of the wavelet tree in attempts to reduce these penalties.
 We also use these measurements to try and analyse and explain why the different algorithms and wavelet trees perform differently.
@@ -14,7 +14,7 @@ We aim at making it something that could be useful in real world scenarios and w
 We have therefore avoided impractical optimizations such as ones that require recompilation to handle different sizes of alphabets.
 
 We have implemented and tested the construction of a wavelet tree, comparing it to the theoretical running time.
-We also implemented and tested the rank and select queries and performed a number of attempts at improving their running times by trying to reduce the various hardware-based penalties by changing how the queries are computed, changing the shape of the tree, changing what is stored and how it is stored.
+We also implemented and tested the rank and select queries and performed a number of modifications, attempting to reduce the amount of hardware penalties they encounter by changing how they are calculated, changing the shape of the tree, changing what is stored and how it is stored.
 We test and compare these optimizations including analysing how they perform with regards to the various penalties found in modern CPUs.
 
 We first implemented the basic construction algorithm based on the description by Navarro~\citeA[Section 2]{Navarro:2014:WT:2592317.2592708}, then expanded the implementation in various ways to attempt to improve the query algorithms.
