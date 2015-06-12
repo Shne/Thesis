@@ -78,6 +78,7 @@ There are conditional branches and unconditional branches.
 An example of an unconditional branch and a conditional branch is shown in Figure~\ref{fig:branchexample} \footnote{Example borrowed from:~\citeA[Section~4.5.2]{Tanenbaum}} where \textit{BNE Else} is a conditional branch and \textit{BR Next} is an unconditional branch.
 
 \begin{figure}
+\begin{framed}
 \begin{algorithmic}
 \If{$i = 0$}
 	\State $k \gets 1$
@@ -97,8 +98,10 @@ A possible translation to assembly looks like this:
 \item \itab{\texttt{Else:}} \tab{\texttt{MOV} $k,2$} \tab{: move 2 to k}
 \item \itab{\texttt{Next:}}
 \end{compactenum}
+\end{framed}
 \caption{Program fragment with conditional and unconditional branches}
 \label{fig:branchexample}
+
 \end{figure}
 
 An unconditional branch is a simple jump to a specified label, it is not based on a condition and is less of a problem than conditional branches because while the target of the jump is known before the instruction is executed, it is not yet known when the fetch unit goes to fetch the next instruction.
