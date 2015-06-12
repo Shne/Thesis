@@ -290,36 +290,40 @@ Why this results in fewer level 2 and level 3 cache misses, we do not know.
 
 
 
-\newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
 
-\begin{figure}\tiny
 
-\begin{subfigure}{0.48\textwidth}
+\begin{figure}[h!]\tiny
+\begin{adjustwidth}{-1cm}{-1cm}
+\begin{subfigure}{0.48\linewidth}
 	\input{PrecomputedRankBlockSize_Rank_WallTime}
 	\caption{Wall Time}
 	\label{fig:PrecomputedRankBlockSize_Rank_WallTime}
 \end{subfigure}
 \hfill
-\begin{subfigure}{0.48\textwidth}
+\begin{subfigure}{0.48\linewidth}
 	\input{PrecomputedRankBlockSize_Rank_BranchMiss}
 	\caption{Branch Mispredictions}
 	\label{fig:PrecomputedRankBlockSize_Rank_BranchMiss}
 \end{subfigure}
 
-\begin{subfigure}{0.48\textwidth}
+\begin{subfigure}{0.48\linewidth}
 	\input{PrecomputedRankBlockSize_Rank_BranchExe}
 	\caption{Branches Executed}
 	\label{fig:PrecomputedRankBlockSize_Rank_BranchExe}
 \end{subfigure}
-\hfill	
-\begin{subfigure}{0.48\textwidth}
+\hfill
+\begin{subfigure}{0.48\linewidth}
 	\input{PrecomputedRankBlockSize_Rank_BranchMissRate}
 	\caption{Branch Misprediction Rate}
 	\label{fig:PrecomputedRankBlockSize_Rank_BranchMissRate}
 \end{subfigure}
 \caption{Various measurements of Rank queries on Wavelet Trees with Precomputed Rank Values for varying block sizes, part 1}
 \label{fig:PrecomputedRankBlockSize_Rank}
+\end{adjustwidth}
 \end{figure}
+
+
+\newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
 
 \begin{figure}\tiny
 \begin{subfigure}{0.48\textwidth}
