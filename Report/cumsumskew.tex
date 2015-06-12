@@ -120,8 +120,9 @@ Agner Fog has tested the Ivy Bridge architecture and found that the branch mispr
 Figure~\ref{fig:CumulativeSumSkew_n8as16_Rank_TLBM} and Figure~\ref{fig:CumulativeSumSkew_n8as16_Select_TLBM} show the amount of Translation Lookaside Buffer Misses encountered as the tree is skewed.
 While it has higher variation and both dips and rises the more the tree is skewed, it does still show a general increase at higher skew parameter values.
 
-In the end we can conclude that skewing the tree is no improvement even though the amount of branch mispredictions are reduced. 
-This reduction simply does not make up for the increased amount of cache misses, increased cycles from more executed branches and increased TLB misses.
+In the end we can confirm that skewing the tree is no improvement even though the amount of branch mispredictions are reduced. 
+This reduction simply does not make up for the increased amount of cache misses, increased cycles from more executed branches and increased TLB misses. 
+Furthermore, skewing uses more memory.
 
 \begin{figure}\tiny
 \begin{subfigure}{0.48\textwidth}
