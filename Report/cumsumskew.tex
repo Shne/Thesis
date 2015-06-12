@@ -2,7 +2,7 @@
 \label{sec:memorylayout}
 In this section, we describe our attempt to improve the query times for the wavelet tree by controlling the memory layout and skewing the tree.
 Skewing the tree means that we force it to be unbalanced with a bias to one side. 
-Brodal et al.~\citeA{gerthSkewedBinarySearchTrees} showed that skewing a binary search tree could reduce the amount of cache misses and branch mispredictions considerately. Enough, in fact, to increase the speed of searching the tree manyfold, even though the skewing increased the depth of the tree structure.
+Brodal et al.~\citeA[Abstract]{gerthSkewedBinarySearchTrees} showed that skewing a binary search tree could reduce the amount of cache misses and branch mispredictions considerately. Enough, in fact, to increase the speed of searching the tree manyfold, even though the skewing increased the depth of the tree structure.
 
 To reduce cache misses by skewing the tree we must control the memory layout, because by skewing the tree to the right, we increase the likelihood of a traversal similar to a depth-first-search going down the right side first (DFSr). So we want to place the data in memory so that a DFSr traversal through the tree would result in sequential address accesses.
 Allocating memory dynamically as we go might produce a similar layout and controlling the memory may not lead to increased performance, but it is the only way to ensure the memory layout is as we want it.
@@ -36,13 +36,13 @@ The algorithms for construction and queries in this implementation remain mostly
 Prefetching is a feature of the CPU whereby it can fetch other parts of the memory into cachelines even though it was not requested yet, if it expects it will be requested soon, to avoid having the program waiting for this fetching.
 See also Section~\ref{sec:cachedesignandcachemiss}.
 In more advanced versions, it can even look at the access into memory of the running program and try to determine a pattern and prefetch memory according to this pattern.
-Looking at the Intel Optimization Manual~\citeB{intel-optimization-manual} for our architecture\footnote{Our architecture is Ivy Bridge, but the optimization manual sections for Sandy Bridge holds true for Ivy Bridge as well, as stated in section 2.2.7 in~\citeB{intel-optimization-manual}.} we find that it has streaming prefetchers loading into L1, L2, and last level cache. The streaming prefetchers detect accesses to ascending or descending addresses and can prefetch up to 20 lines ahead or behind. 
+Looking at the Intel Optimization Manual~\citeB{intel-optimization-manual} for our architecture\footnote{Our architecture is Ivy Bridge, but the optimization manual sections for Sandy Bridge holds true for Ivy Bridge as well, as stated in section 2.2.7 in~\citeB{intel-optimization-manual}.} we find that it has streaming prefetchers loading into level 1, level 2, and level 3. The streaming prefetchers detect accesses to ascending or descending addresses and can prefetch up to 20 lines ahead or behind. 
 Our architecture also has a prefetcher that can detect strides in memory access, as well as a “Next Page Prefetcher” that can load another memory page when detecting memory accesses near the page boundary~\footnote{See section 2.2.7 of~\citeB{intel-optimization-manual}}.
 
 
 \subsection{Skewing The Tree}
 \label{sec:SkewingTheTree}
-Skewing the tree is done by changing the way we find which character in the alphabet to split on in each node's construction.
+Skewing the tree is done by changing the way we find which character in the alphabet to split on in the construction of each node.
 The split character is the last character in the alphabet of the left child node and to be able to skew the calculation we calculate it as
 \[\mathit{SplitCharacter} = \left\lfloor \frac{\mathit{alphabetSize}-1}{\mathit{skew}} + \mathit{alphabetMin} \right\rfloor \]
 where \textit{alphabetSize} is the size of the alphabet at this node, \textit{alphabetMin} is the first character in the alphabet at this node, and \textit{skew} is the skew parameter which is 2 for a balanced tree and higher for right-skewed trees. E.g. a \textit{skew} value of 4 skews the tree by 75\,\% to the right so that, in each node, 25\,\% of the alphabet is put into the left child node and 75\,\% is put into the right child node.
@@ -52,7 +52,7 @@ We only use integer values as characters, so the calculated split character is r
 \subsection{Controlled Memory Layout}
 We still want to support dynamic input and alphabet sizes without recompilation, so the nodes must be dynamically allocated on the heap.
 
-The size of a node is known at compile time as it contains fixed-size pointers to the parent node and left and right child nodes, as well as a boolean to flag it as a leaf node and its bitmap as a vector, which internally stores a pointer to its backing array.
+The size of a node is known at compile time as it contains fixed-size pointers to the parent node and left and right child nodes, as well as a boolean value to flag it as a leaf node and its bitmap as a vector, which internally stores a pointer to its backing array.
 As such, the memory for the nodes is allocated by allocating an array and then instantiating the nodes into that array.
 A reference to a pointer is passed into the array from parent to child nodes during construction, so they know where to allocate their child nodes.
 The pointer points to the position of the last node in the array, and so before each instantiation of a new node, we increment the pointer so it points to free space, then place the new node there.
@@ -68,7 +68,7 @@ The algorithms for rank and select stop querying each bitmap at some position in
 The problem is shown in Figure~\ref{fig:QueryPrefetchFigure}. The drawing assumes the bitmap is stored sequentially and the prefetcher prefetches the next cache line (colored green), but the algorithm stops at some position and skips ahead to the next bitmap. 
 Rank stops when it reaches the position the query was searching up to, given as a parameter.
 Select stops when it has found the sought number of occurrences in the bitmap.
-In both these cases the rest of the bitmap is not used and any such data the prefetcher has fetched would have been in vain.
+In both of these cases the rest of the bitmap is not used and any such data the prefetcher has fetched would have been in vain.
 The prefetcher cannot tell from the algorithms access pattern when it will jump ahead to the next bitmap, and every such jump will therefore give rise to a cache miss.
 This makes it unable to utilize the prefetched data and will try to access memory that is not in the cache yet; a cache miss.
 So regardless of where the bitmap that is accessed next is stored, following right after the first or elsewhere in memory, a cache miss will occur.
@@ -84,7 +84,7 @@ Neither scenario happens often enough to warrant controlling the bitmap memory l
 \subsection{Experiments}
 
 \subsubsection{Queries when skewing the Wavelet Tree using uncontrolled and controlled memory layout}
-In this experiment we want to test whether queries on a skewed tree using controlled memory layout is an improvement in running time.
+In this experiment we want to test whether queries on a skewed tree using controlled memory layout is an improvement in running time and how a change in running time can be explained by the amount of incurred hardware penalties.
 
 \paragraph{Test Setup}~\\
 The general setup is as described in Section~\ref{sec:ExpNotesGeneralSetup}.
@@ -93,7 +93,9 @@ The results can be seen in Figure~\ref{fig:CumulativeSumSkew_n8as16_Build}, Figu
 We skew the wavelet tree as described in Section~\ref{sec:SkewingTheTree}).
 The block size used for testing the build time and memory usage is 1024, as we found that to be the overall best when weighing both rank and select time and memory usage.
 The block size used for rank is 64 bit and 2048 bit for select, as that gave the best performance for each, and we wanted to give each the best possibility to perform well when skewed.
-The less time that is spent in binary rank and binary select, the greater the influence on running time of branch mispredictions and cache misses from navigation nodes in the tree, and therefore the better opportunity reducing these by skewing the tree has to improve running time.
+The less time that is spent in binary rank and binary select, the greater the influence on running time of branch mispredictions and cache misses gets from navigation of nodes in the tree. 
+Skewing the tree can improve running time by reducing these branch mispredictions and cache misses from navigating the tree.
+Therefore, the less time that is spent in binary rank and binary select, the better opportunity skewing the tree has to improve running time.
 
 \paragraph{Results}~\\
 Looking at Figure~\ref{fig:CumulativeSumSkew_n8as16_Build_WallTime}, we can see that it takes more time to build a skewed tree, with increasing time spent as the skew increases.

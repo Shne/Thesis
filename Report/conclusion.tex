@@ -1,25 +1,34 @@
 \section{Conclusion}
-In this Thesis we have described the wavelet tree, a versatile data structure offering solutions for many problem domains such as string processing, computational geometry, and data compression.
-We describe in more detail how a wavelet tree is constructed and how it is queried in three ways: access, rank, and select.
+In this Thesis we have described the wavelet tree, a versatile data structure offering solutions within problem domains such as data compression and information retrieval.
+We describe in detail how a wavelet tree is constructed and how it is queried in three ways: access, rank, and select.
 
 We have performed a survey on the applications of wavelet trees including efficient data compression and fast information retrieval with more detail on how the wavelet tree is used for some of the applications.
 
 We have described some characteristics of modern CPUs that result in penalties in running time for some cases, such as cache misses (CM), branch mispredictions (BM) and translation lookaside buffer (TLB) misses.
 We have described how these penalties are incurred and why they result in performance loss.
 
-We have implemented and tested the construction of a wavelet tree, comparing it to the theoretical running and found the theoretical running time only holds up to a certain alphabet size whereafter an exponentially rising amount of TLB misses reduces performance significantly.
-We have implemented the rank and select queries and performed a number of modifications, attempting to reduce the amount of hardware penalties they encounter by changing how they are calculated, changing the shape of the tree, changing what is stored and how it is stored.
+We have implemented and tested the construction of a wavelet tree, comparing it to the theoretical running time and found the theoretical running time only holds up to a certain alphabet size whereafter an exponentially rising amount of TLB misses reduces performance significantly.
+
+We have implemented rank and select queries and performed a number of modifications, attempting to reduce the amount of hardware penalties they encounter by changing how they are calculated, changing the shape of the tree, changing what is stored and how it is stored.
+
 We have performed a number of experiments to measure and document the change in amount of hardware penalties encountered as well as running times and memory usage to see if our modifications were any improvement.
 The modifications and the results of the experiments are summed up below.
 
 \begin{description*}
-\item[Using \texttt{popcount} CPU instruction] to improve binary rank and select query running times within each node of the tree by reducing the amount of CPU cycles needed. High improvement in running time. 
-\item[Precompute and store binary rank values] in blocks for each bitmap in each node. Use the precomputed values for the most part to reduce the amount of CPU cycles and memory accesses needed. High improvement in running time.
-\item[Concatenate bitmaps and precomputed values] to reduce memory usage and possibly improve cache performance. Little improvement in memory usage, worse running time.
-\item[Align bitmaps with memory pages] to reduce TLB misses. Slightly worse running time.
-\item[Store cumulative sum of precomputed values] instead of raw binary rank values to further reduce CPU cycles and memory accesses needed. Fastest improvement of running time out of all our optimizations but uses more memory than the others but only $0.5\;\%$ more than a wavelet tree with concatenated bitmaps, which is the one that uses the smallest amount of memory.
-\item[Replace branching code with arithmetic operations] in select queries to reduce number of branches and thereby branch mispredictions. This resulted in a worse running time.
-\item[Skewing the tree] with a controlled memory layout to reduce branch mispredictions. The result was worse query running time as well as more time spent building the tree and more memory used.
+\item[Using \texttt{popcount} CPU instruction] to improve binary rank and select query running times within each node of the tree by reducing the amount of CPU cycles needed.\\
+\underline{Result}: High improvement in running time. 
+\item[Precompute and store binary rank values] in blocks for each bitmap in each node. Use the precomputed values for the most part to reduce the amount of CPU cycles and memory accesses needed.\\ 
+\underline{Result}: High improvement in running time.
+\item[Concatenate bitmaps and precomputed values] to reduce memory usage and possibly improve cache performance.\\ 
+\underline{Result}: Small improvement in memory usage, worse running time.
+\item[Align bitmaps with memory pages] to reduce TLB misses.\\ 
+\underline{Result}: Slightly worse running time.
+\item[Store cumulative sum of precomputed values] instead of raw binary rank values to further reduce CPU cycles and memory accesses needed.\\
+\underline{Result}: Fastest improvement of running time out of all our optimizations but uses more memory than the others but only $0.5\;\%$ more than a wavelet tree with concatenated bitmaps, which is the one that uses the smallest amount of memory.
+\item[Replace branching code with arithmetic operations] in select queries to reduce number of branches and thereby branch mispredictions.\\ 
+\underline{Result}: Worse running time than normal branching select.
+\item[Skewing the tree] with a controlled memory layout to reduce branch mispredictions.\\ 
+\underline{Result}: Branch mispredictions were reduced but it resulted in a worse query running time and increased memory usage.
 \end{description*}
 
 In general, improvements that reduced the raw amount of computations and memory accesses needed were a big improvement, whereas improvements focusing on reducing a single type of penalty, such as BM or TLB misses, were either barely an improvement or no improvement at all.

@@ -36,16 +36,18 @@ blockSize = pageSize/2
 # blockSizeRange = range(quartPage, pageSize*2 +1, quartPage)
 
 
-print("UnalignedNaivePrecomputed: Build \n")
-test = 'build'
-for _ in range(repeats):
-	args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
-	subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
-	args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(1), str(blockSize), outputFilename]
-	subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
-	args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(2), str(blockSize), outputFilename]
-	subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
+# print("UnalignedNaivePrecomputed: Build \n")
+# test = 'build'
+# for _ in range(repeats):
+# 	args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
+# 	subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
+# 	args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(1), str(blockSize), outputFilename]
+# 	subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
+# 	args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(2), str(blockSize), outputFilename]
+# 	subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
 
+addNewline()
+addNewline()
 addNewline()
 
 print("UnalignedNaivePrecomputed: Rank \n")
@@ -53,74 +55,74 @@ test = 'rank'
 for _ in range(repeats):
 	args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
 	subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
-	args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(1), str(blockSize), outputFilename]
-	subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
-	args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(2), str(blockSize), outputFilename]
-	subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
+	# args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(1), str(blockSize), outputFilename]
+	# subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
+	# args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(2), str(blockSize), outputFilename]
+	# subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
 
-addNewline()
+# addNewline()
 
-print("UnalignedNaivePrecomputed: Select \n")
-test = 'select'
-for _ in range(repeats):
-	args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
-	subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
-	args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(1), str(blockSize), outputFilename]
-	subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
-	args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(2), str(blockSize), outputFilename]
-	subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
-
-
-
-blockSize = 1024/8 #because the code implementation multiplies it by 8 again
-
-addNewline()
-print("CumulativeSum: Build \n")
-test = 'build'
-for _ in range(repeats):
-	args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
-	subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
-	args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(1), str(blockSize), outputFilename]
-	subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
-	args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(2), str(blockSize), outputFilename]
-	subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
-
-addNewline()
-
-print("CumulativeSum: Rank \n")
-test = 'rank'
-for _ in range(repeats):
-	args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
-	subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
-	args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(1), str(blockSize), outputFilename]
-	subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
-	args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(2), str(blockSize), outputFilename]
-	subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
-
-addNewline()
-
-print("CumulativeSum: Select Branching \n")
-test = 'select'
-for _ in range(repeats):
-	args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
-	subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
-	args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(1), str(blockSize), outputFilename]
-	subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
-	args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(2), str(blockSize), outputFilename]
-	subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
-
-addNewline()
-
-print("CumulativeSum: Select Branchless \n")
-test = 'select'
-for _ in range(repeats):
-	args = [cumulativeSumBranchlessProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
-	subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
-	args = [cumulativeSumBranchlessProgram, str(amount), str(alphabetSize), test, str(1), str(blockSize), outputFilename]
-	subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
-	args = [cumulativeSumBranchlessProgram, str(amount), str(alphabetSize), test, str(2), str(blockSize), outputFilename]
-	subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
+# print("UnalignedNaivePrecomputed: Select \n")
+# test = 'select'
+# for _ in range(repeats):
+# 	args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
+# 	subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
+# 	args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(1), str(blockSize), outputFilename]
+# 	subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
+# 	args = [unalignedNaivePrecomputedProgram, str(amount), str(alphabetSize), test, str(2), str(blockSize), outputFilename]
+# 	subprocess.Popen(args, cwd=unalignedNaivePrecomputedCwd).wait()
 
 
-addNewline()
-addNewline()
+
+# blockSize = 1024/8 #because the code implementation multiplies it by 8 again
+
+# addNewline()
+# print("CumulativeSum: Build \n")
+# test = 'build'
+# for _ in range(repeats):
+# 	args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
+# 	subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
+# 	args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(1), str(blockSize), outputFilename]
+# 	subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
+# 	args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(2), str(blockSize), outputFilename]
+# 	subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
+
+# addNewline()
+
+# print("CumulativeSum: Rank \n")
+# test = 'rank'
+# for _ in range(repeats):
+# 	args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
+# 	subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
+# 	args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(1), str(blockSize), outputFilename]
+# 	subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
+# 	args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(2), str(blockSize), outputFilename]
+# 	subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
+
+# addNewline()
+
+# print("CumulativeSum: Select Branching \n")
+# test = 'select'
+# for _ in range(repeats):
+# 	args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
+# 	subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
+# 	args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(1), str(blockSize), outputFilename]
+# 	subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
+# 	args = [cumulativeSumProgram, str(amount), str(alphabetSize), test, str(2), str(blockSize), outputFilename]
+# 	subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
+
+# addNewline()
+
+# print("CumulativeSum: Select Branchless \n")
+# test = 'select'
+# for _ in range(repeats):
+# 	args = [cumulativeSumBranchlessProgram, str(amount), str(alphabetSize), test, str(0), str(blockSize), outputFilename]
+# 	subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
+# 	args = [cumulativeSumBranchlessProgram, str(amount), str(alphabetSize), test, str(1), str(blockSize), outputFilename]
+# 	subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
+# 	args = [cumulativeSumBranchlessProgram, str(amount), str(alphabetSize), test, str(2), str(blockSize), outputFilename]
+# 	subprocess.Popen(args, cwd=cumulativeSumCwd).wait()
+
+
+# addNewline()
+# addNewline()

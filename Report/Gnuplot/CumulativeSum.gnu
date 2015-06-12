@@ -40,7 +40,7 @@ set term epslatex size 2.1,2.5 color font "" 6.5
 
 
 # Rank Walltime
-set yrange [0:*]
+set yrange [0:5]
 set ylabel 'Walltime (milliseconds)'
 set output 'CumulativeSumRankWalltime.tex'
 plot '../Data/CumulativeSum.data' every 9::1 using ($2/1000):($13/1000) title "UnalignedNaive" ls 1,\
