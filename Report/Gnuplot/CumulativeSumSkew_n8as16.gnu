@@ -12,7 +12,7 @@ set xrange [1.9:6.1]
 set yrange [0:*]
 
 #BUILD
-set term epslatex size 2.8,2.5 color font "" 6
+set term epslatex size 3.2,2.5 color font "" 6
 set ylabel "Wall Time (seconds)"
 set output 'CumulativeSumSkew_n8as16_Build_WallTime.tex'
 plot '../Data/CumulativeSumSkew_n8as16_Build.data' every ::2 using 1:($2/1000000) with linespoints linetype 1 notitle,\

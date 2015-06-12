@@ -1,7 +1,7 @@
 #!/usr/bin/gnuplot
 
 set key top right vertical
-set term epslatex size 2.8,2.5 color font "" 6
+set term epslatex size 3.2,2.5 color font "" 6
 set border
 
 set ylabel "Memory usage (MB)"
