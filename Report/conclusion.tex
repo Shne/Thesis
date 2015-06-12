@@ -5,12 +5,12 @@ We describe in more detail how a wavelet tree is constructed and how it is queri
 We have performed a survey on the applications of wavelet trees including efficient data compression and fast information retrieval with more detail on how the wavelet tree is used for some of the applications.
 
 We have described some characteristics of modern CPUs that result in penalties in running time for some cases, such as cache misses (CM), branch mispredictions (BM) and translation lookaside buffer (TLB) misses.
-We have described both how and why these incur penalties.
+We have described how these penalties are incurred and why they result in performance loss.
 
-We have implemented and tested the construction of a wavelet tree, comparing it to the theoretical running and found the theoretical running time only holds up to a certain alphabet size whereafter an exponentially rising amount of TLB misses incur high penalties.
-We have implemented and tested the rank and select queries and performed a number of attempts at optimizing their running times by changing how they are calculated, changing the shape of the tree, changing what is stored and how it is stored.
-
-The optimizations are their results can be summed up as follows:
+We have implemented and tested the construction of a wavelet tree, comparing it to the theoretical running and found the theoretical running time only holds up to a certain alphabet size whereafter an exponentially rising amount of TLB misses reduces performance significantly.
+We have implemented the rank and select queries and performed a number of modifications attempting to reduce the amount of hardware penalties they encounter by changing how they are calculated, changing the shape of the tree, changing what is stored and how it is stored.
+We have performed a number of experiments to measure and document the change in amount of hardware penalties encountered as well as running times and memory usage to see if our modifications were any improvement.
+The modifications and the results of the experiments are summed up below.
 
 \begin{description*}
 \item[Using \texttt{popcount} CPU instruction] to improve binary rank and select query running times within each node of the tree by reducing the amount of CPU cycles needed. High improvement in running time. 
