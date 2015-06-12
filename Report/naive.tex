@@ -222,29 +222,29 @@ Looking at the values in Figure~\ref{fig:valuesForPopcountDiff} we find that, of
 Cache misses are expensive and reducing them could greatly increase the speed of queries on the wavelet tree.
 
 
-\newgeometry{left=2cm,right=2cm, top=2cm, bottom=3cm}
-\begin{figure}\tiny
-	\begin{subfigure}{0.48\textwidth}
+\begin{figure}[h!]\tiny
+	\begin{subfigure}{\textwidth}
 		\input{popcountRankNew}
 		\caption{Rank}
 		\label{fig:rankPopcountDiff}
 	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.48\textwidth}
+
+	\begin{subfigure}{\textwidth}
 		\input{popcountSelectNew}
 		\caption{Select}
 		\label{fig:selectPopcountDiff}
 	\end{subfigure}
 	\caption{Rank and select queries using simple binary rank and select vs. rank and select queries using binary rank and select using the popcount instruction. Y-Axis is index 100 of the simple queries, that is, every value is percent of the value for the simple query.}
 \end{figure}
+
+
 \begin{figure}
-\center
+\center\footnotesize
 	\caption{Values for Figure~\ref{fig:rankPopcountDiff} and Figure~\ref{fig:selectPopcountDiff}}
 	\label{fig:valuesForPopcountDiff}
 	\input{valuesForPopcount}
 \end{figure}
 
-\restoregeometry
 
 
 
