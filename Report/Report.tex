@@ -26,6 +26,7 @@
 \usepackage[labeled]{multibib}
 \usepackage{array}
 \usepackage{newfloat}
+\usepackage{datetime}
 
 \usepackage{float}
 \graphicspath{{Gnuplot/Graphs/}}
@@ -55,24 +56,25 @@
 
 \newcites{A,B}{Primary Bibliography,Secondary Bibliography (not curriculum)}
 
-\title{Engineering Rank and Select Queries on Wavelet Trees
-	\vspace{25mm}
-	\begin{center}
-		\includegraphics[width=0.7\textwidth]{WTdrawing.pdf}
-	\end{center}
-}
-
-\date{\today}
-
-\author{Jan H. Knudsen (20092926)
-\and
-Roland L. Pedersen (20092817)
-}
 
 %************************************************************
 
 \begin{document}
-\maketitle
+
+\noindent{\rule{\linewidth}{1mm}\\[4ex]\huge
+\textbf{Engineering Rank and Select Queries on Wavelet Trees}\\[3ex]
+\Large
+Jan H. Knudsen, 20092926\\
+Roland L. Pedersen, 20092817\\[3ex]
+\textit{Master's Thesis, Computer Science}\\
+\noindent\rule{\linewidth}{1mm}\\[4ex]
+\begin{center}
+\includegraphics[width=0.75\textwidth]{WTdrawing.pdf}
+\vfill \large
+\monthname, \the\year\\
+Advisor: Gerth Stølting Brodal
+\end{center}
+}
 
 \newpage
 \tableofcontents
