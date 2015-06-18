@@ -80,7 +80,7 @@
 {
 Datalogi, Aarhus Universitet \\ % Your institution for the title page
 \medskip
-\textit{roland.l.pedersen@gmail.com} % Your email address
+\textit{Thesis defence}
 }
 \date{June 25, 2015} % Date, can be changed to a custom date
 
@@ -164,19 +164,41 @@ This makes the total memory consumption $O(n \log \sigma + \sigma \cdot \mathit{
 \section{Queries}
 %------------------------------------------------
 \begin{frame}
-\frametitle{Queries}
+\frametitle{Wavelet Tree: Queries}
 \begin{itemize}
 \item The wavelet tree supports three queries:
 	\begin{itemize}
 	\item \textbf{Access(p)}: Return the character \textit{c} at position \textit{p} in sequence \textit{S}.
 	\item \textbf{Rank(c, p)}: Return the number of occurrences of character \textit{c} in \textit{S} up to position \textit{p}.
+		\begin{itemize}
+		\item Running time: $O(n \log \sigma)$
+		\end{itemize}
 	\item \textbf{Select(c, o)}: Return the position of the \textit{o}th occurrence of character \textit{c} in \textit{S}.
-	\end{itemize}
+		\begin{itemize}
+		\item Running time: $O(n \log \sigma)$
+		\end{itemize}
+		\end{itemize}
 \end{itemize}
 
 \end{frame}
 
 %------------------------------------------------
+
+\subsection{Rank}
+\begin{frame}
+\frametitle{Rank on a Wavelet Tree}
+\begin{center}
+	\center \includegraphics[width=0.8\textwidth]{RankDrawing}
+\end{center}
+\end{frame}
+
+\subsection{Select}
+\begin{frame}
+\frametitle{Select on a Wavelet Tree}
+\begin{center}
+	\includegraphics[width=0.8\textwidth]{SelectDrawing}
+\end{center}
+\end{frame}
 
 \begin{frame}
 \frametitle{Blocks of Highlighted Text}
@@ -213,9 +235,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lectus nisl, ul
 \end{columns}
 \end{frame}
 
-%------------------------------------------------
-\section{Second Section}
-%------------------------------------------------
 
 \begin{frame}
 \frametitle{Table}
