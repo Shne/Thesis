@@ -126,6 +126,13 @@ Datalogi, Aarhus Universitet \\ % Your institution for the title page
 
 \section{What is a Wavelet Tree?}
 
+%------------------------------------------------
+\begin{frame}
+\frametitle{Wavelet Tree}
+\begin{center} \Huge{What is a wavelet tree?} \end{center}
+\end{frame}
+%------------------------------------------------
+
 \subsection{Definitions}
 \begin{frame}
 \frametitle{Wavelet Tree: Definitions}
@@ -150,6 +157,8 @@ Datalogi, Aarhus Universitet \\ % Your institution for the title page
 
 %------------------------------------------------
 \subsection{Constructing the Wavelet Tree}
+
+
 \begin{frame}
 \frametitle{Wavelet Tree Example}
 \Tree
@@ -186,6 +195,14 @@ This makes the total memory consumption $O(n \log \sigma + \sigma \cdot \mathit{
 \end{frame}
 
 \section{Queries}
+
+%------------------------------------------------
+\begin{frame}
+\frametitle{Wavelet Tree}
+\begin{center} \Huge{Queries} \end{center}
+\end{frame}
+%------------------------------------------------
+
 %------------------------------------------------
 \begin{frame}
 \frametitle{Wavelet Tree: Queries}
@@ -234,13 +251,14 @@ This makes the total memory consumption $O(n \log \sigma + \sigma \cdot \mathit{
 %------------------------------------------------
 \begin{frame}
 \frametitle{Wavelet Tree: Applications}
+\begin{center} \Huge{Applications} \end{center}
+\end{frame}
+%------------------------------------------------
+
+\subsection{Information Retrieval}
+\begin{frame}
+\frametitle{Information Retrieval: Applications}
 \begin{itemize}
-\item Compression
-	\begin{itemize}
-	\item Zero-order entropy compression ($H_0$) using a RLE Wavelet Tree or a Huffman Shaped Wavelet Tree.
-	\item Higher-order entropy compression ($H_k$) using Burrows-Wheeler transformation and a RLE wavelet tree.
-	\item $H_k <= H_0 <= \log \sigma$.
-	\end{itemize}
 \item Information Retrieval
 	\begin{itemize}
 	\item Positional inverted index
@@ -251,8 +269,20 @@ This makes the total memory consumption $O(n \log \sigma + \sigma \cdot \mathit{
 \end{itemize}
 \end{frame}
 
-\subsection{Compression}
 %------------------------------------------------
+\subsection{Compression}
+\begin{frame}
+\frametitle{Compression: Applications}
+\begin{itemize}
+\item Compression
+	\begin{itemize}
+	\item Zero-order entropy compression ($H_0$) using a RLE Wavelet Tree or a Huffman Shaped Wavelet Tree.
+	\item Higher-order entropy compression ($H_k$) using Burrows-Wheeler transformation and a RLE wavelet tree.
+	\item $H_k <= H_0 <= \log \sigma$.
+	\end{itemize}
+\end{itemize}
+\end{frame}
+
 \subsubsection{Run-length encoding}
 \begin{frame}
 \frametitle{Compression: Run-length encoding}
@@ -482,10 +512,51 @@ Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 & Sort 4\\
 %----------------------------------------------------------------------------------------
 \begin{frame}
 \frametitle{Huffman Shaped Wavelet Tree: Example}
-\hspace*{2cm}Wavelet Tree: \hspace{3cm} Huffman Shaped WT:
-\begin{center}
-	\center \includegraphics[width=1.0\textwidth]{Huffman-shaped-wavelet-tree}
-\end{center}
+
+\begin{figure}
+\begin{subfigure}{0.49\textwidth}     
+\Tree
+%root
+[.aaaaaabcaaaadf\\00000000000011 
+	%left child
+	[.aaaaaabcaaaa\\000000010000 
+		[.aaaaaabaaaa\\00000010000 
+			[.aaaaaaaaaa  ]
+			[.b ]		
+		] 
+		[.c ]
+	] 
+	%right child
+	[.df\\01 		
+		[.d ] 
+		[.f ]
+	]
+]
+\caption{Balanced Wavelet tree: 39 bits}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.49\textwidth}	
+\Tree
+%root
+[.aaaaaabcaaaadf\\00000000000011 
+	%left child
+	[.bcdf\\0011  
+		[.bc\\01  
+			[.b  ]
+			[.c  ]		
+		] 
+		[.df  
+			[.d ]
+			[.f ]
+		]
+	] 
+	%right child
+	[.aaaaaaaaaa\\01 ]
+]
+\caption{Huffman-shaped wavelet tree: 22 bits}
+\end{subfigure}
+\end{figure}
+
 \end{frame}
 
 %----------------------------------------------------------------------------------------
@@ -499,12 +570,166 @@ Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 & Sort 4\\
 \end{itemize}
 \end{frame}
 
-
+\section{Experiments and Results}
 %----------------------------------------------------------------------------------------
 \begin{frame}
-\frametitle{Information Retrieval}
+\frametitle{Experiments and Results}
+\huge{Experiments and Results}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Focus of experiments}
 \begin{itemize}
-\item k
+\item Focus on optimizing and observing the effect of hardware penalties.
+	\begin{itemize}
+	\item Cache Misses.
+	\item Branch Mispredictions.
+	\item Translation Lookaside Buffer (TLB) Misses.
+	\end{itemize}
+\end{itemize}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Experiments}
+\begin{itemize}
+\item 1. Calculate binary rank and select using popcount
+\item 2. Pre-compute binary rank values in blocks
+\item 3. Block size dependence on input n
+\item 4. Pre-compute cumulative sums of rank values
+\item 5. Branchless select query
+\item 6. Queries on skewed cumulative sum wavelet tree
+\end{itemize}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+
+\begin{frame}
+\frametitle{Calculate binary rank and select using popcount}
+
+\begin{figure}[h!]\tiny
+	\begin{subfigure}{\textwidth}
+		\center \scalebox{.6}{\input{popcountRankNew}}
+		\caption{\tiny{Rank}}
+	\end{subfigure}
+	\begin{subfigure}{\textwidth}
+		\center \scalebox{.6}{\input{popcountSelectNew}}
+		\caption{\tiny{Select}}
+	\end{subfigure}
+	\caption{\tiny{Rank and select queries using simple binary rank and select vs. rank and select queries using binary rank and select using the popcount instruction. Y-Axis is index 100 of the simple queries, that is, every value is percent of the value for the simple query.}}
+\end{figure}
+\end{frame}
+%----------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Experiments: Pre-compute binary rank values in blocks}
+\begin{tabular}{|lcc|}
+\hline
+Name						& Concatenated Bitmaps	& Page-aligned Blocks	\\ \hline
+Preallocated				& yes					& yes					\\ \hline
+UnalignedPreallocated	& yes					& no						\\ \hline
+Naive					& no						& yes					\\ \hline
+UnalignedNaive			& no						& no						\\ \hline
+\end{tabular}\\
+\end{frame}
+%----------------------------------------------------------------------------------------
+
+
+
+\begin{frame}
+\frametitle{Running time: Pre-compute binary rank values in blocks}
+\begin{figure}
+\begin{subfigure}{0.45\textwidth}
+	\begin{tiny}	
+	\scalebox{.7}{\input{PrecomputedRankBlockSize_Rank_WallTime}}
+	\end{tiny}
+	\caption{Rank: Running Time}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.45\textwidth}
+	\begin{tiny}	
+	\scalebox{.7}{\input{PrecomputedRankBlockSize_Select_WallTime}}
+	\end{tiny}
+	\caption{Select: Running Time}
+\end{subfigure}
+\end{figure}
+Best Block size: $\frac{1}{2}$ page size = $\frac{1}{2}*4096 \text{ bytes} = 2048 \text{ bytes}$.
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Memory usage: Pre-compute binary rank values in blocks}
+\begin{center}
+\begin{tiny}
+\input{PrecomputedRankBlockSize_MemoryUsage}
+\end{tiny}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Running time: Not precomputed vs. best precomputed}
+\begin{figure}
+	\begin{subfigure}{0.48\textwidth}
+		\begin{tiny}
+		\scalebox{.7}{\input{PrecomputedRankBlockSize_vsNaiveInteger_Rank}}
+		\end{tiny}
+		\caption{Rank}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.48\textwidth}
+		\begin{tiny}
+		\scalebox{.7}{\input{PrecomputedRankBlockSize_vsNaiveInteger_Select}}
+		\end{tiny}
+		\caption{Select}
+	\end{subfigure}
+	\caption{Comparison of wall time of rank and select queries between SimpleNaive not using precomputed values and UnalignedNaive using precomputed values.}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Block size dependence on input size n}
+\begin{itemize}
+\item When using lookups of precomputed values
+It costs $O(\frac{n}{b} + b)$ to calculate the binary rank.
+\item It costs $O(\frac{n}{b})$ to scan the blocks, and $O(b)$ to calculate the rank within a single block using popcount. The optimal block size should be one that minimizes this.
+\item The derivative of $\frac{n}{b}+b$ is $1-\frac{n}{b^2}$ and its root is $n = b^2$ making the optimal block size $b = \sqrt{n}$.
+\item This is only the optimal block size for a single bitmap, and a wavelet tree has many bitmaps of varying sizes $n$ that are lower near the leaves.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Experiment: Block size dependence on input size n}
+\begin{figure}\tiny
+\begin{subfigure}{0.48\textwidth}
+	\scalebox{.5}{\input{PrecomputedRankBlockSizeVaryN_5_Rank_WallTime}}
+	\caption{$n = 10^5$}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\scalebox{.5}{\input{PrecomputedRankBlockSizeVaryN_6_Rank_WallTime}}
+	\caption{$n = 10^6$}
+\end{subfigure}
+
+\begin{subfigure}{0.48\textwidth}
+	\scalebox{.5}{\input{PrecomputedRankBlockSizeVaryN_7_Rank_WallTime}}
+	\caption{$n = 10^7$}
+\end{subfigure}
+\hfill	
+\begin{subfigure}{0.48\textwidth}
+	\scalebox{.5}{\input{PrecomputedRankBlockSizeVaryN_8_Rank_WallTime}}
+	\caption{$n = 10^8$}
+\end{subfigure}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Experiments}
+\begin{itemize}
+\item
 \end{itemize}
 \end{frame}
 
