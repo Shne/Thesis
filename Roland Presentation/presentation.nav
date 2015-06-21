@@ -27,26 +27,39 @@
 \headcommand {\beamer@subsectionentry {0}{2}{2}{9}{Select}}\headcommand {\beamer@subsectionpages {8}{8}}
 \headcommand {\slideentry {2}{2}{1}{9/9}{Select}{0}}
 \headcommand {\beamer@framepages {9}{9}}
-\headcommand {\slideentry {2}{2}{2}{10/10}{Select}{0}}
+\headcommand {\sectionentry {3}{Applications}{10}{Applications}{0}}
+\headcommand {\beamer@sectionpages {7}{9}}
+\headcommand {\beamer@subsectionpages {9}{9}}
+\headcommand {\slideentry {3}{0}{2}{10/10}{}{0}}
 \headcommand {\beamer@framepages {10}{10}}
-\headcommand {\slideentry {2}{2}{3}{11/11}{Select}{0}}
+\headcommand {\beamer@subsectionentry {0}{3}{1}{11}{Compression}}\headcommand {\beamer@subsectionpages {10}{10}}
+\headcommand {\beamer@subsubsectionentry {0}{3}{1}{1}{11}{Run-length encoding}}
+\headcommand {\slideentry {3}{1}{1}{11/11}{Compression}{0}}
 \headcommand {\beamer@framepages {11}{11}}
-\headcommand {\slideentry {2}{2}{4}{12/12}{Select}{0}}
+\headcommand {\slideentry {3}{1}{2}{12/12}{Compression}{0}}
 \headcommand {\beamer@framepages {12}{12}}
-\headcommand {\slideentry {2}{2}{5}{13/13}{Select}{0}}
+\headcommand {\beamer@subsubsectionentry {0}{3}{1}{2}{13}{Burrows-Wheeler Transform}}
+\headcommand {\slideentry {3}{1}{3}{13/13}{Compression}{0}}
 \headcommand {\beamer@framepages {13}{13}}
-\headcommand {\slideentry {2}{2}{6}{14/14}{Select}{0}}
+\headcommand {\slideentry {3}{1}{4}{14/14}{Compression}{0}}
 \headcommand {\beamer@framepages {14}{14}}
-\headcommand {\slideentry {2}{2}{7}{15/15}{Select}{0}}
+\headcommand {\slideentry {3}{1}{5}{15/15}{Compression}{0}}
 \headcommand {\beamer@framepages {15}{15}}
-\headcommand {\slideentry {2}{2}{8}{16/16}{Select}{0}}
+\headcommand {\slideentry {3}{1}{6}{16/16}{Compression}{0}}
 \headcommand {\beamer@framepages {16}{16}}
-\headcommand {\slideentry {2}{2}{9}{17/17}{Select}{0}}
+\headcommand {\beamer@subsubsectionentry {0}{3}{1}{3}{17}{Huffman Shaped Wavelet tree}}
+\headcommand {\slideentry {3}{1}{7}{17/17}{Compression}{0}}
 \headcommand {\beamer@framepages {17}{17}}
-\headcommand {\slideentry {2}{2}{10}{18/18}{Select}{0}}
+\headcommand {\slideentry {3}{1}{8}{18/18}{Compression}{0}}
 \headcommand {\beamer@framepages {18}{18}}
-\headcommand {\beamer@partpages {1}{18}}
-\headcommand {\beamer@subsectionpages {9}{18}}
-\headcommand {\beamer@sectionpages {7}{18}}
-\headcommand {\beamer@documentpages {18}}
-\headcommand {\def \inserttotalframenumber {18}}
+\headcommand {\slideentry {3}{1}{9}{19/19}{Compression}{0}}
+\headcommand {\beamer@framepages {19}{19}}
+\headcommand {\slideentry {3}{1}{10}{20/20}{Compression}{0}}
+\headcommand {\beamer@framepages {20}{20}}
+\headcommand {\slideentry {3}{1}{11}{21/21}{Compression}{0}}
+\headcommand {\beamer@framepages {21}{21}}
+\headcommand {\beamer@partpages {1}{21}}
+\headcommand {\beamer@subsectionpages {11}{21}}
+\headcommand {\beamer@sectionpages {10}{21}}
+\headcommand {\beamer@documentpages {21}}
+\headcommand {\def \inserttotalframenumber {21}}

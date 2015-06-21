@@ -13,6 +13,29 @@
 
 
 \usepackage{qtree}
+\usepackage{amsthm}
+\usepackage{algpseudocode}
+\usepackage[export]{adjustbox}
+\usepackage{subcaption}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{mdframed}
+\usepackage{framed}
+\usepackage{siunitx}
+\usepackage{placeins}
+\usepackage{units}
+\usepackage{xcolor}
+\usepackage{lipsum}
+\usepackage{algorithm}
+\usepackage{amsmath}
+\usepackage{paralist}
+\usepackage{mdwlist}
+\usepackage[labeled]{multibib}
+\usepackage{array}
+\usepackage{newfloat}
+\usepackage{datetime}
+
 %\usetheme{default}
 %\usetheme{AnnArbor}
 %\usetheme{Antibes}
@@ -29,6 +52,7 @@
 %\usetheme{Hannover}
 %\usetheme{Ilmenau}
 %\usetheme{JuanLesPins}
+
 %\usetheme{Luebeck}
 \usetheme{Madrid}
 %\usetheme{Malmoe}
@@ -169,15 +193,19 @@ This makes the total memory consumption $O(n \log \sigma + \sigma \cdot \mathit{
 \item The wavelet tree supports three queries:
 	\begin{itemize}
 	\item \textbf{Access(p)}: Return the character \textit{c} at position \textit{p} in sequence \textit{S}.
+		\begin{itemize}
+		\item Running time: $O(n \log \sigma)$.
+		\item We have not implemented Access because it resembles Rank.
+		\end{itemize}
 	\item \textbf{Rank(c, p)}: Return the number of occurrences of character \textit{c} in \textit{S} up to position \textit{p}.
 		\begin{itemize}
-		\item Running time: $O(n \log \sigma)$
+		\item Running time: $O(n \log \sigma)$.
 		\end{itemize}
 	\item \textbf{Select(c, o)}: Return the position of the \textit{o}th occurrence of character \textit{c} in \textit{S}.
 		\begin{itemize}
 		\item Running time: $O(n \log \sigma)$
 		\end{itemize}
-		\end{itemize}
+	\end{itemize}
 \end{itemize}
 
 \end{frame}
@@ -192,6 +220,8 @@ This makes the total memory consumption $O(n \log \sigma + \sigma \cdot \mathit{
 \end{center}
 \end{frame}
 
+%------------------------------------------------
+
 \subsection{Select}
 \begin{frame}
 \frametitle{Select on a Wavelet Tree}
@@ -200,115 +230,285 @@ This makes the total memory consumption $O(n \log \sigma + \sigma \cdot \mathit{
 \end{center}
 \end{frame}
 
+\section{Applications}
+%------------------------------------------------
 \begin{frame}
-\frametitle{Blocks of Highlighted Text}
-\begin{block}{Block 1}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lectus nisl, ultricies in feugiat rutrum, porttitor sit amet augue. Aliquam ut tortor mauris. Sed volutpat ante purus, quis accumsan dolor.
-\end{block}
+\frametitle{Wavelet Tree: Applications}
+\begin{itemize}
+\item Compression
+	\begin{itemize}
+	\item Zero-order entropy compression ($H_0$) using a RLE Wavelet Tree or a Huffman Shaped Wavelet Tree.
+	\item Higher-order entropy compression ($H_k$) using Burrows-Wheeler transformation and a RLE wavelet tree.
+	\item $H_k <= H_0 <= \log \sigma$.
+	\end{itemize}
+\item Information Retrieval
+	\begin{itemize}
+	\item Positional inverted index
+	\item Document retrieval
+	\item Range Quantile Query: Return the \textit{k}th smallest number within a subsequence of a given sequence of elements.
+	\item FM-count: Return number of occurrences of a pattern p in S. 
+	\end{itemize}
+\end{itemize}
+\end{frame}
 
-\begin{block}{Block 2}
-Pellentesque sed tellus purus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum quis magna at risus dictum tempor eu vitae velit.
-\end{block}
+\subsection{Compression}
+%------------------------------------------------
+\subsubsection{Run-length encoding}
+\begin{frame}
+\frametitle{Compression: Run-length encoding}
+\begin{itemize}
+\item Run-length encoding counts the number of consecutive occurrences of a symbol and substitutes the consecutive occurrences with the symbol followed by its number of occurrences.
+\item Example: $RLE(\text{aaaaabbbaacccccaaaaa}) = \text{a5,b3,a2,c5,a5}$.
+\item Binary example: $RLE(00000000001111100000) = 10,5,5 $
+	\begin{itemize}
+	\item We can avoid specifying the symbol by assuming that $0$ is always the first symbol.
+	\item If the binary number begins with a $1$ we just add a $0$ to the beginning of the result.
+	\end{itemize}
+\item Query by reversing RLE. It takes linear time $O(n)$ to reverse. Rank and select query time becomes $O(2n \log \sigma) = O(n \log \sigma)$
+\item Achieves space complexity within $H_0$
+\end{itemize}
+\end{frame}
 
-\begin{block}{Block 3}
-Suspendisse tincidunt sagittis gravida. Curabitur condimentum, enim sed venenatis rutrum, ipsum neque consectetur orci, sed blandit justo nisi ac lacus.
-\end{block}
+
+%------------------------------------------------
+\begin{frame}
+\frametitle{RLE Wavelet Tree on string \textit{bananahat} with alphabet $\Sigma =$ \textit{abhnt}}
+\begin{figure}
+\begin{subfigure}{0.49\textwidth}     
+\Tree
+%root
+[.bananahat\\001010001 !\qsetw{3cm} 
+	%left child
+	[.baaaha\\000011 !\qsetw{3cm}
+		[.baaaa\\10000 !\qsetw{3cm}
+			[.aaaa !\qsetw{3cm} ]
+			[.b !\qsetw{3cm} ]		
+		] 
+		[.h !\qsetw{3cm} ]
+	] 
+	%right child
+	[.nnt\\001 !\qsetw{3cm}	
+		[.nn !\qsetw{3cm} ] 
+		[.t !\qsetw{3cm} ]
+	]
+]
+		\caption{Wavelet Tree on string \textit{bananahat} with alphabet $\Sigma =$ \textit{abhnt}}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.49\textwidth}	
+\Tree
+%root
+[.bananahat\\2,1,1,1,3,1 !\qsetw{3cm} 
+	%left child
+	[.baaaha\\4,1,1 !\qsetw{3cm}
+		[.baaaa\\0,1,4 !\qsetw{3cm}
+			[.aaaa !\qsetw{3cm} ]
+			[.b !\qsetw{3cm} ]		
+		] 
+		[.h !\qsetw{3cm} ]
+	] 
+	%right child
+	[.nnt\\2,1 !\qsetw{3cm}	
+		[.nn !\qsetw{3cm} ] 
+		[.t !\qsetw{3cm} ]
+	]
+]
+\caption{RLE Wavelet Tree on string \textit{bananahat} with alphabet $\Sigma =$ \textit{abhnt}}
+\end{subfigure}
+\end{figure}
+\end{frame}
+
+
+\subsubsection{Burrows-Wheeler Transform}
+%------------------------------------------------
+\begin{frame}
+\frametitle{Compression: Burrows-Wheeler transform}
+\begin{itemize}
+\item BWT permutes the order of the characters. If the original string had several substrings that occurred often, then the transformed string will have several places where a single character is repeated multiple times in a row.
+\item As a result it groups symbols more which improves the effect of Run-length encoding
+\item BWT is reversible
+\item Combined with RLE Wavelet Tree it achieves $H_k$ compression.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{BWT example}
+$S = $ bananahat.
+\begin{center}
+$\begin{bmatrix}
+	bananahat\#\\
+	ananahat\#b\\
+	nanahat\#ba\\
+	anahat\#ban\\
+	nahat\#bana\\
+	ahat\#banan\\
+	hat\#banana\\
+	at\#bananah\\
+	t\#bananaha\\
+	\#bananahat\\
+\end{bmatrix} \Rightarrow
+\begin{bmatrix}
+	\#bananaha\textbf{t}\\
+	ahat\#bana\textbf{n}\\
+	anahat\#ba\textbf{n}\\
+	ananahat\#\textbf{b}\\
+	at\#banana\textbf{h}\\
+	bananahat\#\\
+	hat\#banan\textbf{a}\\
+	nahat\#ban\textbf{a}\\
+	nanahat\#b\textbf{a}\\
+	t\#bananah\textbf{a}
+\end{bmatrix}$
+\end{center}
+$BWT(S) = $ tnnbhaaaa.
 \end{frame}
 
 %------------------------------------------------
-
 \begin{frame}
-\frametitle{Multiple Columns}
-\begin{columns}[c] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
+\frametitle{Burrows-Wheeler reverse transform example}
+$S = \text{dca}$
+\begin{center}
+$M = \begin{bmatrix}
+	dca\#\\
+	ca\#d\\
+	a\#dc\\
+	\#dca
+\end{bmatrix} \Rightarrow
+M' = 
+\begin{bmatrix}
+	\#dc\textbf{a}\\
+	a\#d\textbf{c}\\
+	ca\#\textbf{d}\\
+	dca\textbf{\#}
+\end{bmatrix}$\\
+\end{center}
+$BWT(S) = acd$
+\vspace{0.5cm}
 
-\column{.45\textwidth} % Left column and width
-\textbf{Heading}
-\begin{enumerate}
-\item Statement
-\item Explanation
-\item Example
-\end{enumerate}
-
-\column{.5\textwidth} % Right column and width
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lectus nisl, ultricies in feugiat rutrum, porttitor sit amet augue. Aliquam ut tortor mauris. Sed volutpat ante purus, quis accumsan dolor.
-
-\end{columns}
-\end{frame}
-
-
-\begin{frame}
-\frametitle{Table}
-\begin{table}
-\begin{tabular}{l l l}
-\toprule
-\textbf{Treatments} & \textbf{Response 1} & \textbf{Response 2}\\
-\midrule
-Treatment 1 & 0.0003262 & 0.562 \\
-Treatment 2 & 0.0015681 & 0.910 \\
-Treatment 3 & 0.0009271 & 0.296 \\
-\bottomrule
+Reverse BWT:
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
+\hline
+Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 & Sort 4\\
+\hline 
+\begin{tabular}{@{}>{$}l<{$}@{}}
+	a\\ c\\ d\\ \#
+\end{tabular} & 
+\begin{tabular}{@{}>{$}l<{$}@{}}
+	\#\\ a\\ c\\ d
+\end{tabular} & 
+\begin{tabular}{@{}>{$}l<{$}@{}}
+	a\#\\ ca\\ dc\\ \#d
+\end{tabular} & 
+\begin{tabular}{@{}>{$}l<{$}@{}}
+	\#d\\ a\#\\ ca\\ dc
+\end{tabular} & 
+\begin{tabular}{@{}>{$}l<{$}@{}}
+	a\#d\\ ca\#\\ dca\\ \#dc
+\end{tabular} & 
+\begin{tabular}{@{}>{$}l<{$}@{}}
+	\#dc\\ a\#d\\ ca\#\\ dca
+\end{tabular} & 
+\begin{tabular}{@{}>{$}l<{$}@{}}
+	a\#dc\\ ca\#d\\ dca\#\\ \#dca
+\end{tabular} &
+\begin{tabular}{@{}>{$}l<{$}@{}}
+	\#dca\\ a\#dc\\ ca\#d\\ \textbf{dca\#}\\
+\end{tabular} \\ \hline
 \end{tabular}
-\caption{Table caption}
-\end{table}
+*$\# = \text{end of line character}$
 \end{frame}
 
-%------------------------------------------------
-
+%----------------------------------------------------------------------------------------
 \begin{frame}
-\frametitle{Theorem}
-\begin{theorem}[Mass--energy equivalence]
-$E = mc^2$
-\end{theorem}
+\frametitle{RLE Wavelet Tree on string \textit{bananahat} with alphabet $\Sigma =$ \textit{abhnt}}
+\begin{figure}
+\begin{subfigure}{0.49\textwidth}     
+\Tree
+%root
+[.bananahat\\2,1,1,1,3,1 !\qsetw{3cm} 
+	%left child
+	[.baaaha\\4,1,1 !\qsetw{3cm}
+		[.baaaa\\0,1,4 !\qsetw{3cm}
+			[.aaaa !\qsetw{3cm} ]
+			[.b !\qsetw{3cm} ]		
+		] 
+		[.h !\qsetw{3cm} ]
+	] 
+	%right child
+	[.nnt\\2,1 !\qsetw{3cm}	
+		[.nn !\qsetw{3cm} ] 
+		[.t !\qsetw{3cm} ]
+	]
+]
+\caption{RLE Wavelet Tree on string \textit{bananahat} with alphabet $\Sigma =$ \textit{abhnt}}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.49\textwidth}	
+\Tree
+%root
+[.tnnbhaaaa\\\textbf{0,3,6} !\qsetw{3cm} 
+	%left child
+	[.bhaaaa\\1,1,4 !\qsetw{3cm} 
+		[.baaaa\\0,1,4 !\qsetw{3cm} 
+			[.aaaa !\qsetw{3cm} ]
+			[.b !\qsetw{3cm} ]		
+		] 
+		[.h !\qsetw{3cm} ]
+	] 
+	%right child
+	[.tnn\\0,1,2 !\qsetw{3cm}		
+		[.nn !\qsetw{3cm} ] 
+		[.t !\qsetw{3cm} ]
+	]
+]
+\caption{BWT RLE Wavelet Tree on string \textit{tnnbhaaaa} with alphabet $\Sigma =$ \textit{abhnt}}
+\end{subfigure}
+\end{figure}
 \end{frame}
 
-%------------------------------------------------
-
-\begin{frame}[fragile] % Need to use the fragile option when verbatim is used in the slide
-\frametitle{Verbatim}
-\begin{example}[Theorem Slide Code]
-\begin{verbatim}
+\subsubsection{Huffman Shaped Wavelet tree}
+%----------------------------------------------------------------------------------------
 \begin{frame}
-\frametitle{Theorem}
-\begin{theorem}[Mass--energy equivalence]
-$E = mc^2$
-\end{theorem}
-\end{frame}\end{verbatim}
-\end{example}
+\frametitle{Huffman shaped wavelet tree}
+\begin{itemize}
+\item Use Huffman codes of symbols to shape the tree
+\item A Huffman code is a binary value assigned to each symbol. The symbol with the highest frequency gets the lowest value.
+\item Shaping the tree based on Huffman codes places the most frequent symbols at the top of the tree and least frequent symbols at the bottom of the tree.
+\item Huffman shaping only makes sense on non-uniformly distributed data like a natural language text.
+
+\end{itemize}
 \end{frame}
 
-%------------------------------------------------
-
+%----------------------------------------------------------------------------------------
 \begin{frame}
-\frametitle{Figure}
-Uncomment the code on this slide to include your own image from the same directory as the template .TeX file.
-%\begin{figure}
-%\includegraphics[width=0.8\linewidth]{test}
-%\end{figure}
+\frametitle{Huffman Shaped Wavelet Tree: Example}
+\hspace*{2cm}Wavelet Tree: \hspace{3cm} Huffman Shaped WT:
+\begin{center}
+	\center \includegraphics[width=1.0\textwidth]{Huffman-shaped-wavelet-tree}
+\end{center}
 \end{frame}
 
-%------------------------------------------------
-
-\begin{frame}[fragile] % Need to use the fragile option when verbatim is used in the slide
-\frametitle{Citation}
-An example of the \verb|\cite| command to cite within the presentation:\\~
-
-This statement requires citation \cite{p1}.
-\end{frame}
-
-%------------------------------------------------
-
+%----------------------------------------------------------------------------------------
 \begin{frame}
-\frametitle{References}
-\footnotesize{
-\begin{thebibliography}{99} % Beamer does not support BibTeX so references must be inserted manually as below
-\bibitem[Smith, 2012]{p1} John Smith (2012)
-\newblock Title of the publication
-\newblock \emph{Journal Name} 12(3), 45 -- 678.
-\end{thebibliography}
-}
+\frametitle{Huffman Shaped WT: Space complexity}
+\begin{itemize}
+\item Balanced version: $n \log \sigma + o(n \log\sigma) + O(\sigma \log n)$ bits
+\item Huffman-shaped: $n(H_0(S) + 1) + o(n(H_0(S) + 1)) + O(\sigma \log n)$ bits. [Efficient Compressed Wavelet Trees over Large Alphabets by Navarro et al.]
+\item Huffman-shaped + Compressed Bitmap (RLE): $nH_0(S) + o(n(H_0(S) + 1)) + O(\sigma \log n)$ bits.
+
+\end{itemize}
 \end{frame}
 
-%------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Information Retrieval}
+\begin{itemize}
+\item k
+\end{itemize}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
 
 \begin{frame}
 \Huge{\centerline{The End}}
