@@ -607,7 +607,7 @@ Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 & Sort 4\\
 
 %----------------------------------------------------------------------------------------
 
-
+\subsection{Popcount}
 \begin{frame}
 \frametitle{Calculate binary rank and select using popcount}
 
@@ -623,22 +623,87 @@ Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 & Sort 4\\
 	\caption{\tiny{Rank and select queries using simple binary rank and select vs. rank and select queries using binary rank and select using the popcount instruction. Y-Axis is index 100 of the simple queries, that is, every value is percent of the value for the simple query.}}
 \end{figure}
 \end{frame}
+
+%----------------------------------------------------------------------------------------
+\subsection{Pre-compute binary rank values in blocks}
+\begin{frame}
+\frametitle{Pre-compute binary rank values in blocks}
+\begin{itemize}
+\item Pre-compute binary rank values in blocks to reduce amount of popcount calls.
+\end{itemize}
+\begin{figure}
+	\begin{subfigure}{0.48\textwidth}
+		\begin{tiny}
+		\scalebox{.7}{\input{PrecomputedRankBlockSize_vsNaiveInteger_Rank}}
+		\end{tiny}
+		\caption{Rank}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.48\textwidth}
+		\begin{tiny}
+		\scalebox{.7}{\input{PrecomputedRankBlockSize_vsNaiveInteger_Select}}
+		\end{tiny}
+		\caption{Select}
+	\end{subfigure}
+	\caption{Comparison of wall time of rank and select queries between SimpleNaive not using precomputed values and UnalignedNaive using precomputed values.}
+\end{figure}
+\end{frame}
+
+\subsection{Concatenated Bitmaps and/or page-aligned blocks}
+\begin{frame}
+\frametitle{Concatenated Bitmaps and/or page-aligned blocks}
+\begin{itemize}
+\item Concatenated bitmaps
+\begin{itemize}
+\item Save all bitmaps as one large bitmap to reduce memory usage by removing pointers to individual bitmaps.
+\item Access using an offset (ulong) and a size for the bitmap (uint).
+\item This uses $64+32=96$ bits per node vs. individual bitmaps with pointers taking up $3 \times 64=192$ bits per node.
+\item Individual bitmaps for each node are word-aligned, and the bits between the last used bit and the end of the last used word are wasted.
+\end{itemize}
+\item Page-aligned blocks
+\begin{itemize}
+\item To reduce TLB misses
+\item If the blocks are not aligned with the memory pages a block can be partly in one page and partly in another.
+\item Page-aligning makes sure that blocks does not span page boarders.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+
 %----------------------------------------------------------------------------------------
 \begin{frame}
-\frametitle{Experiments: Pre-compute binary rank values in blocks}
+\frametitle{The various precomputed versions}
 \begin{tabular}{|lcc|}
 \hline
 Name						& Concatenated Bitmaps	& Page-aligned Blocks	\\ \hline
 Preallocated				& yes					& yes					\\ \hline
 UnalignedPreallocated	& yes					& no						\\ \hline
 Naive					& no						& yes					\\ \hline
-UnalignedNaive			& no						& no						\\ \hline
+\textbf{UnalignedNaive}			& no						& no						\\ \hline
 \end{tabular}\\
 \end{frame}
+
 %----------------------------------------------------------------------------------------
 
-
-
+\begin{frame}
+\frametitle{Rank and select TLB misses}
+\begin{figure}\tiny
+\begin{subfigure}{0.48\textwidth}
+	\scalebox{.7}{\input{PrecomputedRankBlockSize_Rank_TLB}}
+	\caption{Rank: TLB Misses}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\scalebox{.7}{\input{PrecomputedRankBlockSize_Select_TLB}}
+	\caption{Select: TLB Misses}
+\end{subfigure}
+\end{figure}
+\begin{itemize}
+\item \textit{Naive} does reduce TLB misses because of page alignment.
+\item Concatenated bitmaps reduces TLB misses, but page-aligning does not have much effect.
+\end{itemize}
+\end{frame}
+%----------------------------------------------------------------------------------------
 \begin{frame}
 \frametitle{Running time: Pre-compute binary rank values in blocks}
 \begin{figure}
@@ -669,25 +734,7 @@ Best Block size: $\frac{1}{2}$ page size = $\frac{1}{2}*4096 \text{ bytes} = 204
 \end{center}
 \end{frame}
 
-\begin{frame}
-\frametitle{Running time: Not precomputed vs. best precomputed}
-\begin{figure}
-	\begin{subfigure}{0.48\textwidth}
-		\begin{tiny}
-		\scalebox{.7}{\input{PrecomputedRankBlockSize_vsNaiveInteger_Rank}}
-		\end{tiny}
-		\caption{Rank}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.48\textwidth}
-		\begin{tiny}
-		\scalebox{.7}{\input{PrecomputedRankBlockSize_vsNaiveInteger_Select}}
-		\end{tiny}
-		\caption{Select}
-	\end{subfigure}
-	\caption{Comparison of wall time of rank and select queries between SimpleNaive not using precomputed values and UnalignedNaive using precomputed values.}
-\end{figure}
-\end{frame}
+
 
 \begin{frame}
 \frametitle{Block size dependence on input size n}
@@ -701,7 +748,7 @@ It costs $O(\frac{n}{b} + b)$ to calculate the binary rank.
 \end{frame}
 
 \begin{frame}
-\frametitle{Experiment: Block size dependence on input size n}
+\frametitle{Experiment: Block size dependence on input size n for Rank}
 \begin{figure}\tiny
 \begin{subfigure}{0.48\textwidth}
 	\scalebox{.5}{\input{PrecomputedRankBlockSizeVaryN_5_Rank_WallTime}}
@@ -725,9 +772,9 @@ It costs $O(\frac{n}{b} + b)$ to calculate the binary rank.
 \end{figure}
 \end{frame}
 
-
+\subsection{Cumulative Sum of precomputed rank values}
 \begin{frame}
-\frametitle{Experiments}
+\frametitle{Cumulative sum}
 \begin{itemize}
 \item
 \end{itemize}
