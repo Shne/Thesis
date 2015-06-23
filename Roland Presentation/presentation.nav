@@ -11,95 +11,90 @@
 \headcommand {\beamer@subsectionentry {0}{1}{1}{4}{Definitions}}\headcommand {\beamer@subsectionpages {3}{3}}
 \headcommand {\slideentry {1}{1}{1}{4/4}{Definitions}{0}}
 \headcommand {\beamer@framepages {4}{4}}
-\headcommand {\slideentry {1}{1}{2}{5/5}{Definitions}{0}}
+\headcommand {\beamer@subsectionentry {0}{1}{2}{5}{Constructing the Wavelet Tree}}\headcommand {\beamer@subsectionpages {4}{4}}
+\headcommand {\slideentry {1}{2}{1}{5/5}{Constructing the Wavelet Tree}{0}}
 \headcommand {\beamer@framepages {5}{5}}
-\headcommand {\beamer@subsectionentry {0}{1}{2}{6}{Constructing the Wavelet Tree}}\headcommand {\beamer@subsectionpages {4}{5}}
-\headcommand {\slideentry {1}{2}{1}{6/6}{Constructing the Wavelet Tree}{0}}
+\headcommand {\sectionentry {2}{Queries}{6}{Queries}{0}}
+\headcommand {\beamer@sectionpages {3}{5}}
+\headcommand {\beamer@subsectionpages {5}{5}}
+\headcommand {\slideentry {2}{0}{2}{6/6}{}{0}}
 \headcommand {\beamer@framepages {6}{6}}
-\headcommand {\slideentry {1}{2}{2}{7/7}{Constructing the Wavelet Tree}{0}}
+\headcommand {\slideentry {2}{0}{3}{7/7}{}{0}}
 \headcommand {\beamer@framepages {7}{7}}
-\headcommand {\sectionentry {2}{Queries}{8}{Queries}{0}}
-\headcommand {\beamer@sectionpages {3}{7}}
-\headcommand {\beamer@subsectionpages {6}{7}}
-\headcommand {\slideentry {2}{0}{3}{8/8}{}{0}}
+\headcommand {\beamer@subsectionentry {0}{2}{1}{8}{Rank}}\headcommand {\beamer@subsectionpages {6}{7}}
+\headcommand {\slideentry {2}{1}{1}{8/8}{Rank}{0}}
 \headcommand {\beamer@framepages {8}{8}}
-\headcommand {\slideentry {2}{0}{4}{9/9}{}{0}}
+\headcommand {\beamer@subsectionentry {0}{2}{2}{9}{Select}}\headcommand {\beamer@subsectionpages {8}{8}}
+\headcommand {\slideentry {2}{2}{1}{9/9}{Select}{0}}
 \headcommand {\beamer@framepages {9}{9}}
-\headcommand {\beamer@subsectionentry {0}{2}{1}{10}{Rank}}\headcommand {\beamer@subsectionpages {8}{9}}
-\headcommand {\slideentry {2}{1}{1}{10/10}{Rank}{0}}
+\headcommand {\sectionentry {3}{Applications}{10}{Applications}{0}}
+\headcommand {\beamer@sectionpages {6}{9}}
+\headcommand {\beamer@subsectionpages {9}{9}}
+\headcommand {\slideentry {3}{0}{2}{10/10}{}{0}}
 \headcommand {\beamer@framepages {10}{10}}
-\headcommand {\beamer@subsectionentry {0}{2}{2}{11}{Select}}\headcommand {\beamer@subsectionpages {10}{10}}
-\headcommand {\slideentry {2}{2}{1}{11/11}{Select}{0}}
+\headcommand {\beamer@subsectionentry {0}{3}{1}{11}{Information Retrieval and Compression}}\headcommand {\beamer@subsectionpages {10}{10}}
+\headcommand {\slideentry {3}{1}{1}{11/11}{Information Retrieval and Compression}{0}}
 \headcommand {\beamer@framepages {11}{11}}
-\headcommand {\sectionentry {3}{Applications}{12}{Applications}{0}}
-\headcommand {\beamer@sectionpages {8}{11}}
-\headcommand {\beamer@subsectionpages {11}{11}}
-\headcommand {\slideentry {3}{0}{2}{12/12}{}{0}}
+\headcommand {\slideentry {3}{1}{2}{12/12}{Information Retrieval and Compression}{0}}
 \headcommand {\beamer@framepages {12}{12}}
-\headcommand {\beamer@subsectionentry {0}{3}{1}{13}{Information Retrieval}}\headcommand {\beamer@subsectionpages {12}{12}}
-\headcommand {\slideentry {3}{1}{1}{13/13}{Information Retrieval}{0}}
+\headcommand {\slideentry {3}{1}{3}{13/13}{Information Retrieval and Compression}{0}}
 \headcommand {\beamer@framepages {13}{13}}
-\headcommand {\beamer@subsectionentry {0}{3}{2}{14}{Compression}}\headcommand {\beamer@subsectionpages {13}{13}}
-\headcommand {\slideentry {3}{2}{1}{14/14}{Compression}{0}}
+\headcommand {\slideentry {3}{1}{4}{14/14}{Information Retrieval and Compression}{0}}
 \headcommand {\beamer@framepages {14}{14}}
-\headcommand {\beamer@subsubsectionentry {0}{3}{2}{1}{15}{Run-length encoding}}
-\headcommand {\slideentry {3}{2}{2}{15/15}{Compression}{0}}
+\headcommand {\slideentry {3}{1}{5}{15/15}{Information Retrieval and Compression}{0}}
 \headcommand {\beamer@framepages {15}{15}}
-\headcommand {\slideentry {3}{2}{3}{16/16}{Compression}{0}}
+\headcommand {\slideentry {3}{1}{6}{16/16}{Information Retrieval and Compression}{0}}
 \headcommand {\beamer@framepages {16}{16}}
-\headcommand {\beamer@subsubsectionentry {0}{3}{2}{2}{17}{Burrows-Wheeler Transform}}
-\headcommand {\slideentry {3}{2}{4}{17/17}{Compression}{0}}
+\headcommand {\slideentry {3}{1}{7}{17/17}{Information Retrieval and Compression}{0}}
 \headcommand {\beamer@framepages {17}{17}}
-\headcommand {\slideentry {3}{2}{5}{18/18}{Compression}{0}}
+\headcommand {\slideentry {3}{1}{8}{18/18}{Information Retrieval and Compression}{0}}
 \headcommand {\beamer@framepages {18}{18}}
-\headcommand {\slideentry {3}{2}{6}{19/19}{Compression}{0}}
+\headcommand {\slideentry {3}{1}{9}{19/19}{Information Retrieval and Compression}{0}}
 \headcommand {\beamer@framepages {19}{19}}
-\headcommand {\slideentry {3}{2}{7}{20/20}{Compression}{0}}
+\headcommand {\slideentry {3}{1}{10}{20/20}{Information Retrieval and Compression}{0}}
 \headcommand {\beamer@framepages {20}{20}}
-\headcommand {\beamer@subsubsectionentry {0}{3}{2}{3}{21}{Huffman Shaped Wavelet tree}}
-\headcommand {\slideentry {3}{2}{8}{21/21}{Compression}{0}}
+\headcommand {\slideentry {3}{1}{11}{21/21}{Information Retrieval and Compression}{0}}
 \headcommand {\beamer@framepages {21}{21}}
-\headcommand {\slideentry {3}{2}{9}{22/22}{Compression}{0}}
+\headcommand {\sectionentry {4}{Experiments and Results}{22}{Experiments and Results}{0}}
+\headcommand {\beamer@sectionpages {10}{21}}
+\headcommand {\beamer@subsectionpages {11}{21}}
+\headcommand {\slideentry {4}{0}{12}{22/22}{}{0}}
 \headcommand {\beamer@framepages {22}{22}}
-\headcommand {\slideentry {3}{2}{10}{23/23}{Compression}{0}}
+\headcommand {\slideentry {4}{0}{13}{23/23}{}{0}}
 \headcommand {\beamer@framepages {23}{23}}
-\headcommand {\sectionentry {4}{Experiments and Results}{24}{Experiments and Results}{0}}
-\headcommand {\beamer@sectionpages {12}{23}}
-\headcommand {\beamer@subsectionpages {14}{23}}
-\headcommand {\slideentry {4}{0}{11}{24/24}{}{0}}
+\headcommand {\slideentry {4}{0}{14}{24/24}{}{0}}
 \headcommand {\beamer@framepages {24}{24}}
-\headcommand {\slideentry {4}{0}{12}{25/25}{}{0}}
+\headcommand {\slideentry {4}{0}{15}{25/25}{}{0}}
 \headcommand {\beamer@framepages {25}{25}}
-\headcommand {\slideentry {4}{0}{13}{26/26}{}{0}}
+\headcommand {\slideentry {4}{0}{16}{26/26}{}{0}}
 \headcommand {\beamer@framepages {26}{26}}
-\headcommand {\beamer@subsectionentry {0}{4}{1}{27}{Popcount}}\headcommand {\beamer@subsectionpages {24}{26}}
-\headcommand {\slideentry {4}{1}{1}{27/27}{Popcount}{0}}
+\headcommand {\slideentry {4}{0}{17}{27/27}{}{0}}
 \headcommand {\beamer@framepages {27}{27}}
-\headcommand {\beamer@subsectionentry {0}{4}{2}{28}{Pre-compute binary rank values in blocks}}\headcommand {\beamer@subsectionpages {27}{27}}
-\headcommand {\slideentry {4}{2}{1}{28/28}{Pre-compute binary rank values in blocks}{0}}
+\headcommand {\slideentry {4}{0}{18}{28/28}{}{0}}
 \headcommand {\beamer@framepages {28}{28}}
-\headcommand {\beamer@subsectionentry {0}{4}{3}{29}{Concatenated Bitmaps and/or page-aligned blocks}}\headcommand {\beamer@subsectionpages {28}{28}}
-\headcommand {\slideentry {4}{3}{1}{29/29}{Concatenated Bitmaps and/or page-aligned blocks}{0}}
+\headcommand {\slideentry {4}{0}{19}{29/29}{}{0}}
 \headcommand {\beamer@framepages {29}{29}}
-\headcommand {\slideentry {4}{3}{2}{30/30}{Concatenated Bitmaps and/or page-aligned blocks}{0}}
+\headcommand {\slideentry {4}{0}{20}{30/30}{}{0}}
 \headcommand {\beamer@framepages {30}{30}}
-\headcommand {\slideentry {4}{3}{3}{31/31}{Concatenated Bitmaps and/or page-aligned blocks}{0}}
+\headcommand {\slideentry {4}{0}{21}{31/31}{}{0}}
 \headcommand {\beamer@framepages {31}{31}}
-\headcommand {\slideentry {4}{3}{4}{32/32}{Concatenated Bitmaps and/or page-aligned blocks}{0}}
+\headcommand {\slideentry {4}{0}{22}{32/32}{}{0}}
 \headcommand {\beamer@framepages {32}{32}}
-\headcommand {\slideentry {4}{3}{5}{33/33}{Concatenated Bitmaps and/or page-aligned blocks}{0}}
+\headcommand {\slideentry {4}{0}{23}{33/33}{}{0}}
 \headcommand {\beamer@framepages {33}{33}}
-\headcommand {\slideentry {4}{3}{6}{34/34}{Concatenated Bitmaps and/or page-aligned blocks}{0}}
+\headcommand {\slideentry {4}{0}{24}{34/34}{}{0}}
 \headcommand {\beamer@framepages {34}{34}}
-\headcommand {\slideentry {4}{3}{7}{35/35}{Concatenated Bitmaps and/or page-aligned blocks}{0}}
+\headcommand {\sectionentry {5}{Conclusion}{35}{Conclusion}{0}}
+\headcommand {\beamer@sectionpages {22}{34}}
+\headcommand {\beamer@subsectionpages {22}{34}}
+\headcommand {\slideentry {5}{0}{25}{35/35}{}{0}}
 \headcommand {\beamer@framepages {35}{35}}
-\headcommand {\beamer@subsectionentry {0}{4}{4}{36}{Cumulative Sum of precomputed rank values}}\headcommand {\beamer@subsectionpages {29}{35}}
-\headcommand {\slideentry {4}{4}{1}{36/36}{Cumulative Sum of precomputed rank values}{0}}
+\headcommand {\slideentry {5}{0}{26}{36/36}{}{0}}
 \headcommand {\beamer@framepages {36}{36}}
-\headcommand {\slideentry {4}{4}{2}{37/37}{Cumulative Sum of precomputed rank values}{0}}
+\headcommand {\slideentry {5}{0}{27}{37/37}{}{0}}
 \headcommand {\beamer@framepages {37}{37}}
 \headcommand {\beamer@partpages {1}{37}}
-\headcommand {\beamer@subsectionpages {36}{37}}
-\headcommand {\beamer@sectionpages {24}{37}}
+\headcommand {\beamer@subsectionpages {35}{37}}
+\headcommand {\beamer@sectionpages {35}{37}}
 \headcommand {\beamer@documentpages {37}}
 \headcommand {\def \inserttotalframenumber {37}}

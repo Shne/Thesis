@@ -137,30 +137,26 @@ Datalogi, Aarhus Universitet \\ % Your institution for the title page
 \begin{frame}
 \frametitle{Wavelet Tree: Definitions}
 \begin{itemize}
-\item In its basic form, the wavelet tree is a balanced binary tree. 
-\item It stores a \textit{sequence} $S[1,n] = c_1c_2c_3 \ldots c_n$ of \textit{symbols} $c_i \in \Sigma$, where $\Sigma = [1 \ldots \sigma]$ is the \textit{alphabet} of $S$.
-\item The tree has height $h = \lceil \log \sigma \rceil$, and $2 \sigma - 1$ nodes, with $\sigma$ of those as leaf nodes and $\sigma - 1$ as internal nodes.
+\item Balanced binary tree. 
+\item Stores a \textit{sequence} $S[1,n] = c_1c_2c_3 \ldots c_n$ of \textit{symbols} $c_i \in \Sigma$, where $\Sigma = [1 \ldots \sigma]$ is the \textit{alphabet} of $S$.
+\item Height $h = \lceil \log \sigma \rceil$.
+\item $2 \sigma - 1$ nodes
+\item Construction time: $O(n \log \sigma)$
+\item Memory usage: $O(n \log \sigma + \sigma \cdot \mathit{ws})$ bits.
 \end{itemize}
 
 \end{frame}
 
-
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{Constructing the Wavelet Tree}
-\begin{itemize}
-\item The wavelet tree is constructed recursively, starting at the root node and moving down the tree, with each node in the tree receiving a string constructed by its parent, except the root node that receives the full input string.
-\item Each node calculates the middle character of $\Sigma$ and uses it to set the bits in the bitmap and split $S$ in two substrings $S_{\mathit{left}}$ and $S_{\mathit{right}}$.
-\end{itemize}
-\end{frame}
 
 %------------------------------------------------
 \subsection{Constructing the Wavelet Tree}
 
-
 \begin{frame}
-\frametitle{Wavelet Tree Example}
+\frametitle{Constructing the Wavelet Tree}
+\begin{itemize}
+\item The wavelet tree is constructed recursively.
+\item Each node calculates the middle character of $\Sigma$ and uses it to set the bits in the bitmap and split $S$ in two substrings $S_{\mathit{left}}$ and $S_{\mathit{right}}$.
+\end{itemize}
 \Tree
 %root
 [.adsfadaadsfaads\\001100000110001 !\qsetw{5cm} 
@@ -174,24 +170,7 @@ Datalogi, Aarhus Universitet \\ % Your institution for the title page
 		[.ff !\qsetw{5.3cm} ] [.sss !\qsetw{5.3cm} ]]] 
 \vspace*{1cm}		
 $S = \text{adsfadaadsfaads}, \Sigma = \text{adfs}$
-\end{frame}
 
-%------------------------------------------------
-\begin{frame}
-\frametitle{Construction time and memory usage}
-\begin{itemize}
-\item Construction time: $O(n \cdot h) = O(n \log \sigma)$
-	\begin{itemize}
-	\item The Wavelet Tree can theoretically be constructed in $O(n \cdot h) = O(n \log \sigma)$ time as the sum of the lengths of the strings being processed at any single layer of the tree is the length of the input string to the tree.
-	\end{itemize}
-\item Memory usage: $O(n \log \sigma + \sigma \cdot \mathit{ws})$ bits
-	\begin{itemize}
-	\item At each level in the tree at most \textit{n} bits are stored in the bitmaps in total, making $n \cdot h = n \cdot \log \sigma$ an upper bound to the total number of bits that a wavelet tree stores in its bitmaps.
-\item In addition to this, each node takes some constant amount of machine words of space, and there are $2 \sigma -1$ nodes in the tree.
-\textit{ws} is the size of our machine words.
-This makes the total memory consumption $O(n \log \sigma + \sigma \cdot \mathit{ws})$ bits.
-	\end{itemize}
-\end{itemize}
 \end{frame}
 
 \section{Queries}
@@ -212,7 +191,6 @@ This makes the total memory consumption $O(n \log \sigma + \sigma \cdot \mathit{
 	\item \textbf{Access(p)}: Return the character \textit{c} at position \textit{p} in sequence \textit{S}.
 		\begin{itemize}
 		\item Running time: $O(n \log \sigma)$.
-		\item We have not implemented Access because it resembles Rank.
 		\end{itemize}
 	\item \textbf{Rank(c, p)}: Return the number of occurrences of character \textit{c} in \textit{S} up to position \textit{p}.
 		\begin{itemize}
@@ -255,22 +233,33 @@ This makes the total memory consumption $O(n \log \sigma + \sigma \cdot \mathit{
 \end{frame}
 %------------------------------------------------
 
-\subsection{Information Retrieval}
+\subsection{Information Retrieval and Compression}
 \begin{frame}
 \frametitle{Information Retrieval: Applications}
 \begin{itemize}
 \item Information Retrieval
 	\begin{itemize}
-	\item Positional inverted index
-	\item Document retrieval
-	\item Range Quantile Query: Return the \textit{k}th smallest number within a subsequence of a given sequence of elements.
-	\item FM-count: Return number of occurrences of a pattern p in S. 
+	\item Positional inverted index.
+	\begin{itemize}
+	\item For each word: Return positions of occurrences.
+	\end{itemize}
+	\item Document retrieval.
+	\begin{itemize}
+	\item Return what document a word appears in.
+	\end{itemize}
+	\item Range Quantile Query.
+	\begin{itemize}
+	\item Return the \textit{k}th smallest number within a subsequence of a given sequence of elements.
+	\end{itemize}	
+	\item FM-count. 
+	\begin{itemize}
+	\item Return number of occurrences of a pattern p in S.
+	\end{itemize}	 
 	\end{itemize}
 \end{itemize}
 \end{frame}
 
 %------------------------------------------------
-\subsection{Compression}
 \begin{frame}
 \frametitle{Compression: Applications}
 \begin{itemize}
@@ -283,19 +272,13 @@ This makes the total memory consumption $O(n \log \sigma + \sigma \cdot \mathit{
 \end{itemize}
 \end{frame}
 
-\subsubsection{Run-length encoding}
 \begin{frame}
 \frametitle{Compression: Run-length encoding}
 \begin{itemize}
-\item Run-length encoding counts the number of consecutive occurrences of a symbol and substitutes the consecutive occurrences with the symbol followed by its number of occurrences.
 \item Example: $RLE(\text{aaaaabbbaacccccaaaaa}) = \text{a5,b3,a2,c5,a5}$.
 \item Binary example: $RLE(00000000001111100000) = 10,5,5 $
-	\begin{itemize}
-	\item We can avoid specifying the symbol by assuming that $0$ is always the first symbol.
-	\item If the binary number begins with a $1$ we just add a $0$ to the beginning of the result.
-	\end{itemize}
 \item Query by reversing RLE. It takes linear time $O(n)$ to reverse. Rank and select query time becomes $O(2n \log \sigma) = O(n \log \sigma)$
-\item Achieves space complexity within $H_0$
+\item Space complexity $O(nH_0(S))$
 \end{itemize}
 \end{frame}
 
@@ -349,7 +332,6 @@ This makes the total memory consumption $O(n \log \sigma + \sigma \cdot \mathit{
 \end{frame}
 
 
-\subsubsection{Burrows-Wheeler Transform}
 %------------------------------------------------
 \begin{frame}
 \frametitle{Compression: Burrows-Wheeler transform}
@@ -496,15 +478,15 @@ Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 & Sort 4\\
 \end{figure}
 \end{frame}
 
-\subsubsection{Huffman Shaped Wavelet tree}
+
 %----------------------------------------------------------------------------------------
 \begin{frame}
 \frametitle{Huffman shaped wavelet tree}
 \begin{itemize}
-\item Use Huffman codes of symbols to shape the tree
-\item A Huffman code is a binary value assigned to each symbol. The symbol with the highest frequency gets the lowest value.
-\item Shaping the tree based on Huffman codes places the most frequent symbols at the top of the tree and least frequent symbols at the bottom of the tree.
-\item Huffman shaping only makes sense on non-uniformly distributed data like a natural language text.
+\item Use Huffman codes of symbols to shape the tree.
+\item Most frequent symbols at the top of the tree.
+\item Least frequent symbols at the bottom of the tree.
+\item Best using non-uniformly distributed data like a natural language text.
 
 \end{itemize}
 \end{frame}
@@ -563,9 +545,8 @@ Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 & Sort 4\\
 \begin{frame}
 \frametitle{Huffman Shaped WT: Space complexity}
 \begin{itemize}
-\item Balanced version: $n \log \sigma + o(n \log\sigma) + O(\sigma \log n)$ bits
-\item Huffman-shaped: $n(H_0(S) + 1) + o(n(H_0(S) + 1)) + O(\sigma \log n)$ bits. [Efficient Compressed Wavelet Trees over Large Alphabets by Navarro et al.]
-\item Huffman-shaped + Compressed Bitmap (RLE): $nH_0(S) + o(n(H_0(S) + 1)) + O(\sigma \log n)$ bits.
+\item Balanced version: $O(n \log \sigma +  \sigma \cdot \text{ws})$ bits
+\item Huffman-shaped: $O(n(H_0(S) + 1) +  \sigma \cdot \text{ws})$ bits. [Efficient Compressed Wavelet Trees over Large Alphabets by Navarro et al.]
 
 \end{itemize}
 \end{frame}
@@ -596,21 +577,23 @@ Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 & Sort 4\\
 \begin{frame}
 \frametitle{Experiments}
 \begin{itemize}
-\item 1. Calculate binary rank and select using popcount
-\item 2. Pre-compute binary rank values in blocks
-\item 3. Block size dependence on input n
-\item 4. Pre-compute cumulative sums of rank values
-\item 5. Branchless select query
-\item 6. Queries on skewed cumulative sum wavelet tree
+\item Calculate binary rank and select using popcount.
+\item Pre-compute binary rank values in blocks.
+\item Concatenate bitmaps and Page-align blocks.
+\item Block size dependence on input n.
+\item Pre-compute cumulative sums of rank values.
 \end{itemize}
 \end{frame}
 
 %----------------------------------------------------------------------------------------
 
-\subsection{Popcount}
+
 \begin{frame}
 \frametitle{Calculate binary rank and select using popcount}
-
+\begin{itemize}
+\item Rank: Running time $O(n \log \sigma)$.
+\item Select: Running time $O(n \log \sigma)$.
+\end{itemize}
 \begin{figure}[h!]\tiny
 	\begin{subfigure}{\textwidth}
 		\center \scalebox{.6}{\input{popcountRankNew}}
@@ -620,16 +603,15 @@ Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 & Sort 4\\
 		\center \scalebox{.6}{\input{popcountSelectNew}}
 		\caption{\tiny{Select}}
 	\end{subfigure}
-	\caption{\tiny{Rank and select queries using simple binary rank and select vs. rank and select queries using binary rank and select using the popcount instruction. Y-Axis is index 100 of the simple queries, that is, every value is percent of the value for the simple query.}}
 \end{figure}
 \end{frame}
 
 %----------------------------------------------------------------------------------------
-\subsection{Pre-compute binary rank values in blocks}
 \begin{frame}
 \frametitle{Pre-compute binary rank values in blocks}
 \begin{itemize}
-\item Pre-compute binary rank values in blocks to reduce amount of popcount calls.
+\item Rank: Running time $O((\frac{n}{b} + b) \log \sigma)$.
+\item Select: Running time $O((\frac{n}{b} + b) \log \sigma)$.
 \end{itemize}
 \begin{figure}
 	\begin{subfigure}{0.48\textwidth}
@@ -649,25 +631,25 @@ Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 & Sort 4\\
 \end{figure}
 \end{frame}
 
-\subsection{Concatenated Bitmaps and/or page-aligned blocks}
-\begin{frame}
-\frametitle{Concatenated Bitmaps and/or page-aligned blocks}
-\begin{itemize}
-\item Concatenated bitmaps
-\begin{itemize}
-\item Save all bitmaps as one large bitmap to reduce memory usage by removing pointers to individual bitmaps.
-\item Access using an offset (ulong) and a size for the bitmap (uint).
-\item This uses $64+32=96$ bits per node vs. individual bitmaps with pointers taking up $3 \times 64=192$ bits per node.
-\item Individual bitmaps for each node are word-aligned, and the bits between the last used bit and the end of the last used word are wasted.
-\end{itemize}
-\item Page-aligned blocks
-\begin{itemize}
-\item To reduce TLB misses
-\item If the blocks are not aligned with the memory pages a block can be partly in one page and partly in another.
-\item Page-aligning makes sure that blocks does not span page boarders.
-\end{itemize}
-\end{itemize}
-\end{frame}
+%\subsection{Concatenated Bitmaps and/or page-aligned blocks}
+%\begin{frame}
+%\frametitle{Concatenated Bitmaps and/or page-aligned blocks}
+%\begin{itemize}
+%\item Concatenated bitmaps
+%\begin{itemize}
+%\item Save all bitmaps as one large bitmap to reduce memory usage by removing pointers to individual bitmaps.
+%\item Access using an offset (ulong) and a size for the bitmap (uint).
+%\item This uses $64+32=96$ bits per node vs. individual bitmaps with pointers taking up $3 \times 64=192$ bits per node.
+%\item Individual bitmaps for each node are word-aligned, and the bits between the last used bit and the end of the last used word are wasted.
+%\end{itemize}
+%\item Page-aligned blocks
+%\begin{itemize}
+%\item To reduce TLB misses
+%\item If the blocks are not aligned with the memory pages a block can be partly in one page and partly in another.
+%\item Page-aligning makes sure that blocks does not span page boarders.
+%\end{itemize}
+%\end{itemize}
+%\end{frame}
 
 
 %----------------------------------------------------------------------------------------
@@ -683,6 +665,25 @@ Naive					& no						& yes					\\ \hline
 \end{tabular}\\
 \end{frame}
 
+\begin{frame}
+\frametitle{Running time: Pre-compute binary rank values in blocks}
+\begin{figure}
+\begin{subfigure}{0.45\textwidth}
+	\begin{tiny}	
+	\scalebox{.7}{\input{PrecomputedRankBlockSize_Rank_WallTime}}
+	\end{tiny}
+	\caption{Rank: Running Time}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.45\textwidth}
+	\begin{tiny}	
+	\scalebox{.7}{\input{PrecomputedRankBlockSize_Select_WallTime}}
+	\end{tiny}
+	\caption{Select: Running Time}
+\end{subfigure}
+\end{figure}
+Best Block size: $\frac{1}{2}$ page size = $\frac{1}{2}*4096 \text{ bytes} = 2048 \text{ bytes}$.
+\end{frame}
 %----------------------------------------------------------------------------------------
 
 \begin{frame}
@@ -704,32 +705,17 @@ Naive					& no						& yes					\\ \hline
 \end{itemize}
 \end{frame}
 %----------------------------------------------------------------------------------------
-\begin{frame}
-\frametitle{Running time: Pre-compute binary rank values in blocks}
-\begin{figure}
-\begin{subfigure}{0.45\textwidth}
-	\begin{tiny}	
-	\scalebox{.7}{\input{PrecomputedRankBlockSize_Rank_WallTime}}
-	\end{tiny}
-	\caption{Rank: Running Time}
-\end{subfigure}
-\hfill
-\begin{subfigure}{0.45\textwidth}
-	\begin{tiny}	
-	\scalebox{.7}{\input{PrecomputedRankBlockSize_Select_WallTime}}
-	\end{tiny}
-	\caption{Select: Running Time}
-\end{subfigure}
-\end{figure}
-Best Block size: $\frac{1}{2}$ page size = $\frac{1}{2}*4096 \text{ bytes} = 2048 \text{ bytes}$.
-\end{frame}
+
 
 
 \begin{frame}
 \frametitle{Memory usage: Pre-compute binary rank values in blocks}
+\begin{itemize}
+\item There are $O(\frac{n}{b})$ blocks per level of the tree, and so an extra memory consumption of $O(\frac{n}{b} \log \sigma)$ words making the total memory consumption $O(n \log \sigma + (\sigma + \frac{n}{b} \log \sigma) \cdot \mathit{ws})$ bits.
+\end{itemize}
 \begin{center}
 \begin{tiny}
-\input{PrecomputedRankBlockSize_MemoryUsage}
+\scalebox{0.9}{\input{PrecomputedRankBlockSize_MemoryUsage}}
 \end{tiny}
 \end{center}
 \end{frame}
@@ -739,48 +725,103 @@ Best Block size: $\frac{1}{2}$ page size = $\frac{1}{2}*4096 \text{ bytes} = 204
 \begin{frame}
 \frametitle{Block size dependence on input size n}
 \begin{itemize}
-\item When using lookups of precomputed values
-It costs $O(\frac{n}{b} + b)$ to calculate the binary rank.
-\item It costs $O(\frac{n}{b})$ to scan the blocks, and $O(b)$ to calculate the rank within a single block using popcount. The optimal block size should be one that minimizes this.
-\item The derivative of $\frac{n}{b}+b$ is $1-\frac{n}{b^2}$ and its root is $n = b^2$ making the optimal block size $b = \sqrt{n}$.
-\item This is only the optimal block size for a single bitmap, and a wavelet tree has many bitmaps of varying sizes $n$ that are lower near the leaves.
+\item Costs $O(\frac{n}{b} + b)$ to calculate the binary rank.
+\item Costs $O(\frac{n}{b})$ to scan the blocks, and $O(b)$ to calculate the rank within a single block using popcount. 
+\item Optimal block size $b = \sqrt{n}$.
+\item A wavelet tree has many bitmaps of varying sizes $n$.
 \end{itemize}
 \end{frame}
 
 \begin{frame}
 \frametitle{Experiment: Block size dependence on input size n for Rank}
-\begin{figure}\tiny
-\begin{subfigure}{0.48\textwidth}
-	\scalebox{.5}{\input{PrecomputedRankBlockSizeVaryN_5_Rank_WallTime}}
+\begin{figure}\small
+\begin{subfigure}{0.4\textwidth}
+	\scalebox{.45}{\input{PrecomputedRankBlockSizeVaryN_5_Rank_WallTime}}
 	\caption{$n = 10^5$}
 \end{subfigure}
 \hfill
-\begin{subfigure}{0.48\textwidth}
-	\scalebox{.5}{\input{PrecomputedRankBlockSizeVaryN_6_Rank_WallTime}}
+\begin{subfigure}{0.4\textwidth}
+	\scalebox{.45}{\input{PrecomputedRankBlockSizeVaryN_6_Rank_WallTime}}
 	\caption{$n = 10^6$}
 \end{subfigure}
 
-\begin{subfigure}{0.48\textwidth}
-	\scalebox{.5}{\input{PrecomputedRankBlockSizeVaryN_7_Rank_WallTime}}
+\begin{subfigure}{0.4\textwidth}
+	\scalebox{.45}{\input{PrecomputedRankBlockSizeVaryN_7_Rank_WallTime}}
 	\caption{$n = 10^7$}
 \end{subfigure}
 \hfill	
-\begin{subfigure}{0.48\textwidth}
-	\scalebox{.5}{\input{PrecomputedRankBlockSizeVaryN_8_Rank_WallTime}}
+\begin{subfigure}{0.4\textwidth}
+	\scalebox{.45}{\input{PrecomputedRankBlockSizeVaryN_8_Rank_WallTime}}
 	\caption{$n = 10^8$}
 \end{subfigure}
 \end{figure}
 \end{frame}
 
-\subsection{Cumulative Sum of precomputed rank values}
 \begin{frame}
 \frametitle{Cumulative sum}
 \begin{itemize}
-\item
+\item Each block contain sum of previous blocks.
+\item Binary rank in $O(b)$ time in stead of $O(\frac{n}{b} + b)$ time.
+\item Binary search in select.
+\item Work per level change from $O(\frac{n}{b} + b)$ to $O(\log \frac{n}{b} + b)$. Select query total work $O((\log \frac{n}{b} + b) \log \sigma)$.
+\item Best block size does not depend on n for Rank.
+\item A block size below 64 bits should not be an improvement because popcount works on words of size 64 bits.
 \end{itemize}
 \end{frame}
 
 %----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Cumulative sum: Rank and Select running time}
+\begin{figure}\tiny
+\begin{subfigure}{0.48\textwidth}
+	\scalebox{0.5}{\input{CumulativeSumBlockSizeWallTimeRank}}
+	\caption{Rank.}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+	\scalebox{0.5}{\input{CumulativeSumBlockSizeWallTimeSelect}}
+	\caption{Select.}
+\end{subfigure}
+
+\begin{subfigure}{0.48\textwidth}
+	\scalebox{0.5}{\input{CumulativeSumVsUnalignedNaiveBlockSizeBuildMemory}}
+	\caption{Memory Usage.}
+\end{subfigure}
+\end{figure}
+\end{frame}
+
+
+\section{Conclusion}
+\begin{frame}
+\frametitle{Conclusion: What did we learn?}
+\begin{itemize}
+\item What effect hardware can have on running time and memory.
+\item How to do tests and how to show their results in an understandable way.
+\item The wavelet tree has many applications.
+\item The wavelet tree is great for compression of natural language texts.
+\item Choosing the right test parameters and what data to use can be difficult.
+\item How to do literature search and how important it is.
+\item In general, improvements that reduced the raw amount of computations and memory accesses needed were a big improvement.
+\item That a simple concept can be very difficult to implement.
+\item Gained experience with profilers and hardware measurement tools (cachegrind, PAPI, Massif)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Conclusion: Problems and questions we faced}
+\begin{itemize}
+\item Should we use uniform or non-uniform data?
+\item How should non-uniform data be distributed?
+\item How large alphabet and input size should we use?
+\item Debugging implementation errors in c++
+\item Making the implementations work
+\item Should we have focused on compression in stead?
+\item PAPI produced weird memory measurements. Figuring out what was wrong took some time.
+\item How to avoid introducing bias in tests.
+\end{itemize}
+\end{frame}
+
 
 \begin{frame}
 \Huge{\centerline{The End}}
