@@ -137,12 +137,17 @@ Datalogi, Aarhus Universitet \\ % Your institution for the title page
 \begin{frame}
 \frametitle{Wavelet Tree: Definitions}
 \begin{itemize}
+\setlength\itemsep{1em}
 \item Balanced binary tree. 
 \item Stores a \textit{sequence} $S[1,n] = c_1c_2c_3 \ldots c_n$ of \textit{symbols} $c_i \in \Sigma$, where $\Sigma = [1 \ldots \sigma]$ is the \textit{alphabet} of $S$.
 \item Height $h = \lceil \log \sigma \rceil$.
 \item $2 \sigma - 1$ nodes
 \item Construction time: $O(n \log \sigma)$
-\item Memory usage: $O(n \log \sigma + \sigma \cdot \mathit{ws})$ bits.
+\item Memory usage: $O(n \log \sigma + \sigma \cdot \mathit{ws})$ bits. 
+\begin{itemize}
+\item \textit{ws} er wordsize og \textit{ws} $ \geq \log n $.
+\end{itemize}
+
 \end{itemize}
 
 \end{frame}
@@ -188,17 +193,21 @@ $S = \text{adsfadaadsfaads}, \Sigma = \text{adfs}$
 \begin{itemize}
 \item The wavelet tree supports three queries:
 	\begin{itemize}
+	\setlength\itemsep{1em}
 	\item \textbf{Access(p)}: Return the character \textit{c} at position \textit{p} in sequence \textit{S}.
 		\begin{itemize}
-		\item Running time: $O(n \log \sigma)$.
+		\item Running time: $O(n \log \sigma)$. 
+		\item Can be reduced to $O(\log \sigma)$ using a minimal amount of extra space.
 		\end{itemize}
 	\item \textbf{Rank(c, p)}: Return the number of occurrences of character \textit{c} in \textit{S} up to position \textit{p}.
 		\begin{itemize}
 		\item Running time: $O(n \log \sigma)$.
+		\item Can be reduced to $O(\log \sigma)$ using a minimal amount of extra space.
 		\end{itemize}
 	\item \textbf{Select(c, o)}: Return the position of the \textit{o}th occurrence of character \textit{c} in \textit{S}.
 		\begin{itemize}
 		\item Running time: $O(n \log \sigma)$
+		\item Can be reduced to $O(\log \sigma)$ using a minimal amount of extra space.
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
@@ -206,6 +215,30 @@ $S = \text{adsfadaadsfaads}, \Sigma = \text{adfs}$
 \end{frame}
 
 %------------------------------------------------
+\begin{frame}
+\frametitle{Example: Access}
+Query = Access(p=7).
+\begin{center}
+
+\Tree
+%root
+[.adsfad\textbf{a}adsfaads\\001100\textbf{0}00110001 !\qsetw{5cm} 
+	%left child
+	[.adad\textbf{a}adaad\\0101\textbf{0}01001 !\qsetw{5cm}
+		%left -> left,right child 
+		[.aa\textbf{a}aaa !\qsetw{5cm} ] [.dddd !\qsetw{5cm} ]] 
+	%right child
+	[.sfsfs\\10101 !\qsetw{5cm} 
+		%right -> left,right child
+		[.ff !\qsetw{5.3cm} ] [.sss !\qsetw{5.3cm} ]]] 
+\vspace*{1cm}		
+
+\end{center}
+$S = \text{adsfadaadsfaads}, \Sigma = \text{adfs}$
+
+\end{frame}
+
+
 
 \subsection{Rank}
 \begin{frame}
@@ -229,7 +262,11 @@ $S = \text{adsfadaadsfaads}, \Sigma = \text{adfs}$
 %------------------------------------------------
 \begin{frame}
 \frametitle{Wavelet Tree: Applications}
-\begin{center} \Huge{Applications} \end{center}
+\begin{center} 
+\Huge{Applications\\} 
+\Large{Information Retrieval and Compression}
+
+\end{center}
 \end{frame}
 %------------------------------------------------
 
@@ -237,24 +274,29 @@ $S = \text{adsfadaadsfaads}, \Sigma = \text{adfs}$
 \begin{frame}
 \frametitle{Information Retrieval: Applications}
 \begin{itemize}
+\setlength\itemsep{1em}
 \item Information Retrieval
 	\begin{itemize}
+	\setlength\itemsep{1em}
 	\item Positional inverted index.
 	\begin{itemize}
 	\item For each word: Return positions of occurrences.
+	\item S = words, can, consist, of, several, words.
+	\item Position of \textit{word} = Select(\textit{words}, 2)
+	\item Word at position p = Access(p).
 	\end{itemize}
 	\item Document retrieval.
 	\begin{itemize}
 	\item Return what document a word appears in.
+	\item Example: S = \$dasfdfsd\$fadfadfa\$afadfadfadf\$dfasgsdag
+	\item Position p in S = $\text{Select}_c(f,7)$.
+	\item Document number dn = $\text{Rank}_\$(\$, p)$.
+	\item Position within document = $p - \text{Select}(\$, dn)$
 	\end{itemize}
 	\item Range Quantile Query.
 	\begin{itemize}
 	\item Return the \textit{k}th smallest number within a subsequence of a given sequence of elements.
-	\end{itemize}	
-	\item FM-count. 
-	\begin{itemize}
-	\item Return number of occurrences of a pattern p in S.
-	\end{itemize}	 
+	\end{itemize}		 
 	\end{itemize}
 \end{itemize}
 \end{frame}
@@ -265,27 +307,36 @@ $S = \text{adsfadaadsfaads}, \Sigma = \text{adfs}$
 \begin{itemize}
 \item Compression
 	\begin{itemize}
-	\item Zero-order entropy compression ($H_0$) using a RLE Wavelet Tree or a Huffman Shaped Wavelet Tree.
-	\item Higher-order entropy compression ($H_k$) using Burrows-Wheeler transformation and a RLE wavelet tree.
+	\setlength\itemsep{1em}
+	\item Zero-order entropy compression ($H_0$)
+	\begin{itemize}
+	\item The amount of compression it is possible to achieve when looking at each symbol in a sequence individually.
+	\end{itemize}
+	\item Higher-order entropy compression ($H_k$)
+	\begin{itemize}
+	\item The amount of compression that can be achieved when looking at a symbol and its context.
+	\end{itemize}
 	\item $H_k <= H_0 <= \log \sigma$.
 	\end{itemize}
 \end{itemize}
 \end{frame}
 
 \begin{frame}
-\frametitle{Compression: Run-length encoding}
+\frametitle{$H_0$ Compression: Run-length encoding}
 \begin{itemize}
+\setlength\itemsep{1em}
+\item Run-length Encoding (RLE)
 \item Example: $RLE(\text{aaaaabbbaacccccaaaaa}) = \text{a5,b3,a2,c5,a5}$.
 \item Binary example: $RLE(00000000001111100000) = 10,5,5 $
 \item Query by reversing RLE. It takes linear time $O(n)$ to reverse. Rank and select query time becomes $O(2n \log \sigma) = O(n \log \sigma)$
-\item Space complexity $O(nH_0(S))$
+\item Because it looks at each symbol individually it achieves \\$H_0$ compression.
 \end{itemize}
 \end{frame}
 
 
 %------------------------------------------------
 \begin{frame}
-\frametitle{RLE Wavelet Tree on string \textit{bananahat} with alphabet $\Sigma =$ \textit{abhnt}}
+\frametitle{Run-length encoded Wavelet Tree on string \textit{bananahat} with alphabet $\Sigma =$ \textit{abhnt}}
 \begin{figure}
 \begin{subfigure}{0.49\textwidth}     
 \Tree
@@ -311,17 +362,17 @@ $S = \text{adsfadaadsfaads}, \Sigma = \text{adfs}$
 \begin{subfigure}{0.49\textwidth}	
 \Tree
 %root
-[.bananahat\\2,1,1,1,3,1 !\qsetw{3cm} 
+[.bananahat\\\textbf{2,1,1,1,3,1} !\qsetw{3cm} 
 	%left child
-	[.baaaha\\4,1,1 !\qsetw{3cm}
-		[.baaaa\\0,1,4 !\qsetw{3cm}
+	[.baaaha\\\textbf{4,1,1} !\qsetw{3cm}
+		[.baaaa\\\textbf{0,1,4} !\qsetw{3cm}
 			[.aaaa !\qsetw{3cm} ]
 			[.b !\qsetw{3cm} ]		
 		] 
 		[.h !\qsetw{3cm} ]
 	] 
 	%right child
-	[.nnt\\2,1 !\qsetw{3cm}	
+	[.nnt\\\textbf{2,1} !\qsetw{3cm}	
 		[.nn !\qsetw{3cm} ] 
 		[.t !\qsetw{3cm} ]
 	]
@@ -336,7 +387,9 @@ $S = \text{adsfadaadsfaads}, \Sigma = \text{adfs}$
 \begin{frame}
 \frametitle{Compression: Burrows-Wheeler transform}
 \begin{itemize}
-\item BWT permutes the order of the characters. If the original string had several substrings that occurred often, then the transformed string will have several places where a single character is repeated multiple times in a row.
+\setlength\itemsep{1em}
+\item BWT permutes the order of the characters. 
+\item Group characters based on context.
 \item As a result it groups symbols more which improves the effect of Run-length encoding
 \item BWT is reversible
 \item Combined with RLE Wavelet Tree it achieves $H_k$ compression.
@@ -358,7 +411,7 @@ $\begin{bmatrix}
 	at\#bananah\\
 	t\#bananaha\\
 	\#bananahat\\
-\end{bmatrix} \Rightarrow
+\end{bmatrix} \boldsymbol\Rightarrow
 \begin{bmatrix}
 	\#bananaha\textbf{t}\\
 	ahat\#bana\textbf{n}\\
@@ -376,59 +429,59 @@ $BWT(S) = $ tnnbhaaaa.
 \end{frame}
 
 %------------------------------------------------
-\begin{frame}
-\frametitle{Burrows-Wheeler reverse transform example}
-$S = \text{dca}$
-\begin{center}
-$M = \begin{bmatrix}
-	dca\#\\
-	ca\#d\\
-	a\#dc\\
-	\#dca
-\end{bmatrix} \Rightarrow
-M' = 
-\begin{bmatrix}
-	\#dc\textbf{a}\\
-	a\#d\textbf{c}\\
-	ca\#\textbf{d}\\
-	dca\textbf{\#}
-\end{bmatrix}$\\
-\end{center}
-$BWT(S) = acd$
-\vspace{0.5cm}
-
-Reverse BWT:
-\begin{tabular}{|l|l|l|l|l|l|l|l|}
-\hline
-Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 & Sort 4\\
-\hline 
-\begin{tabular}{@{}>{$}l<{$}@{}}
-	a\\ c\\ d\\ \#
-\end{tabular} & 
-\begin{tabular}{@{}>{$}l<{$}@{}}
-	\#\\ a\\ c\\ d
-\end{tabular} & 
-\begin{tabular}{@{}>{$}l<{$}@{}}
-	a\#\\ ca\\ dc\\ \#d
-\end{tabular} & 
-\begin{tabular}{@{}>{$}l<{$}@{}}
-	\#d\\ a\#\\ ca\\ dc
-\end{tabular} & 
-\begin{tabular}{@{}>{$}l<{$}@{}}
-	a\#d\\ ca\#\\ dca\\ \#dc
-\end{tabular} & 
-\begin{tabular}{@{}>{$}l<{$}@{}}
-	\#dc\\ a\#d\\ ca\#\\ dca
-\end{tabular} & 
-\begin{tabular}{@{}>{$}l<{$}@{}}
-	a\#dc\\ ca\#d\\ dca\#\\ \#dca
-\end{tabular} &
-\begin{tabular}{@{}>{$}l<{$}@{}}
-	\#dca\\ a\#dc\\ ca\#d\\ \textbf{dca\#}\\
-\end{tabular} \\ \hline
-\end{tabular}
-*$\# = \text{end of line character}$
-\end{frame}
+%\begin{frame}
+%\frametitle{Burrows-Wheeler reverse transform example}
+%$S = \text{dca}$
+%\begin{center}
+%$M = \begin{bmatrix}
+%	dca\#\\
+%	ca\#d\\
+%	a\#dc\\
+%	\#dca
+%\end{bmatrix} \Rightarrow
+%M' = 
+%\begin{bmatrix}
+%	\#dc\textbf{a}\\
+%	a\#d\textbf{c}\\
+%	ca\#\textbf{d}\\
+%	dca\textbf{\#}
+%\end{bmatrix}$\\
+%\end{center}
+%$BWT(S) = acd$
+%\vspace{0.5cm}
+%
+%Reverse BWT:
+%\begin{tabular}{|l|l|l|l|l|l|l|l|}
+%\hline
+%Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 & Sort 4\\
+%\hline 
+%\begin{tabular}{@{}>{$}l<{$}@{}}
+%	a\\ c\\ d\\ \#
+%\end{tabular} & 
+%\begin{tabular}{@{}>{$}l<{$}@{}}
+%	\#\\ a\\ c\\ d
+%\end{tabular} & 
+%\begin{tabular}{@{}>{$}l<{$}@{}}
+%	a\#\\ ca\\ dc\\ \#d
+%\end{tabular} & 
+%\begin{tabular}{@{}>{$}l<{$}@{}}
+%	\#d\\ a\#\\ ca\\ dc
+%\end{tabular} & 
+%\begin{tabular}{@{}>{$}l<{$}@{}}
+%	a\#d\\ ca\#\\ dca\\ \#dc
+%\end{tabular} & 
+%\begin{tabular}{@{}>{$}l<{$}@{}}
+%	\#dc\\ a\#d\\ ca\#\\ dca
+%\end{tabular} & 
+%\begin{tabular}{@{}>{$}l<{$}@{}}
+%	a\#dc\\ ca\#d\\ dca\#\\ \#dca
+%\end{tabular} &
+%\begin{tabular}{@{}>{$}l<{$}@{}}
+%	\#dca\\ a\#dc\\ ca\#d\\ \textbf{dca\#}\\
+%\end{tabular} \\ \hline
+%\end{tabular}
+%*$\# = \text{end of line character}$
+%\end{frame}
 
 %----------------------------------------------------------------------------------------
 \begin{frame}
@@ -483,6 +536,7 @@ Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 & Sort 4\\
 \begin{frame}
 \frametitle{Huffman shaped wavelet tree}
 \begin{itemize}
+\setlength\itemsep{1em}
 \item Use Huffman codes of symbols to shape the tree.
 \item Most frequent symbols at the top of the tree.
 \item Least frequent symbols at the bottom of the tree.
@@ -520,20 +574,20 @@ Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 & Sort 4\\
 \begin{subfigure}{0.49\textwidth}	
 \Tree
 %root
-[.aaaaaabcaaaadf\\00000000000011 
+[.aaaaaabcaaaadf\\11111100111100
 	%left child
 	[.bcdf\\0011  
 		[.bc\\01  
 			[.b  ]
 			[.c  ]		
 		] 
-		[.df  
+		[.df\\01  
 			[.d ]
 			[.f ]
 		]
 	] 
 	%right child
-	[.aaaaaaaaaa\\01 ]
+	[.aaaaaaaaaa ]
 ]
 \caption{Huffman-shaped wavelet tree: 22 bits}
 \end{subfigure}
@@ -545,9 +599,12 @@ Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 & Sort 4\\
 \begin{frame}
 \frametitle{Huffman Shaped WT: Space complexity}
 \begin{itemize}
-\item Balanced version: $O(n \log \sigma +  \sigma \cdot \text{ws})$ bits
-\item Huffman-shaped: $O(n(H_0(S) + 1) +  \sigma \cdot \text{ws})$ bits. [Efficient Compressed Wavelet Trees over Large Alphabets by Navarro et al.]
-
+\setlength\itemsep{1em}
+\item Balanced version: $n \log \sigma + o(n \log \sigma) + O(\sigma \cdot \text{ws})$ bits
+\item Huffman-shaped: $n(H_0(S) + 1) + o(n(H_0(S) + 1) + O(\sigma \cdot \text{ws})$ bits.
+\begin{itemize}
+\item From [Efficient Compressed Wavelet Trees over Large Alphabets by Navarro et al.]
+\end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -563,8 +620,10 @@ Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 & Sort 4\\
 \begin{frame}
 \frametitle{Focus of experiments}
 \begin{itemize}
+\setlength\itemsep{1em}
 \item Focus on optimizing and observing the effect of hardware penalties.
 	\begin{itemize}
+	\setlength\itemsep{1em}
 	\item Cache Misses.
 	\item Branch Mispredictions.
 	\item Translation Lookaside Buffer (TLB) Misses.
@@ -577,11 +636,27 @@ Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 & Sort 4\\
 \begin{frame}
 \frametitle{Experiments}
 \begin{itemize}
+\setlength\itemsep{1em}
 \item Calculate binary rank and select using popcount.
+	\begin{itemize}
+	\item Popcount counts number of 1's in a binary number of size 64 bit in $O(1) time$.
+	\item Reduces time spent in binary rank and select.
+	\item Reduces branch mispredictions and cpu cycles
+	\end{itemize}
 \item Pre-compute binary rank values in blocks.
+	\begin{itemize}
+	\item Loop blocks of precomputed rank values to reduce time spent in in binary rank and select.
+	\item Reduces running time and cache misses
+	\end{itemize}
 \item Concatenate bitmaps and Page-align blocks.
-\item Block size dependence on input n.
+	\begin{itemize}
+	\item Concatenate bitmaps to reduce memory and page-align blocks of precomputed ranks to reduce TLB misses.
+	\end{itemize}
 \item Pre-compute cumulative sums of rank values.
+	\begin{itemize}
+	\item Remove need to linear scan blocks.
+	\item Enables binary rank in $O(b)$ time.
+	\end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -628,6 +703,23 @@ Add 1 & Sort 1 & Add 2 & Sort 2 & Add 3 & Sort 3 & Add 4 & Sort 4\\
 		\caption{Select}
 	\end{subfigure}
 	\caption{Comparison of wall time of rank and select queries between SimpleNaive not using precomputed values and UnalignedNaive using precomputed values.}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Calculate binary rank and select using popcount}
+\begin{itemize}
+\item Increased branch misprediction because of extra checks to handle edge cases.
+\end{itemize}
+\begin{figure}[h!]\tiny
+	\begin{subfigure}{\textwidth}
+		\center \scalebox{.6}{\input{popcountRankVsPrecomputed}}
+		\caption{\tiny{Rank}}
+	\end{subfigure}
+	\begin{subfigure}{\textwidth}
+		\center \scalebox{.6}{\input{popcountSelectVsPrecomputed}}
+		\caption{\tiny{Select}}
+	\end{subfigure}
 \end{figure}
 \end{frame}
 
@@ -687,7 +779,20 @@ Best Block size: $\frac{1}{2}$ page size = $\frac{1}{2}*4096 \text{ bytes} = 204
 %----------------------------------------------------------------------------------------
 
 \begin{frame}
-\frametitle{Rank and select TLB misses}
+\frametitle{Memory usage: Pre-compute binary rank values in blocks}
+\begin{itemize}
+\item There are $O(\frac{n}{b})$ blocks per level of the tree, and so an extra memory consumption of $O(\frac{n}{b} \log \sigma)$ words making the total memory consumption $O(n \log \sigma + (\sigma + \frac{n}{b} \log \sigma) \cdot \mathit{ws})$ bits.
+\end{itemize}
+\begin{center}
+\begin{tiny}
+\scalebox{0.9}{\input{PrecomputedRankBlockSize_MemoryUsage}}
+\end{tiny}
+\end{center}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Page-align TLB misses}
 \begin{figure}\tiny
 \begin{subfigure}{0.48\textwidth}
 	\scalebox{.7}{\input{PrecomputedRankBlockSize_Rank_TLB}}
@@ -707,55 +812,40 @@ Best Block size: $\frac{1}{2}$ page size = $\frac{1}{2}*4096 \text{ bytes} = 204
 %----------------------------------------------------------------------------------------
 
 
+%\begin{frame}
+%\frametitle{Block size dependence on input size n}
+%\begin{itemize}
+%\item Costs $O(\frac{n}{b} + b)$ to calculate the binary rank.
+%\item Costs $O(\frac{n}{b})$ to scan the blocks, and $O(b)$ to calculate the rank within a single block using popcount. 
+%\item Optimal block size $b = \sqrt{n}$.
+%\item A wavelet tree has many bitmaps of varying sizes $n$.
+%\end{itemize}
+%\end{frame}
 
-\begin{frame}
-\frametitle{Memory usage: Pre-compute binary rank values in blocks}
-\begin{itemize}
-\item There are $O(\frac{n}{b})$ blocks per level of the tree, and so an extra memory consumption of $O(\frac{n}{b} \log \sigma)$ words making the total memory consumption $O(n \log \sigma + (\sigma + \frac{n}{b} \log \sigma) \cdot \mathit{ws})$ bits.
-\end{itemize}
-\begin{center}
-\begin{tiny}
-\scalebox{0.9}{\input{PrecomputedRankBlockSize_MemoryUsage}}
-\end{tiny}
-\end{center}
-\end{frame}
-
-
-
-\begin{frame}
-\frametitle{Block size dependence on input size n}
-\begin{itemize}
-\item Costs $O(\frac{n}{b} + b)$ to calculate the binary rank.
-\item Costs $O(\frac{n}{b})$ to scan the blocks, and $O(b)$ to calculate the rank within a single block using popcount. 
-\item Optimal block size $b = \sqrt{n}$.
-\item A wavelet tree has many bitmaps of varying sizes $n$.
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Experiment: Block size dependence on input size n for Rank}
-\begin{figure}\small
-\begin{subfigure}{0.4\textwidth}
-	\scalebox{.45}{\input{PrecomputedRankBlockSizeVaryN_5_Rank_WallTime}}
-	\caption{$n = 10^5$}
-\end{subfigure}
-\hfill
-\begin{subfigure}{0.4\textwidth}
-	\scalebox{.45}{\input{PrecomputedRankBlockSizeVaryN_6_Rank_WallTime}}
-	\caption{$n = 10^6$}
-\end{subfigure}
-
-\begin{subfigure}{0.4\textwidth}
-	\scalebox{.45}{\input{PrecomputedRankBlockSizeVaryN_7_Rank_WallTime}}
-	\caption{$n = 10^7$}
-\end{subfigure}
-\hfill	
-\begin{subfigure}{0.4\textwidth}
-	\scalebox{.45}{\input{PrecomputedRankBlockSizeVaryN_8_Rank_WallTime}}
-	\caption{$n = 10^8$}
-\end{subfigure}
-\end{figure}
-\end{frame}
+%\begin{frame}
+%\frametitle{Experiment: Block size dependence on input size n for Rank}
+%\begin{figure}\small
+%\begin{subfigure}{0.4\textwidth}
+%	\scalebox{.45}{\input{PrecomputedRankBlockSizeVaryN_5_Rank_WallTime}}
+%	\caption{$n = 10^5$}
+%\end{subfigure}
+%\hfill
+%\begin{subfigure}{0.4\textwidth}
+%	\scalebox{.45}{\input{PrecomputedRankBlockSizeVaryN_6_Rank_WallTime}}
+%	\caption{$n = 10^6$}
+%\end{subfigure}
+%
+%\begin{subfigure}{0.4\textwidth}
+%	\scalebox{.45}{\input{PrecomputedRankBlockSizeVaryN_7_Rank_WallTime}}
+%	\caption{$n = 10^7$}
+%\end{subfigure}
+%\hfill	
+%\begin{subfigure}{0.4\textwidth}
+%	\scalebox{.45}{\input{PrecomputedRankBlockSizeVaryN_8_Rank_WallTime}}
+%	\caption{$n = 10^8$}
+%\end{subfigure}
+%\end{figure}
+%\end{frame}
 
 \begin{frame}
 \frametitle{Cumulative sum}
@@ -764,7 +854,6 @@ Best Block size: $\frac{1}{2}$ page size = $\frac{1}{2}*4096 \text{ bytes} = 204
 \item Binary rank in $O(b)$ time in stead of $O(\frac{n}{b} + b)$ time.
 \item Binary search in select.
 \item Work per level change from $O(\frac{n}{b} + b)$ to $O(\log \frac{n}{b} + b)$. Select query total work $O((\log \frac{n}{b} + b) \log \sigma)$.
-\item Best block size does not depend on n for Rank.
 \item A block size below 64 bits should not be an improvement because popcount works on words of size 64 bits.
 \end{itemize}
 \end{frame}
@@ -794,13 +883,17 @@ Best Block size: $\frac{1}{2}$ page size = $\frac{1}{2}*4096 \text{ bytes} = 204
 
 \section{Conclusion}
 \begin{frame}
+\frametitle{Conclusion}
+\begin{center}\Huge{Conclusion}\end{center}
+\end{frame}
+
+\begin{frame}
 \frametitle{Conclusion: What did we learn?}
 \begin{itemize}
 \item What effect hardware can have on running time and memory.
 \item How to do tests and how to show their results in an understandable way.
 \item The wavelet tree has many applications.
 \item The wavelet tree is great for compression of natural language texts.
-\item Choosing the right test parameters and what data to use can be difficult.
 \item How to do literature search and how important it is.
 \item In general, improvements that reduced the raw amount of computations and memory accesses needed were a big improvement.
 \item That a simple concept can be very difficult to implement.
